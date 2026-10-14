@@ -365,6 +365,8 @@ html[data-theme="oled"] *{scrollbar-color:#555 transparent}html[data-theme="pape
 .readadd{border:0;padding:0;margin:0;display:flex;gap:18px;flex-wrap:wrap}.readadd legend{font-size:.85rem;color:var(--muted);margin-bottom:6px}
 .readactions{display:flex;gap:10px;flex-wrap:wrap}
 .readdone{background:var(--panel);border-radius:16px;padding:22px;display:grid;gap:10px;justify-items:start}.readdone h3{margin:0;font:600 1.2rem var(--display)}.readdone p{margin:0;line-height:1.6}
+.footread{border:0;background:none;color:var(--lilac);font:500 .9rem var(--ui);text-decoration:underline;text-underline-offset:3px;cursor:pointer;padding:4px 8px}
+.footread:hover{color:var(--fg)}
 .footbtns{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
 .sitefoot .btn.ghost{text-decoration:none}
 @media (max-width:760px){.readgrid{grid-template-columns:1fr}}
@@ -514,11 +516,11 @@ h1,h2,h3,h4,.readh{text-wrap:balance}
 </section>
 <section class="readview" id="readView" hidden>
  <div class="readpg">
-  <h1 class="readh">Get a Reading</h1>
-  <p class="readlead">Every reading is written personally by me, Dvstin, not by AI. I use AI to help me create tools that further my effectiveness, but I will not use AI for interpretations in personal readings. I study your birth chart by hand and write up what I see in plain language, with the time to look closely at what makes your chart yours.</p>
+  <h1 class="readh">Get a personal reading</h1>
+  <p class="readlead">Every reading is written personally by me, Dvstin, not by AI. I use AI to help me create tools that further my effectiveness, but I will not use AI for interpretations in personal readings. I study your birth chart by hand and write up what I see in plain language.</p>
   <div class="readgrid">
-   <div class="readcard primary"><span class="readprice">$108</span><h3>Natal chart reading</h3><p>A written reading of your birth chart: your core temperament and motivations, strengths and growing edges, relationships, work and direction, and the main timing themes coming up for you. Tell me anything you’d especially like me to look at and I’ll make sure it’s covered.</p></div>
-   <div class="readcard"><span class="readtag">Add-on</span><span class="readprice">+$49</span><h3>Astrocartography</h3><p>Where in the world your planetary lines fall, and what that means for places you’ve lived, places you’re considering and places to visit, whether you’re looking for love, career, rest or a fresh start.</p></div>
+   <div class="readcard primary"><span class="readprice">$108</span><h3>Natal chart reading</h3><p>A written reading of your birth chart: your core temperament and motivations, strengths and growing edges, relationships, work and direction, and the main timing themes coming up for you. Tell me anything you’d especially like me to look at, and I’ll make sure it’s covered.</p></div>
+   <div class="readcard"><span class="readtag">Add-on</span><span class="readprice">+$49</span><h3>Astrocartography</h3><p>See where in the world your planetary lines fall and what that means for the places you’ve lived, the places you’re considering and the places you’d like to visit, whether you’re looking for love, career, rest or a fresh start.</p></div>
    <div class="readcard"><span class="readtag">Add-on</span><span class="readprice">+$49</span><h3>Palmistry</h3><p>A reading of your hands alongside your chart. After you reach out, I’ll send simple instructions for taking clear photos of both palms.</p></div>
   </div>
   <h2 class="readsub">How it works</h2>
@@ -601,7 +603,8 @@ h1,h2,h3,h4,.readh{text-wrap:balance}
 
 <footer class="sitefoot">
   <p>Hi! Full disclosure:<br>This site was created with the help of AI, which is one of the many reasons I’m making it free to use. It may make mistakes or have bugs here and there, but I’m constantly updating it to add features and fix issues as I notice them. It isn’t perfect, but I wanted a tool that fit my needs and thought it might help someone else too. This site does cost money to run, so if you’d like to support this effort, please donate any amount you feel is fair.</p>
-  <div class="footbtns"><a class="btn" id="donateBtn" href="https://buymeacoffee.com/destinned" target="_blank" rel="noopener">Donate</a><button class="btn ghost" type="button" id="readBtn">Get a Reading</button></div>
+  <div class="footbtns"><a class="btn" id="donateBtn" href="https://buymeacoffee.com/destinned" target="_blank" rel="noopener">Donate</a></div>
+  <button class="footread" type="button" id="readBtn">Or get a personal reading from me</button>
 </footer>
 <div class="scrim" id="scrim" hidden></div>
 <aside class="drawer" id="drawer" hidden aria-label="Chart library">
