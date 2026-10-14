@@ -233,7 +233,7 @@ tr.clk:hover td,td.clk:hover{background:var(--raised)}
 .aspt tr.dstart td{border-top:1px solid var(--line)}
 .aspt tr:not(.dstart) td{border-top-color:transparent}
 .aspt tr.xev td:nth-child(3){color:var(--muted)}
-.zrbar{width:100%;height:64px;display:block}
+.zrbar{width:100%;height:auto;display:block}
 .zrnow{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
 .zrcard{background:var(--panel);border-radius:14px;padding:12px 14px;display:grid;gap:4px;box-shadow:0 0 0 1px rgba(255,255,255,.05)}
 .zrcard.peak{box-shadow:0 0 0 1.5px var(--accent)}
@@ -346,6 +346,30 @@ html[data-theme="oled"] *{scrollbar-color:#555 transparent}html[data-theme="pape
 @media (max-width:430px){.top .brand{font-size:0;gap:0;margin-right:0}.top .brand svg{width:28px;height:26px}}
 .sitefoot{max-width:760px;margin:28px auto 0;padding:22px 16px calc(28px + env(safe-area-inset-bottom,0px));border-top:1px solid var(--line);color:var(--muted);font-size:.82rem;line-height:1.6;text-align:center;display:grid;gap:12px;justify-items:center}
 .sitefoot p{margin:0}.sitefoot .btn{text-decoration:none;display:inline-block}
+.readview{padding:28px 16px 8px}
+.readpg{max-width:860px;margin:0 auto;display:grid;gap:18px}
+.readh{font:700 clamp(1.5rem,3.5vw,2.2rem)/1.15 var(--display);margin:0;color:var(--fg)}
+.readlead{font-size:1.02rem;line-height:1.65;color:var(--fg);margin:0;max-width:62ch}
+.readgrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.readcard{background:var(--panel);border-radius:16px;padding:16px 18px;box-shadow:0 0 0 1px rgba(255,255,255,.05);display:grid;gap:6px;align-content:start}
+.readcard.primary{box-shadow:0 0 0 1.5px var(--accent)}
+.readcard h3{margin:0;font:600 1.02rem var(--display);color:var(--fg)}.readcard p{margin:0;color:var(--muted);line-height:1.55;font-size:.9rem}
+.readprice{position:absolute;top:14px;right:16px;font:700 1.05rem var(--display);color:var(--lilac)}
+.readcard{position:relative}
+.readtotal{margin:0;font-size:.95rem}
+.readtag{justify-self:start;font:700 .66rem var(--display);letter-spacing:.08em;text-transform:uppercase;color:var(--accent-ink);background:var(--lilac);padding:2px 8px;border-radius:999px}
+.readsub{font:600 .8rem var(--display);letter-spacing:.1em;text-transform:uppercase;color:var(--accent);margin:8px 0 0}
+.readsteps{margin:0;padding-left:1.2em;display:grid;gap:6px;line-height:1.55}
+.readform{background:var(--panel);border-radius:16px;padding:18px;display:grid;gap:14px;position:relative;box-shadow:0 0 0 1px rgba(255,255,255,.05)}
+.readform textarea{resize:vertical;min-height:110px;font:inherit}
+.readadd{border:0;padding:0;margin:0;display:flex;gap:18px;flex-wrap:wrap}.readadd legend{font-size:.85rem;color:var(--muted);margin-bottom:6px}
+.readactions{display:flex;gap:10px;flex-wrap:wrap}
+.readdone{background:var(--panel);border-radius:16px;padding:22px;display:grid;gap:10px;justify-items:start}.readdone h3{margin:0;font:600 1.2rem var(--display)}.readdone p{margin:0;line-height:1.6}
+.footbtns{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
+.sitefoot .btn.ghost{text-decoration:none}
+@media (max-width:760px){.readgrid{grid-template-columns:1fr}}
+p,li,dd,.interp,.note,.readlead,.readcard p,.sitefoot p{text-wrap:pretty}
+h1,h2,h3,h4,.readh{text-wrap:balance}
 .mphase{width:15px;height:15px;vertical-align:-3px;margin-right:2px}
 *{scrollbar-width:thin;scrollbar-color:#8e6aa6 transparent}
 ::-webkit-scrollbar{width:10px;height:10px}
@@ -488,6 +512,40 @@ html[data-theme="oled"] *{scrollbar-color:#555 transparent}html[data-theme="pape
     <div id="tSummary"></div>
   </div>
 </section>
+<section class="readview" id="readView" hidden>
+ <div class="readpg">
+  <h1 class="readh">Get a Reading</h1>
+  <p class="readlead">Every reading is written personally by me, Dvstin, not by AI. I use AI to help me create tools that further my effectiveness, but I will not use AI for interpretations in personal readings. I study your birth chart by hand and write up what I see in plain language, with the time to look closely at what makes your chart yours.</p>
+  <div class="readgrid">
+   <div class="readcard primary"><span class="readprice">$108</span><h3>Natal chart reading</h3><p>A written reading of your birth chart: your core temperament and motivations, strengths and growing edges, relationships, work and direction, and the main timing themes coming up for you. Tell me anything you’d especially like me to look at and I’ll make sure it’s covered.</p></div>
+   <div class="readcard"><span class="readtag">Add-on</span><span class="readprice">+$49</span><h3>Astrocartography</h3><p>Where in the world your planetary lines fall, and what that means for places you’ve lived, places you’re considering and places to visit, whether you’re looking for love, career, rest or a fresh start.</p></div>
+   <div class="readcard"><span class="readtag">Add-on</span><span class="readprice">+$49</span><h3>Palmistry</h3><p>A reading of your hands alongside your chart. After you reach out, I’ll send simple instructions for taking clear photos of both palms.</p></div>
+  </div>
+  <h2 class="readsub">How it works</h2>
+  <ol class="readsteps"><li><b>Send a request</b> with your birth details and any add-ons using the form below.</li><li><b>I’ll reply by email</b> to confirm your details, answer questions and arrange payment.</li><li><b>Your written reading</b> arrives by email once it’s ready.</li></ol>
+  <h2 class="readsub" id="readFormTitle">Request a reading</h2>
+  <form class="readform" id="readForm" novalidate>
+   <div class="fgrid">
+    <label class="l" for="rName">Your name<input class="f" id="rName" name="name" autocomplete="name" required></label>
+    <label class="l" for="rEmail">Email<input class="f" id="rEmail" name="email" type="email" autocomplete="email" required></label>
+    <label class="l" for="rDate">Birth date<input class="f" id="rDate" name="birth_date" type="date" required></label>
+    <label class="l" for="rTime">Birth time<input class="f" id="rTime" name="birth_time" type="time"></label>
+    <label class="chk full" for="rTimeUnk"><input type="checkbox" id="rTimeUnk"> I don’t know my birth time</label>
+    <label class="l full" for="rPlace">Birth place (city, region, country)<input class="f" id="rPlace" name="birth_place" required></label>
+   </div>
+   <fieldset class="readadd"><legend>Add-ons</legend>
+    <label class="chk" for="rAcg"><input type="checkbox" id="rAcg" value="Astrocartography"> Astrocartography <span class="muted">+$49</span></label>
+    <label class="chk" for="rPalm"><input type="checkbox" id="rPalm" value="Palmistry"> Palmistry <span class="muted">+$49</span></label>
+   </fieldset>
+   <p class="readtotal" id="rTotal">Total: <b>$108</b> <span class="muted">(natal chart reading)</span></p>
+   <label class="l full" for="rMsg">Anything you’d like me to focus on? (optional)<textarea class="f" id="rMsg" name="message" rows="5" placeholder="Questions, areas of life, places you’re considering…"></textarea></label>
+   <input type="text" name="_honey" id="rHoney" tabindex="-1" autocomplete="off" style="position:absolute;left:-9999px" aria-hidden="true">
+   <div class="readactions"><button class="btn" type="submit" id="rSend">Send request</button><button class="btn ghost" type="button" id="rFill" hidden>Fill in from the open chart</button></div>
+   <p class="err" id="rErr" hidden></p>
+  </form>
+  <div class="readdone" id="readDone" hidden></div>
+ </div>
+</section>
 <section class="eph" id="zrView" hidden>
   <div class="eph-side"><div id="zrForm" style="display:grid;gap:14px"></div></div>
   <div class="eph-main">
@@ -542,8 +600,8 @@ html[data-theme="oled"] *{scrollbar-color:#555 transparent}html[data-theme="pape
 </div>
 
 <footer class="sitefoot">
-  <p>Hi! Full disclosure: this site was created with the help of AI, which is one of the many reasons I’m making it free to use. It may make mistakes or have bugs here and there, but I’m constantly updating it to add features and fix issues as I notice them. It isn’t perfect, but I wanted a tool that fit my needs and thought it might help someone else too. This site does cost money to run, so if you’d like to support this effort, please donate any amount you feel is fair.</p>
-  <a class="btn" id="donateBtn" href="https://buymeacoffee.com/destinned" target="_blank" rel="noopener">Donate</a>
+  <p>Hi! Full disclosure:<br>This site was created with the help of AI, which is one of the many reasons I’m making it free to use. It may make mistakes or have bugs here and there, but I’m constantly updating it to add features and fix issues as I notice them. It isn’t perfect, but I wanted a tool that fit my needs and thought it might help someone else too. This site does cost money to run, so if you’d like to support this effort, please donate any amount you feel is fair.</p>
+  <div class="footbtns"><a class="btn" id="donateBtn" href="https://buymeacoffee.com/destinned" target="_blank" rel="noopener">Donate</a><button class="btn ghost" type="button" id="readBtn">Get a Reading</button></div>
 </footer>
 <div class="scrim" id="scrim" hidden></div>
 <aside class="drawer" id="drawer" hidden aria-label="Chart library">
@@ -2207,7 +2265,7 @@ $('ephCsv').onclick=async()=>{if(!ephRows)return;let csv;
  if(!window.claude){const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));a.download=name;document.body.append(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},1000);toast('Downloaded '+name);return}
  try{await navigator.clipboard.writeText(csv);toast('Copied as CSV to the clipboard.')}catch(e){toast('Export is not available in this view.')}};
 let prevMode='natal';
-function setView(v){const changed=v!==view;if(changed)requestAnimationFrame(()=>{try{window.scrollTo({top:0,left:0,behavior:'instant'})}catch(e){window.scrollTo(0,0)}document.querySelectorAll('#pane,.pane,.eph-out,.eph-side,.eph-main,.tarot-side,.tarot-main,.stage').forEach(el=>{el.scrollTop=0})});if(v!=='acg'&&$('acgWrap').classList.contains('fs'))mapFsSet(false);if(v==='acg'&&mode!=='acg'){prevMode=mode;mode='acg'}if(v!=='acg'&&mode==='acg')mode=prevMode||'natal';view=v;$('ephView').hidden=v!=='eph';$('zrView').hidden=v!=='zr';$('tarotView').hidden=v!=='tarot';$('chartView').hidden=v==='eph'||v==='tarot'||v==='zr';if(v==='zr')renderZRPage();$('modesWrap').hidden=v!=='chart';$('styleSeg').hidden=v!=='chart';closeModeMenu();if(v==='chart'||v==='acg')renderAll();if(v==='tarot'){renderTarot();renderSaved()}
+function setView(v){const changed=v!==view;if(changed)requestAnimationFrame(()=>{try{window.scrollTo({top:0,left:0,behavior:'instant'})}catch(e){window.scrollTo(0,0)}document.querySelectorAll('#pane,.pane,.eph-out,.eph-side,.eph-main,.tarot-side,.tarot-main,.stage').forEach(el=>{el.scrollTop=0})});if(v!=='acg'&&$('acgWrap').classList.contains('fs'))mapFsSet(false);if(v==='acg'&&mode!=='acg'){prevMode=mode;mode='acg'}if(v!=='acg'&&mode==='acg')mode=prevMode||'natal';view=v;$('ephView').hidden=v!=='eph';$('zrView').hidden=v!=='zr';$('readView').hidden=v!=='reading';if(v==='reading')prepReading();$('tarotView').hidden=v!=='tarot';$('chartView').hidden=v==='eph'||v==='tarot'||v==='zr'||v==='reading';if(v==='zr')renderZRPage();$('modesWrap').hidden=v!=='chart';$('styleSeg').hidden=v!=='chart';closeModeMenu();if(v==='chart'||v==='acg')renderAll();if(v==='tarot'){renderTarot();renderSaved()}
  document.querySelectorAll('#views button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.view===v));
  if(v==='eph'){$('ephZone').innerHTML=zoneOpts().map(([k,l])=>`<option value="${k}">${esc(l)}</option>`).join('');renderEphForm();if(!ephRows){if(ephTab==='aspects')runEph();else $('ephOut').innerHTML='<p class="empty">Set up a search on the left and run it. Results can be opened as charts.</p>'}}
  try{localStorage.setItem('orrery.page',v)}catch(e){}}
@@ -2229,15 +2287,16 @@ function zrData(){const A=byId(activeId);if(A.now||A.timeUnknown)return null;con
 const zrAge=(ms,b)=>((ms-b)/31557600000);
 const zrFmtAge=(ms,b)=>{const a=zrAge(ms,b);return a<0?'':a<1?`${Math.max(0,Math.round(a*12))} mo`:`${a.toFixed(1)}`};
 function zrBadges(p){return `${p.peak?`<span class="pk ${p.peak}">${p.peak==='major'?'Peak · 10th from Fortune':'Angular to Fortune'}</span>`:''}${p.lb?'<span class="pk lb">Loosing of the bond</span>':''}`}
-function zrBar(periods,t0,t1,now,birth,selIdx,attr,ticks){const W=1000,H=58,x=ms=>(ms-t0)/(t1-t0)*W;let g='';
+let zrW=1000;
+function zrBar(periods,t0,t1,now,birth,selIdx,attr,ticks){const W=zrW,H=58,x=ms=>(ms-t0)/(t1-t0)*W;let g='';
  periods.forEach((p,i)=>{const a=Math.max(0,x(p.start)),b=Math.min(W,x(p.end));if(b<=a)return;const w=b-a,col=`var(--${ELEM[p.sign%4]})`;
   g+=`<g data-${attr}="${i}" data-obj="zr:${attr==='l1'?'L.'+i:'L.'+zrSel+'.'+i}" style="cursor:pointer"><rect x="${a.toFixed(2)}" y="8" width="${Math.max(.5,w-1).toFixed(2)}" height="34" rx="3" fill="${col}" fill-opacity="${i===selIdx?.55:.22}" stroke="${i===selIdx?col:'none'}" stroke-width="1.5"/>${p.peak==='major'?`<rect x="${a.toFixed(2)}" y="3" width="${Math.max(.5,w-1).toFixed(2)}" height="4" rx="2" fill="var(--accent)"/>`:p.peak==='minor'?`<rect x="${a.toFixed(2)}" y="4" width="${Math.max(.5,w-1).toFixed(2)}" height="2" rx="1" fill="var(--accent)" opacity=".6"/>`:''}${p.lb?`<line x1="${a.toFixed(2)}" x2="${a.toFixed(2)}" y1="2" y2="46" stroke="#ff8f9a" stroke-width="2" stroke-dasharray="3 2"/>`:''}${w>22?`<text x="${(a+w/2).toFixed(2)}" y="26" text-anchor="middle" dominant-baseline="central" font-size="${w>40?19:14}" font-weight="300" fill="var(--fg)" font-family="var(--sym)">${SIGN_G[p.sign]+VS}</text>`:''}<title>${SIGN_N[p.sign]}: ${fmtDate(p.start)} to ${fmtDate(p.end)}${p.peak==='major'?' (peak)':''}${p.lb?' (loosing of the bond)':''}</title></g>`});
- (ticks||[]).forEach(([ms,l])=>{const xx=x(ms);if(xx<0||xx>W)return;g+=`<line x1="${xx}" x2="${xx}" y1="42" y2="47" stroke="var(--muted)"/><text x="${xx}" y="54" text-anchor="middle" font-size="9.5" fill="var(--muted)" font-family="var(--mono)">${l}</text>`});
+ (ticks||[]).forEach(([ms,l])=>{const xx=x(ms);if(xx<0||xx>W)return;g+=`<line x1="${xx}" x2="${xx}" y1="42" y2="47" stroke="var(--muted)"/><text x="${xx}" y="54" text-anchor="${xx<12?'start':xx>W-12?'end':'middle'}" font-size="9.5" fill="var(--muted)" font-family="var(--mono)">${l}</text>`});
  if(now>=t0&&now<=t1){const xx=x(now);g+=`<line x1="${xx}" x2="${xx}" y1="0" y2="48" stroke="#fff" stroke-width="1.5"/><circle cx="${xx}" cy="2" r="3" fill="#fff"/>`}
- return `<svg class="zrbar" viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" role="img" aria-label="Timeline">${g}</svg>`}
+ return `<svg class="zrbar" viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" role="img" aria-label="Timeline">${g}</svg>`}
 function zrRows(list,fSign,yd,birth,now,path){return list.map((p,i)=>{const key=path+'.'+i,cur=now>=p.start&&now<p.end,open=zrOpenSet.has(key),kids=p.level<4;
   return `<div class="zrrow l${p.level}${cur?' now':''}"><button class="zrow" type="button" data-obj="zr:${key}" ${kids?`data-zx="${key}" aria-expanded="${open}"`:''}><span class="zs" style="color:${S.elemColors?`var(--${ELEM[p.sign%4]})`:'inherit'}">${SIGN_G[p.sign]+VS}</span><span>${kids?`<span class="zcar">${open?'▾':'▸'}</span>`:''}${SIGN_N[p.sign]} <span class="muted" style="font-size:.8rem">· ${PT[RULER[p.sign]][1]}</span>${zrBadges(p)}</span><span class="zd">${fmtDate(p.start)} → ${fmtDate(p.end)}<small class="muted"> · age ${zrFmtAge(p.start,birth)}</small></span></button>${open?`<div class="zsub">${zrRows(zrKids(p,fSign,yd),fSign,yd,birth,now,key)}</div>`:''}</div>`}).join('')}
-let zrLast=null;
+let zrLast=null;let zrRT=0;addEventListener('resize',()=>{if(view!=='zr')return;clearTimeout(zrRT);zrRT=setTimeout(()=>{try{renderZRPage()}catch(e){}},150)});
 
 const ZR_LOT_TOPIC={spirit:'career, action and the direction of the will',fortune:'the body, health and material circumstances',eros:'love, desire and what the heart pursues',necessity:'constraints, struggles and obligations',courage:'boldness, risk and conflict',victory:'success, faith and alliances',nemesis:'hidden difficulties and reckonings'};
 const ZR_LEN=ms=>{const d=ms/86400000;return d>=365?`${(d/365.25).toFixed(1)} years`:d>=28?`${(d/30.44).toFixed(1)} months`:d>=1?`${d.toFixed(1)} days`:`${(d*24).toFixed(1)} hours`};
@@ -2285,7 +2344,7 @@ function renderZRPage(){const side=$('zrForm'),main=$('zrMain');const d=zrData()
  if(!zrOpenSet.size&&curI>=0){let k='L.'+curI;zrOpenSet.add(k);let l2=zrKids(L1[curI],fSign,yd),j=l2.findIndex(q=>now>=q.start&&now<q.end);if(j>=0){k+='.'+j;zrOpenSet.add(k)}}
  $('zrTitle').textContent=`Zodiacal releasing from ${PT[d.key][1].replace('Lot of ','')}`;
  $('zrSub').innerHTML=`${esc(d.A.name)} · ${PT[d.key][1]} at ${posStr(d.lot)} · Fortune in ${SIGN_N[fSign]} · ${yd}-day years`;
- const sel=L1[zrSel],L2=zrKids(sel,fSign,yd),decT=[];for(let a=0;a<=100;a+=10)decT.push([birth+a*31557600000,a===100?'':`${a}`]);
+ zrW=Math.max(260,Math.round((main.clientWidth||1000)-30));const sel=L1[zrSel],L2=zrKids(sel,fSign,yd),decT=[];for(let a=0;a<=100;a+=10)decT.push([birth+a*31557600000,a===100?'':`${a}`]);
  const yrT=[];{const y0=new Date(sel.start).getFullYear(),y1=new Date(sel.end).getFullYear(),stp=Math.max(1,Math.ceil((y1-y0)/10));for(let y=y0+1;y<=y1;y+=stp)yrT.push([new Date(y,0,1).getTime(),String(y)])}
  const chainKeys=[];{let lst2=L1,k2='L',ix=curI;while(ix>=0&&lst2[ix]){k2+='.'+ix;chainKeys.push(k2);const p=lst2[ix];if(p.level>=4)break;lst2=zrKids(p,fSign,yd);ix=lst2.findIndex(q=>now>=q.start&&now<q.end)}}
  main.innerHTML=`<div class="zrnow">${[0,1,2,3].map(i=>{const p=chain[i];return p?`<div class="zrcard${p.peak==='major'?' peak':''}" data-obj="zr:${chainKeys[i]}" role="button" tabindex="0"><span class="note">${ZR_LEVEL_N[i]}</span><div class="zrc-sign"><span class="zs" style="color:${S.elemColors?`var(--${ELEM[p.sign%4]})`:'inherit'}">${SIGN_G[p.sign]+VS}</span> ${SIGN_N[p.sign]}</div><div class="zd note">${fmtDate(p.start)} → ${fmtDate(p.end)}</div><div>${zrBadges(p)||'<span class="note">—</span>'}</div></div>`:''}).join('')}</div>
@@ -2295,6 +2354,35 @@ function renderZRPage(){const side=$('zrForm'),main=$('zrMain');const d=zrData()
 $('zrView').addEventListener('click',e=>{const o=e.target.closest('[data-obj^="zr:"]');if(o){const ob=o.dataset.obj,x=e.clientX,y=e.clientY;setTimeout(()=>showInfo(ob,x,y),0)}
  const a=e.target.closest('[data-l1]');if(a){zrSel=+a.dataset.l1;zrOpenSet.add('L.'+zrSel);renderZRPage();return}
  const x=e.target.closest('[data-zx]');if(x){const k=x.dataset.zx;zrOpenSet.has(k)?zrOpenSet.delete(k):zrOpenSet.add(k);const top=k.split('.')[1];if(k.split('.').length===2)zrSel=+top;renderZRPage()}});
+
+/* ---------- personal readings page ---------- */
+const READ_TO='dvstin@tuta.com';
+$('readBtn').onclick=()=>setView('reading');
+function noOrphans(root){(root||document).querySelectorAll('.readpg p,.readpg li,.sitefoot p,.readcard p').forEach(el=>{const w=document.createTreeWalker(el,NodeFilter.SHOW_TEXT);let last=null,n;while(n=w.nextNode())if(n.nodeValue.trim())last=n;if(last)last.nodeValue=last.nodeValue.replace(/\s+(\S+\s*)$/,'\u00a0$1')})}
+noOrphans();
+const READ_BASE=108,READ_ADD=49;
+function readTotal(){const n=[$('rAcg'),$('rPalm')].filter(x=>x.checked);const t=READ_BASE+READ_ADD*n.length;$('rTotal').innerHTML=`Total: <b>$${t}</b> <span class="muted">(natal chart reading${n.map(x=>' + '+x.value.toLowerCase()).join('')})</span>`;return t}
+$('rAcg').addEventListener('change',readTotal);$('rPalm').addEventListener('change',readTotal);
+function prepReading(){readTotal();const A=byId(activeId);$('rFill').hidden=!!A.now;$('rTimeUnk').onchange=()=>{$('rTime').disabled=$('rTimeUnk').checked};}
+$('rFill').onclick=()=>{const A=byId(activeId);if(A.now)return;$('rName').value=$('rName').value||A.name;$('rDate').value=`${A.y}-${String(A.mo).padStart(2,'0')}-${String(A.d).padStart(2,'0')}`;
+ if(A.timeUnknown){$('rTimeUnk').checked=true;$('rTime').disabled=true;$('rTime').value=''}else{$('rTimeUnk').checked=false;$('rTime').disabled=false;$('rTime').value=`${String(A.h).padStart(2,'0')}:${String(A.mi).padStart(2,'0')}`}
+ $('rPlace').value=A.place||'';toast('Filled in from '+A.name)};
+function readingText(d){return `Reading request\n\nName: ${d.name}\nEmail: ${d.email}\nBirth date: ${d.birth_date}\nBirth time: ${d.birth_time}\nBirth place: ${d.birth_place}\nAdd-ons: ${d.addons}\nTotal: ${d.total}\n\nFocus / questions:\n${d.message||'(none)'}\n`}
+$('readForm').addEventListener('submit',async e=>{e.preventDefault();const err=$('rErr');err.hidden=true;if($('rHoney').value)return;
+ const d={name:$('rName').value.trim(),email:$('rEmail').value.trim(),birth_date:$('rDate').value,birth_time:$('rTimeUnk').checked?'Unknown':($('rTime').value||''),birth_place:$('rPlace').value.trim(),
+  addons:[$('rAcg'),$('rPalm')].filter(x=>x.checked).map(x=>x.value).join(', ')||'None',total:'$'+readTotal(),message:$('rMsg').value.trim()};
+ const miss=[];if(!d.name)miss.push('your name');if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(d.email))miss.push('a valid email');if(!d.birth_date)miss.push('your birth date');if(!d.birth_time)miss.push('your birth time (or tick “I don’t know”)');if(!d.birth_place)miss.push('your birth place');
+ if(miss.length){err.hidden=false;err.textContent='Please add '+andList(miss.join(', '))+'.';return}
+ const btn=$('rSend');btn.disabled=true;btn.textContent='Sending…';let ok=false;
+ try{const r=await fetch('https://formsubmit.co/ajax/'+READ_TO,{method:'POST',headers:{'Content-Type':'application/json',Accept:'application/json'},body:JSON.stringify({...d,_subject:`Reading request from ${d.name}`,_replyto:d.email,_template:'table',_captcha:'false'})});
+  if(r.ok){const j=await r.json().catch(()=>({}));ok=!(j&&(j.success===false||j.success==='false'))}}catch(x){ok=false}
+ btn.disabled=false;btn.textContent='Send request';
+ const mail=`mailto:${READ_TO}?subject=${encodeURIComponent('Reading request from '+d.name)}&body=${encodeURIComponent(readingText(d))}`;
+ $('readForm').hidden=true;const done=$('readDone');done.hidden=false;
+ done.innerHTML=ok?`<h3>Thank you, ${esc(d.name.split(' ')[0])}!</h3><p>Your request is on its way. I’ll reply to <b>${esc(d.email)}</b> soon to confirm the details.</p><button class="btn ghost" type="button" id="rAgain">Send another request</button>`
+  :`<h3>Almost there</h3><p>The form couldn’t send directly from this page, so your email app should open with your request already written. Just press send. If it doesn’t open, <a href="${mail}">click here</a> or email <b>${READ_TO}</b>.</p><button class="btn ghost" type="button" id="rAgain">Back to the form</button>`;
+ if(!ok){try{location.href=mail}catch(x){}}
+ $('rAgain').onclick=()=>{done.hidden=true;$('readForm').hidden=false;if(ok){$('readForm').reset();readTotal()}}});
 
 /* ---------- boot ---------- */
 if(mode==='acg')mode='natal';
