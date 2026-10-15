@@ -318,6 +318,12 @@ body.mapfs{overflow:hidden}
  .main.sidecol .stage{--ww:max(420px,min(1180px,calc(100vh - 240px)))}
  .main.sidecol .wheelwrap{max-width:var(--ww)}.main.sidecol .stage>.chartbar,.main.sidecol .stage>.dial,.main.sidecol .stage>.reloc{max-width:max(760px,var(--ww))}
  .main.sidecol #stage>#acgWrap,.main.sidecol #stage>#relocBar,.main.sidecol #stage:has(>#acgWrap:not([hidden]))>.chartbar,.main.sidecol #stage:has(>#acgWrap:not([hidden]))>.dial{max-width:max(560px,min(100%,calc((100vh - 250px)*1.818)))}}
+.stage{overflow:clip;position:relative}
+.stage>.wheelwrap,.stage #wheel{overflow:visible}
+.stage>.chartbar,.stage>.dial,.stage>.reloc{position:relative;z-index:2}
+.stage.wzoomed:not(.fs)>.chartbar,.stage.wzoomed:not(.fs)>.dial{background:color-mix(in srgb,var(--panel) 82%,transparent);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);border-radius:14px;box-shadow:0 0 0 6px color-mix(in srgb,var(--panel) 82%,transparent)}
+.wheelwrap .wzoom{z-index:3}
+@media (min-width:981px){.main.sidecol .sidetog{height:76px;width:34px;border-radius:12px}}
 .dial.shifted .when{color:var(--lilac)}
 .dial.shifted #reset{background:var(--lilac);color:var(--accent-ink);border-color:transparent}
 .dial.shifted #reset:hover{filter:brightness(1.08)}
@@ -2215,7 +2221,7 @@ svg.addEventListener('click',e=>{const t=e.target.closest('[data-obj]');if(!t)re
 /* ---------- wheel zoom: pinch, ctrl/trackpad wheel, double-tap, buttons ---------- */
 const WZ={s:1,cx:400,cy:400};
 function wzApply(){WZ.s=Math.min(6,Math.max(1,WZ.s));const w=800/WZ.s,h=w/2;WZ.cx=Math.min(800-h,Math.max(h,WZ.cx));WZ.cy=Math.min(800-h,Math.max(h,WZ.cy));
- svg.setAttribute('viewBox',`${(WZ.cx-h).toFixed(2)} ${(WZ.cy-h).toFixed(2)} ${w.toFixed(2)} ${w.toFixed(2)}`);const z=WZ.s>1.001;svg.classList.toggle('zoomed',z);$('wzReset').hidden=!z;$('wzOut').disabled=!z}
+ svg.setAttribute('viewBox',`${(WZ.cx-h).toFixed(2)} ${(WZ.cy-h).toFixed(2)} ${w.toFixed(2)} ${w.toFixed(2)}`);const z=WZ.s>1.001;svg.classList.toggle('zoomed',z);$('stage').classList.toggle('wzoomed',z);$('wzReset').hidden=!z;$('wzOut').disabled=!z}
 function wzAt(ns,fx,fy){const w0=800/WZ.s,px=WZ.cx-w0/2+fx*w0,py=WZ.cy-w0/2+fy*w0;WZ.s=Math.min(6,Math.max(1,ns));const w=800/WZ.s;WZ.cx=px-fx*w+w/2;WZ.cy=py-fy*w+w/2;wzApply()}
 const wzFrac=(x,y)=>{const r=svg.getBoundingClientRect();return [(x-r.left)/r.width,(y-r.top)/r.height]};
 $('wzIn').onclick=()=>wzAt(WZ.s*1.5,.5,.5);$('wzOut').onclick=()=>wzAt(WZ.s/1.5,.5,.5);$('wzReset').onclick=()=>{WZ.s=1;WZ.cx=WZ.cy=400;wzApply()};
