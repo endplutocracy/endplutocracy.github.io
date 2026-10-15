@@ -10,6 +10,7 @@ Destinned bundles the following data, code, fonts and images.
   - Using the site yourself, or sharing it freely with the AGPL's conditions met (offering the source, which here means `index.html` itself), is covered by the AGPL.
   - A commercial or closed-source deployment needs the professional license from Astrodienst. https://www.astro.com/swisseph/
 - **Fixed star positions** are from the Swiss Ephemeris star catalogue (`sefstars.txt`), under the same terms as above.
+- **Uranian (Hamburg School) points** use the orbital elements of Witte and Sieggrün as refined by James Neely, as published in the Swiss Ephemeris file `seorbel.txt`, under the same terms as above.
 - **Asteroid 6583 Destinn:** computed by numerical integration from orbital elements published in the JPL Small-Body Database, a US government work.
 
 ## Places and maps
