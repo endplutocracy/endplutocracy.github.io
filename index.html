@@ -315,9 +315,9 @@ body.mapfs{overflow:hidden}
  .main.sidecol .tabs,.main.sidecol #pane{display:none}
  .main.sidecol .sidetog{margin:12px 0 0}
  .main.sidecol .sidetog svg{transform:rotate(180deg)}
- .main.sidecol .stage{--ww:clamp(722px,calc(100vh - 250px),1180px)}
+ .main.sidecol .stage{--ww:max(420px,min(1180px,calc(100vh - 240px)))}
  .main.sidecol .wheelwrap{max-width:var(--ww)}.main.sidecol .stage>.chartbar,.main.sidecol .stage>.dial,.main.sidecol .stage>.reloc{max-width:max(760px,var(--ww))}
- .main.sidecol #stage>#acgWrap,.main.sidecol #stage>#relocBar,.main.sidecol #stage:has(>#acgWrap:not([hidden]))>.chartbar,.main.sidecol #stage:has(>#acgWrap:not([hidden]))>.dial{max-width:max(1000px,min(100%,calc((100vh - 250px)*1.818)))}}
+ .main.sidecol #stage>#acgWrap,.main.sidecol #stage>#relocBar,.main.sidecol #stage:has(>#acgWrap:not([hidden]))>.chartbar,.main.sidecol #stage:has(>#acgWrap:not([hidden]))>.dial{max-width:max(560px,min(100%,calc((100vh - 250px)*1.818)))}}
 .dial.shifted .when{color:var(--lilac)}
 .dial.shifted #reset{background:var(--lilac);color:var(--accent-ink);border-color:transparent}
 .dial.shifted #reset:hover{filter:brightness(1.08)}
@@ -336,12 +336,14 @@ body.mapfs{overflow:hidden}
 .reloc .rltxt{flex:1 1 260px;font-size:.9rem}
 .reloc .rlpick{position:relative;flex:1 1 200px;min-width:180px}
 .reloc .rlpick .f{width:100%}
-@media (min-width:981px){.wheelwrap{width:95%;max-width:722px}}
+@media (min-width:981px){.stage{--ww:max(420px,min(722px,calc(100vh - 240px)))}.wheelwrap{width:95%;max-width:var(--ww)}
+ #stage>#acgWrap,#stage>#relocBar{max-width:min(1000px,max(560px,calc((100vh - 250px)*1.818)))}
+ .tarot-main .spread{max-width:min(780px,max(420px,calc((100vh - 200px)*1.226)))}}
 @media (min-width:1400px){.main{grid-template-columns:minmax(0,1.4fr) minmax(520px,1fr)}
- .stage{--ww:clamp(722px,calc(100vh - 250px),1180px)}
+ .stage{--ww:max(420px,min(1180px,calc(100vh - 240px)))}
  .wheelwrap{max-width:var(--ww)}.stage>.chartbar,.stage>.dial,.stage>.reloc{max-width:max(760px,var(--ww))}
- .tarot-main .spread{max-width:max(780px,min(100%,calc((100vh - 230px)*1.226)))}
- #stage>#acgWrap,#stage>#relocBar,#stage:has(>#acgWrap:not([hidden]))>.chartbar,#stage:has(>#acgWrap:not([hidden]))>.dial{max-width:max(1000px,min(100%,calc((100vh - 250px)*1.818)))}}
+ .tarot-main .spread{max-width:max(420px,min(100%,calc((100vh - 200px)*1.226)))}
+ #stage>#acgWrap,#stage>#relocBar,#stage:has(>#acgWrap:not([hidden]))>.chartbar,#stage:has(>#acgWrap:not([hidden]))>.dial{max-width:max(560px,min(100%,calc((100vh - 250px)*1.818)))}}
 
 /* ---------- themes: Oled (black and white) and Paper (white and black) ---------- */
 html[data-theme="oled"]{--bg:#000;--bg-deep:#000;--panel:#000;--raised:#141414;--line:#2b2b2b;--fg:#f0f0f0;--muted:#9b9b9b;--accent:#fff;--accent-dim:#5c5c5c;--accent-ink:#000;--lilac:#fff;
