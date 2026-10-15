@@ -600,7 +600,7 @@ h1,h2,h3,h4,.readh{text-wrap:balance}
         <button class="iconbtn" id="back" type="button" aria-label="Step back">◀</button>
         <button class="iconbtn" id="fwd" type="button" aria-label="Step forward">▶</button>
         <button class="iconbtn" id="reset" type="button" title="Reset to now" aria-label="Reset"><span class="rlbl">Reset</span><svg class="rico" viewBox="0 0 24 24" aria-hidden="true"><path d="M4.6 9.2A8 8 0 1 1 4 12"/><path d="M4 5v4.4h4.4"/><path d="M12 7.6V12l3 2"/></svg></button>
-        <button class="iconbtn lockbtn" id="wLock" type="button" title="Lock the wheel: keep the houses and angles still while the planets move" aria-label="Lock the wheel" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="10.5" width="14" height="10" rx="2.2"/><path class="shk" d="M8.5 10.5V7.5a3.5 3.5 0 0 1 7 0v3"/></svg></button>
+        <button class="iconbtn lockbtn" id="wLock" type="button" title="Lock the wheel: keep it from turning while the time moves" aria-label="Lock the wheel" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="10.5" width="14" height="10" rx="2.2"/><path class="shk" d="M8.5 10.5V7.5a3.5 3.5 0 0 1 7 0v3"/></svg></button>
       </div>
       <div class="jog" id="jog" aria-label="Drag to move through time" role="slider" tabindex="0" aria-valuetext="Time dial"><div class="ticks" id="ticks"></div><span class="hint">drag · <span class="kbd">←</span><span class="kbd">→</span> step · <span class="kbd">N</span> reset</span></div>
       <div class="note" id="stageNote"></div>
@@ -1163,11 +1163,10 @@ function compute(){
  if(mode==='relocated'&&(!reloc||reloc.id!==A.id)){reloc=A.cur?{id:A.id,lat:A.cur.lat,lon:A.cur.lon,label:A.cur.place}:null}
  const shiftNatal=mode==='natal'||mode==='relocated'||mode==='draconic'||mode==='acg'?offsetMin:0;
  out.inner=castChart(A,shiftNatal);
- out.lockable=['natal','relocated','draconic'].includes(mode)&&!out.inner.noHouses;
+ out.lockable=['natal','relocated','draconic'].includes(mode)&&!out.inner.noHouses&&S.chartStyle!=='north'&&S.chartStyle!=='south';
  if(S.wheelLock&&out.lockable){const key=A.id+'|'+mode+'|'+(mode==='relocated'&&reloc?reloc.lat+','+reloc.lon:'');
-  if(!lockSnap||lockSnap.key!==key)lockSnap={key,ms:chartUtc(A)+shiftNatal*60000,cusps:[...out.inner.cusps],ang:Object.fromEntries(['asc','mc','dsc','ic'].map(k=>[k,out.inner.pts[k].lon]))};
-  else{out.inner.cusps=[...lockSnap.cusps];['asc','mc','dsc','ic'].forEach(k=>{out.inner.pts[k]={...out.inner.pts[k],lon:lockSnap.ang[k]}})}
-  out.inner.locked=true;out.notes.push(`Wheel locked: houses and angles held at ${fmtFor(lockSnap.ms,A)}; planets move with the time.`)}
+  if(!lockSnap||lockSnap.key!==key)lockSnap={key,ms:chartUtc(A)+shiftNatal*60000,asc:out.inner.pts.asc.lon};
+  out.inner.locked=true;out.notes.push(`Wheel locked in the orientation of ${fmtFor(lockSnap.ms,A)}; the planets, houses and angles move with the time.`)}
  const target=Date.now()+offsetMin*60000;
  if(mode==='transits'){const useCur=S.transitLoc==='current'&&A.cur,L=useCur?A.cur:A;out.outer=Calc.cast(target,L.lat,L.lon,opt());out.outer.label='Transits';out.targetMs=target;out.transitPlace=useCur?A.cur.place:(A.place||'birthplace');out.transitCur=!!useCur}
  if(mode==='synastry'){const B=otherId&&byId(otherId);if(B&&B.id!==A.id){out.outer=castChart(B,offsetMin);out.outer.label=B.name}else out.notes.push('Choose a second chart for synastry from the library (the ⇄ button on any chart).')}
@@ -1308,7 +1307,7 @@ function renderVedic(v){svg.replaceChildren();const inner=v.inner,outer=v.outer,
 function renderWheel(v){
  if(S.chartStyle==='north'||S.chartStyle==='south'){renderVedic(v);return}
  svg.replaceChildren();const inner=v.inner,outer=v.outer,bi=!!outer,Ly=S.layers;
- const ascLon=inner.noHouses?0:inner.pts.asc.lon;rot=180-ascLon;
+ const ascLon=inner.noHouses?0:inner.pts.asc.lon;rot=180-(inner.locked&&lockSnap?lockSnap.asc:ascLon);
  const nr=['terms','decans','naks'].filter(k=>Ly[k]).length;
  const Z1=Ly.stars?382:394,Z2=Z1-50,base=Z2-22*nr,IN=bi?base-176:base-130;
  const bandKeys=[...['terms','decans','naks'].filter(k=>Ly[k]),...(bi?['outer']:[]),'inner'],BC={};
@@ -1409,7 +1408,7 @@ function renderAll(){const A=byId(activeId);if(view==='eph'){try{saveEphState();
  else{whenMs=Date.now()+offsetMin*60000;whenLabel='Target date'}
  $('when').innerHTML=`${esc(A.timeUnknown&&mode==='natal'?fmtDate(whenMs):fmtFor(whenMs,mode==='synastry'&&otherId?byId(otherId):mode==='transits'&&v.transitCur?A.cur:A))}${offsetMin?` <span class="badge shiftb" title="Moved from ${byId(activeId).now?'now':'the chart time'}">${fmtShift(offsetMin)}</span>`:''}<small>${esc(whenLabel)}</small>`;
  $('shiftBadge').hidden=true;document.querySelector('.dial').classList.toggle('shifted',!!offsetMin);
- $('stageNote').textContent=v.notes.join(' ');{const lb=$('wLock');lb.hidden=!v.lockable;lb.setAttribute('aria-pressed',String(!!(S.wheelLock&&v.lockable)));lb.title=lb.ariaLabel=S.wheelLock?'Unlock the wheel':'Lock the wheel: keep the houses and angles still while the planets move'}
+ $('stageNote').textContent=v.notes.join(' ');{const lb=$('wLock');lb.hidden=!v.lockable;lb.setAttribute('aria-pressed',String(!!(S.wheelLock&&v.lockable)));lb.title=lb.ariaLabel=S.wheelLock?'Unlock the wheel':'Lock the wheel: keep it from turning while the time moves'}
  $('engineNote').textContent=Calc.engine()==='Approximate orbital elements'?'Approximate ephemeris':'';
  document.querySelectorAll('#tabs button').forEach(b=>b.setAttribute('aria-selected',b.dataset.tab===tab));
  if(infoObj&&!$('info').hidden){const h=infoFor(infoObj);if(h)$('infoBody').innerHTML=h;else hideInfo()}
