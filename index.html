@@ -1336,6 +1336,10 @@ function renderWheel(v){
  const aspR=IN-26;svg.append(el('circle',{cx:C,cy:C,r:aspR,fill:'var(--asp-field)',stroke:'none'}));pairs.forEach(p=>{const [x1,y1]=pt((outer||inner).pts[p.b].lon,aspR),[x2,y2]=pt(inner.pts[p.a].lon,aspR);
   svg.append(el('line',{x1,y1,x2,y2,stroke:aspectColor(p.asp),'stroke-width':(p.asp.orb<1?1.1:p.asp.orb<3?.8:.6)*(outer?.75:1),'stroke-linecap':'round',opacity:p.asp.cls==='minor'?.85:1,'stroke-dasharray':p.asp.cls==='minor'?'5 4':'none'}));svg.append(hit({x1,y1,x2,y2,stroke:'transparent','stroke-width':12},`asp:${bi?'o':'i'}:${p.b}:${p.a}`))});
  svg.append(el('circle',{cx:C,cy:C,r:aspR,fill:'none',stroke:'var(--w-line)'}));
+ if(bi&&mode==='progressed'&&outer.pts.asc){[['asc','ASC'],['mc','MC'],['dsc','DC'],['ic','IC']].forEach(([k,l])=>{const lon=outer.pts[k].lon,[a,b]=pt(lon,base),[c,d]=pt(lon,base-84);
+   svg.append(el('line',{x1:a,y1:b,x2:c,y2:d,stroke:'var(--lilac)','stroke-width':1.5,'stroke-dasharray':'6 4',opacity:.9,class:'pang'}));
+   const [t1,t2]=pt(lon,Z2+14),[t3,t4]=pt(lon,Z2);svg.append(el('line',{x1:t1,y1:t2,x2:t3,y2:t4,stroke:'var(--lilac)','stroke-width':2.6,'stroke-linecap':'round','stroke-dasharray':'3 2.5',class:'pang'}));
+   const [lx,ly]=pt(lon+(k==='asc'||k==='dsc'?3.4:-3.4),base-72);const t=el('text',{x:lx,y:ly,'text-anchor':'middle','dominant-baseline':'central','font-size':11.5,'font-weight':700,fill:'var(--lilac)','font-family':'var(--mono)'},'p'+l);t.append(el('title',{},`Progressed ${PT[k][1]} ${deg(lon).txt} ${SIGN_N[deg(lon).s]}`));svg.append(t);svg.append(hit({cx:lx,cy:ly,r:14,fill:'transparent'},`pt:o:${k}`))})}
  if(bi){drawPlanets(svg,outer,base-30,base-62,base,base-10,false,false,base);drawPlanets(svg,inner,base-110,base-140,IN,IN+10,false,true,base-84)}
  else drawPlanets(svg,inner,base-46,base-90,IN,IN+10,true,false,base);
  [...svg.querySelectorAll('.hit')].sort((a,b)=>(a.dataset.obj.startsWith('pt:')?1:0)-(b.dataset.obj.startsWith('pt:')?1:0)).forEach(e=>svg.append(e));
