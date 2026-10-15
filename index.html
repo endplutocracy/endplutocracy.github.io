@@ -303,6 +303,21 @@ body.mapfs{overflow:hidden}
 .psec[open]>summary::before{transform:rotate(45deg)}
 .psec>summary h3{margin:0}.psec>summary:hover h3{color:var(--fg)}
 .psec{margin:14px 0 4px}
+.sidehead{display:flex;align-items:stretch;border-bottom:1px solid var(--line);min-width:0}
+.sidehead .tabs{flex:1;border-bottom:0;min-width:0}
+.sidetog{display:none;flex:none;align-self:center;width:32px;height:32px;margin:8px 0 0 10px;border-radius:9px;border:0;background:var(--lilac);color:var(--accent-ink);cursor:pointer;place-items:center;box-shadow:0 2px 10px -3px rgba(0,0,0,.5);transition:filter .15s,transform .15s}
+.sidetog:hover{filter:brightness(1.1)}.sidetog:active{transform:scale(.94)}
+.sidetog svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;transition:transform .2s}
+@media (min-width:981px){.sidetog{display:grid}
+ .main.sidecol{grid-template-columns:minmax(0,1fr) 52px!important}
+ .main.sidecol .side{grid-template-rows:auto;align-content:start}
+ .main.sidecol .sidehead{border-bottom:0;justify-content:center}
+ .main.sidecol .tabs,.main.sidecol #pane{display:none}
+ .main.sidecol .sidetog{margin:12px 0 0}
+ .main.sidecol .sidetog svg{transform:rotate(180deg)}
+ .main.sidecol .stage{--ww:clamp(722px,calc(100vh - 250px),1180px)}
+ .main.sidecol .wheelwrap{max-width:var(--ww)}.main.sidecol .stage>.chartbar,.main.sidecol .stage>.dial,.main.sidecol .stage>.reloc{max-width:max(760px,var(--ww))}
+ .main.sidecol #stage>#acgWrap,.main.sidecol #stage>#relocBar,.main.sidecol #stage:has(>#acgWrap:not([hidden]))>.chartbar,.main.sidecol #stage:has(>#acgWrap:not([hidden]))>.dial{max-width:max(1000px,min(100%,calc((100vh - 250px)*1.818)))}}
 .dial.shifted .when{color:var(--lilac)}
 .dial.shifted #reset{background:var(--lilac);color:var(--accent-ink);border-color:transparent}
 .dial.shifted #reset:hover{filter:brightness(1.08)}
@@ -622,13 +637,14 @@ h1,h2,h3,h4,.readh{text-wrap:balance}
       <div class="note" id="stageNote"></div>
     </div>
   </div>
-  <div class="side">
+  <div class="side" id="side">
+    <div class="sidehead"><button class="sidetog" id="sideTog" type="button" aria-expanded="true" aria-controls="pane" title="Hide panel" aria-label="Hide panel"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></button>
     <div class="tabs" role="tablist" id="tabs">
       <button role="tab" data-tab="pos" aria-selected="true">Positions</button>
       <button role="tab" data-tab="asp" aria-selected="false">Aspects</button>
       <button role="tab" data-tab="zr" aria-selected="false">Releasing</button>
       <button role="tab" data-tab="info" aria-selected="false">Chart</button>
-    </div>
+    </div></div>
     <div class="pane" id="pane"></div>
   </div>
 </div>
@@ -1467,7 +1483,9 @@ $('pane').addEventListener('click',e=>{const z=e.target.closest('[data-zr]');if(
 // time dial
 const stepMin=()=>+$('step').value;$('step').value=S.step;$('step').addEventListener('change',()=>{S.step=$('step').value;saveSet()});
 const nudge=n=>{offsetMin+=n*stepMin();renderAll()};
-$('back').onclick=()=>nudge(-1);$('fwd').onclick=()=>nudge(1);$('reset').onclick=()=>{offsetMin=0;renderAll()};$('wLock').onclick=()=>{S.wheelLock=!S.wheelLock;lockSnap=null;saveSet();renderAll()};
+$('back').onclick=()=>nudge(-1);$('fwd').onclick=()=>nudge(1);$('reset').onclick=()=>{offsetMin=0;renderAll()};function sideSet(c){$('chartView').classList.toggle('sidecol',c);const b=$('sideTog');b.setAttribute('aria-expanded',String(!c));b.title=b.ariaLabel=c?'Show panel':'Hide panel';setTimeout(()=>dispatchEvent(new Event('resize')),0)}
+$('sideTog').onclick=()=>{S.sideCol=!$('chartView').classList.contains('sidecol');saveSet();sideSet(S.sideCol)};sideSet(!!S.sideCol);
+$('wLock').onclick=()=>{S.wheelLock=!S.wheelLock;lockSnap=null;saveSet();renderAll()};
 let jog=null,raf=0,pending=0;const ticks=$('ticks');
 $('jog').addEventListener('pointerdown',e=>{jog={x:e.clientX,acc:0};$('jog').setPointerCapture(e.pointerId)});
 $('jog').addEventListener('pointermove',e=>{if(!jog)return;const dx=e.clientX-jog.x;jog.x=e.clientX;jog.acc+=dx;ticks.style.transform=`translateX(${(jog.acc%60)}px)`;
