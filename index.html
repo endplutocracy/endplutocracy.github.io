@@ -277,10 +277,15 @@ tr.clk:hover td,td.clk:hover{background:var(--raised)}
 @media (max-width:820px){.vlbl{display:none}}
 @media (max-width:600px){#views{margin-left:10px}.top{column-gap:6px}}
 @media (max-width:380px){#views{margin-left:6px}.top .seg button.vbtn{padding:5px 5px}}
-.stage.fs{position:fixed;inset:0;z-index:33;background:var(--bg);overflow:auto;border:0;display:flex;flex-direction:column;align-items:center;justify-content:safe center;gap:10px;padding:calc(10px + env(safe-area-inset-top,0px)) 12px calc(10px + env(safe-area-inset-bottom,0px));--fsw:min(calc(100vw - 24px),calc(100dvh - 190px))}
-.stage.fs>*{width:max(var(--fsw),min(100%,620px))!important;max-width:100%!important;margin:0!important}
-.stage.fs .wheelwrap{width:var(--fsw)!important;flex:none}
-@media (max-width:600px){.stage.fs{--fsw:min(calc(100vw - 24px),calc(100dvh - 260px))}}
+.stage.fs{position:fixed;inset:0;z-index:33;background:var(--bg);overflow:hidden;border:0;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;gap:8px;padding:calc(10px + env(safe-area-inset-top,0px)) 10px calc(10px + env(safe-area-inset-bottom,0px));--fsw:min(100vw,100dvh)}
+.stage.fs>.wheelwrap{position:absolute!important;z-index:0;left:calc(50% - var(--fsw)/2);top:calc(50% - var(--fsw)/2);width:var(--fsw)!important;max-width:none!important;margin:0!important}
+.stage.fs>.chartbar,.stage.fs>.reloc,.stage.fs>.dial{position:relative;z-index:2;width:fit-content!important;max-width:min(760px,100%)!important;margin:0!important;background:color-mix(in srgb,var(--panel) 78%,transparent);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);border-radius:14px;padding:8px 10px;box-shadow:0 10px 30px -12px rgba(0,0,0,.55),0 0 0 1px color-mix(in srgb,var(--line) 70%,transparent)}
+.stage.fs>.dial{margin-top:auto!important;width:min(620px,100%)!important}
+.stage.fs>.dial .note:empty{display:none}
+.stage.fs>.wheelwrap,.stage.fs #wheel{overflow:visible}
+body.wheelfs .layers,body.wheelfs .menu{z-index:36}
+.stage.fs .wzoom{position:fixed;right:calc(14px + env(safe-area-inset-right,0px));bottom:auto;top:50%;transform:translateY(-50%)}
+@media (max-width:600px){.stage.fs .wzoom{top:calc(env(safe-area-inset-top,0px) + 92px);transform:none}}
 .wheelwrap.fs .wzoom{right:calc(14px + env(safe-area-inset-right,0px));bottom:calc(14px + env(safe-area-inset-bottom,0px))}
 .mapwrap.fs{position:fixed;inset:0;z-index:33;max-width:none;width:auto;aspect-ratio:auto;border-radius:0;border:0;margin:0}
 .mapwrap.fs .wzoom{right:calc(14px + env(safe-area-inset-right,0px));bottom:calc(14px + env(safe-area-inset-bottom,0px))}
