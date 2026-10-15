@@ -1320,7 +1320,7 @@ function renderWheel(v){
  if(!inner.noHouses){inner.cusps.forEach((c,i)=>{const ang=i%3===0;const [a,b]=pt(c,base),[x,y]=pt(c,IN);
    svg.append(el('line',{x1:a,y1:b,x2:x,y2:y,stroke:ang?'var(--fg)':'var(--line)','stroke-width':ang?1.6:1,opacity:ang?.8:1}));
    const mid=c+n360(inner.cusps[(i+1)%12]-c)/2,[hx,hy]=pt(mid,IN-14);svg.append(hit({d:sector(IN,IN-26,c,inner.cusps[(i+1)%12]),fill:'transparent'},`house:${i+1}`));svg.append(el('text',{x:hx,y:hy,'text-anchor':'middle','dominant-baseline':'central','font-size':12,fill:'var(--muted)','font-family':'var(--mono)'},i+1))});
-  [['asc','ASC'],['mc','MC'],['dsc','DC'],['ic','IC']].forEach(([k,l])=>{const lon=inner.pts[k].lon;const [lx,ly]=pt(lon+(k==='asc'||k==='dsc'?-3.2:3.2),base-22);
+  [['asc','ASC'],['mc','MC'],['dsc','DC'],['ic','IC']].forEach(([k,l])=>{const lon=inner.pts[k].lon;{const [t1,t2]=pt(lon,Z2+14),[t3,t4]=pt(lon,Z2),[t5,t6]=pt(lon,base),[t7,t8]=pt(lon,base-12);svg.append(el('line',{x1:t1,y1:t2,x2:t3,y2:t4,stroke:'var(--lilac)','stroke-width':2.6,'stroke-linecap':'round',class:'angtick'}));svg.append(el('line',{x1:t5,y1:t6,x2:t7,y2:t8,stroke:'var(--lilac)','stroke-width':2.6,class:'angtick'}))}const [lx,ly]=pt(lon+(k==='asc'||k==='dsc'?-3.2:3.2),base-22);
    svg.append(el('text',{x:lx,y:ly,'text-anchor':'middle','dominant-baseline':'central','font-size':13,'font-weight':700,fill:'var(--lilac)','font-family':'var(--mono)'},l));svg.append(hit({cx:lx,cy:ly,r:14,fill:'transparent'},`pt:i:${k}`))});}
  const pairs=aspectPairs(inner,outer||null).filter(p=>p.asp.k!=='conj');
  const aspR=IN-26;svg.append(el('circle',{cx:C,cy:C,r:aspR,fill:'var(--asp-field)',stroke:'none'}));pairs.forEach(p=>{const [x1,y1]=pt((outer||inner).pts[p.b].lon,aspR),[x2,y2]=pt(inner.pts[p.a].lon,aspR);
