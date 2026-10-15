@@ -316,6 +316,10 @@ body.mapfs{overflow:hidden}
 .reloc .rlpick{position:relative;flex:1 1 200px;min-width:180px}
 .reloc .rlpick .f{width:100%}
 @media (min-width:981px){.wheelwrap{width:95%;max-width:722px}}
+@media (min-width:1400px){.main{grid-template-columns:minmax(0,1.4fr) minmax(520px,1fr)}
+ .stage{--ww:clamp(722px,calc(100vh - 250px),1180px)}
+ .wheelwrap{max-width:var(--ww)}.stage>.chartbar,.stage>.dial,.stage>.reloc{max-width:max(760px,var(--ww))}
+ #stage>#acgWrap,#stage>#relocBar,#stage:has(>#acgWrap:not([hidden]))>.chartbar,#stage:has(>#acgWrap:not([hidden]))>.dial{max-width:max(1000px,min(100%,calc((100vh - 250px)*1.818)))}}
 
 /* ---------- themes: Oled (black and white) and Paper (white and black) ---------- */
 html[data-theme="oled"]{--bg:#000;--bg-deep:#000;--panel:#000;--raised:#141414;--line:#2b2b2b;--fg:#f0f0f0;--muted:#9b9b9b;--accent:#fff;--accent-dim:#5c5c5c;--accent-ink:#000;--lilac:#fff;
@@ -2197,7 +2201,7 @@ svg.addEventListener('pointermove',e=>{if(!wzP.has(e.pointerId)||!wzG)return;wzP
 const wzEnd=e=>{wzP.delete(e.pointerId);svg.classList.remove('panning');if(wzP.size===1&&wzG&&wzG.t==='pinch'){const [a]=[...wzP.values()];wzG={t:'pan',x:a.x,y:a.y,cx:WZ.cx,cy:WZ.cy}}else if(!wzP.size)wzG=null};
 ['pointerup','pointercancel','pointerleave'].forEach(t=>svg.addEventListener(t,wzEnd));
 svg.addEventListener('click',e=>{if(wzMoved){e.stopPropagation();e.preventDefault();wzMoved=false}},true);
-svg.addEventListener('wheel',e=>{if(!e.ctrlKey)return;e.preventDefault();const [fx,fy]=wzFrac(e.clientX,e.clientY);wzAt(WZ.s*Math.exp(-e.deltaY*0.01),fx,fy)},{passive:false});
+svg.addEventListener('wheel',e=>{const fs=$('stage').classList.contains('fs');if(!e.ctrlKey&&!fs)return;e.preventDefault();const [fx,fy]=wzFrac(e.clientX,e.clientY),dy=(e.deltaMode===1?e.deltaY*16:e.deltaY);wzAt(WZ.s*Math.exp(-dy*(e.ctrlKey?0.01:0.0022)),fx,fy)},{passive:false});
 svg.addEventListener('dblclick',e=>{if(e.target.closest('[data-obj]'))return;const [fx,fy]=wzFrac(e.clientX,e.clientY);if(WZ.s>1.001){WZ.s=1;WZ.cx=WZ.cy=400;wzApply()}else wzAt(2.5,fx,fy)});
 wzApply();
 
