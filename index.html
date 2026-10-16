@@ -310,6 +310,8 @@ html[data-theme="paper"] .psec>summary{box-shadow:0 1px 4px rgba(0,0,0,.15)}html
 .psec>summary::-webkit-details-marker{display:none}
 .psec>summary::before{content:'';width:13px;height:13px;flex:none;margin:0 1px 0 0;background:var(--lilac);-webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='6 8.4 7.2 7.2'%3E%3Cpath d='M9.6 8.4 L10.5 11.1 L13.2 12 L10.5 12.9 L9.6 15.6 L8.7 12.9 L6 12 L8.7 11.1 Z'/%3E%3C/svg%3E") center/contain no-repeat;mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='6 8.4 7.2 7.2'%3E%3Cpath d='M9.6 8.4 L10.5 11.1 L13.2 12 L10.5 12.9 L9.6 15.6 L8.7 12.9 L6 12 L8.7 11.1 Z'/%3E%3C/svg%3E") center/contain no-repeat;transition:transform .25s ease}
 .psec[open]>summary::before{transform:rotate(45deg)}
+.psec>summary:hover::before{transform:rotate(45deg)}.psec[open]>summary:hover::before{transform:rotate(90deg)}
+.sidetog:hover svg{transform:rotate(45deg)}.main.sidecol .sidetog:hover svg{transform:rotate(90deg)}
 .psec>summary h3{margin:0}.psec>summary:hover h3{color:var(--fg)}
 .psec{margin:10px 0 4px}
 .sidehead{display:flex;align-items:stretch;border-bottom:1px solid var(--line);min-width:0}
