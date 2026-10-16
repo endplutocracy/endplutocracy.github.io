@@ -393,6 +393,10 @@ html[data-theme="pastel"] .cstyle button:not([aria-pressed="true"]):hover{backgr
 .stage.fs .elemmini{position:fixed;left:calc(14px + env(safe-area-inset-left,0px));top:50%;bottom:auto;transform:translateY(-50%)}
 @media (min-width:981px){.stage.fs .emc{width:50px;height:50px}.stage.fs .emc .elg{width:20px;height:20px}.stage.fs .emc span{font-size:.68rem;bottom:5px}}
 html[data-theme="retro"] .emc{background:linear-gradient(to top,rgba(57,255,106,.4) var(--p),#03140a var(--p));box-shadow:0 0 0 1px #147a34,0 0 8px rgba(57,255,106,.25)}
+.stage:not(.fs) .wheelwrap>.wzoom{right:calc(4px - var(--side,0px))}
+.stage:not(.fs) .wheelwrap>.wlab{right:calc(46px - var(--side,0px))}
+.stage:not(.fs) .wheelwrap>.elemmini{left:calc(4px - var(--side,0px))}
+@media (max-width:860px){.stage:not(.fs) .wheelwrap>.wlab{right:calc(50px - var(--side,0px))}}
 .dial.shifted .when{color:var(--lilac)}
 .dial.shifted #reset{background:var(--lilac);color:var(--accent-ink);border-color:transparent}
 .dial.shifted #reset:hover{filter:brightness(1.08)}
@@ -1679,6 +1683,7 @@ $('back').onclick=()=>nudge(-1);$('fwd').onclick=()=>nudge(1);$('reset').onclick
 $('sideTog').onclick=()=>{S.sideCol=!$('chartView').classList.contains('sidecol');saveSet();sideSet(S.sideCol)};sideSet(!!S.sideCol);
 function wlSync(){[['wlDeg',S.wDeg!==false],['wlMin',S.wMin!==false],['wlSign',!!S.wSign]].forEach(([id,on])=>$(id).setAttribute('aria-pressed',String(on)))}wlSync();
 [['wlDeg','wDeg',true],['wlMin','wMin',true],['wlSign','wSign',false]].forEach(([id,k,d])=>$(id).onclick=e=>{e.stopPropagation();const cur=S[k]===undefined?d:!!S[k];S[k]=!cur;saveSet();wlSync();renderAll()});
+{const sideFit=()=>{const st=$('stage'),w=$('wheelWrap');if(!st||!w||w.hidden)return;const cs=getComputedStyle(st),inner=st.clientWidth-parseFloat(cs.paddingLeft)-parseFloat(cs.paddingRight),gap=(inner-w.offsetWidth)/2;w.style.setProperty('--side',Math.max(0,Math.min(90,gap-6))+'px')};new ResizeObserver(sideFit).observe($('stage'));new ResizeObserver(sideFit).observe($('wheelWrap'));addEventListener('resize',sideFit)}
 $('wLock').onclick=()=>{S.wheelLock=!S.wheelLock;lockSnap=null;saveSet();renderAll()};
 let jog=null,raf=0,pending=0;const ticks=$('ticks');
 $('jog').addEventListener('pointerdown',e=>{jog={x:e.clientX,acc:0};$('jog').setPointerCapture(e.pointerId)});
