@@ -383,14 +383,14 @@ html[data-theme="oled"] .eph-side,html[data-theme="oled"] .stage,html[data-theme
 html[data-theme="oled"] .wzoom button{color:#fff;box-shadow:0 0 0 1px #2a2a2a}html[data-theme="paper"] .wzoom button{color:#111;box-shadow:0 1px 6px rgba(0,0,0,.18)}html[data-theme="paper"] .wzoom button:hover{filter:brightness(.95);color:#111}
 html[data-theme="oled"] .tcard,html[data-theme="paper"] .tcard,html[data-theme="oled"] .zrbar,html[data-theme="paper"] .zrbar,html[data-theme="oled"] #pane,html[data-theme="paper"] #pane,html[data-theme="oled"] .info,html[data-theme="paper"] .info{filter:grayscale(1)}
 html[data-theme="oled"] .tarot-side,html[data-theme="paper"] .tarot-side{background:var(--bg)}
-html[data-theme="oled"] :is(#map,#mapBase) rect[fill="#1b2230"],html[data-theme="oled"] .mapwrap{fill:#000;background:#000}
+html[data-theme="oled"] :is(#map,#mapBase,#mapStyle) rect[fill="#1b2230"],html[data-theme="oled"] .mapwrap{fill:#000;background:#000}
 html[data-theme="oled"] #map stop{stop-color:#000}
-html[data-theme="oled"] :is(#map,#mapBase) .land{fill:#1d1d1d;stroke:#6a6a6a}html[data-theme="oled"] :is(#map,#mapBase) .border{stroke:#555}html[data-theme="oled"] :is(#map,#mapBase) .adm1{stroke:#444}
+html[data-theme="oled"] :is(#map,#mapBase,#mapStyle) .land{fill:#1d1d1d;stroke:#6a6a6a}html[data-theme="oled"] :is(#map,#mapBase,#mapStyle) .border{stroke:#555}html[data-theme="oled"] :is(#map,#mapBase,#mapStyle) .adm1{stroke:#444}
 html[data-theme="oled"] #map text{stroke:#000}
-html[data-theme="paper"] :is(#map,#mapBase) rect[fill="#1b2230"],html[data-theme="paper"] .mapwrap{fill:#fff;background:#fff}
+html[data-theme="paper"] :is(#map,#mapBase,#mapStyle) rect[fill="#1b2230"],html[data-theme="paper"] .mapwrap{fill:#fff;background:#fff}
 html[data-theme="paper"] #map stop{stop-color:#fff}
-html[data-theme="paper"] :is(#map,#mapBase) .land{fill:#e9e9e9;stroke:#9a9a9a}html[data-theme="paper"] :is(#map,#mapBase) .border{stroke:#9a9a9a}html[data-theme="paper"] :is(#map,#mapBase) .adm1{stroke:#b5b5b5}
-html[data-theme="paper"] :is(#map,#mapBase) .grat{stroke:rgba(0,0,0,.07)}
+html[data-theme="paper"] :is(#map,#mapBase,#mapStyle) .land{fill:#e9e9e9;stroke:#9a9a9a}html[data-theme="paper"] :is(#map,#mapBase,#mapStyle) .border{stroke:#9a9a9a}html[data-theme="paper"] :is(#map,#mapBase,#mapStyle) .adm1{stroke:#b5b5b5}
+html[data-theme="paper"] :is(#map,#mapBase,#mapStyle) .grat{stroke:rgba(0,0,0,.07)}
 html[data-theme="paper"] #map text{stroke:#fff}html[data-theme="paper"] #map .cap text,html[data-theme="paper"] #map .cap circle{fill:#222}
 html[data-theme="paper"] .mapwrap,html[data-theme="oled"] .mapwrap{border-color:var(--line)}
 html[data-theme="paper"] .info,html[data-theme="paper"] .menu,html[data-theme="paper"] .layers,html[data-theme="paper"] .modal{box-shadow:0 18px 44px -16px rgba(0,0,0,.28),0 0 0 1px rgba(0,0,0,.08)}
@@ -448,13 +448,13 @@ h1,h2,h3,h4,.readh{text-wrap:balance}
 .mapwrap{position:relative;width:100%;max-width:1000px;margin-inline:auto;aspect-ratio:2/1.1;border-radius:14px;overflow:hidden;background:#1b2230;border:1px solid var(--w-line)}
 #map{width:100%;height:100%;display:block;touch-action:none;cursor:grab;user-select:none;-webkit-user-select:none}
 #map.dragging{cursor:grabbing}
-:is(#map,#mapBase) .land{fill:#3b3545;stroke:#8a7aa0;stroke-width:.9;vector-effect:non-scaling-stroke}
-:is(#map,#mapBase) .border{fill:none;stroke:#6d6082;stroke-width:.7;vector-effect:non-scaling-stroke}
-:is(#map,#mapBase) .adm1{fill:none;stroke:#7d6e92;stroke-width:.6;stroke-dasharray:3 2;vector-effect:non-scaling-stroke}
+:is(#map,#mapBase,#mapStyle) .land{fill:#3b3545;stroke:#8a7aa0;stroke-width:.9;vector-effect:non-scaling-stroke}
+:is(#map,#mapBase,#mapStyle) .border{fill:none;stroke:#6d6082;stroke-width:.7;vector-effect:non-scaling-stroke}
+:is(#map,#mapBase,#mapStyle) .adm1{fill:none;stroke:#7d6e92;stroke-width:.6;stroke-dasharray:3 2;vector-effect:non-scaling-stroke}
 #map .cap circle{fill:#e6dcef;stroke:#1b2230;stroke-width:1;vector-effect:non-scaling-stroke}#map .cap.s circle{fill:#b9a9c9}
 #map .cap text{fill:#e6dcef;font-family:var(--body,inherit);font-weight:500}#map .cap.s text{fill:#b9a9c9;font-weight:400}
 #map .mcaps{pointer-events:none}
-:is(#map,#mapBase) .grat{fill:none;stroke:rgba(255,255,255,.06);stroke-width:.6;vector-effect:non-scaling-stroke}
+:is(#map,#mapBase,#mapStyle) .grat{fill:none;stroke:rgba(255,255,255,.06);stroke-width:.6;vector-effect:non-scaling-stroke}
 #map .acg{fill:none;stroke-width:2;vector-effect:non-scaling-stroke;stroke-linecap:round}
 #map .acghit{fill:none;stroke:transparent;stroke-width:14;vector-effect:non-scaling-stroke;cursor:pointer}
 #map .acghit:hover{stroke:rgba(255,255,255,.12)}
@@ -638,7 +638,7 @@ h1,h2,h3,h4,.readh{text-wrap:balance}
     <div class="reloc" id="relocBar" hidden></div>
     <div class="wheelwrap" id="wheelWrap"><svg id="wheel" viewBox="0 0 800 800" role="img" aria-label="Chart wheel"></svg><div class="wzoom" role="group" aria-label="Zoom the chart"><button type="button" id="wzIn" aria-label="Zoom in" title="Zoom in">+</button><button type="button" id="wzOut" aria-label="Zoom out" title="Zoom out">−</button><button type="button" id="wzReset" aria-label="Reset zoom" title="Reset zoom" hidden>⤢</button><button type="button" id="wFs" aria-label="Fill the window" title="Fill the window" aria-pressed="false"></button></div></div>
     <div class="mapwrap" id="acgWrap" hidden>
-      <svg id="mapBase" viewBox="0 150 3600 1350" preserveAspectRatio="xMidYMid meet" aria-hidden="true"></svg><svg id="map" viewBox="0 150 3600 1350" role="img" aria-label="Astrocartography world map" preserveAspectRatio="xMidYMid meet"></svg>
+      <canvas id="mapBase" aria-hidden="true"></canvas><svg id="mapStyle" aria-hidden="true" style="display:none"><rect fill="#1b2230"/><path class="land"/><path class="border"/><path class="adm1"/><path class="grat"/></svg><svg id="map" viewBox="0 150 3600 1350" role="img" aria-label="Astrocartography world map" preserveAspectRatio="xMidYMid meet"></svg>
       <div class="wzoom" role="group" aria-label="Zoom the map"><button type="button" id="mapIn" aria-label="Zoom in" title="Zoom in">+</button><button type="button" id="mapOut" aria-label="Zoom out" title="Zoom out">−</button><button type="button" id="mapReset" aria-label="Show the whole world" title="Show the whole world" hidden>⤢</button><button type="button" id="mapFs" aria-label="Fill the window" title="Fill the window" aria-pressed="false"></button></div>
     </div>
     <div class="dial">
@@ -1828,9 +1828,10 @@ function renderMap(v){const map=$('map'),ch=v.inner,A=byId(activeId),T=acgT();tr
   for(let l=-150;l<=180;l+=30)st+=`<path class="grat" d="M${lonX(l)} 0V1800"/>`;for(let b=-60;b<=60;b+=30)st+=`<path class="grat" d="M0 ${latY(b)}H3600"/>`;
   st+=`<path class="land" d="${MAP_LAND}"/>${det?`<path class="adm1" id="mAdm" d="${MAP_ADM1}"/>`:''}<path class="border" d="${MAP_BORDERS}"/>`;
   const fade=`<defs><linearGradient id="mfT" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1b2230"/><stop offset="1" stop-color="#1b2230" stop-opacity="0"/></linearGradient><linearGradient id="mfB" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#1b2230"/><stop offset="1" stop-color="#1b2230" stop-opacity="0"/></linearGradient></defs>`;
-  $('mapBase').innerHTML=`<rect x="-8000" y="-1000" width="20000" height="4000" fill="#1b2230"/><g id="mwS">${st}</g><use href="#mwS" x="-3600"/><use href="#mwS" x="3600"/>`;map.innerHTML=`${fade}<g id="mCaps"></g><g id="mLines"></g><rect x="-8000" y="0" width="20000" height="120" fill="url(#mfT)" pointer-events="none"/><rect x="-8000" y="1680" width="20000" height="120" fill="url(#mfB)" pointer-events="none"/>`;map.dataset.bkey=bkey}
+  try{mbStyle=null}catch(e){}map.innerHTML=`${fade}<g id="mCaps"></g><g id="mLines"></g><rect x="-8000" y="0" width="20000" height="120" fill="url(#mfT)" pointer-events="none"/><rect x="-8000" y="1680" width="20000" height="120" fill="url(#mfB)" pointer-events="none"/>`;map.dataset.bkey=bkey}
  map.classList.toggle('far',mapVB.w>2400);
  $('mCaps').innerHTML=cl?`<g class="mcaps">${cl}</g><g class="mcaps" transform="translate(-3600 0)">${cl}</g><g class="mcaps" transform="translate(3600 0)">${cl}</g>`:'';
+ try{mbQueue()}catch(e){}
  h=monoMap(h);$('mLines').innerHTML=`<g>${h}</g><g transform="translate(-3600 0)">${h}</g><g transform="translate(3600 0)">${h}</g>`}
 function renderAcgPanel(v){const A=byId(activeId),lines=v.acg||acgLines(v.inner);const all=[...Calc.BODY_KEYS,'node',...(S.layers.asteroids?Calc.AST_KEYS:[])],on=S.acgShow||Calc.BODY_KEYS;
  const near=(b,l)=>lines.map(L=>({L,d:lineDist(L,b,l)})).sort((x,y)=>x.d-y.d).slice(0,6);
@@ -1874,7 +1875,25 @@ addEventListener('resize',()=>{if($('acgWrap').classList.contains('fs'))mapFsSet
 $('map').addEventListener('wheel',e=>{e.preventDefault();const p=svgPt(e),dy=e.deltaMode===1?e.deltaY*16:e.deltaY;const f=Math.min(1.2,Math.max(1/1.2,Math.exp(dy*(e.ctrlKey?0.006:0.0012))));zoomMap(f,p.x,p.y)},{passive:false});
 let drag=null;const mapPtrs=new Map();let mapPinch=null;
 ['acgWrap','wheelWrap'].forEach(id=>{const el=$(id);['gesturestart','gesturechange','gestureend'].forEach(t=>el.addEventListener(t,e=>e.preventDefault(),{passive:false}));el.addEventListener('touchmove',e=>{if(e.touches.length>1)e.preventDefault()},{passive:false})});
-new MutationObserver(()=>{$('mapBase').setAttribute('viewBox',$('map').getAttribute('viewBox'))}).observe($('map'),{attributes:true,attributeFilter:['viewBox']});
+/* base map drawn into a canvas (one bitmap per view) instead of live SVG paths */
+let mbPaths=null,mbStyle=null,mbRaf=0;
+function mbReadStyle(){const g=$('mapStyle'),cs=q=>getComputedStyle(g.querySelector(q)),px=v=>parseFloat(v)||0;
+ const L=cs('.land'),B=cs('.border'),A=cs('.adm1'),G=cs('.grat'),R=cs('rect');
+ return {bg:R.fill,land:[L.fill,L.stroke,px(L.strokeWidth)],border:[B.stroke,px(B.strokeWidth)],adm:[A.stroke,px(A.strokeWidth),(A.strokeDasharray||'').split(/[ ,]+/).map(parseFloat).filter(x=>x>0)],grat:[G.stroke,px(G.strokeWidth)]}}
+function drawBase(){mbRaf=0;const cv=$('mapBase');if(!cv||mode!=='acg'||$('acgWrap').hidden)return;const W=cv.clientWidth,H=cv.clientHeight;if(!W||!H)return;
+ if(!mbPaths)mbPaths={land:new Path2D(MAP_LAND),border:new Path2D(MAP_BORDERS),adm:new Path2D(MAP_ADM1)};if(!mbStyle)mbStyle=mbReadStyle();const st=mbStyle;
+ const dpr=Math.min(window.devicePixelRatio||1,Math.sqrt(16e6/(W*H)));const pw=Math.round(W*dpr),ph=Math.round(H*dpr);if(cv.width!==pw||cv.height!==ph){cv.width=pw;cv.height=ph}
+ const ctx=cv.getContext('2d');ctx.setTransform(1,0,0,1,0,0);ctx.fillStyle=st.bg;ctx.fillRect(0,0,pw,ph);
+ const vx=mapVB.x-mapVB.w/2,vy=mapVB.y-mapVB.h/2,vw=mapVB.w*2,vh=mapVB.h*2,k=Math.min(W/vw,H/vh)*dpr,ox=(pw-vw*k)/2,oy=(ph-vh*k)/2,lw=p=>p*dpr/k;
+ const det=S.acgDetail!==false&&mapVB.w<=2400;
+ for(const off of [-3600,0,3600]){if(off+3600<vx||off>vx+vw)continue;ctx.setTransform(k,0,0,k,ox+(off-vx)*k,oy-vy*k);
+  ctx.strokeStyle=st.grat[0];ctx.lineWidth=lw(st.grat[1]);ctx.beginPath();for(let l=-150;l<=180;l+=30){const x=lonX(l);ctx.moveTo(x,0);ctx.lineTo(x,1800)}for(let b=-60;b<=60;b+=30){const y=latY(b);ctx.moveTo(0,y);ctx.lineTo(3600,y)}ctx.stroke();
+  ctx.fillStyle=st.land[0];ctx.fill(mbPaths.land);ctx.strokeStyle=st.land[1];ctx.lineWidth=lw(st.land[2]);ctx.lineJoin='round';ctx.stroke(mbPaths.land);
+  if(det){ctx.save();ctx.strokeStyle=st.adm[0];ctx.lineWidth=lw(st.adm[1]);if(st.adm[2].length)ctx.setLineDash(st.adm[2].map(lw));ctx.stroke(mbPaths.adm);ctx.restore()}
+  ctx.strokeStyle=st.border[0];ctx.lineWidth=lw(st.border[1]);ctx.stroke(mbPaths.border)}}
+function mbQueue(){if(!mbRaf)mbRaf=requestAnimationFrame(drawBase)}
+new MutationObserver(mbQueue).observe($('map'),{attributes:true,attributeFilter:['viewBox']});
+new ResizeObserver(mbQueue).observe($('acgWrap'));
 const mapTx=(x,y,sc=1)=>{const w=$('acgWrap');w.style.setProperty('--mtx',x+'px');w.style.setProperty('--mty',y+'px');w.style.setProperty('--ms',sc)};
 /* gesture preview: move/scale the already-drawn layers with a GPU transform, redraw once when the gesture ends */
 let MG=null,mgT=0;
