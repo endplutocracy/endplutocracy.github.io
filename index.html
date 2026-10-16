@@ -21,7 +21,7 @@
 /* Layout: app shell — top bar, wheel + time dial on the left, tabbed tables on the right; chart library slides in as a drawer */
 /* Palette and type from the earlier Destinned site: charcoal, lilac, plum top bar, starfield; dark only by design */
 :root{
-  --bg:#272828; --bg-deep:#1d1e1e; --panel:#1f2020; --raised:#282929; --line:#444646; --fg:#cbcbcb; --muted:#a6a8a8; --accent:#b88ccf; --accent-dim:#87539b; --accent-ink:#2d2e2e; --lilac:#d4b8e3;
+  --bg:#2c2d2d; --bg-deep:#1d1e1e; --panel:#242525; --raised:#282929; --line:#444646; --fg:#cbcbcb; --muted:#a6a8a8; --accent:#b88ccf; --accent-dim:#87539b; --accent-ink:#2d2e2e; --lilac:#d4b8e3;
   --bar:#6f4283; --bar-dark:#5d3a70; --bar-gradient:linear-gradient(160deg,#5d3a70,#2d2e2e);
   --fire:#f2a7c6; --earth:#a9d1a0; --air:#9fbcef; --water:#bb9ff0; --hard:#ffb4b4; --soft:#9fd8c4; --minor:#d4b8e3; --asp-hard:#ff5c72; --asp-soft:#3fe0b0; --asp-minor:#c99bff; --asp-conj:#ffd36b; --w-zodiac:#2e2637; --w-terms:#3a2f45; --w-decans:#33293e; --w-naks:#3d3149; --w-inner:#252029; --w-house:#2b2431; --w-line:#4b3e58; --w-grey:var(--panel); --w-p1:#3a2f45; --w-p2:#2e2538; --asp-field:var(--w-grey); --outer-band:#2a2131; --outer-line:#6e5585; --outer-fg:#e3cdf2; --outer-tick:#c99be6;
   --display:"Poppins",system-ui,-apple-system,"Segoe UI",sans-serif; --ui:system-ui,-apple-system,"Segoe UI",sans-serif; --mono:"Manrope","Avenir Next","Segoe UI",system-ui,sans-serif;
@@ -269,7 +269,8 @@ tr.clk:hover td,td.clk:hover{background:var(--raised)}
 .chartbar .grow{display:none}
 #styleSeg{margin-left:auto}.chartbar #openLayers{margin-left:2px}
 .dial-top #back,.dial-top #fwd{min-width:74px;display:inline-grid;place-items:center}
-.dial-top #reset{margin-left:auto}.dial-top #wLock{margin-left:8px}
+.dial-top #reset{margin-left:auto}
+@media (max-width:1300px) and (min-width:981px){.dial-top #back,.dial-top #fwd{min-width:52px}.dial-top #wLock{margin-left:4px}}.dial-top #wLock{margin-left:8px}
 .chartbar .chip,.chartbar .iconbtn{background:var(--raised);border:0;color:var(--fg)}
 .chartbar .chip:hover,.chartbar .iconbtn:hover{background:color-mix(in srgb,var(--accent) 16%,var(--raised))}
 .chartbar #modeBtn{color:var(--fg)}
@@ -333,7 +334,7 @@ html[data-theme="oled"] .sidetog{color:#fff;box-shadow:0 0 0 1px #2a2a2a}html[da
 .wheelwrap .wzoom{z-index:3}
 @media (min-width:981px){.main.sidecol{grid-template-columns:minmax(0,1fr) 50px!important}.main.sidecol .side{position:sticky;top:56px;height:calc(100vh - 56px);align-self:start;border-left:0;display:flex!important;flex-direction:column}.main.sidecol .sidehead{flex:1;align-items:stretch}.main.sidecol .sidetog{height:auto;width:32px;margin:8px 10px 8px 8px;border-radius:9px;align-self:stretch}}
 .mapwrap:has(#map.far) .adm1,.mapwrap:has(#map.dragging) .adm1{display:none}.mapwrap:has(#map.dragging) :is(.land,.border,.acg){shape-rendering:optimizeSpeed}
-#mapBase{position:absolute;inset:0;width:100%;height:100%;display:block;pointer-events:none;will-change:transform}#map{position:relative;z-index:1;will-change:transform}
+#mapBase,#map{position:absolute;left:-50%;top:-50%;width:200%!important;height:200%!important;display:block;will-change:transform;transform:translate(var(--mtx,0px),var(--mty,0px))}#mapBase{pointer-events:none}#map{z-index:1}
 .dial.shifted .when{color:var(--lilac)}
 .dial.shifted #reset{background:var(--lilac);color:var(--accent-ink);border-color:transparent}
 .dial.shifted #reset:hover{filter:brightness(1.08)}
@@ -399,7 +400,7 @@ html[data-theme="oled"] *{scrollbar-color:#555 transparent}html[data-theme="pape
 .thememenu button{justify-content:flex-start;gap:12px}.thememenu .tml{flex:none}.tmi{display:inline-grid;place-items:center;width:20px;height:20px;color:var(--lilac)}.tmi svg{width:20px;height:20px;display:block}.thememenu button[aria-checked="true"] .tmi{color:inherit}.tchk{color:inherit;font-weight:700}
 .thememenu b{display:block;font:600 .85rem var(--display)}.thememenu small{display:block;color:var(--muted);font-size:.74rem;font-weight:400}
 .tsw{width:22px;height:22px;border-radius:50%;flex:none;box-shadow:0 0 0 1px rgba(128,128,128,.5)}
-.tsw-orrery{background:linear-gradient(135deg,#6f4283 50%,#272828 50%)}.tsw-oled{background:linear-gradient(135deg,#000 50%,#fff 50%)}.tsw-paper{background:linear-gradient(135deg,#fff 50%,#000 50%)}
+.tsw-orrery{background:linear-gradient(135deg,#6f4283 50%,#2c2d2d 50%)}.tsw-oled{background:linear-gradient(135deg,#000 50%,#fff 50%)}.tsw-paper{background:linear-gradient(135deg,#fff 50%,#000 50%)}
 .rico{display:none;width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
 @media (max-width:600px){#reset .rlbl{display:none}#reset .rico{display:block}#reset{display:inline-grid;place-items:center;min-width:40px}#themeWrap{margin-left:auto}#openSettings{margin-left:0}}
 @media (max-width:430px){.top .brand{font-size:0;gap:0;margin-right:0}.top .brand svg{width:28px;height:26px}}
@@ -1801,7 +1802,7 @@ function lineDist(L,b,l){if(L.mer!=null){const dl=Math.abs(w180b(l-L.mer));if(dl
 function monoMap(h){const t=document.documentElement.dataset.theme;if(t!=='oled'&&t!=='paper')return h;
  return h.replace(/(stroke|fill)="#([0-9a-fA-F]{6})"/g,(m,a,c)=>{if(c.toLowerCase()==='1b2230')return `${a}="${t==='oled'?'#000000':'#ffffff'}"`;const r=parseInt(c.slice(0,2),16),g=parseInt(c.slice(2,4),16),b=parseInt(c.slice(4,6),16),L=(.2126*r+.7152*g+.0722*b)/255;
   const v=Math.round(t==='oled'?140+L*115:20+(1-L)*30+L*90);const x=v.toString(16).padStart(2,'0');return `${a}="#${x}${x}${x}"`})}
-function renderMap(v){const map=$('map'),ch=v.inner,A=byId(activeId),T=acgT();map.setAttribute('viewBox',`${mapVB.x} ${mapVB.y} ${mapVB.w} ${mapVB.h}`);mapZoomUI();
+function renderMap(v){const map=$('map'),ch=v.inner,A=byId(activeId),T=acgT();map.setAttribute('viewBox',mapVBs());mapZoomUI();
  const det=S.acgDetail!==false;
  let h='';
  const fs=mapVB.w/58,fs2=mapVB.w/80;
@@ -1847,10 +1848,11 @@ function renderAcgPanel(v){const A=byId(activeId),lines=v.acg||acgLines(v.inner)
  return h}
 function acgPanelWire(){const q=$('acgQ');if(!q)return;placePicker(q,$('acgSugg'),it=>{mapPin={b:it.lat,l:it.lon,label:it.label};centerMap(it.lat,it.lon);renderAll()})}
 function centerMap(b,l){const w=Math.min(mapVB.w,1400),h=w*mapVB.h/mapVB.w;mapVB={x:lonX(l)-w/2,y:latY(b)-h/2,w,h};clampVB()}
+const mapVBs=()=>`${mapVB.x-mapVB.w/2} ${mapVB.y-mapVB.h/2} ${mapVB.w*2} ${mapVB.h*2}`;
 let mapRatio=1350/3600;const mapMaxW=()=>Math.min(3600,1500/mapRatio);
 function clampVB(){mapVB.w=Math.min(mapMaxW(),Math.max(160,mapVB.w));mapVB.h=mapVB.w*mapRatio;let sh=0;const cx=mapVB.x+mapVB.w/2;if(cx<0)sh=3600;else if(cx>=3600)sh=-3600;mapVB.x+=sh;
  const top=0,bot=1800;if(mapVB.h>=bot-top)mapVB.y=(top+bot-mapVB.h)/2;else mapVB.y=Math.min(bot-mapVB.h,Math.max(top,mapVB.y));return sh}
-let zt=0;function zoomMap(f,cx,cy){clearTimeout(zt);zt=setTimeout(()=>{if(mode==='acg')renderMap(lastView)},120);const nx=cx??mapVB.x+mapVB.w/2,ny=cy??mapVB.y+mapVB.h/2;mapVB.w*=f;mapVB.h*=f;mapVB.x=nx-(nx-mapVB.x)*f;mapVB.y=ny-(ny-mapVB.y)*f;clampVB();$('map').setAttribute('viewBox',`${mapVB.x} ${mapVB.y} ${mapVB.w} ${mapVB.h}`);mapZoomUI()}
+let zt=0;function zoomMap(f,cx,cy){clearTimeout(zt);zt=setTimeout(()=>{if(mode==='acg')renderMap(lastView)},120);const nx=cx??mapVB.x+mapVB.w/2,ny=cy??mapVB.y+mapVB.h/2;mapVB.w*=f;mapVB.h*=f;mapVB.x=nx-(nx-mapVB.x)*f;mapVB.y=ny-(ny-mapVB.y)*f;clampVB();$('map').setAttribute('viewBox',mapVBs());mapZoomUI()}
 function mapZoomUI(){const z=mapVB.w<mapMaxW()-1;$('mapReset').hidden=!z;$('mapOut').disabled=!z}
 const svgPt=(e)=>{const m=$('map'),p=m.createSVGPoint();p.x=e.clientX;p.y=e.clientY;return p.matrixTransform(m.getScreenCTM().inverse())};
 $('mapIn').onclick=()=>zoomMap(0.6);$('mapOut').onclick=()=>zoomMap(1/0.6);$('mapReset').onclick=()=>{mapWorld();renderAll()};
@@ -1869,17 +1871,20 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape'&&$('acgWrap').classL
 addEventListener('resize',()=>{if($('acgWrap').classList.contains('fs'))mapFsSet(true)});
 $('map').addEventListener('wheel',e=>{e.preventDefault();const p=svgPt(e),dy=e.deltaMode===1?e.deltaY*16:e.deltaY;const f=Math.min(1.2,Math.max(1/1.2,Math.exp(dy*(e.ctrlKey?0.006:0.0012))));zoomMap(f,p.x,p.y)},{passive:false});
 let drag=null;const mapPtrs=new Map();let mapPinch=null;
+['acgWrap','wheelWrap'].forEach(id=>{const el=$(id);['gesturestart','gesturechange','gestureend'].forEach(t=>el.addEventListener(t,e=>e.preventDefault(),{passive:false}));el.addEventListener('touchmove',e=>{if(e.touches.length>1)e.preventDefault()},{passive:false})});
 new MutationObserver(()=>{$('mapBase').setAttribute('viewBox',$('map').getAttribute('viewBox'))}).observe($('map'),{attributes:true,attributeFilter:['viewBox']});
-const setMapVB=()=>$('map').setAttribute('viewBox',`${mapVB.x} ${mapVB.y} ${mapVB.w} ${mapVB.h}`);
+const mapTx=(x,y)=>{const w=$('acgWrap');w.style.setProperty('--mtx',x+'px');w.style.setProperty('--mty',y+'px')};
+const setMapVB=()=>$('map').setAttribute('viewBox',mapVBs());
 $('map').addEventListener('pointerdown',e=>{mapPtrs.set(e.pointerId,{x:e.clientX,y:e.clientY});try{$('map').setPointerCapture(e.pointerId)}catch(err){}
  if(mapPtrs.size===1){drag={x:e.clientX,y:e.clientY,vb:{...mapVB},moved:false}}
- else if(mapPtrs.size===2){const [a,b]=[...mapPtrs.values()],m={clientX:(a.x+b.x)/2,clientY:(a.y+b.y)/2},p=svgPt(m);mapPinch={d:Math.hypot(a.x-b.x,a.y-b.y)||1,w:mapVB.w,px:p.x,py:p.y,mx:m.clientX,my:m.clientY};if(drag)drag.moved=true}});
-$('map').addEventListener('pointermove',e=>{if(!mapPtrs.has(e.pointerId))return;mapPtrs.set(e.pointerId,{x:e.clientX,y:e.clientY});const r=$('map').getBoundingClientRect();
- if(mapPinch&&mapPtrs.size>=2){const [a,b]=[...mapPtrs.values()],d=Math.hypot(a.x-b.x,a.y-b.y)||1,f=Math.pow(mapPinch.d/d,.6);const mx=(a.x+b.x)/2,my=(a.y+b.y)/2;
+ else if(mapPtrs.size===2){if(drag&&drag.moved){mapTx(0,0);setMapVB()}const [a,b]=[...mapPtrs.values()],m={clientX:(a.x+b.x)/2,clientY:(a.y+b.y)/2},p=svgPt(m);mapPinch={d:Math.hypot(a.x-b.x,a.y-b.y)||1,w:mapVB.w,px:p.x,py:p.y,mx:m.clientX,my:m.clientY};if(drag)drag.moved=true}});
+$('map').addEventListener('pointermove',e=>{if(!mapPtrs.has(e.pointerId))return;mapPtrs.set(e.pointerId,{x:e.clientX,y:e.clientY});const r=$('acgWrap').getBoundingClientRect();
+ if(mapPinch&&mapPtrs.size>=2){mapTx(0,0);const [a,b]=[...mapPtrs.values()],d=Math.hypot(a.x-b.x,a.y-b.y)||1,f=Math.pow(mapPinch.d/d,.6);const mx=(a.x+b.x)/2,my=(a.y+b.y)/2;
   mapVB.w=mapPinch.w*f;mapVB.h=mapVB.w*mapRatio;clampVB();const k=mapVB.w/r.width;mapVB.x=mapPinch.px-(mx-r.left)*k;mapVB.y=mapPinch.py-(my-r.top)*k;clampVB();setMapVB();mapZoomUI();clearTimeout(zt);zt=setTimeout(()=>{if(mode==='acg')renderMap(lastView)},140);return}
- if(!drag)return;const sx=mapVB.w/r.width,dx=(e.clientX-drag.x),dy=(e.clientY-drag.y);if(Math.abs(dx)+Math.abs(dy)>4){drag.moved=true;$('map').classList.add('dragging')}if(drag.moved){mapVB.x=drag.vb.x-dx*sx;mapVB.y=drag.vb.y-dy*sx;const sh=clampVB();drag.vb.x+=sh;setMapVB()}});
-$('map').addEventListener('pointercancel',e=>{mapPtrs.delete(e.pointerId);if(mapPtrs.size<2)mapPinch=null;if(!mapPtrs.size)drag=null});
-$('map').addEventListener('pointerup',async e=>{mapPtrs.delete(e.pointerId);if(mapPinch){if(mapPtrs.size<2)mapPinch=null;if(mapPtrs.size===1){const [a]=[...mapPtrs.values()];drag={x:a.x,y:a.y,vb:{...mapVB},moved:true}}else drag=null;return}const d=drag;if(mapPtrs.size)return;drag=null;$('map').classList.remove('dragging');if(!d||d.moved)return;
+ if(!drag)return;const sx=mapVB.w/r.width,dx=(e.clientX-drag.x),dy=(e.clientY-drag.y);if(Math.abs(dx)+Math.abs(dy)>4){drag.moved=true;$('map').classList.add('dragging')}if(drag.moved){mapVB.x=drag.vb.x-dx*sx;mapVB.y=drag.vb.y-dy*sx;mapVB.w=drag.vb.w;const sh=clampVB();const tx=-(mapVB.x-sh-drag.vb.x)/sx,ty=-(mapVB.y-drag.vb.y)/sx;
+  if(Math.abs(tx)>r.width*.42||Math.abs(ty)>r.height*.42){mapTx(0,0);setMapVB();drag.vb={...mapVB};drag.x=e.clientX;drag.y=e.clientY}else mapTx(tx,ty)}});
+$('map').addEventListener('pointercancel',e=>{mapPtrs.delete(e.pointerId);if(drag&&drag.moved){mapTx(0,0);setMapVB()}if(mapPtrs.size<2)mapPinch=null;if(!mapPtrs.size)drag=null});
+$('map').addEventListener('pointerup',async e=>{mapPtrs.delete(e.pointerId);if(mapPinch){if(mapPtrs.size<2)mapPinch=null;if(mapPtrs.size===1){const [a]=[...mapPtrs.values()];drag={x:a.x,y:a.y,vb:{...mapVB},moved:true}}else drag=null;return}const d=drag;if(mapPtrs.size)return;drag=null;$('map').classList.remove('dragging');if(d&&d.moved){mapTx(0,0);setMapVB();clearTimeout(zt);zt=setTimeout(()=>{if(mode==='acg')renderMap(lastView)},60)}if(!d||d.moved)return;
  const t=document.elementFromPoint(e.clientX,e.clientY)?.closest('[data-obj]');if(t){showInfo(t.dataset.obj,e.clientX,e.clientY);return}
  const p=svgPt(e),l=w180b(p.x/10-180),b=90-p.y/10;if(Math.abs(b)>85)return;let label=null;try{await Geo.ready();label=Geo.nearest(b,l)}catch(err){}
  mapPin={b,l,label:label||`${Math.abs(b).toFixed(2)}°${b>=0?'N':'S'}, ${Math.abs(l).toFixed(2)}°${l>=0?'E':'W'}`};renderAll();showInfo(`acgpt:${b.toFixed(3)}:${l.toFixed(3)}`,e.clientX,e.clientY)});
