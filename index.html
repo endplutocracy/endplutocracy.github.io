@@ -23,7 +23,7 @@
 :root{
   --bg:#2c2d2d; --bg-deep:#1d1e1e; --panel:#242525; --raised:#282929; --line:#444646; --fg:#cbcbcb; --muted:#a6a8a8; --accent:#b88ccf; --accent-dim:#87539b; --accent-ink:#2d2e2e; --lilac:#d4b8e3;
   --bar:#6f4283; --bar-dark:#5d3a70; --bar-gradient:linear-gradient(160deg,#5d3a70,#2d2e2e);
-  --fire:#f2a7c6; --earth:#a9d1a0; --air:#9fbcef; --water:#bb9ff0; --hard:#ffb4b4; --soft:#9fd8c4; --minor:#d4b8e3; --asp-hard:#ff5c72; --asp-soft:#3fe0b0; --asp-minor:#c99bff; --asp-conj:#ffd36b; --w-zodiac:#2e2637; --w-terms:#3a2f45; --w-decans:#33293e; --w-naks:#3d3149; --w-inner:#252029; --w-house:#2b2431; --w-line:#4b3e58; --w-grey:var(--panel); --w-p1:#3a2f45; --w-p2:#2e2538; --asp-field:var(--w-grey); --outer-band:#2a2131; --outer-line:#6e5585; --outer-fg:#e3cdf2; --outer-tick:#c99be6;
+  --fire:#f2a7c6; --earth:#a9d1a0; --air:#9fbcef; --water:#bb9ff0; --hard:#ffb4b4; --soft:#9fd8c4; --minor:#d4b8e3; --asp-hard:#ff5c72; --asp-soft:#3fe0b0; --asp-tri:#5ea8ff; --asp-minor:#c99bff; --asp-conj:#ffd36b; --w-zodiac:#2e2637; --w-terms:#3a2f45; --w-decans:#33293e; --w-naks:#3d3149; --w-inner:#252029; --w-house:#2b2431; --w-line:#4b3e58; --w-grey:var(--panel); --w-p1:#3a2f45; --w-p2:#2e2538; --asp-field:var(--w-grey); --outer-band:#2a2131; --outer-line:#6e5585; --outer-fg:#e3cdf2; --outer-tick:#c99be6;
   --display:"Poppins",system-ui,-apple-system,"Segoe UI",sans-serif; --ui:system-ui,-apple-system,"Segoe UI",sans-serif; --mono:"Manrope","Avenir Next","Segoe UI",system-ui,sans-serif;
   --sym:"OrreryGlyph","Segoe UI Symbol","Apple Symbols","Noto Sans Symbols","Noto Sans Symbols 2","DejaVu Sans",sans-serif;
   color-scheme:dark;
@@ -108,7 +108,7 @@ h3.sub:first-child{margin-top:0}
 .grid td.cell span{display:block;font-family:var(--sym)}
 .grid td.cell small{display:block;font:.58rem var(--mono);color:var(--muted);margin-top:2px}
 .grid td.diag{font-family:var(--sym);color:var(--muted)}
-.hard{color:var(--asp-hard)} .soft{color:var(--asp-soft)} .minr{color:var(--asp-minor)} .conj{color:var(--asp-conj)}
+.hard{color:var(--asp-hard)} .soft{color:var(--asp-soft)} .tri{color:var(--asp-tri)} .minr{color:var(--asp-minor)} .conj{color:var(--asp-conj)}
 
 /* ZR */
 .zr{display:grid;gap:4px}
@@ -336,7 +336,7 @@ html[data-theme="oled"] .sidetog{color:#fff;box-shadow:0 0 0 1px #2a2a2a}html[da
 .wheelwrap .wzoom{z-index:3}
 @media (min-width:981px){.main.sidecol{grid-template-columns:minmax(0,1fr) 50px!important}.main.sidecol .side{position:sticky;top:56px;height:calc(100vh - 56px);align-self:start;border-left:0;display:flex!important;flex-direction:column}.main.sidecol .sidehead{flex:1;align-items:stretch}.main.sidecol .sidetog{height:auto;width:32px;margin:8px 10px 8px 8px;border-radius:9px;align-self:stretch}}
 .mapwrap:has(#map.far) .adm1,.mapwrap:has(#map.dragging) .adm1{display:none}.mapwrap:has(#map.dragging) :is(.land,.border,.acg){shape-rendering:optimizeSpeed}
-#mapBase,#map{position:absolute;left:-50%;top:-50%;width:200%!important;height:200%!important;display:block;will-change:transform;transform:translate(var(--mtx,0px),var(--mty,0px))}#mapBase{pointer-events:none}#map{z-index:1}
+#mapBase,#map{position:absolute;left:-50%;top:-50%;width:200%!important;height:200%!important;display:block;will-change:transform;transform:translate(var(--mtx,0px),var(--mty,0px)) scale(var(--ms,1))}#mapBase{pointer-events:none}#map{z-index:1}
 .dial.shifted .when{color:var(--lilac)}
 .dial.shifted #reset{background:var(--lilac);color:var(--accent-ink);border-color:transparent}
 .dial.shifted #reset:hover{filter:brightness(1.08)}
@@ -367,10 +367,10 @@ html[data-theme="oled"] .sidetog{color:#fff;box-shadow:0 0 0 1px #2a2a2a}html[da
 /* ---------- themes: Oled (black and white) and Paper (white and black) ---------- */
 html[data-theme="oled"]{--bg:#000;--bg-deep:#000;--panel:#000;--raised:#141414;--line:#2b2b2b;--fg:#f0f0f0;--muted:#9b9b9b;--accent:#fff;--accent-dim:#5c5c5c;--accent-ink:#000;--lilac:#fff;
  --bar:#000;--bar-dark:#000;--bar-gradient:linear-gradient(#000,#000);--fire:#f0f0f0;--earth:#f0f0f0;--air:#f0f0f0;--water:#f0f0f0;--hard:#fff;--soft:#bdbdbd;--minor:#9b9b9b;
- --asp-hard:#ffffff;--asp-soft:#a8a8a8;--asp-minor:#6e6e6e;--asp-conj:#fff;--w-line:#4a4a4a;--w-grey:#000;--w-p1:#0f0f0f;--w-p2:#1b1b1b;--asp-field:#000;--outer-band:#111;--outer-line:#888;--outer-fg:#fff;--outer-tick:#d6d6d6;color-scheme:dark}
+ --asp-hard:#ffffff;--asp-soft:#a8a8a8;--asp-tri:#a8a8a8;--asp-minor:#6e6e6e;--asp-conj:#fff;--w-line:#4a4a4a;--w-grey:#000;--w-p1:#0f0f0f;--w-p2:#1b1b1b;--asp-field:#000;--outer-band:#111;--outer-line:#888;--outer-fg:#fff;--outer-tick:#d6d6d6;color-scheme:dark}
 html[data-theme="paper"]{--bg:#fff;--bg-deep:#fff;--panel:#fff;--raised:#f1f1f1;--line:#d9d9d9;--fg:#111;--muted:#5c5c5c;--accent:#000;--accent-dim:#a3a3a3;--accent-ink:#fff;--lilac:#000;
  --bar:#fff;--bar-dark:#fff;--bar-gradient:linear-gradient(#fff,#fff);--fire:#111;--earth:#111;--air:#111;--water:#111;--hard:#000;--soft:#555;--minor:#777;
- --asp-hard:#000;--asp-soft:#6b6b6b;--asp-minor:#a0a0a0;--asp-conj:#000;--w-line:#a9a9a9;--w-grey:#fff;--w-p1:#f3f3f3;--w-p2:#e7e7e7;--asp-field:#fff;--outer-band:#efefef;--outer-line:#777;--outer-fg:#000;--outer-tick:#333;color-scheme:light}
+ --asp-hard:#000;--asp-soft:#6b6b6b;--asp-tri:#6b6b6b;--asp-minor:#a0a0a0;--asp-conj:#000;--w-line:#a9a9a9;--w-grey:#fff;--w-p1:#f3f3f3;--w-p2:#e7e7e7;--asp-field:#fff;--outer-band:#efefef;--outer-line:#777;--outer-fg:#000;--outer-tick:#333;color-scheme:light}
 html[data-theme="oled"] body,html[data-theme="paper"] body{background-image:none}
 html[data-theme="oled"] .top{color:#f0f0f0;box-shadow:0 1px 0 #262626}
 html[data-theme="paper"] .top{color:#111;box-shadow:0 1px 0 #dcdcdc}
@@ -1296,8 +1296,8 @@ function drawPlanets(g,chart,rGlyph,rDeg,rTickOut,rTickIn,big,small,rEdge){const
   const f=deg(o.lon),[dx,dy]=pt(o.show,rDeg);g.append(el('text',{x:dx,y:dy,'text-anchor':'middle','dominant-baseline':'central','font-size':small?11:13,'font-weight':500,fill:o.sp<0&&!['node','snode'].includes(o.k)?'var(--fire)':ow?'var(--outer-tick)':'var(--fg)',opacity:ow?.95:o.sp<0&&!['node','snode'].includes(o.k)?.95:.8,'font-family':'var(--mono)'},f.dd+'°'+String(f.mm).padStart(2,'0')+'′'+(o.sp<0&&!['node','snode'].includes(o.k)?'℞':'')));
   g.append(hit({cx:x,cy:y,r:big?21:small?15:18,fill:'transparent'},`pt:${which}:${o.k}`));
  });}
-function aspectCls(a){return a.k==='conj'?'conj':a.cls==='minor'?'minr':(a.k==='squ'||a.k==='opp')?'hard':'soft'}
-function aspectColor(a){return `var(--${({conj:'asp-conj',minr:'asp-minor',hard:'asp-hard',soft:'asp-soft'})[aspectCls(a)]})`}
+function aspectCls(a){return a.k==='conj'?'conj':a.cls==='minor'?'minr':(a.k==='squ'||a.k==='opp')?'hard':a.k==='tri'?'tri':'soft'}
+function aspectColor(a){return `var(--${({conj:'asp-conj',minr:'asp-minor',hard:'asp-hard',soft:'asp-soft',tri:'asp-tri'})[aspectCls(a)]})`}
 function aspectPairs(c1,c2){const keys1=aspKeys(c1),keys2=c2?aspKeys(c2):keys1;const out=[];
  keys1.forEach((a,i)=>keys2.forEach((b,j)=>{if(!c2&&j<=i)return;if(!c2&&((a==='asc'&&b==='mc')||(a==='mc'&&b==='asc')))return;
   const orbs=c2?Object.fromEntries(Object.entries(S.orbs).map(([k,v])=>[k,Math.max(1,v*(mode==='transits'||mode==='progressed'?S.transitOrb:0.75))])):S.orbs;
@@ -1765,7 +1765,7 @@ const ACG_COL={sun:'#ffcf5a',moon:'#d9dde6',mercury:'#e8e27a',venus:'#7fe0a6',ma
 const ACG_ANG={MC:['Midheaven','career, reputation and public visibility','none'],IC:['Imum Coeli','home, family, roots and inner life','7 5'],ASC:['Ascendant','identity, vitality and how you come across','none'],DSC:['Descendant','relationships, partnerships and the people you meet','2 5']};
 const ACG_TONE={sun:'brings visibility, confidence and vitality',moon:'brings emotional sensitivity, comfort and connection with the public',mercury:'brings ideas, communication, study and movement',venus:'brings ease, affection, beauty and enjoyment',mars:'brings energy, drive and courage, along with conflict and accidents to watch for',jupiter:'brings growth, opportunity, generosity and optimism',saturn:'brings responsibility, hard work and lasting structure, sometimes with weight or isolation',uranus:'brings change, independence, innovation and surprises',neptune:'brings inspiration, spirituality and idealism, but also confusion and escapism',pluto:'brings intensity, power and deep transformation',node:'brings fated connections and a sense of direction',chiron:'brings healing through old wounds',ceres:'brings nurture and care',pallas:'brings strategy and creative intelligence',juno:'brings commitment and partnership',vesta:'brings focus and devotion',destinn:'brings a sense of calling and destiny'};
 let mapVB={x:0,y:150,w:3600,h:1350},reloc=null,mapPin=null;
-const DR=Math.PI/180,PARAN_COL='#f2c14e',ASPL_COL={sext:'#ffb3dd',squ:'#ff4f9a',tri:'#cf8cff'},ASPL_N={sext:['Sextile','⚹'],squ:['Square','□'],tri:['Trine','△']};
+const DR=Math.PI/180,PARAN_COL='#d4b8e3',ASPL_COL={sext:'#3fe0b0',squ:'#ff5c72',tri:'#5ea8ff'},ASPL_N={sext:['Sextile','⚹'],squ:['Square','□'],tri:['Trine','△']};
 const LS_COL={sun:'#8ff5dc',moon:'#c8f7ee',mercury:'#5fe0c6',venus:'#3fd1b0',mars:'#25b394',jupiter:'#72e4ff',saturn:'#4cc0de',uranus:'#3aa6c8',neptune:'#2c8db0',pluto:'#5fb8a2',node:'#9be8d2'};
 const EVN={R:'rising',S:'setting',C:'culminating',A:'anticulminating'},EVS={R:'rise',S:'set',C:'MC',A:'IC'};
 const shortG=k=>GLYPH_SVG[k]?({pluto:'Pl',destinn:'Ds'})[k]||PT[k][0]:PT[k][0]+VS;
@@ -1804,7 +1804,7 @@ function lineDist(L,b,l){if(L.mer!=null){const dl=Math.abs(w180b(l-L.mer));if(dl
 function monoMap(h){const t=document.documentElement.dataset.theme;if(t!=='oled'&&t!=='paper')return h;
  return h.replace(/(stroke|fill)="#([0-9a-fA-F]{6})"/g,(m,a,c)=>{if(c.toLowerCase()==='1b2230')return `${a}="${t==='oled'?'#000000':'#ffffff'}"`;const r=parseInt(c.slice(0,2),16),g=parseInt(c.slice(2,4),16),b=parseInt(c.slice(4,6),16),L=(.2126*r+.7152*g+.0722*b)/255;
   const v=Math.round(t==='oled'?140+L*115:20+(1-L)*30+L*90);const x=v.toString(16).padStart(2,'0');return `${a}="#${x}${x}${x}"`})}
-function renderMap(v){const map=$('map'),ch=v.inner,A=byId(activeId),T=acgT();map.setAttribute('viewBox',mapVBs());mapZoomUI();
+function renderMap(v){const map=$('map'),ch=v.inner,A=byId(activeId),T=acgT();try{if(MG){MG=null;clearTimeout(mgT);mapTx(0,0,1)}}catch(e){}map.setAttribute('viewBox',mapVBs());mapZoomUI();
  const det=S.acgDetail!==false;
  let h='';
  const fs=mapVB.w/58,fs2=mapVB.w/80;
@@ -1836,7 +1836,7 @@ function renderAcgPanel(v){const A=byId(activeId),lines=v.acg||acgLines(v.inner)
  const near=(b,l)=>lines.map(L=>({L,d:lineDist(L,b,l)})).sort((x,y)=>x.d-y.d).slice(0,6);
  const nearList=(b,l)=>`<table><tbody>${near(b,l).map(o=>`<tr class="clk" data-obj="acgline:${o.L.k}:${o.L.a}"><td style="width:1.6em;color:${ACG_COL[o.L.k]}">${glyphHtml(o.L.k)}</td><td>${PT[o.L.k][1]} ${o.L.a}</td><td class="mono">${Math.round(o.d).toLocaleString()} km</td><td class="mono muted">${Math.round(o.d*0.621371).toLocaleString()} mi</td></tr>`).join('')}</tbody></table>`;
  const T=acgT(),f=S.acgFocus||'sun',asel=S.acgAsp||['squ','tri'],lso=S.lsOrigin||'birth';
- let h=`<label class="chk" for="acgDet" style="margin-bottom:6px"><input type="checkbox" id="acgDet" ${S.acgDetail!==false?'checked':''}> Show state and province borders and capital cities (labels appear as you zoom in)</label><h3 class="sub hrow">Line types<span class="allnone"><button type="button" class="linkbtn" data-acgall="types" data-v="1">Select all</button><button type="button" class="linkbtn" data-acgall="types" data-v="0">Clear all</button></span></h3><div class="acgleg">${[['planet','Planet lines','linear-gradient(90deg,#ffcf5a,#ff6b6b,#7fe0a6,#6f9dff)'],['paran','Parans',PARAN_COL],['ls','Local space','linear-gradient(90deg,#8ff5dc,#3fd1b0,#2c8db0)'],['asp','Aspect lines','linear-gradient(90deg,#ffb3dd,#ff4f9a,#cf8cff)']].map(([k,l,c])=>`<label for="acgt-${k}"><input type="checkbox" id="acgt-${k}" data-acgt="${k}" ${T[k]?'checked':''}><i style="background:${c}"></i>${l}</label>`).join('')}</div>
+ let h=`<label class="chk" for="acgDet" style="margin-bottom:6px"><input type="checkbox" id="acgDet" ${S.acgDetail!==false?'checked':''}> Show state and province borders and capital cities (labels appear as you zoom in)</label><h3 class="sub hrow">Line types<span class="allnone"><button type="button" class="linkbtn" data-acgall="types" data-v="1">Select all</button><button type="button" class="linkbtn" data-acgall="types" data-v="0">Clear all</button></span></h3><div class="acgleg">${[['planet','Planet lines','linear-gradient(90deg,#ffcf5a,#ff6b6b,#7fe0a6,#6f9dff)'],['paran','Parans',PARAN_COL],['ls','Local space','linear-gradient(90deg,#8ff5dc,#3fd1b0,#2c8db0)'],['asp','Aspect lines','linear-gradient(90deg,#3fe0b0,#5ea8ff,#ff5c72)']].map(([k,l,c])=>`<label for="acgt-${k}"><input type="checkbox" id="acgt-${k}" data-acgt="${k}" ${T[k]?'checked':''}><i style="background:${c}"></i>${l}</label>`).join('')}</div>
  ${T.paran||T.asp?`<div class="two" style="margin-top:10px"><label class="l" for="acgFocus">${T.paran&&T.asp?'Parans and aspect lines for':T.paran?'Parans for':'Aspect lines for'}<select class="f" id="acgFocus"><option value="all" ${f==='all'?'selected':''}>All shown planets</option>${all.filter(k=>on.includes(k)).map(k=>`<option value="${k}" ${f===k?'selected':''}>${PT[k][1]}</option>`).join('')}</select></label>${T.ls?`<label class="l" for="lsOrigin">Local space from<select class="f" id="lsOrigin"><option value="birth" ${lso==='birth'?'selected':''}>Birthplace</option>${A.cur?`<option value="current" ${lso==='current'?'selected':''}>Current city</option>`:''}${mapPin?`<option value="pin" ${lso==='pin'?'selected':''}>Selected place</option>`:''}</select></label>`:''}</div>`:T.ls?`<div class="two" style="margin-top:10px"><label class="l" for="lsOrigin">Local space from<select class="f" id="lsOrigin"><option value="birth" ${lso==='birth'?'selected':''}>Birthplace</option>${A.cur?`<option value="current" ${lso==='current'?'selected':''}>Current city</option>`:''}${mapPin?`<option value="pin" ${lso==='pin'?'selected':''}>Selected place</option>`:''}</select></label></div>`:''}
  ${T.asp?`<div class="hrow" style="margin-top:10px"><span class="note">Aspects</span><span class="allnone"><button type="button" class="linkbtn" data-acgall="asp" data-v="1">Select all</button><button type="button" class="linkbtn" data-acgall="asp" data-v="0">Clear all</button></span></div><div class="acgleg" style="margin-top:6px">${Object.keys(ASPL_COL).map(a=>`<label for="acga-${a}"><input type="checkbox" id="acga-${a}" data-acga="${a}" ${asel.includes(a)?'checked':''}><i style="background:${ASPL_COL[a]}"></i>${ASPL_N[a][1]} ${ASPL_N[a][0]}</label>`).join('')}</div>`:''}
  ${T.paran&&v.parans?`<p class="note" style="margin-top:8px">${v.parans.length} paran latitude${v.parans.length===1?'':'s'} shown. Solid: one planet on the meridian; dashed: both on the horizon.</p>`:''}
@@ -1854,7 +1854,7 @@ const mapVBs=()=>`${mapVB.x-mapVB.w/2} ${mapVB.y-mapVB.h/2} ${mapVB.w*2} ${mapVB
 let mapRatio=1350/3600;const mapMaxW=()=>Math.min(3600,1500/mapRatio);
 function clampVB(){mapVB.w=Math.min(mapMaxW(),Math.max(160,mapVB.w));mapVB.h=mapVB.w*mapRatio;let sh=0;const cx=mapVB.x+mapVB.w/2;if(cx<0)sh=3600;else if(cx>=3600)sh=-3600;mapVB.x+=sh;
  const top=0,bot=1800;if(mapVB.h>=bot-top)mapVB.y=(top+bot-mapVB.h)/2;else mapVB.y=Math.min(bot-mapVB.h,Math.max(top,mapVB.y));return sh}
-let zt=0;function zoomMap(f,cx,cy){clearTimeout(zt);zt=setTimeout(()=>{if(mode==='acg')renderMap(lastView)},120);const nx=cx??mapVB.x+mapVB.w/2,ny=cy??mapVB.y+mapVB.h/2;mapVB.w*=f;mapVB.h*=f;mapVB.x=nx-(nx-mapVB.x)*f;mapVB.y=ny-(ny-mapVB.y)*f;clampVB();$('map').setAttribute('viewBox',mapVBs());mapZoomUI()}
+let zt=0;function zoomMap(f,cx,cy){mgBegin();const nx=cx??mapVB.x+mapVB.w/2,ny=cy??mapVB.y+mapVB.h/2;mapVB.w*=f;mapVB.h*=f;mapVB.x=nx-(nx-mapVB.x)*f;mapVB.y=ny-(ny-mapVB.y)*f;clampVB();mgApply();if(!mapPtrs.size)mgEnd(160)}
 function mapZoomUI(){const z=mapVB.w<mapMaxW()-1;$('mapReset').hidden=!z;$('mapOut').disabled=!z}
 const svgPt=(e)=>{const m=$('map'),p=m.createSVGPoint();p.x=e.clientX;p.y=e.clientY;return p.matrixTransform(m.getScreenCTM().inverse())};
 $('mapIn').onclick=()=>zoomMap(0.6);$('mapOut').onclick=()=>zoomMap(1/0.6);$('mapReset').onclick=()=>{mapWorld();renderAll()};
@@ -1875,18 +1875,23 @@ $('map').addEventListener('wheel',e=>{e.preventDefault();const p=svgPt(e),dy=e.d
 let drag=null;const mapPtrs=new Map();let mapPinch=null;
 ['acgWrap','wheelWrap'].forEach(id=>{const el=$(id);['gesturestart','gesturechange','gestureend'].forEach(t=>el.addEventListener(t,e=>e.preventDefault(),{passive:false}));el.addEventListener('touchmove',e=>{if(e.touches.length>1)e.preventDefault()},{passive:false})});
 new MutationObserver(()=>{$('mapBase').setAttribute('viewBox',$('map').getAttribute('viewBox'))}).observe($('map'),{attributes:true,attributeFilter:['viewBox']});
-const mapTx=(x,y)=>{const w=$('acgWrap');w.style.setProperty('--mtx',x+'px');w.style.setProperty('--mty',y+'px')};
+const mapTx=(x,y,sc=1)=>{const w=$('acgWrap');w.style.setProperty('--mtx',x+'px');w.style.setProperty('--mty',y+'px');w.style.setProperty('--ms',sc)};
+/* gesture preview: move/scale the already-drawn layers with a GPU transform, redraw once when the gesture ends */
+let MG=null,mgT=0;
+function mgBegin(){if(!MG)MG={b:{...mapVB}}}
+function mgApply(){if(!MG)mgBegin();const W=$('acgWrap').clientWidth,H=$('acgWrap').clientHeight,k1=W/mapVB.w,sc=MG.b.w/mapVB.w;let dx=(MG.b.x+MG.b.w/2)-(mapVB.x+mapVB.w/2);dx=((dx%3600)+5400)%3600-1800;const dy=(MG.b.y+MG.b.h/2)-(mapVB.y+mapVB.h/2),tx=k1*dx,ty=k1*dy;
+ if(sc<.55||sc>3.5||Math.abs(tx)>W*.45||Math.abs(ty)>H*.45){mapTx(0,0,1);setMapVB();MG.b={...mapVB}}else mapTx(tx,ty,sc);mapZoomUI()}
+function mgEnd(delay=0){clearTimeout(mgT);const fin=()=>{if(!MG)return;MG=null;mapTx(0,0,1);setMapVB();mapZoomUI();if(mode==='acg')renderMap(lastView)};if(delay)mgT=setTimeout(fin,delay);else fin()}
 const setMapVB=()=>$('map').setAttribute('viewBox',mapVBs());
 $('map').addEventListener('pointerdown',e=>{mapPtrs.set(e.pointerId,{x:e.clientX,y:e.clientY});try{$('map').setPointerCapture(e.pointerId)}catch(err){}
- if(mapPtrs.size===1){drag={x:e.clientX,y:e.clientY,vb:{...mapVB},moved:false}}
- else if(mapPtrs.size===2){if(drag&&drag.moved){mapTx(0,0);setMapVB()}const [a,b]=[...mapPtrs.values()],m={clientX:(a.x+b.x)/2,clientY:(a.y+b.y)/2},p=svgPt(m);mapPinch={d:Math.hypot(a.x-b.x,a.y-b.y)||1,w:mapVB.w,px:p.x,py:p.y,mx:m.clientX,my:m.clientY};if(drag)drag.moved=true}});
+ if(mapPtrs.size===1){clearTimeout(mgT);drag={x:e.clientX,y:e.clientY,vb:{...mapVB},moved:false}}
+ else if(mapPtrs.size===2){mgBegin();const [a,b]=[...mapPtrs.values()],m={clientX:(a.x+b.x)/2,clientY:(a.y+b.y)/2},p=svgPt(m);mapPinch={d:Math.hypot(a.x-b.x,a.y-b.y)||1,w:mapVB.w,px:p.x,py:p.y,mx:m.clientX,my:m.clientY};if(drag)drag.moved=true}});
 $('map').addEventListener('pointermove',e=>{if(!mapPtrs.has(e.pointerId))return;mapPtrs.set(e.pointerId,{x:e.clientX,y:e.clientY});const r=$('acgWrap').getBoundingClientRect();
- if(mapPinch&&mapPtrs.size>=2){mapTx(0,0);const [a,b]=[...mapPtrs.values()],d=Math.hypot(a.x-b.x,a.y-b.y)||1,f=Math.pow(mapPinch.d/d,.6);const mx=(a.x+b.x)/2,my=(a.y+b.y)/2;
-  mapVB.w=mapPinch.w*f;mapVB.h=mapVB.w*mapRatio;clampVB();const k=mapVB.w/r.width;mapVB.x=mapPinch.px-(mx-r.left)*k;mapVB.y=mapPinch.py-(my-r.top)*k;clampVB();setMapVB();mapZoomUI();clearTimeout(zt);zt=setTimeout(()=>{if(mode==='acg')renderMap(lastView)},140);return}
- if(!drag)return;const sx=mapVB.w/r.width,dx=(e.clientX-drag.x),dy=(e.clientY-drag.y);if(Math.abs(dx)+Math.abs(dy)>4){drag.moved=true;$('map').classList.add('dragging')}if(drag.moved){mapVB.x=drag.vb.x-dx*sx;mapVB.y=drag.vb.y-dy*sx;mapVB.w=drag.vb.w;const sh=clampVB();const tx=-(mapVB.x-sh-drag.vb.x)/sx,ty=-(mapVB.y-drag.vb.y)/sx;
-  if(Math.abs(tx)>r.width*.42||Math.abs(ty)>r.height*.42){mapTx(0,0);setMapVB();drag.vb={...mapVB};drag.x=e.clientX;drag.y=e.clientY}else mapTx(tx,ty)}});
-$('map').addEventListener('pointercancel',e=>{mapPtrs.delete(e.pointerId);if(drag&&drag.moved){mapTx(0,0);setMapVB()}if(mapPtrs.size<2)mapPinch=null;if(!mapPtrs.size)drag=null});
-$('map').addEventListener('pointerup',async e=>{mapPtrs.delete(e.pointerId);if(mapPinch){if(mapPtrs.size<2)mapPinch=null;if(mapPtrs.size===1){const [a]=[...mapPtrs.values()];drag={x:a.x,y:a.y,vb:{...mapVB},moved:true}}else drag=null;return}const d=drag;if(mapPtrs.size)return;drag=null;$('map').classList.remove('dragging');if(d&&d.moved){mapTx(0,0);setMapVB();clearTimeout(zt);zt=setTimeout(()=>{if(mode==='acg')renderMap(lastView)},60)}if(!d||d.moved)return;
+ if(mapPinch&&mapPtrs.size>=2){const [a,b]=[...mapPtrs.values()],d=Math.hypot(a.x-b.x,a.y-b.y)||1,f=mapPinch.d/d;const mx=(a.x+b.x)/2,my=(a.y+b.y)/2;
+  mapVB.w=mapPinch.w*f;mapVB.h=mapVB.w*mapRatio;clampVB();const k=mapVB.w/r.width,ox=r.left+r.width/2,oy=r.top+r.height/2;mapVB.x=mapPinch.px-(mx-ox)*k-mapVB.w/2;mapVB.y=mapPinch.py-(my-oy)*k-mapVB.h/2;clampVB();mgApply();return}
+ if(!drag)return;const sx=drag.vb.w/r.width,dx=(e.clientX-drag.x),dy=(e.clientY-drag.y);if(Math.abs(dx)+Math.abs(dy)>4){drag.moved=true;$('map').classList.add('dragging')}if(drag.moved){mgBegin();mapVB.x=drag.vb.x-dx*sx;mapVB.y=drag.vb.y-dy*sx;mapVB.w=drag.vb.w;mapVB.h=drag.vb.h;clampVB();mgApply()}});
+$('map').addEventListener('pointercancel',e=>{mapPtrs.delete(e.pointerId);if(mapPtrs.size<2)mapPinch=null;if(!mapPtrs.size){drag=null;$('map').classList.remove('dragging');mgEnd()}});
+$('map').addEventListener('pointerup',async e=>{mapPtrs.delete(e.pointerId);if(mapPinch){if(mapPtrs.size<2)mapPinch=null;if(mapPtrs.size===1){const [a]=[...mapPtrs.values()];drag={x:a.x,y:a.y,vb:{...mapVB},moved:true}}else{drag=null;mgEnd()}return}const d=drag;if(mapPtrs.size)return;drag=null;$('map').classList.remove('dragging');if(d&&d.moved)mgEnd();if(!d||d.moved)return;
  const t=document.elementFromPoint(e.clientX,e.clientY)?.closest('[data-obj]');if(t){showInfo(t.dataset.obj,e.clientX,e.clientY);return}
  const p=svgPt(e),l=w180b(p.x/10-180),b=90-p.y/10;if(Math.abs(b)>85)return;let label=null;try{await Geo.ready();label=Geo.nearest(b,l)}catch(err){}
  mapPin={b,l,label:label||`${Math.abs(b).toFixed(2)}°${b>=0?'N':'S'}, ${Math.abs(l).toFixed(2)}°${l>=0?'E':'W'}`};renderAll();showInfo(`acgpt:${b.toFixed(3)}:${l.toFixed(3)}`,e.clientX,e.clientY)});
