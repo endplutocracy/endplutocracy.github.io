@@ -317,13 +317,13 @@ html[data-theme="paper"] .psec>summary{box-shadow:0 1px 4px rgba(0,0,0,.15)}html
 .sidetog{display:none;flex:none;align-self:center;width:32px;height:32px;margin:8px 0 0 10px;border-radius:9px;border:0;background:var(--w-p1);color:var(--lilac,#d4b8e3);cursor:pointer;place-items:center;box-shadow:0 2px 8px rgba(0,0,0,.3);transition:filter .15s,color .15s}
 .sidetog:hover{filter:brightness(1.25);color:#fff}
 html[data-theme="oled"] .sidetog{color:#fff;box-shadow:0 0 0 1px #2a2a2a}html[data-theme="paper"] .sidetog{color:#111;box-shadow:0 1px 6px rgba(0,0,0,.18)}html[data-theme="paper"] .sidetog:hover{filter:brightness(.95);color:#111}
-.sidetog svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;transition:transform .2s}
+.sidetog svg{width:15px;height:15px;fill:currentColor;stroke:none;transition:transform .25s ease}
 @media (min-width:981px){.sidetog{display:grid}
  .main.sidecol{grid-template-columns:minmax(0,1fr) 52px!important}
  .main.sidecol .side{grid-template-rows:auto;align-content:start}
  .main.sidecol .sidehead{border-bottom:0;justify-content:center}
  .main.sidecol .tabs,.main.sidecol #pane{display:none}
- .main.sidecol .sidetog svg{transform:rotate(180deg)}
+ .main.sidecol .sidetog svg{transform:rotate(45deg)}
  .main.sidecol .stage{--ww:max(420px,min(1180px,calc(100vh - 240px)))}
  .main.sidecol .wheelwrap{max-width:var(--ww)}.main.sidecol .stage>.chartbar,.main.sidecol .stage>.dial,.main.sidecol .stage>.reloc{max-width:max(760px,var(--ww))}
  .main.sidecol #stage>#acgWrap,.main.sidecol #stage>#relocBar,.main.sidecol #stage:has(>#acgWrap:not([hidden]))>.chartbar,.main.sidecol #stage:has(>#acgWrap:not([hidden]))>.dial{max-width:max(560px,min(100%,calc((100vh - 250px)*1.818)))}}
@@ -657,7 +657,7 @@ h1,h2,h3,h4,.readh{text-wrap:balance}
     </div>
   </div>
   <div class="side" id="side">
-    <div class="sidehead"><button class="sidetog" id="sideTog" type="button" aria-expanded="true" aria-controls="pane" title="Hide panel" aria-label="Hide panel"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></button>
+    <div class="sidehead"><button class="sidetog" id="sideTog" type="button" aria-expanded="true" aria-controls="pane" title="Hide panel" aria-label="Hide panel"><svg viewBox="6 8.4 7.2 7.2" aria-hidden="true"><path d="M9.6 8.4 L10.5 11.1 L13.2 12 L10.5 12.9 L9.6 15.6 L8.7 12.9 L6 12 L8.7 11.1 Z"/></svg></button>
     <div class="tabs" role="tablist" id="tabs">
       <button role="tab" data-tab="pos" aria-selected="true">Positions</button>
       <button role="tab" data-tab="asp" aria-selected="false">Aspects</button>
