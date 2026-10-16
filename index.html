@@ -1456,9 +1456,9 @@ function drawPlanets(g,chart,rGlyph,rDeg,rTickOut,rTickIn,big,small,rEdge){const
  // one label scale for the whole chart, set by the planet that needs the most room
  let K=1;const LI=new Map();placed.forEach(o=>{const L=labInfo(o);LI.set(o,L);K=Math.min(K,L.kn)});
  function labInfo(o){const f=deg(o.lon),rx=o.sp<0&&!['node','snode'].includes(o.k),col=rx?'var(--fire)':which==='o'?'var(--outer-tick)':'var(--fg)',op=which==='o'?.95:rx?.95:.8,gh=(big?31:small?25:26)/2*o.f,fsz=big?13:small?10.5:12;
-   const parts=[];if(S.wDeg!==false)parts.push(['d',f.dd+'°'+(rx&&S.wMin===false?'℞':'')]);if(S.wSign)parts.push(['s',f.s]);if(S.wMin!==false)parts.push(['t',String(f.mm).padStart(2,'0')+'′'+(rx?'℞':'')]);if(!parts.length&&rx)parts.push(['t','℞']);
+   const parts=[];if(S.wDeg!==false)parts.push(['d',f.dd+'°']);if(S.wSign)parts.push(['s',f.s]);if(S.wMin!==false)parts.push(['t',String(f.mm).padStart(2,'0')+'′']);if(rx)parts.push(['r','R']);
    const [ux0,uy0]=pt(o.show,100),ux=Math.abs(ux0-C)/100,uy=Math.abs(uy0-C)/100,lim=which==='o'?rTickOut-(lastView&&lastView.ob||84)+1:rTickIn+1,top=rGlyph-gh+1.5;
-   const ext=([t,v],k)=>{const z=t==='d'?fsz*1.15:fsz;return t==='s'?(fsz+1)*(ux*1+uy*1)*k:(ux*String(v).length*z*.6+uy*z*1.05)*k};
+   const ext=([t,v],k)=>{const z=t==='d'?fsz*1.15:t==='r'?fsz*.85:fsz;return t==='s'?(fsz+1)*(ux*1+uy*1)*k:(ux*String(v).length*z*.6+uy*z*1.05)*k};
    const tot=parts.reduce((a,p)=>a+ext(p,1)+2,0),kn=tot>top-lim?Math.max(.72,(top-lim)/tot):1;return {parts,col,op,fsz,top,ext,kn}}
  placed.forEach(o=>{
   const [a,b]=pt(o.lon,rTickOut),[c,d]=pt(o.lon,rTickIn);const ow=which==='o';g.append(el('line',{x1:a,y1:b,x2:c,y2:d,stroke:ow?'var(--outer-tick)':'var(--accent)','stroke-width':2}));
@@ -1472,7 +1472,7 @@ function drawPlanets(g,chart,rGlyph,rDeg,rTickOut,rTickIn,big,small,rEdge){const
    let rr=top;const pos=parts.map(p=>{const e=ext(p,k);const c=rr-e/2;rr-=e+2*k;return c});
    parts.forEach(([t,v],i)=>{const [dx,dy]=pt(o.show,pos[i]);
     if(t==='s')g.append(el('text',{x:dx,y:dy,'text-anchor':'middle','dominant-baseline':'central','font-size':(fsz+1)*k,'font-weight':300,fill:S.elemColors?`var(--${ELEM[v%4]})`:col,'font-family':'var(--sym)',class:'wlab-s'},SIGN_G[v]+VS));
-    else g.append(el('text',{x:dx,y:dy,'text-anchor':'middle','dominant-baseline':'central','font-size':(t==='d'?fsz*1.15:fsz-1)*k,'font-weight':t==='d'?600:500,fill:col,opacity:op,'font-family':'var(--mono)'},v))})}
+    else g.append(el('text',{x:dx,y:dy,'text-anchor':'middle','dominant-baseline':'central','font-size':(t==='d'?fsz*1.15:t==='r'?fsz*.85:fsz-1)*k,'font-weight':t==='d'||t==='r'?600:500,fill:col,opacity:op,'font-family':'var(--mono)'},v))})}
   g.append(hit({cx:x,cy:y,r:(big?21:small?15:18)*o.f,fill:'transparent'},`pt:${which}:${o.k}`));
  });}
 function aspectCls(a){return a.k==='conj'?'conj':a.cls==='minor'?'minr':(a.k==='squ'||a.k==='opp')?'hard':a.k==='tri'?'tri':'soft'}
