@@ -104,7 +104,8 @@ h3.sub:first-child{margin-top:0}
 .grid{border-collapse:separate;border-spacing:2px;width:auto}
 .grid td,.grid th{border:0;padding:0;width:34px;height:34px;text-align:center;vertical-align:middle;font-size:.95rem}
 .grid th{font-family:var(--sym);font-size:1.05rem;text-transform:none;letter-spacing:0;color:var(--fg)}
-.grid td.cell{background:var(--raised);border-radius:4px;line-height:1}
+.grid td.cell{background:var(--raised);border-radius:4px;line-height:1;box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--line) 70%,transparent)}
+.grid td.gc,.grid td.diag{box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--line) 55%,transparent);border-radius:4px}
 .grid td.cell span{display:block;font-family:var(--sym)}
 .grid td.cell small{display:block;font:.58rem var(--mono);color:var(--muted);margin-top:2px}
 .grid td.diag{font-family:var(--sym);color:var(--muted)}
@@ -145,7 +146,10 @@ h3.sub:first-child{margin-top:0}
 .btn:hover{background:var(--lilac);border-color:var(--lilac)}
 .btn.ghost{background:transparent;color:var(--accent);border:2px solid var(--accent-dim)}
 .btn.danger{background:transparent;border:2px solid var(--hard);color:var(--hard)}
-input.f,select.f{width:100%;background:var(--bg);border:1px solid var(--line);border-radius:7px;padding:8px 10px}
+input.f,select.f,textarea.f{width:100%;background:var(--bg);color:var(--fg);border:1px solid var(--line);border-radius:7px;padding:8px 10px;font:inherit}
+.f::placeholder{color:var(--muted);opacity:.85}
+.f:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 2px color-mix(in srgb,var(--accent) 25%,transparent)}
+.orb input[type=number]{background:var(--bg);color:var(--fg);border:1px solid var(--line)}
 .modal{position:fixed;z-index:42;left:50%;top:50%;transform:translate(-50%,-50%);width:min(560px,calc(100% - 32px));max-height:calc(100% - 40px);overflow:auto;background:var(--panel);border:2px solid var(--accent-dim);border-radius:22px;padding:20px;display:grid;gap:14px}
 .modal h2{font:700 1.2rem var(--display);text-transform:uppercase;letter-spacing:.06em;margin:0}
 .fgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
@@ -267,7 +271,7 @@ tr.clk:hover td,td.clk:hover{background:var(--raised)}
 .mapwrap .wzoom{right:10px;bottom:10px}
 .chartbar{display:flex;align-items:center;gap:8px;flex-wrap:wrap;max-width:760px;width:100%;margin-inline:auto}
 .chartbar .grow{display:none}
-#styleSeg{margin-left:auto}.chartbar #openLayers{margin-left:2px}
+#styleSeg{margin-left:auto}.chartbar #openLayers{margin-left:auto}#styleSeg:not([hidden])~#openLayers{margin-left:2px}
 .dial-top #back,.dial-top #fwd{min-width:74px;display:inline-grid;place-items:center}
 .dial-top #reset{margin-left:auto}
 @media (max-width:1300px) and (min-width:981px){.dial-top #back,.dial-top #fwd{min-width:52px}.dial-top #wLock{margin-left:4px}}.dial-top #wLock{margin-left:8px}
@@ -306,7 +310,8 @@ body.mapfs{overflow:hidden}
 .psec>summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:10px;user-select:none;background:var(--w-p1);border-radius:10px;padding:10px 14px;box-shadow:0 2px 8px -2px rgba(0,0,0,.35);transition:filter .15s}
 .psec>summary:hover{filter:brightness(1.18)}.psec>summary:focus-visible{outline:2px solid var(--lilac);outline-offset:2px}
 .psec[open]>summary{margin-bottom:10px}
-html[data-theme="paper"] .psec>summary{box-shadow:0 1px 4px rgba(0,0,0,.15)}html[data-theme="oled"] .psec>summary{box-shadow:0 0 0 1px #2a2a2a}
+html[data-theme="paper"] .psec>summary,
+html[data-theme="pastel"] .psec>summary{box-shadow:0 1px 4px rgba(0,0,0,.15)}html[data-theme="oled"] .psec>summary,html[data-theme="retro"] .psec>summary{box-shadow:0 0 0 1px #2a2a2a}
 .psec>summary::-webkit-details-marker{display:none}
 .psec>summary::before{content:'';width:13px;height:13px;flex:none;margin:0 1px 0 0;background:var(--lilac);-webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='6 8.4 7.2 7.2'%3E%3Cpath d='M9.6 8.4 L10.5 11.1 L13.2 12 L10.5 12.9 L9.6 15.6 L8.7 12.9 L6 12 L8.7 11.1 Z'/%3E%3C/svg%3E") center/contain no-repeat;mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='6 8.4 7.2 7.2'%3E%3Cpath d='M9.6 8.4 L10.5 11.1 L13.2 12 L10.5 12.9 L9.6 15.6 L8.7 12.9 L6 12 L8.7 11.1 Z'/%3E%3C/svg%3E") center/contain no-repeat;transition:transform .25s ease}
 .psec[open]>summary::before{transform:rotate(45deg)}
@@ -318,7 +323,8 @@ html[data-theme="paper"] .psec>summary{box-shadow:0 1px 4px rgba(0,0,0,.15)}html
 .sidehead .tabs{flex:1;border-bottom:0;min-width:0}
 .sidetog{display:none;flex:none;align-self:center;width:32px;height:32px;margin:8px 0 0 10px;border-radius:9px;border:0;background:var(--w-p1);color:var(--lilac,#d4b8e3);cursor:pointer;place-items:center;box-shadow:0 2px 8px rgba(0,0,0,.3);transition:filter .15s,color .15s}
 .sidetog:hover{filter:brightness(1.25);color:#fff}
-html[data-theme="oled"] .sidetog{color:#fff;box-shadow:0 0 0 1px #2a2a2a}html[data-theme="paper"] .sidetog{color:#111;box-shadow:0 1px 6px rgba(0,0,0,.18)}html[data-theme="paper"] .sidetog:hover{filter:brightness(.95);color:#111}
+html[data-theme="oled"] .sidetog,
+html[data-theme="retro"] .sidetog{color:#fff;box-shadow:0 0 0 1px #2a2a2a}html[data-theme="paper"] .sidetog,html[data-theme="pastel"] .sidetog{color:#111;box-shadow:0 1px 6px rgba(0,0,0,.18)}html[data-theme="paper"] .sidetog:hover,html[data-theme="pastel"] .sidetog:hover{filter:brightness(.95);color:#111}
 .sidetog svg{width:15px;height:15px;fill:currentColor;stroke:none;transition:transform .25s ease}
 @media (min-width:981px){.sidetog{display:grid}
  .main.sidecol{grid-template-columns:minmax(0,1fr) 52px!important}
@@ -352,6 +358,16 @@ html[data-theme="oled"] .sidetog{color:#fff;box-shadow:0 0 0 1px #2a2a2a}html[da
 .maplayers .sub{margin-top:14px}
 @media (min-width:981px){.mapwrap.fs .maplayersbtn{width:50px;height:50px}}
 @media (min-width:981px){.mapwrap.fs .maplayers:not([hidden]){top:calc(74px + env(safe-area-inset-top,0px))}}
+.top .seg button{transition:background .15s,color .15s}
+.top .seg button:not([aria-pressed="true"]):hover{background:rgba(255,255,255,.1);color:#fff}
+.top .iconbtn{transition:background .15s,filter .15s}.top .iconbtn:hover{background:rgba(255,255,255,.12)}
+html[data-theme="paper"] .top .seg button:not([aria-pressed="true"]):hover,html[data-theme="paper"] .top .iconbtn:hover,
+html[data-theme="pastel"] .top .seg button:not([aria-pressed="true"]):hover,html[data-theme="pastel"] .top .iconbtn:hover{background:rgba(0,0,0,.08);color:inherit}
+.cstyle button{transition:background .15s,color .15s}
+.cstyle button:not([aria-pressed="true"]):hover{background:rgba(255,255,255,.08);color:var(--fg)}
+html[data-theme="paper"] .cstyle button:not([aria-pressed="true"]):hover,
+html[data-theme="pastel"] .cstyle button:not([aria-pressed="true"]):hover{background:rgba(0,0,0,.07)}
+.chartbar #openLayers{transition:background .15s,color .15s}.chartbar #openLayers:hover{background:rgba(255,255,255,.08);color:var(--fg)}
 .dial.shifted .when{color:var(--lilac)}
 .dial.shifted #reset{background:var(--lilac);color:var(--accent-ink);border-color:transparent}
 .dial.shifted #reset:hover{filter:brightness(1.08)}
@@ -380,24 +396,40 @@ html[data-theme="oled"] .sidetog{color:#fff;box-shadow:0 0 0 1px #2a2a2a}html[da
  #stage>#acgWrap,#stage>#relocBar,#stage:has(>#acgWrap:not([hidden]))>.chartbar,#stage:has(>#acgWrap:not([hidden]))>.dial{max-width:max(560px,min(100%,calc((100vh - 250px)*1.818)))}}
 
 /* ---------- themes: Oled (black and white) and Paper (white and black) ---------- */
-html[data-theme="oled"]{--bg:#000;--bg-deep:#000;--panel:#000;--raised:#141414;--line:#2b2b2b;--fg:#f0f0f0;--muted:#9b9b9b;--accent:#fff;--accent-dim:#5c5c5c;--accent-ink:#000;--lilac:#fff;
+html[data-theme="oled"],
+
+/* ---------- themes: Oled (black and white) and Paper (white and black) ---------- */
+html[data-theme="retro"]{--bg:#000;--bg-deep:#000;--panel:#000;--raised:#141414;--line:#2b2b2b;--fg:#f0f0f0;--muted:#9b9b9b;--accent:#fff;--accent-dim:#5c5c5c;--accent-ink:#000;--lilac:#fff;
  --bar:#000;--bar-dark:#000;--bar-gradient:linear-gradient(#000,#000);--fire:#f0f0f0;--earth:#f0f0f0;--air:#f0f0f0;--water:#f0f0f0;--hard:#fff;--soft:#bdbdbd;--minor:#9b9b9b;
  --asp-hard:#ffffff;--asp-soft:#a8a8a8;--asp-tri:#a8a8a8;--asp-minor:#6e6e6e;--asp-conj:#fff;--w-line:#4a4a4a;--w-grey:#000;--w-p1:#0f0f0f;--w-p2:#1b1b1b;--asp-field:#000;--outer-band:#111;--outer-line:#888;--outer-fg:#fff;--outer-tick:#d6d6d6;color-scheme:dark}
 html[data-theme="paper"]{--bg:#fff;--bg-deep:#fff;--panel:#fff;--raised:#f1f1f1;--line:#d9d9d9;--fg:#111;--muted:#5c5c5c;--accent:#000;--accent-dim:#a3a3a3;--accent-ink:#fff;--lilac:#000;
  --bar:#fff;--bar-dark:#fff;--bar-gradient:linear-gradient(#fff,#fff);--fire:#111;--earth:#111;--air:#111;--water:#111;--hard:#000;--soft:#555;--minor:#777;
  --asp-hard:#000;--asp-soft:#6b6b6b;--asp-tri:#6b6b6b;--asp-minor:#a0a0a0;--asp-conj:#000;--w-line:#a9a9a9;--w-grey:#fff;--w-p1:#f3f3f3;--w-p2:#e7e7e7;--asp-field:#fff;--outer-band:#efefef;--outer-line:#777;--outer-fg:#000;--outer-tick:#333;color-scheme:light}
-html[data-theme="oled"] body,html[data-theme="paper"] body{background-image:none}
-html[data-theme="oled"] .top{color:#f0f0f0;box-shadow:0 1px 0 #262626}
-html[data-theme="paper"] .top{color:#111;box-shadow:0 1px 0 #dcdcdc}
-html[data-theme="oled"] .top .chip,html[data-theme="oled"] .top .iconbtn,html[data-theme="oled"] .top .seg{background:#141414}
-html[data-theme="paper"] .top .chip,html[data-theme="paper"] .top .iconbtn,html[data-theme="paper"] .top .seg{background:#f1f1f1}
-html[data-theme="paper"] .top .seg button,html[data-theme="paper"] .top .note,html[data-theme="paper"] .icobtn,html[data-theme="paper"] .brand{color:#111}
-html[data-theme="oled"] .brand{color:#f0f0f0}
-html[data-theme="oled"] .top .seg button[aria-pressed="true"],html[data-theme="paper"] .top .seg button[aria-pressed="true"]{background:var(--lilac);color:var(--accent-ink)}
-html[data-theme="oled"] .eph-side,html[data-theme="oled"] .stage,html[data-theme="paper"] .eph-side,html[data-theme="paper"] .stage{background:var(--bg)}
-html[data-theme="oled"] .wzoom button{color:#fff;box-shadow:0 0 0 1px #2a2a2a}html[data-theme="paper"] .wzoom button{color:#111;box-shadow:0 1px 6px rgba(0,0,0,.18)}html[data-theme="paper"] .wzoom button:hover{filter:brightness(.95);color:#111}
+html[data-theme="oled"] body,html[data-theme="paper"] body,
+html[data-theme="retro"] body,html[data-theme="pastel"] body{background-image:none}
+html[data-theme="oled"] .top,
+html[data-theme="retro"] .top{color:#f0f0f0;box-shadow:0 1px 0 #262626}
+html[data-theme="paper"] .top,
+html[data-theme="pastel"] .top{color:#111;box-shadow:0 1px 0 #dcdcdc}
+html[data-theme="oled"] .top .chip,html[data-theme="oled"] .top .iconbtn,html[data-theme="oled"] .top .seg,
+html[data-theme="retro"] .top .chip,html[data-theme="retro"] .top .iconbtn,html[data-theme="retro"] .top .seg{background:#141414}
+html[data-theme="paper"] .top .chip,html[data-theme="paper"] .top .iconbtn,html[data-theme="paper"] .top .seg,
+html[data-theme="pastel"] .top .chip,html[data-theme="pastel"] .top .iconbtn,html[data-theme="pastel"] .top .seg{background:#f1f1f1}
+html[data-theme="paper"] .top .seg button,html[data-theme="paper"] .top .note,html[data-theme="paper"] .icobtn,html[data-theme="paper"] .brand,
+html[data-theme="pastel"] .top .seg button,html[data-theme="pastel"] .top .note,html[data-theme="pastel"] .icobtn,html[data-theme="pastel"] .brand{color:#111}
+html[data-theme="oled"] .brand,
+html[data-theme="retro"] .brand{color:#f0f0f0}
+html[data-theme="oled"] .top .seg button[aria-pressed="true"],html[data-theme="paper"] .top .seg button[aria-pressed="true"],
+html[data-theme="retro"] .top .seg button[aria-pressed="true"],html[data-theme="pastel"] .top .seg button[aria-pressed="true"]{background:var(--lilac);color:var(--accent-ink)}
+html[data-theme="oled"] .eph-side,html[data-theme="oled"] .stage,html[data-theme="paper"] .eph-side,html[data-theme="paper"] .stage,
+html[data-theme="retro"] .eph-side,html[data-theme="retro"] .stage,html[data-theme="pastel"] .eph-side,html[data-theme="pastel"] .stage{background:var(--bg)}
+html[data-theme="oled"] .wzoom button,
+html[data-theme="retro"] .wzoom button{color:#fff;box-shadow:0 0 0 1px #2a2a2a}html[data-theme="paper"] .wzoom button,html[data-theme="pastel"] .wzoom button{color:#111;box-shadow:0 1px 6px rgba(0,0,0,.18)}html[data-theme="paper"] .wzoom button:hover,html[data-theme="pastel"] .wzoom button:hover{filter:brightness(.95);color:#111}
 html[data-theme="oled"] .tcard,html[data-theme="paper"] .tcard,html[data-theme="oled"] .zrbar,html[data-theme="paper"] .zrbar,html[data-theme="oled"] #pane,html[data-theme="paper"] #pane,html[data-theme="oled"] .info,html[data-theme="paper"] .info{filter:grayscale(1)}
-html[data-theme="oled"] .tarot-side,html[data-theme="paper"] .tarot-side{background:var(--bg)}
+
+html[data-theme="retro"] .tcard,html[data-theme="retro"] .zrbar,html[data-theme="retro"] #pane,html[data-theme="retro"] .info{filter:grayscale(1) sepia(1) hue-rotate(68deg) saturate(3.2) brightness(1.05)}
+html[data-theme="oled"] .tarot-side,html[data-theme="paper"] .tarot-side,
+html[data-theme="retro"] .tarot-side,html[data-theme="pastel"] .tarot-side{background:var(--bg)}
 html[data-theme="oled"] :is(#map,#mapBase,#mapStyle) rect[fill="#1b2230"],html[data-theme="oled"] .mapwrap{fill:#000;background:#000}
 html[data-theme="oled"] #map stop{stop-color:#000}
 html[data-theme="oled"] :is(#map,#mapBase,#mapStyle) .land{fill:#1d1d1d;stroke:#6a6a6a}html[data-theme="oled"] :is(#map,#mapBase,#mapStyle) .border{stroke:#555}html[data-theme="oled"] :is(#map,#mapBase,#mapStyle) .adm1{stroke:#444}
@@ -407,12 +439,18 @@ html[data-theme="paper"] #map stop{stop-color:#fff}
 html[data-theme="paper"] :is(#map,#mapBase,#mapStyle) .land{fill:#e9e9e9;stroke:#9a9a9a}html[data-theme="paper"] :is(#map,#mapBase,#mapStyle) .border{stroke:#9a9a9a}html[data-theme="paper"] :is(#map,#mapBase,#mapStyle) .adm1{stroke:#b5b5b5}
 html[data-theme="paper"] :is(#map,#mapBase,#mapStyle) .grat{stroke:rgba(0,0,0,.07)}
 html[data-theme="paper"] #map text{stroke:#fff}html[data-theme="paper"] #map .cap text,html[data-theme="paper"] #map .cap circle{fill:#222}
-html[data-theme="paper"] .mapwrap,html[data-theme="oled"] .mapwrap{border-color:var(--line)}
-html[data-theme="paper"] .info,html[data-theme="paper"] .menu,html[data-theme="paper"] .layers,html[data-theme="paper"] .modal{box-shadow:0 18px 44px -16px rgba(0,0,0,.28),0 0 0 1px rgba(0,0,0,.08)}
-html[data-theme="paper"] .zrcard,html[data-theme="paper"] .zrsec{box-shadow:0 0 0 1px #e2e2e2}
-html[data-theme="paper"] ::-webkit-scrollbar-thumb{background:#bdbdbd;background-clip:padding-box}
-html[data-theme="oled"] ::-webkit-scrollbar-thumb{background:#555;background-clip:padding-box}
-html[data-theme="oled"] *{scrollbar-color:#555 transparent}html[data-theme="paper"] *{scrollbar-color:#bdbdbd transparent}
+html[data-theme="paper"] .mapwrap,html[data-theme="oled"] .mapwrap,html[data-theme="retro"] .mapwrap,
+html[data-theme="pastel"] .mapwrap{border-color:var(--line)}
+html[data-theme="paper"] .info,html[data-theme="paper"] .menu,html[data-theme="paper"] .layers,html[data-theme="paper"] .modal,
+html[data-theme="pastel"] .info,html[data-theme="pastel"] .menu,html[data-theme="pastel"] .layers,html[data-theme="pastel"] .modal{box-shadow:0 18px 44px -16px rgba(0,0,0,.28),0 0 0 1px rgba(0,0,0,.08)}
+html[data-theme="paper"] .zrcard,html[data-theme="paper"] .zrsec,
+html[data-theme="pastel"] .zrcard,html[data-theme="pastel"] .zrsec{box-shadow:0 0 0 1px #e2e2e2}
+html[data-theme="paper"] ::-webkit-scrollbar-thumb,
+html[data-theme="pastel"] ::-webkit-scrollbar-thumb{background:#bdbdbd;background-clip:padding-box}
+html[data-theme="oled"] ::-webkit-scrollbar-thumb,
+html[data-theme="retro"] ::-webkit-scrollbar-thumb{background:#555;background-clip:padding-box}
+html[data-theme="oled"] *,
+html[data-theme="retro"] *{scrollbar-color:#555 transparent}html[data-theme="paper"] *,html[data-theme="pastel"] *{scrollbar-color:#bdbdbd transparent}
 .thememenu{left:auto;right:0;min-width:0;width:max-content}.thememenu button{padding-right:16px}
 .thememenu button{justify-content:flex-start;gap:12px}.thememenu .tml{flex:none}.tmi{display:inline-grid;place-items:center;width:20px;height:20px;color:var(--lilac)}.tmi svg{width:20px;height:20px;display:block}.thememenu button[aria-checked="true"] .tmi{color:inherit}.tchk{color:inherit;font-weight:700}
 .thememenu b{display:block;font:600 .85rem var(--display)}.thememenu small{display:block;color:var(--muted);font-size:.74rem;font-weight:400}
@@ -470,7 +508,7 @@ h1,h2,h3,h4,.readh{text-wrap:balance}
 #map .cap text{fill:#e6dcef;font-family:var(--body,inherit);font-weight:500}#map .cap.s text{fill:#b9a9c9;font-weight:400}
 #map .mcaps{pointer-events:none}
 :is(#map,#mapBase,#mapStyle) .grat{fill:none;stroke:rgba(255,255,255,.06);stroke-width:.6;vector-effect:non-scaling-stroke}
-#map .acg{fill:none;stroke-width:2;vector-effect:non-scaling-stroke;stroke-linecap:round}
+#map .acg{fill:none;stroke-width:1.3;vector-effect:non-scaling-stroke;stroke-linecap:round}
 #map .acghit{fill:none;stroke:transparent;stroke-width:14;vector-effect:non-scaling-stroke;cursor:pointer}
 #map .acghit:hover{stroke:rgba(255,255,255,.12)}
 #map text{font-family:var(--mono);paint-order:stroke;stroke:#1b2230;stroke-width:3px;stroke-linejoin:round}
@@ -562,6 +600,63 @@ h1,h2,h3,h4,.readh{text-wrap:balance}
 .chips label,.acgleg label{border-color:transparent;background:var(--raised)}
 .chips label:has(input:checked),.acgleg label:has(input:checked){border-color:transparent;background:color-mix(in srgb,var(--accent) 22%,var(--raised))}
 .pk.minor{border:0;background:color-mix(in srgb,var(--accent) 18%,transparent)}
+html[data-theme="retro"]{--bg:#020a04;--bg-deep:#010602;--panel:#03100a;--raised:#06190d;--line:#0f4a22;--fg:#39ff6a;--muted:#22b04a;--accent:#39ff6a;--accent-dim:#147a34;--accent-ink:#020a04;--lilac:#7dff9c;
+ --bar:#03140a;--bar-dark:#020a04;--bar-gradient:linear-gradient(#03140a,#020a04);--fire:#39ff6a;--earth:#39ff6a;--air:#39ff6a;--water:#39ff6a;--hard:#7dff9c;--soft:#2bd858;--minor:#1f9a44;
+ --asp-hard:#9dffb5;--asp-soft:#2bd858;--asp-tri:#2bd858;--asp-minor:#178a3c;--asp-conj:#c8ffd6;--w-line:#126b2d;--w-grey:#020a04;--w-p1:#04160b;--w-p2:#072010;--asp-field:#020a04;--outer-band:#03120a;--outer-line:#1d8c40;--outer-fg:#7dff9c;--outer-tick:#39ff6a;
+ --display:"VT323","Courier New",ui-monospace,monospace;--ui:ui-monospace,"SFMono-Regular","Menlo","Consolas","Courier New",monospace;--mono:ui-monospace,"SFMono-Regular","Menlo","Consolas","Courier New",monospace;color-scheme:dark}
+html[data-theme="retro"] body{background-image:none;text-shadow:0 0 6px rgba(57,255,106,.45)}
+html[data-theme="retro"] body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:9999;background:repeating-linear-gradient(to bottom,rgba(0,0,0,0) 0,rgba(0,0,0,0) 2px,rgba(0,0,0,.22) 3px);mix-blend-mode:multiply}
+html[data-theme="retro"] body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:9998;background:radial-gradient(ellipse at center,rgba(57,255,106,.05) 0%,rgba(0,0,0,0) 55%,rgba(0,0,0,.45) 100%)}
+html[data-theme="retro"] .top{color:#39ff6a;box-shadow:0 1px 0 #0f4a22}
+html[data-theme="retro"] .brand,html[data-theme="retro"] .brand svg{color:#39ff6a}
+html[data-theme="retro"] #wheel,html[data-theme="retro"] .vedic svg{filter:drop-shadow(0 0 2px rgba(57,255,106,.45))}
+html[data-theme="retro"] :is(#map,#mapBase,#mapStyle) rect[fill="#1b2230"],html[data-theme="retro"] .mapwrap{fill:#020a04;background:#020a04}
+html[data-theme="retro"] #map stop{stop-color:#020a04}
+html[data-theme="retro"] :is(#map,#mapBase,#mapStyle) .land{fill:#04170b;stroke:#1fa646}html[data-theme="retro"] :is(#map,#mapBase,#mapStyle) .border{stroke:#147a34}html[data-theme="retro"] :is(#map,#mapBase,#mapStyle) .adm1{stroke:#0e5a27}
+html[data-theme="retro"] :is(#map,#mapBase,#mapStyle) .grat{stroke:rgba(57,255,106,.08)}
+html[data-theme="retro"] #map text{stroke:#020a04}html[data-theme="retro"] #map .cap text,html[data-theme="retro"] #map .cap circle{fill:#39ff6a}
+html[data-theme="retro"] ::selection{background:#39ff6a;color:#020a04}
+@media (max-width:600px){html[data-theme="retro"] .dial-top #back,html[data-theme="retro"] .dial-top #fwd{min-width:50px}html[data-theme="retro"] .dial-top{gap:6px}}
+html[data-theme="retro"] .top .seg button,html[data-theme="retro"] .top .iconbtn,html[data-theme="retro"] .top .icobtn,html[data-theme="retro"] .top .note{color:#39ff6a}
+html[data-theme="retro"] .top .seg button[aria-pressed="true"]{background:#39ff6a;color:#020a04}
+html[data-theme="retro"] .top .seg button:not([aria-pressed="true"]):hover,html[data-theme="retro"] .top .iconbtn:hover{background:rgba(57,255,106,.12);color:#9dffb5}
+html[data-theme="retro"] .top .chip,html[data-theme="retro"] .top .iconbtn,html[data-theme="retro"] .top .seg{background:#03140a;box-shadow:0 0 0 1px #0f4a22}
+html[data-theme="retro"] .f,html[data-theme="retro"] textarea,html[data-theme="retro"] select,html[data-theme="retro"] input[type=text],html[data-theme="retro"] input[type=search],html[data-theme="retro"] input[type=number],html[data-theme="retro"] input[type=email],html[data-theme="retro"] input[type=date],html[data-theme="retro"] input[type=time]{background:#03100a;color:#39ff6a;border-color:#0f4a22;caret-color:#39ff6a}
+html[data-theme="retro"] .f:focus,html[data-theme="retro"] textarea:focus{border-color:#39ff6a;outline-color:#39ff6a;box-shadow:0 0 0 2px rgba(57,255,106,.2)}
+html[data-theme="retro"] ::placeholder{color:#1f8f40;opacity:1}
+html[data-theme="retro"] option{background:#03100a;color:#39ff6a}
+html[data-theme="pastel"]{--bg:#fff3f6;--bg-deep:#ffeef3;--panel:#fff6f8;--raised:#fdeef2;--line:#f3cfd8;--fg:#7a2f50;--muted:#a5607e;--accent:#f5a9b8;--accent-dim:#f8c6d0;--accent-ink:#6b2546;--lilac:#3bb5ec;
+ --bar:#5bcefa;--bar-dark:#f5a9b8;--bar-gradient:linear-gradient(115deg,#f9c9d4,#e3e2f4 55%,#bfe9fc);--fire:#e7728e;--earth:#4fa37c;--air:#2fa6dc;--water:#8f7ad9;--hard:#d9476e;--soft:#2aa983;--minor:#9a74d1;
+ --asp-hard:#e04f78;--asp-soft:#2fb38c;--asp-tri:#2b9fe0;--asp-minor:#a77bd9;--asp-conj:#d9a02c;--w-line:#f0c3cf;--w-grey:#fff6f8;--w-p1:#fcdbe2;--w-p2:#d4f1fe;--asp-field:#fff6f8;--outer-band:#eaf8ff;--outer-line:#9bd6f2;--outer-fg:#7a2f50;--outer-tick:#2fa6dc;color-scheme:light}
+html[data-theme="pastel"] body{background-image:none}
+html[data-theme="pastel"] .top{color:#6b2546;box-shadow:0 1px 0 #f3cfd8}
+html[data-theme="pastel"] .top .chip,html[data-theme="pastel"] .top .iconbtn,html[data-theme="pastel"] .top .seg{background:rgba(255,240,245,.6)}
+html[data-theme="pastel"] .top .seg button,html[data-theme="pastel"] .top .iconbtn,html[data-theme="pastel"] .brand,html[data-theme="pastel"] .brand svg{color:#6b2546}
+html[data-theme="pastel"] .top .seg button[aria-pressed="true"]{background:#fff6f8;color:#6b2546;box-shadow:0 1px 4px rgba(107,37,70,.18)}
+html[data-theme="pastel"] .wzoom button,html[data-theme="pastel"] .sidetog,html[data-theme="pastel"] .psec>summary,html[data-theme="pastel"] .maplayersbtn{color:#6b2546}
+html[data-theme="pastel"] .btn{color:#6b2546}
+html[data-theme="pastel"] :is(#map,#mapBase,#mapStyle) rect[fill="#1b2230"],html[data-theme="pastel"] .mapwrap{fill:#d6f2fe;background:#d6f2fe}
+html[data-theme="pastel"] #map stop{stop-color:#d6f2fe}
+html[data-theme="pastel"] :is(#map,#mapBase,#mapStyle) .land{fill:#fde3e9;stroke:#e79aae}html[data-theme="pastel"] :is(#map,#mapBase,#mapStyle) .border{stroke:#eaa9b9}html[data-theme="pastel"] :is(#map,#mapBase,#mapStyle) .adm1{stroke:#f0c3cf}
+html[data-theme="pastel"] :is(#map,#mapBase,#mapStyle) .grat{stroke:rgba(107,37,70,.07)}
+html[data-theme="pastel"] #map text{stroke:#fff6f8}html[data-theme="pastel"] #map .cap text,html[data-theme="pastel"] #map .cap circle{fill:#6b2546}
+html[data-theme="pastel"] #mLines .acg{filter:brightness(.72) saturate(1.5)}html[data-theme="pastel"] #mLines text{filter:brightness(.6) saturate(1.html[data-theme="pastel"] .top,html[data-theme="pastel"] .top .seg button,html[data-theme="pastel"] .top .note,html[data-theme="pastel"] .icobtn,html[data-theme="pastel"] .brand{color:#6b2546}
+html[data-theme="pastel"] .top .chip,html[data-theme="pastel"] .top .iconbtn,html[data-theme="pastel"] .top .seg{background:rgba(255,240,245,.6)}
+html[data-theme="pastel"] .wzoom button,html[data-theme="pastel"] .sidetog,html[data-theme="pastel"] .psec>summary,html[data-theme="pastel"] .maplayersbtn,html[data-theme="pastel"] .btn{color:#6b2546}
+6)}
+html[data-theme="pastel"] .brand svg{color:#6b2546!important}
+html[data-theme="pastel"] .cstyle button[aria-pressed="true"]{background:#6b2546;color:#fff3f6}
+html[data-theme="pastel"] .icobtn,html[data-theme="pastel"] #openLayers,html[data-theme="pastel"] .chartbar .icobtn svg,html[data-theme="pastel"] #openLayers svg{color:#6b2546!important}
+html[data-theme="pastel"] input[type=checkbox]{-webkit-appearance:none;appearance:none;width:16px;height:16px;border:1.6px solid #6b2546;border-radius:4px;background:#fff6f8;display:inline-grid;place-items:center;cursor:pointer;flex:none;vertical-align:-3px;margin:0}
+html[data-theme="pastel"] input[type=checkbox]:checked{background:#6b2546 url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M3.5 8.3l3 3 6-6.3' fill='none' stroke='%23fff3f6' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center/12px no-repeat}
+html[data-theme="pastel"] input[type=checkbox]:focus-visible{outline:2px solid #3bb5ec;outline-offset:1px}
+html[data-theme="pastel"] .layer input{width:18px;height:18px}
+html[data-theme="pastel"] .tback{background:linear-gradient(160deg,#bfe9fc,#8fd6f7);border-color:#5bcefa;box-shadow:0 1cqw 2.4cqw -1cqw rgba(107,37,70,.35)}
+html[data-theme="pastel"] .tcard.cross .tback{background:linear-gradient(160deg,#a9e2fb,#7ccdf4)}
+html[data-theme="pastel"] .tback svg{color:#fff6f8;opacity:1}
+html[data-theme="pastel"] .tback::after{border-color:rgba(255,255,255,.7)}
+html[data-theme="pastel"] .tfront{box-shadow:0 1cqw 2.4cqw -1cqw rgba(107,37,70,.35)}
+html[data-theme="pastel"] .tcard .tbadge{background:#6b2546;color:#fff3f6}
 </style>
 <style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}img{max-width:100%}</style>
 </head>
@@ -688,8 +783,8 @@ h1,h2,h3,h4,.readh{text-wrap:balance}
 </div>
 
 <footer class="sitefoot">
-  <p>Hi! Full Disclosure:<br>This site was created with the help of AI, which is one of the many reasons I’m making it free to use. It may make mistakes or have bugs here and there, but I’m constantly updating it to add features and fix issues as I notice them. It isn’t perfect, but I wanted a tool that fit my needs and thought it might help someone else too. This site does cost money to run, so if you’d like to support this effort, please donate any amount you feel is fair. Or get a personal reading from me.</p>
-  <div class="footbtns"><a class="btn" id="donateBtn" href="https://buymeacoffee.com/destinned" target="_blank" rel="noopener">Donate</a><button class="btn ghost" type="button" id="readBtn">Get a Reading</button></div>
+  <p><strong>Hi! Full Disclosure:</strong><br>This site was created with the help of AI, which is one of the many reasons I’m making it free to use. It may make mistakes or have bugs here and there, but I’m constantly updating it to add features and fix issues as I notice them. It isn’t perfect, but I wanted a tool that fit my needs and thought it might help someone else too. This site does cost money to run, so if you’d like to support this effort, please donate any amount you feel is fair. Or get a personal reading from me.</p>
+  <div class="footbtns"><a class="btn" id="donateBtn" href="https://buymeacoffee.com/destinned" target="_blank" rel="noopener">Donate</a><button class="btn" type="button" id="readBtn">Get a Reading</button></div>
 </footer>
 <div class="scrim" id="scrim" hidden></div>
 <aside class="drawer" id="drawer" hidden aria-label="Chart library">
@@ -1199,15 +1294,15 @@ const DEFAULT_SET={house:'placidus',zodiac:'tropical',node:'true',theme:'system'
 let S;try{S=Object.assign(structuredClone(DEFAULT_SET),JSON.parse(localStorage.getItem('orrery.settings')||'{}'))}catch(e){S=structuredClone(DEFAULT_SET)}
 S.show=Object.assign({},DEFAULT_SET.show,S.show);S.layers=Object.assign({},DEFAULT_SET.layers,S.layers);
 const saveSet=()=>{try{localStorage.setItem('orrery.settings',JSON.stringify(S))}catch(e){}};
-const THEMES=[['orrery','Destinned','Purple'],['oled','Oled','Black and white'],['paper','Paper','White and black']];
-const THEME_ICO={orrery:'<svg viewBox="0 0 26 24"><defs><mask id="tmlogo"><rect width="26" height="24" fill="#fff"/><circle cx="9" cy="10" r="8.6" fill="#000"/></mask></defs><circle cx="14" cy="12" r="10" fill="currentColor" mask="url(#tmlogo)"/><path d="M9.6 8.4 L10.5 11.1 L13.2 12 L10.5 12.9 L9.6 15.6 L8.7 12.9 L6 12 L8.7 11.1 Z" fill="currentColor"/></svg>',oled:'<svg viewBox="0 0 24 24"><defs><mask id="tmmoon"><rect width="24" height="24" fill="#fff"/><circle cx="8.6" cy="9.4" r="7.6" fill="#000"/></mask></defs><circle cx="12.5" cy="12.6" r="8.6" fill="currentColor" mask="url(#tmmoon)"/></svg>',paper:'<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="4.6" fill="currentColor"/><path fill="currentColor" d="M18.10 13.05L21.70 12.00L18.10 10.95ZM15.57 17.06L18.01 18.01L17.06 15.57ZM10.95 18.10L12.00 21.70L13.05 18.10ZM6.94 15.57L5.99 18.01L8.43 17.06ZM5.90 10.95L2.30 12.00L5.90 13.05ZM8.43 6.94L5.99 5.99L6.94 8.43ZM13.05 5.90L12.00 2.30L10.95 5.90ZM17.06 8.43L18.01 5.99L15.57 6.94Z"/></svg>'};
-function renderThemeMenu(){$('themeMenu').innerHTML=THEMES.map(([k,l,d])=>`<button type="button" role="menuitemradio" data-theme-k="${k}" aria-checked="${(['oled','paper'].includes(S.theme)?S.theme:'orrery')===k}"><span class="tmi">${THEME_ICO[k]}</span><span class="tml"><b>${l}</b></span></button>`).join('')}
+const THEMES=[['orrery','Destinned','Purple'],['oled','Oled','Black and white'],['paper','Paper','White and black'],['retro','Retro','Green CRT'],['pastel','Pastel','Trans flag']];
+const THEME_ICO={pastel:'<svg viewBox="0 0 24 24"><path d="M7.2 18.5h10.3a4 4 0 0 0 .6-7.95 5.6 5.6 0 0 0-10.8-1.2A4.6 4.6 0 0 0 7.2 18.5Z" fill="currentColor"/></svg>',retro:'<svg viewBox="0 0 24 24"><path fill-rule="evenodd" d="M3 4.5h18a1.5 1.5 0 0 1 1.5 1.5v10a1.5 1.5 0 0 1-1.5 1.5H3A1.5 1.5 0 0 1 1.5 16V6A1.5 1.5 0 0 1 3 4.5Zm1.2 2.2v8.6h15.6V6.7Z" fill="currentColor"/><path d="M6 9.2h4.5M6 11.6h7" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/><path d="M9 20.5h6M12 17.5v3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>',orrery:'<svg viewBox="0 0 26 24"><defs><mask id="tmlogo"><rect width="26" height="24" fill="#fff"/><circle cx="9" cy="10" r="8.6" fill="#000"/></mask></defs><circle cx="14" cy="12" r="10" fill="currentColor" mask="url(#tmlogo)"/><path d="M9.6 8.4 L10.5 11.1 L13.2 12 L10.5 12.9 L9.6 15.6 L8.7 12.9 L6 12 L8.7 11.1 Z" fill="currentColor"/></svg>',oled:'<svg viewBox="0 0 24 24"><defs><mask id="tmmoon"><rect width="24" height="24" fill="#fff"/><circle cx="8.6" cy="9.4" r="7.6" fill="#000"/></mask></defs><circle cx="12.5" cy="12.6" r="8.6" fill="currentColor" mask="url(#tmmoon)"/></svg>',paper:'<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="4.6" fill="currentColor"/><path fill="currentColor" d="M18.10 13.05L21.70 12.00L18.10 10.95ZM15.57 17.06L18.01 18.01L17.06 15.57ZM10.95 18.10L12.00 21.70L13.05 18.10ZM6.94 15.57L5.99 18.01L8.43 17.06ZM5.90 10.95L2.30 12.00L5.90 13.05ZM8.43 6.94L5.99 5.99L6.94 8.43ZM13.05 5.90L12.00 2.30L10.95 5.90ZM17.06 8.43L18.01 5.99L15.57 6.94Z"/></svg>'};
+function renderThemeMenu(){$('themeMenu').innerHTML=THEMES.map(([k,l,d])=>`<button type="button" role="menuitemradio" data-theme-k="${k}" aria-checked="${(['oled','paper','retro','pastel'].includes(S.theme)?S.theme:'orrery')===k}"><span class="tmi">${THEME_ICO[k]}</span><span class="tml"><b>${l}</b></span></button>`).join('')}
 document.addEventListener('click',e=>{const b=e.target.closest('#openTheme');const m=$('themeMenu');if(b){e.stopPropagation();const open=m.hidden;if(open)renderThemeMenu();m.hidden=!open;b.setAttribute('aria-expanded',String(open));return}
  const it=e.target.closest('[data-theme-k]');if(it){S.theme=it.dataset.themeK;saveSet();applyTheme();renderThemeMenu();renderAll();m.hidden=true;$('openTheme').setAttribute('aria-expanded','false');return}
  if(!m.hidden&&!e.target.closest('#themeMenu')){m.hidden=true;$('openTheme').setAttribute('aria-expanded','false')}});
 const DONATE_URL='https://buymeacoffee.com/destinned';
 if(DONATE_URL){const d=$('donateBtn');d.href=DONATE_URL;d.hidden=false}
-const applyTheme=()=>{const t=['oled','paper'].includes(S.theme)?S.theme:'orrery';document.documentElement.dataset.theme=t;const m=document.querySelector('meta[name="theme-color"]');if(m)m.content=t==='oled'?'#000000':t==='paper'?'#ffffff':'#3a2a47'};applyTheme();
+const applyTheme=()=>{const t=['oled','paper','retro','pastel'].includes(S.theme)?S.theme:'orrery';document.documentElement.dataset.theme=t;const m=document.querySelector('meta[name="theme-color"]');if(m)m.content=t==='oled'?'#000000':t==='paper'?'#ffffff':t==='retro'?'#020a04':t==='pastel'?'#5bcefa':'#3a2a47'};applyTheme();
 /* ---------- chart store ---------- */
 const NOW_CHART={id:'__now',name:'Sky now',folder:'',fav:false,now:true,place:'Durham, NC, USA',lat:35.994,lon:-78.899,tz:'America/New_York'};
 let lockSnap=null,charts=[],db=null,activeId='__now',otherId=null,mode='natal',offsetMin=0,tab='pos',zrOpen=null;
@@ -1431,18 +1526,18 @@ function dignity(k,lon){const s=Math.floor(lon/30);if(RULER[s]===k)return['dom',
 const posOpen=new Map(),posIs=(k,def)=>posOpen.has(k)?posOpen.get(k):def;
 function posTable(ch,title,ref){const keys=[...shownKeys(),...(ch.noHouses?[]:['asc','mc','dsc','ic'])].filter(k=>ch.pts[k]&&!(ch.noHouses&&[...LOTS,'vertex'].includes(k)));
  const cusps=(ref||ch).noHouses?null:(ref||ch).cusps;
- const Ly=S.layers;const tk='pos:'+(ref?'outer':'inner');let h=`<details class="psec" data-sec="${tk}" ${posIs(tk,true)?'open':''}><summary><h3 class="sub">${title}</h3></summary><div class="tblwrap"><table><thead><tr><th></th><th>Point</th><th>Position</th><th>${ref?'In natal':'House'}</th><th>Daily</th><th>Dignity</th>${Ly.decans?'<th>Decan</th>':''}${Ly.terms?'<th>Term</th>':''}${Ly.naks?'<th>Nakshatra</th>':''}</tr></thead><tbody>`;
+ const Ly=S.layers;const tk='pos:'+(ref?'outer':'inner');let h=`<h3 class="sub">${title}</h3><div class="tblwrap"><table><thead><tr><th></th><th>Point</th><th>Position</th><th>${ref?'In natal':'House'}</th><th>Daily</th><th>Dignity</th>${Ly.decans?'<th>Decan</th>':''}${Ly.terms?'<th>Term</th>':''}${Ly.naks?'<th>Nakshatra</th>':''}</tr></thead><tbody>`;
  for(const k of keys){const p=ch.pts[k],dg=dignity(k,p.lon),g=PT[k][0],isPl=!!GLYPH_SVG[k],isText=g.length>1&&!/[☀-⯿]/.test(g);
   h+=`<tr class="clk" data-obj="pt:${lastView&&ch===lastView.outer?'o':'i'}:${k}"><td class="g" ${isText?'style="font:600 .75rem var(--mono)"':''}>${isPl?svgGlyph(k):isText?g:g+VS}</td><td>${PT[k][1]}</td><td>${lonHtml(p.lon)}${p.speed<0&&!['node','snode'].includes(k)?' <span class="rx">℞</span>':''}</td><td class="mono">${cusps&&!['asc','mc','dsc','ic'].includes(k)?Calc.houseOf(p.lon,cusps):''}</td><td class="mono muted">${p.speed?(p.speed>0?'+':'−')+Math.abs(p.speed).toFixed(Math.abs(p.speed)<1?3:2)+'°':''}</td><td>${dg?`<span class="dig ${dg[0]}">${dg[1]}</span>`:''}</td>${Ly.decans?(()=>{const d=decanOf(p.lon);return `<td><span class="sym">${PT[d.ruler][0]+VS}</span> <span class="muted">${d.n}</span></td>`})():''}${Ly.terms?(()=>{const t=termOf(p.lon);return `<td><span class="sym">${PT[t][0]+VS}</span> <span class="muted">${PT[t][1]}</span></td>`})():''}${Ly.naks?(()=>{const n=nakOf(p.lon,ch.jd,ch.ayanamsa||0);return `<td>${NAKS[n.i]} <span class="muted mono">p${n.pada}</span></td>`})():''}</tr>`}
- h+='</tbody></table></div></details>';
- if(!ch.noHouses){const sk='cusps:'+title;h+=`<details class="psec" data-sec="${esc(sk)}" ${posIs(sk,false)?'open':''}><summary><h3 class="sub">House cusps · ${HOUSES.find(x=>x[0]===ch.houseUsed)?.[1]||''}</h3></summary><div class="tblwrap"><table><tbody>`;
-  for(let r=0;r<6;r++)h+=`<tr><td class="mono muted clk" data-obj="house:${r+1}">${r+1}</td><td class="clk" data-obj="house:${r+1}">${lonHtml(ch.cusps[r])}</td><td class="mono muted clk" data-obj="house:${r+7}">${r+7}</td><td class="clk" data-obj="house:${r+7}">${lonHtml(ch.cusps[r+6])}</td></tr>`;h+='</tbody></table></div></details>'}
+ h+='</tbody></table></div>';
+ if(!ch.noHouses){const sk='cusps:'+title;h+=`<h3 class="sub">House cusps · ${HOUSES.find(x=>x[0]===ch.houseUsed)?.[1]||''}</h3><div class="tblwrap"><table><tbody>`;
+  for(let r=0;r<6;r++)h+=`<tr><td class="mono muted clk" data-obj="house:${r+1}">${r+1}</td><td class="clk" data-obj="house:${r+1}">${lonHtml(ch.cusps[r])}</td><td class="mono muted clk" data-obj="house:${r+7}">${r+7}</td><td class="clk" data-obj="house:${r+7}">${lonHtml(ch.cusps[r+6])}</td></tr>`;h+='</tbody></table></div>'}
  return h}
 function renderPositions(v){let h='';if(v.outer)h+=posTable(v.outer,v.outer.label||'Outer',v.inner);h+=posTable(v.inner,v.mode==='composite'?'Composite':v.mode==='draconic'?'Draconic':byId(activeId).name);
  const el2=n360(v.inner.pts.moon.lon-v.inner.pts.sun.lon),ph=['New','Waxing crescent','First quarter','Waxing gibbous','Full','Waning gibbous','Last quarter','Waning crescent'][Math.floor(((el2+22.5)%360)/45)];
- if(S.layers.stars){const hits=starHits(v.inner);h+=`<details class="psec" data-sec="stars" ${posIs('stars',false)?'open':''}><summary><h3 class="sub">Fixed star conjunctions</h3></summary>`+(hits.length?`<div class="tblwrap"><table><thead><tr><th>Star</th><th>Position</th><th>With</th><th>Orb</th><th>Mag.</th></tr></thead><tbody>${hits.map(x=>`<tr><td>${x.star[0]}</td><td>${lonHtml(x.lon)}</td><td>${PT[x.k][1]}</td><td class="mono">${x.d.toFixed(2)}°</td><td class="mono muted">${x.star[4].toFixed(1)}</td></tr>`).join('')}</tbody></table></div>`:'<p class="muted">No chart point is within 1° of a listed star (1.5° for the brightest).</p>')+'</details>'}
+ if(S.layers.stars){const hits=starHits(v.inner);h+=`<h3 class="sub">Fixed star conjunctions</h3>`+(hits.length?`<div class="tblwrap"><table><thead><tr><th>Star</th><th>Position</th><th>With</th><th>Orb</th><th>Mag.</th></tr></thead><tbody>${hits.map(x=>`<tr><td>${x.star[0]}</td><td>${lonHtml(x.lon)}</td><td>${PT[x.k][1]}</td><td class="mono">${x.d.toFixed(2)}°</td><td class="mono muted">${x.star[4].toFixed(1)}</td></tr>`).join('')}</tbody></table></div>`:'<p class="muted">No chart point is within 1° of a listed star (1.5° for the brightest).</p>')}
  if(S.midpoints)h+=midTable(v.inner);
- h+=`<details class="psec" data-sec="sect" ${posIs('sect',false)?'open':''}><summary><h3 class="sub">Sect &amp; Moon</h3></summary><p>${v.inner.day?'Day chart (Sun above the horizon)':'Night chart (Sun below the horizon)'}. Moon phase: ${ph}, ${el2.toFixed(1)}° from the Sun.</p></details>`;return h}
+ h+=`<h3 class="sub">Sect &amp; Moon</h3><p>${v.inner.day?'Day chart (Sun above the horizon)':'Night chart (Sun below the horizon)'}. Moon phase: ${ph}, ${el2.toFixed(1)}° from the Sun.</p>`;return h}
 function renderAspects(v){const ch=v.inner,o=v.outer;const rows=aspKeys(ch);const cols=o?aspKeys(o):rows;
  const gl=k=>{const g=PT[k][0];if(GLYPH_SVG[k])return svgGlyph(k);return g.length>1?`<span style="font:600 .62rem var(--mono)">${g}</span>`:g+VS};
  const orbs=o?Object.fromEntries(Object.entries(S.orbs).map(([k,v2])=>[k,Math.max(1,v2*(mode==='transits'||mode==='progressed'?S.transitOrb:0.75))])):S.orbs;
@@ -1451,7 +1546,7 @@ function renderAspects(v){const ch=v.inner,o=v.outer;const rows=aspKeys(ch);cons
  (o?cols:rows).forEach((r,i)=>{h+=`<tr><th title="${PT[r][1]}">${gl(r)}</th>`;
   rows.forEach((c,j)=>{if(!o&&j>=i){h+=j===i?`<td class="diag">${gl(r)}</td>`:'<td></td>';return}
    const a=Calc.aspectBetween((o||ch).pts[r],ch.pts[c],orbs,S.aspects);
-   if(a){list.push({r,c,a});h+=`<td data-obj="asp:${o?'o':'i'}:${r}:${c}" class="clk cell ${aspectCls(a)}" title="${PT[r][1]} ${a.n} ${PT[c][1]}, orb ${a.orb.toFixed(2)}° ${a.applying?'applying':'separating'}"><span>${a.g}</span><small>${a.orb.toFixed(0)}${a.applying?'a':'s'}</small></td>`}else h+='<td></td>'});h+='</tr>'});
+   if(a){list.push({r,c,a});h+=`<td data-obj="asp:${o?'o':'i'}:${r}:${c}" class="clk cell ${aspectCls(a)}" title="${PT[r][1]} ${a.n} ${PT[c][1]}, orb ${a.orb.toFixed(2)}° ${a.applying?'applying':'separating'}"><span>${a.g}</span><small>${a.orb.toFixed(0)}${a.applying?'a':'s'}</small></td>`}else h+='<td class="gc"></td>'});h+='</tr>'});
  h+='</table></div>';
  // grid header fix for single: rows==cols
  list.sort((x,y)=>x.a.orb-y.a.orb);
@@ -1459,14 +1554,9 @@ function renderAspects(v){const ch=v.inner,o=v.outer;const rows=aspKeys(ch);cons
  return h}
 function renderZR(){const A=byId(activeId);if(A.now)return '<p class="muted">Zodiacal releasing runs from a birth chart. Open a saved chart from the library.</p>';
  if(A.timeUnknown)return '<p class="muted">Zodiacal releasing needs the Ascendant, so it requires a birth time.</p>';
- const n=castChart(A),birth=chartUtc(A),lot=(n.pts[S.zrLot]||n.pts.spirit).lon;
- const per=Calc.zr(lot,n.pts.fortune.lon,birth,S.zrYear,2,110),now=Date.now()+offsetMin*60000;
- let h=`<div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:12px"><div class="seg" role="group" aria-label="Lot"><button data-zl="spirit" aria-pressed="${S.zrLot==='spirit'}">From Spirit</button><button data-zl="fortune" aria-pressed="${S.zrLot==='fortune'}">From Fortune</button></div><span class="note">Lot in ${SIGN_N[Math.floor(lot/30)]} · ${S.zrYear}-day years · peaks counted from Fortune</span></div><div class="zr">`;
- per.forEach((p,i)=>{const cur=now>=p.start&&now<p.end,open=zrOpen===i||(zrOpen==null&&cur);
-  h+=`<button class="zrow ${cur?'now':''}" data-zr="${i}" aria-expanded="${open}"><span class="zs" style="color:${S.elemColors?`var(--${ELEM[p.sign%4]})`:'inherit'}">${SIGN_G[p.sign]+VS}</span><span>L1 ${SIGN_N[p.sign]}${p.peak?`<span class="pk ${p.peak}">${p.peak==='major'?'10th from Fortune':'angular'}</span>`:''}</span><span class="zd">${fmtDate(p.start)} → ${fmtDate(p.end)}</span></button>`;
-  if(open){h+='<div class="zsub">';p.subs.forEach(s=>{if(s.lbMark)return;const c2=now>=s.start&&now<s.end;
-   h+=`<div class="zrow ${c2?'now':''}"><span class="zs" style="color:${S.elemColors?`var(--${ELEM[s.sign%4]})`:'inherit'}">${SIGN_G[s.sign]+VS}</span><span>${SIGN_N[s.sign]}${s.lb?'<span class="pk lb">Loosing of the bond</span>':''}${s.peak?`<span class="pk ${s.peak}">${s.peak==='major'?'peak':'angular'}</span>`:''}</span><span class="zd">${fmtDate(s.start)} → ${fmtDate(s.end)}</span></div>`});h+='</div>'}});
- return h+'</div>'}
+ const d=zrData();if(!d)return '';zrLast=d;const now=Date.now()+offsetMin*60000,{L1,birth,fSign,yd}=d;
+ if(!zrOpenSet.size){let lst=L1,k='L',i=lst.findIndex(q=>now>=q.start&&now<q.end);while(i>=0&&lst[i]&&lst[i].level<4){k+='.'+i;zrOpenSet.add(k);lst=zrKids(lst[i],fSign,yd);i=lst.findIndex(q=>now>=q.start&&now<q.end)}}
+ return `<div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:12px"><div class="seg" role="group" aria-label="Lot"><button data-zl="spirit" aria-pressed="${S.zrLot==='spirit'}">From Spirit</button><button data-zl="fortune" aria-pressed="${S.zrLot==='fortune'}">From Fortune</button></div><span class="note">Lot in ${SIGN_N[Math.floor(d.lot/30)]} · ${yd}-day years · levels 1 to 4 · peaks counted from Fortune</span></div><div class="zr">${zrRows(L1.filter(p=>p.start<birth+100*31557600000),fSign,yd,birth,now,'L')}</div>`}
 function renderInfo(v){const A=byId(activeId),utc=chartUtc(A);
  const rows=[['Name',A.name],['Local time',A.now?'Live':A.timeUnknown?fmtDate(utc)+' (time unknown)':fmtFor(utc,A)],['UTC',new Date(utc).toISOString().replace('T',' ').slice(0,16)],['Place',A.place||'—'],['Current city',A.cur?`${A.cur.place} (${A.cur.tz})`:'—'],['Coordinates',`${Math.abs(A.lat).toFixed(3)}°${A.lat>=0?'N':'S'}, ${Math.abs(A.lon).toFixed(3)}°${A.lon>=0?'E':'W'}`],['Time zone',A.tz==='manual'?`Manual offset ${(A.offset||0)/60} h`:A.tz],['Folder',A.folder||'—'],['Houses',HOUSES.find(h=>h[0]===v.inner.houseUsed)?.[1]],['Zodiac',ZODIACS.find(z=>z[0]===S.zodiac)[1]+(v.inner.ayanamsa?` (ayanamsa ${v.inner.ayanamsa.toFixed(4)}°)`:'')],['Nodes',S.node==='true'?'True node':'Mean node'],['Ephemeris',Calc.engine()],['Julian day (UT)',v.inner.jd.toFixed(5)]];
  let h=`<h3 class="sub">Chart data</h3><table><tbody>${rows.map(r=>`<tr><td class="muted">${r[0]}</td><td style="white-space:normal">${esc(String(r[1]??''))}</td></tr>`).join('')}</tbody></table>`;
@@ -1510,8 +1600,8 @@ $('modes').addEventListener('keydown',e=>{const items=[...$('modes').querySelect
 document.addEventListener('click',e=>{if(!e.target.closest('#modesWrap'))closeModeMenu()});
 $('modes').addEventListener('click',e=>{const b=e.target.closest('[data-mode]');if(!b)return;closeModeMenu();mode=b.dataset.mode;offsetMin=0;if(mode==='progressed'&&+$('step').value<43830)$('step').value='525960';if(['synastry','composite'].includes(mode)&&!otherId){openLib('pick')}renderAll()});
 document.querySelectorAll('#tabs button').forEach(b=>b.addEventListener('click',()=>{tab=b.dataset.tab;renderAll()}));
-$('pane').addEventListener('click',e=>{const z=e.target.closest('[data-zr]');if(z){const i=+z.dataset.zr;zrOpen=z.getAttribute('aria-expanded')==='true'?-1:i;renderAll();return}
- const zl=e.target.closest('[data-zl]');if(zl){S.zrLot=zl.dataset.zl;zrOpen=null;saveSet();renderAll();return}
+$('pane').addEventListener('click',e=>{const zx=e.target.closest('[data-zx]');if(zx&&tab==='zr'){const k=zx.dataset.zx;zrOpenSet.has(k)?zrOpenSet.delete(k):zrOpenSet.add(k);const P=$('pane'),st=P.scrollTop;P.innerHTML=renderZR();P.scrollTop=st;return}const z=e.target.closest('[data-zr]');if(z){const i=+z.dataset.zr;zrOpen=z.getAttribute('aria-expanded')==='true'?-1:i;renderAll();return}
+ const zl=e.target.closest('[data-zl]');if(zl){S.zrLot=zl.dataset.zl;zrOpen=null;zrOpenSet.clear();saveSet();renderAll();return}
  const act=e.target.closest('[data-act]');if(!act)return;const A=byId(activeId);
  if(act.dataset.act==='edit')openForm(A);
  if(act.dataset.act==='dup')openForm({...A,id:null,name:A.name+' (copy)'});
@@ -1652,7 +1742,7 @@ function openForm(c){const f=c||{name:'',folder:'',y:'',mo:'',d:'',h:null,mi:nul
  $('fSave').onclick=async()=>{const r=read();if(!r.ok){$('fErr').hidden=false;$('fErr').textContent='Please add '+r.errs.join(', ')+'.';return}
   const rec={...r.rec,fav:c?.fav||false,id:editing?c.id:newId(),created:c?.created||Date.now()};
   const i=charts.findIndex(x=>x.id===rec.id);if(i>=0)charts[i]=rec;else charts.push(rec);
-  const ok=await persist(rec);if(!ok)return;activeId=rec.id;offsetMin=0;zrOpen=null;closeModals();closeLib();renderAll();toast(editing?'Chart updated':'Chart saved')};}
+  const ok=await persist(rec);if(!ok)return;activeId=rec.id;offsetMin=0;zrOpen=null;zrOpenSet.clear();closeModals();closeLib();renderAll();toast(editing?'Chart updated':'Chart saved')};}
 
 /* ---------- Sabian symbols (user-supplied list) ---------- */
 let SABIAN=null;try{const a=JSON.parse(localStorage.getItem('orrery.sabian')||'null');if(Array.isArray(a)&&a.length===360)SABIAN=a}catch(e){}
@@ -1818,7 +1908,7 @@ function segPath(pts){let d='',prev=null;for(const [l,b] of pts){const x=lonX(l)
 function gcDist(b1,l1,b2,l2){const r=Math.PI/180,a=Math.sin((b2-b1)*r/2)**2+Math.cos(b1*r)*Math.cos(b2*r)*Math.sin((l2-l1)*r/2)**2;return 6371*2*Math.asin(Math.min(1,Math.sqrt(a)))}
 function lineDist(L,b,l){if(L.mer!=null){const dl=Math.abs(w180b(l-L.mer));if(dl<=90)return 6371*Math.asin(Math.min(1,Math.sin(dl*Math.PI/180)*Math.cos(b*Math.PI/180)));return Math.min(gcDist(b,l,85,L.mer),gcDist(b,l,-85,L.mer))}
  let m=1e9;for(const [pl,pb] of L.pts){const d=gcDist(b,l,pb,pl);if(d<m)m=d}return m}
-function monoMap(h){const t=document.documentElement.dataset.theme;if(t!=='oled'&&t!=='paper')return h;
+function monoMap(h){const t=document.documentElement.dataset.theme;if(t==='retro')return h.replace(/(stroke|fill)="#([0-9a-fA-F]{6})"/g,(m,a,c)=>{if(c.toLowerCase()==='1b2230')return `${a}="#020a04"`;const r=parseInt(c.slice(0,2),16),g=parseInt(c.slice(2,4),16),b=parseInt(c.slice(4,6),16),L=(.2126*r+.7152*g+.0722*b)/255,v=.45+L*.55;return `${a}="rgb(${Math.round(40*v)},${Math.round(255*v)},${Math.round(90*v)})"`});if(t!=='oled'&&t!=='paper')return h;
  return h.replace(/(stroke|fill)="#([0-9a-fA-F]{6})"/g,(m,a,c)=>{if(c.toLowerCase()==='1b2230')return `${a}="${t==='oled'?'#000000':'#ffffff'}"`;const r=parseInt(c.slice(0,2),16),g=parseInt(c.slice(2,4),16),b=parseInt(c.slice(4,6),16),L=(.2126*r+.7152*g+.0722*b)/255;
   const v=Math.round(t==='oled'?140+L*115:20+(1-L)*30+L*90);const x=v.toString(16).padStart(2,'0');return `${a}="#${x}${x}${x}"`})}
 function renderMap(v){const map=$('map'),ch=v.inner,A=byId(activeId),T=acgT();try{if(MG){MG=null;clearTimeout(mgT);mapTx(0,0,1)}}catch(e){}map.setAttribute('viewBox',mapVBs());mapZoomUI();
@@ -1826,13 +1916,13 @@ function renderMap(v){const map=$('map'),ch=v.inner,A=byId(activeId),T=acgT();tr
  let h='';
  const fs=mapVB.w/58,fs2=mapVB.w/80;
  v.acg=acgLines(ch);v.parans=T.paran?acgParans(ch):[];v.ls=T.ls?localSpace(ch,lsOrigin(A)):[];v.asl=T.asp?aspectLinesAcg(ch):[];
- v.parans.forEach((P,i)=>{const y=latY(P.lat),d=`M-4000 ${y}H8000`,c=PARAN_COL;h+=`<path class="acg" d="${d}" stroke="${c}" stroke-opacity=".8" stroke-width="1.2" style="stroke-width:1.2px" stroke-dasharray="${'CA'.includes(P.e1)||'CA'.includes(P.e2)?'none':'5 5'}"/><path class="acghit" d="${d}" data-obj="paran:${i}"><title>${PT[P.p][1]} ${EVN[P.e1]} / ${PT[P.q][1]} ${EVN[P.e2]} · ${Math.abs(P.lat).toFixed(2)}°${P.lat>=0?'N':'S'}</title></path><text x="${mapVB.x+mapVB.w-fs*0.4}" y="${y-fs2*0.35}" text-anchor="end" font-size="${fs2.toFixed(1)}" fill="${c}">${shortG(P.p)} ${EVS[P.e1]} · ${shortG(P.q)} ${EVS[P.e2]}</text>`});
- v.ls.forEach(L=>{const d=segPath(L.pts),c=LS_COL[L.k]||'#7fd8c8';h+=`<path class="acg" d="${d}" stroke="${c}" stroke-dasharray="1 5" style="stroke-width:2.2px"/><path class="acghit" d="${d}" data-obj="ls:${L.k}"><title>${PT[L.k][1]} local space · ${L.az.toFixed(0)}° ${compass(L.az)}</title></path>`});
+ v.parans.forEach((P,i)=>{const y=latY(P.lat),d=`M-4000 ${y}H8000`,c=PARAN_COL;h+=`<path class="acg" d="${d}" stroke="${c}" stroke-opacity=".8" stroke-width=".85" style="stroke-width:.85px" stroke-dasharray="${'CA'.includes(P.e1)||'CA'.includes(P.e2)?'none':'5 5'}"/><path class="acghit" d="${d}" data-obj="paran:${i}"><title>${PT[P.p][1]} ${EVN[P.e1]} / ${PT[P.q][1]} ${EVN[P.e2]} · ${Math.abs(P.lat).toFixed(2)}°${P.lat>=0?'N':'S'}</title></path><text x="${mapVB.x+mapVB.w-fs*0.4}" y="${y-fs2*0.35}" text-anchor="end" font-size="${fs2.toFixed(1)}" fill="${c}">${shortG(P.p)} ${EVS[P.e1]} · ${shortG(P.q)} ${EVS[P.e2]}</text>`});
+ v.ls.forEach(L=>{const d=segPath(L.pts),c=LS_COL[L.k]||'#7fd8c8';h+=`<path class="acg" d="${d}" stroke="${c}" stroke-dasharray="1 5" style="stroke-width:1.5px"/><path class="acghit" d="${d}" data-obj="ls:${L.k}"><title>${PT[L.k][1]} local space · ${L.az.toFixed(0)}° ${compass(L.az)}</title></path>`});
  if(v.ls.length){const o=v.ls[0].origin,x=lonX(o.lon),y=latY(o.lat);v.ls.forEach(L=>{const r=fs*2.6,a=(L.az-90)*DR;h+=`<text x="${x+Math.cos(a)*r}" y="${y+Math.sin(a)*r}" text-anchor="middle" dominant-baseline="central" font-size="${fs2.toFixed(1)}" fill="${LS_COL[L.k]||'#7fd8c8'}">${shortG(L.k)}</text>`})}
- v.asl.forEach((L,i)=>{const d=segPath(L.pts),c=ASPL_COL[L.a];h+=`<path class="acg" d="${d}" stroke="${c}" stroke-opacity=".85" stroke-dasharray="${L.ang==='MC'?'10 4 2 4':'3 4'}" style="stroke-width:1.4px"/><path class="acghit" d="${d}" data-obj="asl:${i}"><title>${PT[L.k][1]} ${ASPL_N[L.a][0]} to ${L.ang}</title></path>`;
+ v.asl.forEach((L,i)=>{const d=segPath(L.pts),c=ASPL_COL[L.a];h+=`<path class="acg" d="${d}" stroke="${c}" stroke-opacity=".85" stroke-dasharray="${L.ang==='MC'?'10 4 2 4':'3 4'}" style="stroke-width:1px"/><path class="acghit" d="${d}" data-obj="asl:${i}"><title>${PT[L.k][1]} ${ASPL_N[L.a][0]} to ${L.ang}</title></path>`;
   if(L.ang==='MC')h+=`<text x="${lonX(L.mer)}" y="${latY(-38)}" text-anchor="middle" font-size="${fs2.toFixed(1)}" fill="${c}">${shortG(L.k)}${ASPL_N[L.a][1]}MC</text>`});
  if(T.planet)v.acg.forEach(L=>{const d=segPath(L.pts),c=ACG_COL[L.k]||'#ddd';h+=`<path class="acg" d="${d}" stroke="${c}" stroke-dasharray="${ACG_ANG[L.a][2]}"/><path class="acghit" d="${d}" data-obj="acgline:${L.k}:${L.a}"><title>${PT[L.k][1]} ${L.a}</title></path>`;
-  if(L.a==='MC'||L.a==='IC'){const x=lonX(L.mer);h+=`<text x="${x}" y="${L.a==='MC'?latY(70):latY(-52)}" text-anchor="middle" font-size="${fs.toFixed(1)}" font-weight="600" fill="${c}">${GLYPH_SVG[L.k]||PT[L.k][0].length>1?PT[L.k][1]:PT[L.k][0]+VS} ${L.a}</text>`}});
+  if(L.a==='MC'||L.a==='IC'){const x=lonX(L.mer);h+=`<text x="${x}" y="${L.a==='MC'?latY(70):latY(-52)}" text-anchor="middle" font-size="${(fs*.92).toFixed(1)}" font-weight="400" fill="${c}">${GLYPH_SVG[L.k]||PT[L.k][0].length>1?PT[L.k][1]:PT[L.k][0]+VS} ${L.a}</text>`}});
  const pin=(b,l,label,col,shape)=>{const x=lonX(l),y=latY(b),r=mapVB.w/170;return `<g data-obj="acgpt:${b.toFixed(3)}:${l.toFixed(3)}" style="cursor:pointer">${shape==='star'?`<path d="M${x} ${y-r*1.6}L${x+r*.45} ${y-r*.45}L${x+r*1.6} ${y}L${x+r*.45} ${y+r*.45}L${x} ${y+r*1.6}L${x-r*.45} ${y+r*.45}L${x-r*1.6} ${y}L${x-r*.45} ${y-r*.45}Z" fill="${col}" stroke="#1b2230" stroke-width="1.5" vector-effect="non-scaling-stroke"/>`:`<circle cx="${x}" cy="${y}" r="${r}" fill="${col}" stroke="#1b2230" stroke-width="2" vector-effect="non-scaling-stroke"/>`}<title>${esc(label)}</title></g>`};
  if(!A.now)h+=pin(A.lat,A.lon,'Birthplace: '+(A.place||''),'#ffffff','star');
  if(A.cur)h+=pin(A.cur.lat,A.cur.lon,'Current city: '+A.cur.place,'#b88ccf','dot');
@@ -1851,21 +1941,21 @@ function renderMap(v){const map=$('map'),ch=v.inner,A=byId(activeId),T=acgT();tr
  try{mbQueue()}catch(e){}
  h=monoMap(h);$('mLines').innerHTML=`<g>${h}</g><g transform="translate(-3600 0)">${h}</g><g transform="translate(3600 0)">${h}</g>`}
 function acgControls(v){const A=byId(activeId),all=[...Calc.BODY_KEYS,'node',...(S.layers.asteroids?Calc.AST_KEYS:[])],on=S.acgShow||Calc.BODY_KEYS,T=acgT(),f=S.acgFocus||'sun',asel=S.acgAsp||['squ','tri'],lso=S.lsOrigin||'birth';
- return `<div class="acgopts"><label class="chk" for="acgDet"><input type="checkbox" id="acgDet" ${S.acgDetail!==false?'checked':''}> States and provinces</label><label class="chk" for="acgCap"><input type="checkbox" id="acgCap" ${S.acgCaps!==false?'checked':''}> Capital cities</label></div><p class="note" style="margin:2px 0 6px">Borders and labels appear as you zoom in.</p><details class="psec" data-sec="acg:types" ${posIs('acg:types',true)?'open':''}><summary><h3 class="sub">Line types</h3></summary><div class="setall"><button type="button" class="pillbtn" data-acgall="types" data-v="1">Select all</button><button type="button" class="pillbtn" data-acgall="types" data-v="0">Clear all</button></div><div class="acgleg">${[['planet','Planet lines','linear-gradient(90deg,#ffcf5a,#ff6b6b,#7fe0a6,#6f9dff)'],['paran','Parans',PARAN_COL],['ls','Local space','linear-gradient(90deg,#8ff5dc,#3fd1b0,#2c8db0)'],['asp','Aspect lines','linear-gradient(90deg,#3fe0b0,#5ea8ff,#ff5c72)']].map(([k,l,c])=>`<label for="acgt-${k}"><input type="checkbox" id="acgt-${k}" data-acgt="${k}" ${T[k]?'checked':''}><i style="background:${c}"></i>${l}</label>`).join('')}</div>
+ return `<div class="acgopts"><label class="chk" for="acgDet"><input type="checkbox" id="acgDet" ${S.acgDetail!==false?'checked':''}> States and provinces</label><label class="chk" for="acgCap"><input type="checkbox" id="acgCap" ${S.acgCaps!==false?'checked':''}> Capital cities</label></div><p class="note" style="margin:2px 0 6px">Borders and labels appear as you zoom in.</p><h3 class="sub hrow">Line types<span class="allnone"><button type="button" class="linkbtn" data-acgall="types" data-v="1">Select all</button><button type="button" class="linkbtn" data-acgall="types" data-v="0">Clear all</button></span></h3><div class="acgleg">${[['planet','Planet lines','linear-gradient(90deg,#ffcf5a,#ff6b6b,#7fe0a6,#6f9dff)'],['paran','Parans',PARAN_COL],['ls','Local space','linear-gradient(90deg,#8ff5dc,#3fd1b0,#2c8db0)'],['asp','Aspect lines','linear-gradient(90deg,#3fe0b0,#5ea8ff,#ff5c72)']].map(([k,l,c])=>`<label for="acgt-${k}"><input type="checkbox" id="acgt-${k}" data-acgt="${k}" ${T[k]?'checked':''}><i style="background:${c}"></i>${l}</label>`).join('')}</div>
  ${T.paran||T.asp?`<div class="two" style="margin-top:10px"><label class="l" for="acgFocus">${T.paran&&T.asp?'Parans and aspect lines for':T.paran?'Parans for':'Aspect lines for'}<select class="f" id="acgFocus"><option value="all" ${f==='all'?'selected':''}>All shown planets</option>${all.filter(k=>on.includes(k)).map(k=>`<option value="${k}" ${f===k?'selected':''}>${PT[k][1]}</option>`).join('')}</select></label>${T.ls?`<label class="l" for="lsOrigin">Local space from<select class="f" id="lsOrigin"><option value="birth" ${lso==='birth'?'selected':''}>Birthplace</option>${A.cur?`<option value="current" ${lso==='current'?'selected':''}>Current city</option>`:''}${mapPin?`<option value="pin" ${lso==='pin'?'selected':''}>Selected place</option>`:''}</select></label>`:''}</div>`:T.ls?`<div class="two" style="margin-top:10px"><label class="l" for="lsOrigin">Local space from<select class="f" id="lsOrigin"><option value="birth" ${lso==='birth'?'selected':''}>Birthplace</option>${A.cur?`<option value="current" ${lso==='current'?'selected':''}>Current city</option>`:''}${mapPin?`<option value="pin" ${lso==='pin'?'selected':''}>Selected place</option>`:''}</select></label></div>`:''}
  ${T.asp?`<div class="hrow" style="margin-top:10px"><span class="note">Aspects</span><span class="allnone"><button type="button" class="linkbtn" data-acgall="asp" data-v="1">Select all</button><button type="button" class="linkbtn" data-acgall="asp" data-v="0">Clear all</button></span></div><div class="acgleg" style="margin-top:6px">${Object.keys(ASPL_COL).map(a=>`<label for="acga-${a}"><input type="checkbox" id="acga-${a}" data-acga="${a}" ${asel.includes(a)?'checked':''}><i style="background:${ASPL_COL[a]}"></i>${ASPL_N[a][1]} ${ASPL_N[a][0]}</label>`).join('')}</div>`:''}
- ${T.paran&&v.parans?`<p class="note" style="margin-top:8px">${v.parans.length} paran latitude${v.parans.length===1?'':'s'} shown. Solid: one planet on the meridian; dashed: both on the horizon.</p>`:''}</details>
- <details class="psec" data-sec="acg:planets" ${posIs('acg:planets',true)?'open':''}><summary><h3 class="sub">Planets shown</h3></summary><div class="setall"><button type="button" class="pillbtn" data-acgall="planets" data-v="1">Select all</button><button type="button" class="pillbtn" data-acgall="planets" data-v="0">Clear all</button></div><div class="acgleg">${all.map(k=>`<label for="acg-${k}"><input type="checkbox" id="acg-${k}" data-acg="${k}" ${on.includes(k)?'checked':''}><i style="background:${ACG_COL[k]||'#ddd'}"></i>${glyphHtml(k)} ${PT[k][1].replace('North Node','Node')}</label>`).join('')}</div></details>`}
+ ${T.paran&&v.parans?`<p class="note" style="margin-top:8px">${v.parans.length} paran latitude${v.parans.length===1?'':'s'} shown. Solid: one planet on the meridian; dashed: both on the horizon.</p>`:''}
+ <h3 class="sub hrow">Planets shown<span class="allnone"><button type="button" class="linkbtn" data-acgall="planets" data-v="1">Select all</button><button type="button" class="linkbtn" data-acgall="planets" data-v="0">Clear all</button></span></h3><div class="acgleg">${all.map(k=>`<label for="acg-${k}"><input type="checkbox" id="acg-${k}" data-acg="${k}" ${on.includes(k)?'checked':''}><i style="background:${ACG_COL[k]||'#ddd'}"></i>${glyphHtml(k)} ${PT[k][1].replace('North Node','Node')}</label>`).join('')}</div>`}
 function renderAcgPanel(v){const A=byId(activeId),lines=v.acg||acgLines(v.inner);const all=[...Calc.BODY_KEYS,'node',...(S.layers.asteroids?Calc.AST_KEYS:[])],on=S.acgShow||Calc.BODY_KEYS;
  const near=(b,l)=>lines.map(L=>({L,d:lineDist(L,b,l)})).sort((x,y)=>x.d-y.d).slice(0,6);
  const nearList=(b,l)=>`<table><tbody>${near(b,l).map(o=>`<tr class="clk" data-obj="acgline:${o.L.k}:${o.L.a}"><td style="width:1.6em;color:${ACG_COL[o.L.k]}">${glyphHtml(o.L.k)}</td><td>${PT[o.L.k][1]} ${o.L.a}</td><td class="mono">${Math.round(o.d).toLocaleString()} km</td><td class="mono muted">${Math.round(o.d*0.621371).toLocaleString()} mi</td></tr>`).join('')}</tbody></table>`;
  const T=acgT(),f=S.acgFocus||'sun',asel=S.acgAsp||['squ','tri'],lso=S.lsOrigin||'birth';
  let h=acgControls(v)+`
- <details class="psec" data-sec="acg:styles" ${posIs('acg:styles',false)?'open':''}><summary><h3 class="sub">Line styles</h3></summary><div class="styles">${Object.entries(ACG_ANG).map(([a,[n,,da]])=>`<span><svg viewBox="0 0 34 8"><path d="M1 4H33" stroke="var(--fg)" stroke-width="2" stroke-dasharray="${da}" fill="none"/></svg>${a} · ${n}</span>`).join('')}</div></details>
- <details class="psec" data-sec="acg:place" ${posIs('acg:place',true)?'open':''}><summary><h3 class="sub">Check a place</h3></summary><div class="place"><input class="f" id="acgQ" placeholder="Type a city to see which lines run near it" autocomplete="off"><ul class="sugg" id="acgSugg" role="listbox" hidden></ul></div>
- ${mapPin?`<p class="note" style="margin-top:8px">${esc(mapPin.label||'Selected place')}</p>${nearList(mapPin.b,mapPin.l)}`:'<p class="note" style="margin-top:8px">Or click anywhere on the map.</p>'}</details>
- ${A.now?'':`<details class="psec" data-sec="acg:nearb" ${posIs('acg:nearb',true)?'open':''}><summary><h3 class="sub">Nearest lines to the birthplace</h3></summary>${nearList(A.lat,A.lon)}</details>`}
- ${A.cur?`<details class="psec" data-sec="acg:nearc" ${posIs('acg:nearc',true)?'open':''}><summary><h3 class="sub">Nearest lines to ${esc(A.cur.place)}</h3></summary>${nearList(A.cur.lat,A.cur.lon)}</details>`:''}
+ <h3 class="sub">Line styles</h3><div class="styles">${Object.entries(ACG_ANG).map(([a,[n,,da]])=>`<span><svg viewBox="0 0 34 8"><path d="M1 4H33" stroke="var(--fg)" stroke-width="2" stroke-dasharray="${da}" fill="none"/></svg>${a} · ${n}</span>`).join('')}</div>
+ <h3 class="sub">Check a place</h3><div class="place"><input class="f" id="acgQ" placeholder="Type a city to see which lines run near it" autocomplete="off"><ul class="sugg" id="acgSugg" role="listbox" hidden></ul></div>
+ ${mapPin?`<p class="note" style="margin-top:8px">${esc(mapPin.label||'Selected place')}</p>${nearList(mapPin.b,mapPin.l)}`:'<p class="note" style="margin-top:8px">Or click anywhere on the map.</p>'}
+ ${A.now?'':`<h3 class="sub">Nearest lines to the birthplace</h3>${nearList(A.lat,A.lon)}`}
+ ${A.cur?`<h3 class="sub">Nearest lines to ${esc(A.cur.place)}</h3>${nearList(A.cur.lat,A.cur.lon)}`:''}
  <p class="note" style="margin-top:14px">Lines are drawn in mundo from each body’s right ascension and declination at the moment of birth. A line’s influence is usually read within a few hundred kilometres either side.</p>`;
  return h}
 function mapGoTo(b,l){const w=Math.max(160,Math.min(mapMaxW(),260)),h=w*mapRatio;mapVB={x:lonX(l)-w/2,y:latY(b)-h/2,w,h};clampVB();setMapVB();mapZoomUI()}
@@ -2269,7 +2359,7 @@ function infoMid(a,b){const ch=lastView.inner;if(!ch.pts[a]||!ch.pts[b])return n
  <dl><dt>Position</dt><dd>${dms(m.lon)}</dd>${h?`<dt>House</dt><dd>${ord(h)}</dd>`:''}<dt>Contacts</dt><dd>${c.length?c.map(x=>`${glyphHtml(x.k)} ${PT[x.k][1]} ${x.n} (${x.o.toFixed(1)}°)`).join('<br>'):'None within '+MID_ORB+'°'}</dd></dl>
  <p class="il">About</p><p class="interp">The ${midName(a,b)} midpoint is the sensitive degree halfway between the two points, where their themes (${ma}, and ${mb}) meet. ${c.length?`Here it is activated by ${c.map(x=>PT[x.k][1]).join(', ')}, so ${c.length>1?'those points draw':'that point draws'} on this combination: a planetary picture written ${PT[a][0].length>1?a:PT[a][1]}/${PT[b][0].length>1?b:PT[b][1]} = ${c.map(x=>PT[x.k][1]).join(' = ')}.`:'No chart point touches it by conjunction or hard aspect within the orb, so it works in the background until a transit or progression reaches it.'} Contacts use the 8th-harmonic aspects (0°, 45°, 90°, 135°, 180°) with a ${MID_ORB}° orb.</p>`}
 function midTable(ch){const ms=midpoints(ch).map(m=>({...m,c:midContacts(ch,m)})).sort((x,y)=>(y.c.length?1:0)-(x.c.length?1:0)||x.lon-y.lon);
- return `<details class="psec" data-sec="mids" ${posIs('mids',false)?'open':''}><summary><h3 class="sub">Midpoints</h3></summary><p class="note">Nearer midpoints. Contacts are conjunctions and hard aspects within ${MID_ORB}°; pairs with contacts are listed first.</p><div class="tblwrap"><table><thead><tr><th>Pair</th><th>Position</th><th>Contacts</th></tr></thead><tbody>${ms.map(m=>`<tr class="clk" data-obj="mid:${m.a}:${m.b}"><td class="g" style="white-space:nowrap">${glyphHtml(m.a)}/${glyphHtml(m.b)}</td><td>${lonHtml(m.lon)}</td><td>${m.c.map(x=>`${glyphHtml(x.k)}<span class="muted mono" style="font-size:.75rem"> ${({0:'☌',45:'∠',90:'□',135:'⚼',180:'☍'})[x.h]}${x.o.toFixed(1)}°</span>`).join(' ')}</td></tr>`).join('')}</tbody></table></div></details>`}
+ return `<h3 class="sub">Midpoints</h3><p class="note">Nearer midpoints. Contacts are conjunctions and hard aspects within ${MID_ORB}°; pairs with contacts are listed first.</p><div class="tblwrap"><table><thead><tr><th>Pair</th><th>Position</th><th>Contacts</th></tr></thead><tbody>${ms.map(m=>`<tr class="clk" data-obj="mid:${m.a}:${m.b}"><td class="g" style="white-space:nowrap">${glyphHtml(m.a)}/${glyphHtml(m.b)}</td><td>${lonHtml(m.lon)}</td><td>${m.c.map(x=>`${glyphHtml(x.k)}<span class="muted mono" style="font-size:.75rem"> ${({0:'☌',45:'∠',90:'□',135:'⚼',180:'☍'})[x.h]}${x.o.toFixed(1)}°</span>`).join(' ')}</td></tr>`).join('')}</tbody></table></div>`}
 function infoStar(name){const st=STARS.find(x=>x[0]===name);if(!st)return null;const inner=lastView.inner,L=starLon(st,inner.jd,inner.ayanamsa||0);
  const near=shownKeys().concat(['asc','mc']).filter(k=>inner.pts[k]).map(k=>({k,d:Math.abs(n360(inner.pts[k].lon-L+180)-180)})).filter(o=>o.d<=3).sort((a,b)=>a.d-b.d);
  return `<p class="kicker">Fixed star</p><h4><span class="big" style="color:var(--accent)">✦${VS}</span>${esc(name)}</h4>
