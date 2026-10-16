@@ -290,7 +290,7 @@ tr.clk:hover td,td.clk:hover{background:var(--raised)}
 .stage.fs{position:fixed;inset:0;z-index:33;background:var(--bg);overflow:hidden;border:0;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;gap:8px;padding:calc(10px + env(safe-area-inset-top,0px)) 10px calc(10px + env(safe-area-inset-bottom,0px));--fsT:0px;--fsB:0px;--fsw:max(200px,min(calc(100vw - 16px),calc(100dvh - var(--fsT) - var(--fsB) - 16px)))}
 .stage.fs>.wheelwrap{position:absolute!important;z-index:0;left:calc(50% - var(--fsw)/2);top:calc(var(--fsT) + (100dvh - var(--fsT) - var(--fsB) - var(--fsw))/2);width:var(--fsw)!important;max-width:none!important;margin:0!important}
 .stage.fs>.chartbar,.stage.fs>.reloc,.stage.fs>.dial{position:relative;z-index:2;width:fit-content!important;max-width:min(760px,100%)!important;margin:0!important;background:color-mix(in srgb,var(--panel) 78%,transparent);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);border-radius:14px;padding:8px 10px;box-shadow:0 10px 30px -12px rgba(0,0,0,.55),0 0 0 1px color-mix(in srgb,var(--line) 70%,transparent)}
-.stage.fs>.dial{margin-top:auto!important;width:min(620px,100%)!important}
+.stage.fs>.dial{margin-top:auto!important;width:min(760px,100%)!important}
 .stage.fs>.dial .note:empty{display:none}
 .stage.fs>.wheelwrap,.stage.fs #wheel{overflow:visible}
 body.wheelfs .layers,body.wheelfs .menu{z-index:36}
@@ -368,6 +368,20 @@ html[data-theme="pastel"] .top .seg button:not([aria-pressed="true"]):hover,html
 html[data-theme="paper"] .cstyle button:not([aria-pressed="true"]):hover,
 html[data-theme="pastel"] .cstyle button:not([aria-pressed="true"]):hover{background:rgba(0,0,0,.07)}
 .chartbar #openLayers{transition:background .15s,color .15s}.chartbar #openLayers:hover{background:rgba(255,255,255,.08);color:var(--fg)}
+.wlab{position:absolute;right:46px;bottom:4px;display:flex;flex-direction:column;gap:6px;z-index:3}
+.wlab button{width:28px;height:28px;border-radius:50%;border:0;background:var(--w-p1);color:var(--muted);font:600 .95rem/1 var(--mono);display:grid;place-items:center;cursor:pointer;opacity:.75;box-shadow:0 2px 8px rgba(0,0,0,.3);transition:filter .15s,color .15s,opacity .15s}
+.wlab button .sym{font-size:.85rem}
+.wlab button[aria-pressed="true"]{color:var(--lilac);opacity:1}
+.wlab button:hover{filter:brightness(1.25);opacity:1}
+@media (max-width:860px){.wlab{right:50px;gap:5px}.wlab button{width:28px;height:28px;font-size:.85rem}}
+.wzoom .wlab{position:static;display:flex;flex-direction:column;gap:inherit;align-items:center;margin-bottom:4px}
+@media (min-width:981px){.stage.fs .wzoom .wlab button{width:40px;height:40px;font-size:1.15rem}}
+
+
+.ebal{display:grid;gap:6px}
+.ebrow{display:grid;grid-template-columns:5.2em 1fr 3em minmax(0,1.3fr);align-items:center;gap:8px;font-size:.88rem}
+.ebbar{height:8px;border-radius:99px;background:var(--raised);overflow:hidden}.ebbar i{display:block;height:100%;border-radius:99px}
+.ebp{text-align:right;color:var(--muted);font-size:.8rem}.ebg{color:var(--muted);font-size:.85rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .dial.shifted .when{color:var(--lilac)}
 .dial.shifted #reset{background:var(--lilac);color:var(--accent-ink);border-color:transparent}
 .dial.shifted #reset:hover{filter:brightness(1.08)}
@@ -657,6 +671,17 @@ html[data-theme="pastel"] .tback svg{color:#fff6f8;opacity:1}
 html[data-theme="pastel"] .tback::after{border-color:rgba(255,255,255,.7)}
 html[data-theme="pastel"] .tfront{box-shadow:0 1cqw 2.4cqw -1cqw rgba(107,37,70,.35)}
 html[data-theme="pastel"] .tcard .tbadge{background:#6b2546;color:#fff3f6}
+html[data-theme="retro"] input[type=checkbox],html[data-theme="retro"] input[type=radio]{-webkit-appearance:none;appearance:none;width:16px;height:16px;border:1.6px solid #39ff6a;border-radius:3px;background:#020a04;display:inline-grid;place-items:center;cursor:pointer;flex:none;vertical-align:-3px;margin:0;box-shadow:0 0 5px rgba(57,255,106,.35)}
+html[data-theme="retro"] input[type=radio]{border-radius:50%}
+html[data-theme="retro"] input[type=checkbox]:checked{background:#39ff6a url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M3.5 8.3l3 3 6-6.3' fill='none' stroke='%23020a04' stroke-width='2.4' stroke-linecap='square'/%3E%3C/svg%3E") center/12px no-repeat}
+html[data-theme="retro"] input[type=radio]:checked{background:radial-gradient(circle,#39ff6a 0 45%,#020a04 50%)}
+html[data-theme="retro"] .layer input{width:18px;height:18px}
+html[data-theme="retro"] ::-webkit-calendar-picker-indicator{filter:brightness(0) invert(1) sepia(1) saturate(8) hue-rotate(75deg) brightness(1.05);opacity:1;cursor:pointer}
+html[data-theme="pastel"] ::-webkit-calendar-picker-indicator{filter:invert(18%) sepia(40%) saturate(2200%) hue-rotate(300deg) brightness(70%)}
+html[data-theme="retro"] .wzoom button,html[data-theme="retro"] .sidetog,html[data-theme="retro"] .maplayersbtn,html[data-theme="retro"] .psec>summary{background:#03140a;color:#39ff6a;box-shadow:0 0 0 1px #147a34,0 0 8px rgba(57,255,106,.25)}
+html[data-theme="retro"] .wzoom button:hover,html[data-theme="retro"] .sidetog:hover,html[data-theme="retro"] .maplayersbtn:hover{filter:none;background:#072a14;color:#9dffb5}
+html[data-theme="retro"] .wlab button{background:#03140a;color:#1f9a44;box-shadow:0 0 0 1px #0f4a22}
+html[data-theme="retro"] .wlab button[aria-pressed="true"]{color:#39ff6a;box-shadow:0 0 0 1px #147a34,0 0 8px rgba(57,255,106,.25)}
 </style>
 <style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}img{max-width:100%}</style>
 </head>
@@ -746,7 +771,7 @@ html[data-theme="pastel"] .tcard .tbadge{background:#6b2546;color:#fff3f6}
   <div class="stage" id="stage">
     <div class="chartbar" id="chartBar"><button class="chip" id="openLib" type="button" aria-label="Open chart library"><svg class="hamb" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg><strong id="chartName">Sky now</strong></button><button class="iconbtn icobtn" id="editActive" type="button" title="Edit this chart" aria-label="Edit this chart" hidden><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20h4L19 9l-4-4L4 16v4z"/><path d="M14 6l4 4"/></svg></button><div class="menuwrap" id="modesWrap"><button class="chip" id="modeBtn" type="button" aria-haspopup="menu" aria-expanded="false" aria-controls="modes"><span class="note" style="color:inherit;opacity:.75">Chart type</span><strong id="modeLabel">Natal</strong><span aria-hidden="true">▾</span></button><div class="menu" id="modes" role="menu" aria-label="Chart type" hidden></div></div><div class="seg cstyle" id="styleSeg" role="group" aria-label="Chart style"><button type="button" data-cs="western" title="Western wheel" aria-label="Western wheel"><svg class="vico" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4.5"/><path d="M3 12h4.5M16.5 12H21"/></svg><span class="cslbl">Western</span></button><button type="button" data-cs="north" title="North Indian chart" aria-label="North Indian chart"><svg class="vico" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="1.5"/><path d="M3 3l18 18M21 3L3 21M12 3l9 9-9 9-9-9z"/></svg><span class="cslbl">North Indian</span></button><button type="button" data-cs="south" title="South Indian chart" aria-label="South Indian chart"><svg class="vico" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="1.5"/><path d="M3 7.5h18M3 16.5h18M7.5 3v18M16.5 3v18"/><rect x="7.5" y="7.5" width="9" height="9" fill="currentColor" fill-opacity=".18" stroke="none"/></svg><span class="cslbl">South Indian</span></button></div><span class="grow"></span><button class="iconbtn icobtn" id="openLayers" type="button" aria-expanded="false" aria-controls="layersMenu" aria-label="Layers" title="Layers"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5.5"/><circle cx="12" cy="12" r="5.5"/><circle cx="15.5" cy="15.5" r="5.5"/></svg></button></div>
     <div class="reloc" id="relocBar" hidden></div>
-    <div class="wheelwrap" id="wheelWrap"><svg id="wheel" viewBox="0 0 800 800" role="img" aria-label="Chart wheel"></svg><div class="wzoom" role="group" aria-label="Zoom the chart"><button type="button" id="wzIn" aria-label="Zoom in" title="Zoom in">+</button><button type="button" id="wzOut" aria-label="Zoom out" title="Zoom out">−</button><button type="button" id="wzReset" aria-label="Reset zoom" title="Reset zoom" hidden>⤢</button><button type="button" id="wFs" aria-label="Fill the window" title="Fill the window" aria-pressed="false"></button></div></div>
+    <div class="wheelwrap" id="wheelWrap"><svg id="wheel" viewBox="0 0 800 800" role="img" aria-label="Chart wheel"></svg><div class="wlab" role="group" aria-label="Wheel labels"><button type="button" id="wlDeg" aria-pressed="true" title="Show degrees" aria-label="Show degrees">°</button><button type="button" id="wlMin" aria-pressed="true" title="Show minutes" aria-label="Show minutes">′</button><button type="button" id="wlSign" aria-pressed="false" title="Show sign symbols" aria-label="Show sign symbols"><span class="sym">♈︎</span></button></div><div class="wzoom" role="group" aria-label="Zoom the chart"><button type="button" id="wzIn" aria-label="Zoom in" title="Zoom in">+</button><button type="button" id="wzOut" aria-label="Zoom out" title="Zoom out">−</button><button type="button" id="wzReset" aria-label="Reset zoom" title="Reset zoom" hidden>⤢</button><button type="button" id="wFs" aria-label="Fill the window" title="Fill the window" aria-pressed="false"></button></div></div>
     <div class="mapwrap" id="acgWrap" hidden>
       <canvas id="mapBase" aria-hidden="true"></canvas><svg id="mapStyle" aria-hidden="true" style="display:none"><rect fill="#1b2230"/><path class="land"/><path class="border"/><path class="adm1"/><path class="grat"/></svg><svg id="map" viewBox="0 150 3600 1350" role="img" aria-label="Astrocartography world map" preserveAspectRatio="xMidYMid meet"></svg>
       <button class="maplayersbtn" id="mapLayersBtn" type="button" aria-expanded="false" aria-controls="mapLayers" aria-label="Map layers" title="Map layers"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5.5"/><circle cx="12" cy="12" r="5.5"/><circle cx="15.5" cy="15.5" r="5.5"/></svg></button><div class="maplayers" id="mapLayers" hidden role="dialog" aria-label="Map layers"></div>
@@ -776,7 +801,7 @@ html[data-theme="pastel"] .tcard .tbadge{background:#6b2546;color:#fff3f6}
       <button role="tab" data-tab="pos" aria-selected="true">Positions</button>
       <button role="tab" data-tab="asp" aria-selected="false">Aspects</button>
       <button role="tab" data-tab="zr" aria-selected="false">Releasing</button>
-      <button role="tab" data-tab="info" aria-selected="false">Chart</button>
+      <button role="tab" data-tab="elem" aria-selected="false">Elements</button><button role="tab" data-tab="info" aria-selected="false">Chart</button>
     </div></div>
     <div class="pane" id="pane"></div>
   </div>
@@ -1397,15 +1422,23 @@ const MOON_PHASE_NOTES={'New Moon':'Born near the New Moon, the Moon and Sun are
 function moonPhaseName(E){E=((E%360)+360)%360;return E<10||E>=350?'New Moon':E<80?'Waxing Crescent':E<100?'First Quarter':E<170?'Waxing Gibbous':E<190?'Full Moon':E<260?'Waning Gibbous':E<280?'Last Quarter':'Waning Crescent'}
 function drawPlanets(g,chart,rGlyph,rDeg,rTickOut,rTickIn,big,small,rEdge){const which=lastView&&chart===lastView.outer?'o':'i';
  const items=shownKeys().filter(k=>chart.pts[k]&&!(chart.noHouses&&[...LOTS,'vertex'].includes(k))).map(k=>({k,lon:chart.pts[k].lon,sp:chart.pts[k].speed}));
- spread(items,big?9:small?7.6:8.2).forEach(o=>{
+ spread(items,big?9:small?8.2:8.2).forEach(o=>{
   const [a,b]=pt(o.lon,rTickOut),[c,d]=pt(o.lon,rTickIn);const ow=which==='o';g.append(el('line',{x1:a,y1:b,x2:c,y2:d,stroke:ow?'var(--outer-tick)':'var(--accent)','stroke-width':2}));
-  if(rEdge){const gr=(big?34:small?24:29)/2+2,tl=ow?10:7,lc=ow?'var(--outer-tick)':'var(--accent)';if(!ow){const [e1,e2]=pt(o.lon,rEdge),[e3,e4]=pt(o.lon,rEdge-tl);g.append(el('line',{x1:e1,y1:e2,x2:e3,y2:e4,stroke:lc,'stroke-width':1.6}))}
+  if(rEdge){const gr=(big?31:small?25:26)/2+2,tl=ow?10:7,lc=ow?'var(--outer-tick)':'var(--accent)';if(!ow){const [e1,e2]=pt(o.lon,rEdge),[e3,e4]=pt(o.lon,rEdge-tl);g.append(el('line',{x1:e1,y1:e2,x2:e3,y2:e4,stroke:lc,'stroke-width':1.6}))}
    const [l1,l2]=pt(o.show,rGlyph+gr),[l3,l4]=pt(o.lon,rEdge-tl);g.append(el('line',{x1:l1,y1:l2,x2:l3,y2:l4,stroke:lc,'stroke-width':.8,opacity:.7,class:'glink'}))}
   const [x,y]=pt(o.show,rGlyph),txt=PT[o.k][0],isText=txt.length>1&&!/[☀-⯿]/.test(txt);
-  if(o.k==='moon'&&!chart.pts.sun){}else if(WHEEL_SVG[o.k]){const col=ow?'var(--outer-fg)':o.k==='sun'||o.k==='moon'?'var(--accent)':'var(--fg)',mE=o.k==='moon'?chart.pts.moon.lon-chart.pts.sun.lon:0,gs=o.k==='moon'?{vb:'0 0 24 24',fill:false,parts:moonPhaseParts(mE,col)}:WHEEL_SVG[o.k],sz=(big?34:small?24:29)*(o.k==='sun'||o.k==='fortune'||o.k==='moon'?.8:1)*(ow?1:.95),ps=el('svg',{x:x-sz/2,y:y-sz/2,width:sz,height:sz,viewBox:gs.vb,fill:gs.fill?col:'none',stroke:gs.fill?'none':col,'stroke-width':o.k==='sun'||o.k==='fortune'||o.k==='moon'?1.35:1.25,'stroke-linecap':'round','stroke-linejoin':'round',color:col,overflow:'visible'});ps.innerHTML=gs.parts;ps.append(el('title',{},`${PT[o.k][1]}${o.k==='moon'?' ('+moonPhaseName(mE)+')':''} ${deg(o.lon).txt} ${SIGN_N[deg(o.lon).s]}${o.sp<0?' (retrograde)':''}`));g.append(ps)}
-  const t=WHEEL_SVG[o.k]&&(o.k!=='moon'||chart.pts.sun)?el('g',{}):el('text',{x,y,'text-anchor':'middle','dominant-baseline':'central','font-weight':isText?400:300,'font-size':(isText?(small?14:17):(big?36:small?25:30)*(({mars:1.25,venus:1.15,node:.88,snode:.88})[o.k]||1))*(ow?1:.95),fill:ow?'var(--outer-fg)':o.k==='sun'||o.k==='moon'?'var(--accent)':o.k==='node'||o.k==='snode'?'var(--lilac)':'var(--fg)','font-family':isText?'var(--mono)':'var(--sym)'},isText?txt:txt+VS);
+  if(o.k==='moon'&&!chart.pts.sun){}else if(WHEEL_SVG[o.k]){const col=ow?'var(--outer-fg)':o.k==='sun'||o.k==='moon'?'var(--accent)':'var(--fg)',mE=o.k==='moon'?chart.pts.moon.lon-chart.pts.sun.lon:0,gs=o.k==='moon'?{vb:'0 0 24 24',fill:false,parts:moonPhaseParts(mE,col)}:WHEEL_SVG[o.k],sz=(big?31:small?25:26)*(o.k==='sun'||o.k==='fortune'||o.k==='moon'?.8:1)*(ow?1:.95),ps=el('svg',{x:x-sz/2,y:y-sz/2,width:sz,height:sz,viewBox:gs.vb,fill:gs.fill?col:'none',stroke:gs.fill?'none':col,'stroke-width':o.k==='sun'||o.k==='fortune'||o.k==='moon'?1.35:1.25,'stroke-linecap':'round','stroke-linejoin':'round',color:col,overflow:'visible'});ps.innerHTML=gs.parts;ps.append(el('title',{},`${PT[o.k][1]}${o.k==='moon'?' ('+moonPhaseName(mE)+')':''} ${deg(o.lon).txt} ${SIGN_N[deg(o.lon).s]}${o.sp<0?' (retrograde)':''}`));g.append(ps)}
+  const t=WHEEL_SVG[o.k]&&(o.k!=='moon'||chart.pts.sun)?el('g',{}):el('text',{x,y:o.k==='mars'?y-(big?6:4.5):y,'text-anchor':'middle','dominant-baseline':'central','font-weight':isText?400:300,'font-size':(isText?(small?14:17):(big?32.5:small?25.5:27)*(({mars:1.25,venus:1.15,node:.88,snode:.88})[o.k]||1))*(ow?1:.95),fill:ow?'var(--outer-fg)':o.k==='sun'||o.k==='moon'?'var(--accent)':o.k==='node'||o.k==='snode'?'var(--lilac)':'var(--fg)','font-family':isText?'var(--mono)':'var(--sym)'},isText?txt:txt+VS);
   const ti=el('title',{},`${PT[o.k][1]} ${deg(o.lon).txt} ${SIGN_N[deg(o.lon).s]}${o.sp<0?' (retrograde)':''}`);t.append(ti);g.append(t);
-  const f=deg(o.lon),[dx,dy]=pt(o.show,rDeg);g.append(el('text',{x:dx,y:dy,'text-anchor':'middle','dominant-baseline':'central','font-size':small?11:13,'font-weight':500,fill:o.sp<0&&!['node','snode'].includes(o.k)?'var(--fire)':ow?'var(--outer-tick)':'var(--fg)',opacity:ow?.95:o.sp<0&&!['node','snode'].includes(o.k)?.95:.8,'font-family':'var(--mono)'},f.dd+'°'+String(f.mm).padStart(2,'0')+'′'+(o.sp<0&&!['node','snode'].includes(o.k)?'℞':'')));
+  {const f=deg(o.lon),rx=o.sp<0&&!['node','snode'].includes(o.k),col=rx?'var(--fire)':ow?'var(--outer-tick)':'var(--fg)',op=ow?.95:rx?.95:.8,gh=(big?31:small?25:26)/2,step=big?13:small?10.5:11.5,fsz=big?13:small?10.5:12;
+   const parts=[];if(S.wDeg!==false)parts.push(['t',f.dd+'°'+(rx&&S.wMin===false?'℞':'')]);if(S.wSign)parts.push(['s',f.s]);if(S.wMin!==false)parts.push(['t',String(f.mm).padStart(2,'0')+'′'+(rx?'℞':'')]);if(!parts.length&&rx)parts.push(['t','℞']);
+   const [ux0,uy0]=pt(o.show,100),ux=Math.abs(ux0-C)/100,uy=Math.abs(uy0-C)/100,lim=ow?rTickOut-(lastView&&lastView.ob||84)+2:rTickIn+3,top=rGlyph-gh+1.5;
+   const ext=([t,v],k)=>t==='s'?(fsz+1)*(ux*1+uy*1)*k:(ux*String(v).length*fsz*.6+uy*fsz*1.05)*k;
+   let k=1;{const tot=parts.reduce((a,p)=>a+ext(p,1)+2,0);if(tot>top-lim)k=Math.max(.72,(top-lim)/tot)}
+   let rr=top;const pos=parts.map(p=>{const e=ext(p,k);const c=rr-e/2;rr-=e+2*k;return c});
+   parts.forEach(([t,v],i)=>{const [dx,dy]=pt(o.show,pos[i]);
+    if(t==='s')g.append(el('text',{x:dx,y:dy,'text-anchor':'middle','dominant-baseline':'central','font-size':(fsz+1)*k,'font-weight':300,fill:S.elemColors?`var(--${ELEM[v%4]})`:col,'font-family':'var(--sym)',class:'wlab-s'},SIGN_G[v]+VS));
+    else g.append(el('text',{x:dx,y:dy,'text-anchor':'middle','dominant-baseline':'central','font-size':(i===0?fsz:fsz-1)*k,'font-weight':500,fill:col,opacity:op,'font-family':'var(--mono)'},v))})}
   g.append(hit({cx:x,cy:y,r:big?21:small?15:18,fill:'transparent'},`pt:${which}:${o.k}`));
  });}
 function aspectCls(a){return a.k==='conj'?'conj':a.cls==='minor'?'minr':(a.k==='squ'||a.k==='opp')?'hard':a.k==='tri'?'tri':'soft'}
@@ -1417,7 +1450,7 @@ function aspectPairs(c1,c2){const keys1=aspKeys(c1),keys2=c2?aspKeys(c2):keys1;c
 function ring(r1,r2,segs,fill){const g=el('g',{});const mid=(r1+r2)/2;
  svg.append(el('circle',{cx:C,cy:C,r:r1,fill:fill||'none',stroke:'var(--w-line)'}));svg.append(el('circle',{cx:C,cy:C,r:r2,fill:'none',stroke:'var(--w-line)'}));
  segs.forEach(sg=>{const [a,b]=pt(sg.start,r1),[c,d]=pt(sg.start,r2);g.append(el('line',{x1:a,y1:b,x2:c,y2:d,stroke:'var(--w-line)','stroke-width':sg.major?1:.6}));
-  const [x,y]=pt((sg.start+sg.end)/2,mid);const t=el('text',{x,y,'text-anchor':'middle','dominant-baseline':'central','font-size':sg.size||11,fill:sg.color||'var(--muted)','font-family':sg.font||'var(--sym)'},sg.label);t.append(el('title',{},sg.title));g.append(t);if(sg.obj)g.append(hit({d:sector(r1,r2,sg.start,sg.end),fill:'transparent'},sg.obj))});
+  const [x,y]=pt((sg.start+sg.end)/2,mid);let rt=null;if(sg.tang){let r=Math.atan2(y-C,x-C)*180/Math.PI+90;r=((r+180)%360+360)%360-180;if(r>90)r-=180;else if(r<-90)r+=180;rt=`rotate(${r.toFixed(1)} ${x.toFixed(1)} ${y.toFixed(1)})`}const t=el('text',{x,y,'text-anchor':'middle','dominant-baseline':'central','font-size':sg.size||11,fill:sg.color||'var(--muted)','font-family':sg.font||'var(--sym)',...(rt?{transform:rt}:{})},sg.label);t.append(el('title',{},sg.title));g.append(t);if(sg.obj)g.append(hit({d:sector(r1,r2,sg.start,sg.end),fill:'transparent'},sg.obj))});
  svg.append(g)}
 function starLon(st,jd,ay){return n360(st[1]+st[3]*(jd-2451545)/365.25-ay)}
 function starHits(ch){const out=[];if(!S.layers.stars)return out;const keys=[...Calc.BODY_KEYS,...astKeys(ch),'node',...(ch.noHouses?[]:['asc','mc'])].filter(k=>ch.pts[k]);
@@ -1484,7 +1517,7 @@ function renderWheel(v){
  svg.replaceChildren();const inner=v.inner,outer=v.outer,bi=!!outer,Ly=S.layers;
  const ascLon=inner.noHouses?0:inner.pts.asc.lon;rot=180-(inner.locked&&lockSnap?lockSnap.asc:ascLon);
  const nr=['terms','decans','naks'].filter(k=>Ly[k]).length;
- const Z1=Ly.stars?382:394,Z2=Z1-50,base=Z2-22*nr,IN=bi?base-176:base-130;
+ const Z1=Ly.stars?382:394,Z2=Z1-50,base=Z2-22*nr,wn=(S.wDeg!==false?1:0)+(S.wMin!==false?1:0)+(S.wSign?1:0),OB=Math.round(50+wn*34/3),IN=Math.round(bi?base-OB-54-wn*38/3:base-84-wn*46/3);v.ob=OB;
  const bandKeys=[...['terms','decans','naks'].filter(k=>Ly[k]),...(bi?['outer']:[]),'inner'],BC={};
  {let prev='G';bandKeys.forEach(k=>{BC[k]=prev==='G'?'P':'G';prev=BC[k]});if(BC.inner==='G')BC.inner='P';
   let pi=0,last=null;bandKeys.forEach(k=>{if(BC[k]==='P'){pi=last==='P'?pi+1:0;BC[k]=`var(--w-p${pi%2?2:1})`}else BC[k]='var(--w-grey)';last=BC[k].includes('-p')?'P':'G'})}
@@ -1495,28 +1528,28 @@ function renderWheel(v){
  let r=Z2;const glyph=k=>PT[k][0]+VS;
  if(Ly.terms){const segs=[];TERMS.forEach((t,s)=>{let a=s*30;t.forEach(([pl,end])=>{segs.push({obj:`term:${s}:${a-s*30}`,start:a,end:s*30+end,label:glyph(pl),title:`Term of ${PT[pl][1]}, ${SIGN_N[s]} ${a-s*30}°–${end}°`,size:10,major:a===s*30});a=s*30+end})});ring(r,r-22,segs,BC.terms);r-=22}
  if(Ly.decans){const segs=[];for(let d=0;d<36;d++){const pl=CHALDEAN[d%7];segs.push({obj:`decan:${d}`,start:d*10,end:d*10+10,label:glyph(pl),title:`Decan ${d%3+1} of ${SIGN_N[Math.floor(d/3)]}: ${PT[pl][1]}`,size:11,major:d%3===0})}ring(r,r-22,segs,BC.decans);r-=22}
- if(Ly.naks){const off=Calc.ayanamsa(inner.jd,'lahiri')-(inner.ayanamsa||0),w=360/27,segs=[];for(let i=0;i<27;i++)segs.push({obj:`nak:${i}`,start:i*w+off,end:(i+1)*w+off,label:NAK_AB[i],title:`${i+1}. ${NAKS[i]} (lord ${NAK_LORD[i%9]})`,size:9.5,font:'var(--mono)',color:'var(--lilac,var(--muted))',major:true});ring(r,r-22,segs,BC.naks);r-=22}
- svg.append(el('circle',{cx:C,cy:C,r:base,fill:bi?BC.outer:BC.inner,stroke:'none'}));if(bi)svg.append(el('circle',{cx:C,cy:C,r:base-84,fill:BC.inner,stroke:'none'}));
+ if(Ly.naks){const off=Calc.ayanamsa(inner.jd,'lahiri')-(inner.ayanamsa||0),w=360/27,segs=[];for(let i=0;i<27;i++)segs.push({obj:`nak:${i}`,start:i*w+off,end:(i+1)*w+off,label:NAK_AB[i],tang:true,title:`${i+1}. ${NAKS[i]} (lord ${NAK_LORD[i%9]})`,size:9.5,font:'var(--mono)',color:'var(--lilac,var(--muted))',major:true});ring(r,r-22,segs,BC.naks);r-=22}
+ svg.append(el('circle',{cx:C,cy:C,r:base,fill:bi?BC.outer:BC.inner,stroke:'none'}));if(bi)svg.append(el('circle',{cx:C,cy:C,r:base-OB,fill:BC.inner,stroke:'none'}));
  for(let i=0;i<360;i+=1){if(i%30===0)continue;const len=i%10===0?11:i%5===0?7:4;const [a,b]=pt(i,base),[c,d]=pt(i,base-len);svg.append(el('line',{x1:a,y1:b,x2:c,y2:d,stroke:'var(--muted)','stroke-width':.7,opacity:.55}))}
  if(Ly.stars){const hits=new Set(starHits(inner).map(h=>h.star[0]));STARS.forEach(st=>{const L=starLon(st,inner.jd,inner.ayanamsa||0),[x,y]=pt(L,Z1+9),isHit=hits.has(st[0]);
    const t=el('text',{x,y,'text-anchor':'middle','dominant-baseline':'central','font-size':isHit?13:Math.max(6,10-st[4]*1.5),fill:isHit?'var(--accent)':'var(--muted)','font-family':'var(--sym)'},'✦'+VS);t.append(el('title',{},`${st[0]} ${deg(L).txt} ${SIGN_N[deg(L).s]}${isHit?' (conjunct a chart point)':''}`));svg.append(t);svg.append(el('circle',{cx:x,cy:y,r:9,fill:'transparent','data-obj':`star:${st[0]}`,class:'hit'}))})}
- if(bi){svg.append(el('circle',{cx:C,cy:C,r:base-84,fill:'none',stroke:'var(--outer-line)','stroke-width':1.2}))}
+ if(bi){svg.append(el('circle',{cx:C,cy:C,r:base-OB,fill:'none',stroke:'var(--outer-line)','stroke-width':1.2}))}
  svg.append(el('circle',{cx:C,cy:C,r:IN,fill:'var(--w-grey)',stroke:'var(--w-line)'}));
- if(!inner.noHouses){inner.cusps.forEach((c,i)=>{const ang=i%3===0;const [a,b]=pt(c,bi&&ang&&mode==='progressed'?base-84:base),[x,y]=pt(c,IN);
+ if(!inner.noHouses){inner.cusps.forEach((c,i)=>{const ang=i%3===0;const [a,b]=pt(c,bi&&ang&&mode==='progressed'?base-OB:base),[x,y]=pt(c,IN);
    svg.append(el('line',{x1:a,y1:b,x2:x,y2:y,stroke:ang?'var(--fg)':'var(--line)','stroke-width':ang?1.6:1,opacity:ang?.8:1}));
    const mid=c+n360(inner.cusps[(i+1)%12]-c)/2,[hx,hy]=pt(mid,IN-14);svg.append(hit({d:sector(IN,IN-26,c,inner.cusps[(i+1)%12]),fill:'transparent'},`house:${i+1}`));svg.append(el('text',{x:hx,y:hy,'text-anchor':'middle','dominant-baseline':'central','font-size':12,fill:'var(--muted)','font-family':'var(--mono)'},i+1))});
-  [['asc','AC'],['mc','MC'],['dsc','DC'],['ic','IC']].forEach(([k,l])=>{const lon=inner.pts[k].lon;const pin=bi&&mode==='progressed',rE=pin?base-84:base;{if(!pin){const [t1,t2]=pt(lon,Z2+14),[t3,t4]=pt(lon,Z2);svg.append(el('line',{x1:t1,y1:t2,x2:t3,y2:t4,stroke:'var(--lilac)','stroke-width':2.6,'stroke-linecap':'round',class:'angtick'}))}const [t5,t6]=pt(lon,rE),[t7,t8]=pt(lon,rE-12);svg.append(el('line',{x1:t5,y1:t6,x2:t7,y2:t8,stroke:'var(--lilac)','stroke-width':2.6,class:'angtick'}))}const [lx,ly]=pin?pt(lon+(k==='asc'||k==='dsc'?-4.2:4.2),rE-20):pt(angLabA(lon),Z2+28);
+  [['asc','AC'],['mc','MC'],['dsc','DC'],['ic','IC']].forEach(([k,l])=>{const lon=inner.pts[k].lon;const pin=bi&&mode==='progressed',rE=pin?base-OB:base;{if(!pin){const [t1,t2]=pt(lon,Z2+14),[t3,t4]=pt(lon,Z2);svg.append(el('line',{x1:t1,y1:t2,x2:t3,y2:t4,stroke:'var(--lilac)','stroke-width':2.6,'stroke-linecap':'round',class:'angtick'}))}const [t5,t6]=pt(lon,rE),[t7,t8]=pt(lon,rE-12);svg.append(el('line',{x1:t5,y1:t6,x2:t7,y2:t8,stroke:'var(--lilac)','stroke-width':2.6,class:'angtick'}))}const [lx,ly]=pin?pt(lon+(k==='asc'||k==='dsc'?-4.2:4.2),rE-20):pt(angLabA(lon),Z2+28);
    svg.append(el('text',{x:lx,y:ly,'text-anchor':'middle','dominant-baseline':'central','font-size':pin?12:13,'font-weight':700,fill:'var(--lilac)','font-family':'var(--mono)'},l));svg.append(hit({cx:lx,cy:ly,r:14,fill:'transparent'},`pt:i:${k}`))});}
  const pairs=aspectPairs(inner,outer||null).filter(p=>p.asp.k!=='conj');
  const aspR=IN-26;svg.append(el('circle',{cx:C,cy:C,r:aspR,fill:'var(--asp-field)',stroke:'none'}));pairs.forEach(p=>{const [x1,y1]=pt((outer||inner).pts[p.b].lon,aspR),[x2,y2]=pt(inner.pts[p.a].lon,aspR);
   svg.append(el('line',{x1,y1,x2,y2,stroke:aspectColor(p.asp),'stroke-width':(p.asp.orb<1?1.1:p.asp.orb<3?.8:.6)*(outer?.75:1),'stroke-linecap':'round',opacity:p.asp.cls==='minor'?.85:1,'stroke-dasharray':p.asp.cls==='minor'?'5 4':'none'}));svg.append(hit({x1,y1,x2,y2,stroke:'transparent','stroke-width':12},`asp:${bi?'o':'i'}:${p.b}:${p.a}`))});
  svg.append(el('circle',{cx:C,cy:C,r:aspR,fill:'none',stroke:'var(--w-line)'}));
- if(bi&&mode==='progressed'&&outer.pts.asc){[['asc','AC'],['mc','MC'],['dsc','DC'],['ic','IC']].forEach(([k,l])=>{const lon=outer.pts[k].lon,[a,b]=pt(lon,base),[c,d]=pt(lon,base-84);
+ if(bi&&mode==='progressed'&&outer.pts.asc){[['asc','AC'],['mc','MC'],['dsc','DC'],['ic','IC']].forEach(([k,l])=>{const lon=outer.pts[k].lon,[a,b]=pt(lon,base),[c,d]=pt(lon,base-OB);
    svg.append(el('line',{x1:a,y1:b,x2:c,y2:d,stroke:'var(--fg)','stroke-width':1.6,opacity:.8,class:'pang'}));
    const [t1,t2]=pt(lon,Z2+14),[t3,t4]=pt(lon,Z2),[t5,t6]=pt(lon,base),[t7,t8]=pt(lon,base-12);svg.append(el('line',{x1:t1,y1:t2,x2:t3,y2:t4,stroke:'var(--lilac)','stroke-width':2.6,'stroke-linecap':'round',class:'pang'}));svg.append(el('line',{x1:t5,y1:t6,x2:t7,y2:t8,stroke:'var(--lilac)','stroke-width':2.6,class:'pang'}));
    const [lx,ly]=pt(angLabA(lon),Z2+28);const t=el('text',{x:lx,y:ly,'text-anchor':'middle','dominant-baseline':'central','font-size':12,'font-weight':700,fill:'var(--lilac)','font-family':'var(--mono)'},l);t.append(el('title',{},`Progressed ${PT[k][1]} ${deg(lon).txt} ${SIGN_N[deg(lon).s]}`));svg.append(t);svg.append(hit({cx:lx,cy:ly,r:14,fill:'transparent'},`pt:o:${k}`))})}
- if(S.midpoints){const rM=(bi?base-84:base)-16,g=el('g',{class:'mids'});midpoints(inner).forEach(m=>{const [x,y]=pt(m.lon,rM);g.append(el('circle',{cx:x,cy:y,r:2,fill:'var(--lilac)',opacity:.8}));const hc=hit({cx:x,cy:y,r:5,fill:'transparent'},`mid:${m.a}:${m.b}`);hc.append(el('title',{},`${midName(m.a,m.b)} midpoint ${deg(m.lon).txt} ${SIGN_N[deg(m.lon).s]}`));g.append(hc)});svg.append(g)}
- if(bi){drawPlanets(svg,outer,base-30,base-62,base,base-10,false,false,base);drawPlanets(svg,inner,base-110,base-140,IN,IN+10,false,true,base-84)}
+ if(S.midpoints){const rM=(bi?base-OB:base)-16,g=el('g',{class:'mids'});midpoints(inner).forEach(m=>{const [x,y]=pt(m.lon,rM);g.append(el('circle',{cx:x,cy:y,r:2,fill:'var(--lilac)',opacity:.8}));const hc=hit({cx:x,cy:y,r:5,fill:'transparent'},`mid:${m.a}:${m.b}`);hc.append(el('title',{},`${midName(m.a,m.b)} midpoint ${deg(m.lon).txt} ${SIGN_N[deg(m.lon).s]}`));g.append(hc)});svg.append(g)}
+ if(bi){drawPlanets(svg,outer,base-30,base-62,base,base-10,false,false,base);drawPlanets(svg,inner,base-OB-26,base-OB-56,IN,IN+10,false,true,base-OB)}
  else drawPlanets(svg,inner,base-46,base-90,IN,IN+10,true,false,base);
  [...svg.querySelectorAll('.hit')].sort((a,b)=>(a.dataset.obj.startsWith('pt:')?1:0)-(b.dataset.obj.startsWith('pt:')?1:0)).forEach(e=>svg.append(e));
 }
@@ -1533,6 +1566,13 @@ function posTable(ch,title,ref){const keys=[...shownKeys(),...(ch.noHouses?[]:['
  if(!ch.noHouses){const sk='cusps:'+title;h+=`<h3 class="sub">House cusps · ${HOUSES.find(x=>x[0]===ch.houseUsed)?.[1]||''}</h3><div class="tblwrap"><table><tbody>`;
   for(let r=0;r<6;r++)h+=`<tr><td class="mono muted clk" data-obj="house:${r+1}">${r+1}</td><td class="clk" data-obj="house:${r+1}">${lonHtml(ch.cusps[r])}</td><td class="mono muted clk" data-obj="house:${r+7}">${r+7}</td><td class="clk" data-obj="house:${r+7}">${lonHtml(ch.cusps[r+6])}</td></tr>`;h+='</tbody></table></div>'}
  return h}
+function elemBalance(ch){const keys=[...Calc.BODY_KEYS,...(ch.noHouses?[]:['asc','mc'])].filter(k=>ch.pts[k]),W={sun:2,moon:2,asc:2},E=[0,0,0,0],M=[0,0,0],EL=[[],[],[],[]],ML=[[],[],[]];
+ keys.forEach(k=>{const s=Math.floor(ch.pts[k].lon/30),w=W[k]||1;E[s%4]+=w;M[s%3]+=w;EL[s%4].push(k);ML[s%3].push(k)});const tot=E.reduce((a,b)=>a+b,0)||1;
+ const row=(name,val,list,col)=>{const pc=Math.round(val/tot*100);return `<div class="ebrow"><span class="ebn">${name}</span><span class="ebbar"><i style="width:${pc}%;background:${col}"></i></span><span class="ebp mono">${pc}%</span><span class="ebg">${list.map(k=>glyphHtml(k)).join(' ')}</span></div>`};
+ const EN=['Fire','Earth','Air','Water'],MN=['Cardinal','Fixed','Mutable'],ei=E.indexOf(Math.max(...E)),lo=E.indexOf(Math.min(...E)),mi=M.indexOf(Math.max(...M));
+ return `<h3 class="sub">Elements</h3><div class="ebal">${E.map((v,i)=>row(EN[i],v,EL[i],`var(--${ELEM[i]})`)).join('')}</div>
+ <h3 class="sub">Modes</h3><div class="ebal">${M.map((v,i)=>row(MN[i],v,ML[i],'var(--lilac)')).join('')}</div>
+ <p class="note" style="margin-top:8px">${(()=>{const j=a=>a.length>1?a.slice(0,-1).join(', ')+' and '+a.at(-1):a[0],mx=Math.max(...E),mn=Math.min(...E),mm=Math.max(...M),hi=EN.filter((_,i)=>E[i]===mx),lw=EN.filter((_,i)=>E[i]===mn),hm=MN.filter((_,i)=>M[i]===mm);return `Strongest element${hi.length>1?'s':''}: ${j(hi)}. ${mn===0?'Missing':'Weakest'}: ${j(lw)}. Dominant mode: ${j(hm)}.`})()} The Sun, Moon and Ascendant count double; the other planets and the MC count once.</p>`}
 function renderPositions(v){let h='';if(v.outer)h+=posTable(v.outer,v.outer.label||'Outer',v.inner);h+=posTable(v.inner,v.mode==='composite'?'Composite':v.mode==='draconic'?'Draconic':byId(activeId).name);
  const el2=n360(v.inner.pts.moon.lon-v.inner.pts.sun.lon),ph=['New','Waxing crescent','First quarter','Waxing gibbous','Full','Waning gibbous','Last quarter','Waning crescent'][Math.floor(((el2+22.5)%360)/45)];
  if(S.layers.stars){const hits=starHits(v.inner);h+=`<h3 class="sub">Fixed star conjunctions</h3>`+(hits.length?`<div class="tblwrap"><table><thead><tr><th>Star</th><th>Position</th><th>With</th><th>Orb</th><th>Mag.</th></tr></thead><tbody>${hits.map(x=>`<tr><td>${x.star[0]}</td><td>${lonHtml(x.lon)}</td><td>${PT[x.k][1]}</td><td class="mono">${x.d.toFixed(2)}°</td><td class="mono muted">${x.star[4].toFixed(1)}</td></tr>`).join('')}</tbody></table></div>`:'<p class="muted">No chart point is within 1° of a listed star (1.5° for the brightest).</p>')}
@@ -1590,7 +1630,7 @@ function renderAll(){const A=byId(activeId);if(view==='eph'){try{saveEphState();
  document.querySelectorAll('#tabs button').forEach(b=>b.setAttribute('aria-selected',b.dataset.tab===tab));
  if(infoObj&&!$('info').hidden){const h=infoFor(infoObj);if(h)$('infoBody').innerHTML=h;else hideInfo()}
  const P=$('pane');if(mode==='acg'){P.innerHTML=renderAcgPanel(v);acgPanelWire();mlRender(v);saveView();return}
- P.innerHTML=tab==='pos'?renderPositions(v):tab==='asp'?renderAspects(v):tab==='zr'?renderZR():renderInfo(v);
+ P.innerHTML=tab==='pos'?renderPositions(v):tab==='asp'?renderAspects(v):tab==='zr'?renderZR():tab==='elem'?elemBalance(v.inner):renderInfo(v);
  saveView();}
 
 /* ---------- interactions ---------- */
@@ -1613,6 +1653,8 @@ const stepMin=()=>+$('step').value;$('step').value=S.step;$('step').addEventList
 const nudge=n=>{offsetMin+=n*stepMin();renderAll()};
 $('back').onclick=()=>nudge(-1);$('fwd').onclick=()=>nudge(1);$('reset').onclick=()=>{offsetMin=0;renderAll()};function sideSet(c){$('chartView').classList.toggle('sidecol',c);const b=$('sideTog');b.setAttribute('aria-expanded',String(!c));b.title=b.ariaLabel=c?'Show panel':'Hide panel';setTimeout(()=>dispatchEvent(new Event('resize')),0)}
 $('sideTog').onclick=()=>{S.sideCol=!$('chartView').classList.contains('sidecol');saveSet();sideSet(S.sideCol)};sideSet(!!S.sideCol);
+function wlSync(){[['wlDeg',S.wDeg!==false],['wlMin',S.wMin!==false],['wlSign',!!S.wSign]].forEach(([id,on])=>$(id).setAttribute('aria-pressed',String(on)))}wlSync();
+[['wlDeg','wDeg',true],['wlMin','wMin',true],['wlSign','wSign',false]].forEach(([id,k,d])=>$(id).onclick=e=>{e.stopPropagation();const cur=S[k]===undefined?d:!!S[k];S[k]=!cur;saveSet();wlSync();renderAll()});
 $('wLock').onclick=()=>{S.wheelLock=!S.wheelLock;lockSnap=null;saveSet();renderAll()};
 let jog=null,raf=0,pending=0;const ticks=$('ticks');
 $('jog').addEventListener('pointerdown',e=>{jog={x:e.clientX,acc:0};$('jog').setPointerCapture(e.pointerId)});
@@ -1977,7 +2019,7 @@ const FS_IN='<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke=
 $('mapFs').innerHTML=FS_IN;
 function fsFit(){const W=$('stage');if(!W.classList.contains('fs'))return;const H=W.clientHeight;let t=0;for(const el of [$('chartBar'),$('relocBar')]){if(el.hidden||!el.offsetHeight)continue;t=Math.max(t,el.offsetTop+el.offsetHeight)}const d=W.querySelector('.dial');const b=d?H-d.offsetTop:0;W.style.setProperty('--fsT',t+'px');W.style.setProperty('--fsB',b+'px')}
 const fsRO=new ResizeObserver(()=>fsFit());addEventListener('resize',fsFit);
-function wheelFsSet(on){const W=$('stage');W.classList.toggle('fs',on);if(on){[$('chartBar'),$('relocBar'),W.querySelector('.dial'),W].forEach(e=>e&&fsRO.observe(e));fsFit();requestAnimationFrame(fsFit)}else{fsRO.disconnect();W.style.removeProperty('--fsT');W.style.removeProperty('--fsB')}document.body.classList.toggle('mapfs',on);document.body.classList.toggle('wheelfs',on);const b=$('wFs');b.setAttribute('aria-pressed',String(on));b.title=b.ariaLabel=on?'Exit full window':'Fill the window';b.innerHTML=on?FS_OUT:FS_IN}
+function wheelFsSet(on){const W=$('stage');W.classList.toggle('fs',on);{const wl=document.querySelector('.wlab'),wz=$('wheelWrap').querySelector('.wzoom');if(on)wz.prepend(wl);else wz.before(wl)}if(on){[$('chartBar'),$('relocBar'),W.querySelector('.dial'),W].forEach(e=>e&&fsRO.observe(e));fsFit();requestAnimationFrame(fsFit)}else{fsRO.disconnect();W.style.removeProperty('--fsT');W.style.removeProperty('--fsB')}document.body.classList.toggle('mapfs',on);document.body.classList.toggle('wheelfs',on);const b=$('wFs');b.setAttribute('aria-pressed',String(on));b.title=b.ariaLabel=on?'Exit full window':'Fill the window';b.innerHTML=on?FS_OUT:FS_IN}
 $('wFs').innerHTML=FS_IN;$('wFs').onclick=()=>wheelFsSet(!$('stage').classList.contains('fs'));
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&$('stage').classList.contains('fs'))wheelFsSet(false)});
 $('mapFs').onclick=()=>mapFsSet(!$('acgWrap').classList.contains('fs'));
