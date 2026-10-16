@@ -274,6 +274,12 @@ tr.clk:hover td,td.clk:hover{background:var(--raised)}
 #styleSeg{margin-left:auto}.chartbar #openLayers{margin-left:auto}#styleSeg:not([hidden])~#openLayers{margin-left:2px}
 .dial-top #back,.dial-top #fwd{min-width:74px;display:inline-grid;place-items:center}
 .dial-top #reset{margin-left:auto}
+@media (max-width:420px){.dial-top #back,.dial-top #fwd{min-width:44px!important;padding-left:6px;padding-right:6px}
+@media (max-width:360px){.dial-top{gap:6px!important}.dial-top #back,.dial-top #fwd{min-width:40px!important;padding-left:4px;padding-right:4px}.dial-top select{min-width:0;width:84px;padding-right:22px}.dial-top #wLock{margin-left:0!important}.dial-top #reset,.dial-top #wLock{width:38px;min-width:38px;padding-left:0;padding-right:0}}
+ #styleSeg{position:relative;overflow:visible}#styleSeg>[data-cs][aria-pressed="false"]{display:none}
+ #styleSeg>[data-cs][aria-pressed="true"]{display:inline-flex;align-items:center;gap:2px}#styleSeg>[data-cs][aria-pressed="true"]::after{content:"▾";font-size:.7rem;line-height:1}
+ .csmenu{left:auto;right:0;min-width:190px}.csmenu .csmi{display:flex;align-items:center;gap:10px}.csmenu .vico{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.6}
+ .csmenu button[aria-checked="true"]{background:var(--lilac);color:var(--accent-ink)}}
 @media (max-width:1300px) and (min-width:981px){.dial-top #back,.dial-top #fwd{min-width:52px}.dial-top #wLock{margin-left:4px}}.dial-top #wLock{margin-left:8px}
 .chartbar .chip,.chartbar .iconbtn{background:var(--raised);border:0;color:var(--fg)}
 .chartbar .chip:hover,.chartbar .iconbtn:hover{background:color-mix(in srgb,var(--accent) 16%,var(--raised))}
@@ -281,7 +287,7 @@ tr.clk:hover td,td.clk:hover{background:var(--raised)}
 .chartbar .icobtn{color:var(--fg)}
 .chartbar .icobtn[aria-expanded="true"]{background:var(--lilac)!important;color:var(--accent-ink)}
 .top .seg button.vbtn{display:inline-flex;align-items:center;gap:7px}
-#views{margin-left:18px}.top>.grow{display:none}.top>#openSettings{margin-left:auto}.top>#engineNote:empty{display:none}.top>#engineNote:not(:empty)~#openSettings{margin-left:0}.top>#engineNote{margin-left:auto}#hdrDonate{text-decoration:none}@media (max-width:860px){#hdrDonate{display:none!important}}.top.tight .seg button.vbtn{padding:5px 4px;gap:4px;letter-spacing:.01em}
+#views{margin-left:18px}.top>.grow{display:none}.top>#openSettings{margin-left:auto}.top>#engineNote:empty{display:none}.top>#engineNote:not(:empty)~#openSettings{margin-left:0}.top>#engineNote{margin-left:auto}#hdrDonate{text-decoration:none}#hdrDonate .ico{width:25px;height:25px;margin:-2px -1px}@media (max-width:860px){#hdrDonate{display:none!important}}.top.tight .seg button.vbtn{padding:5px 4px;gap:4px;letter-spacing:.01em}
 .hlbl{display:none}
 @media (min-width:1200px){
  .top>#views{position:static;transform:none}
@@ -302,6 +308,12 @@ tr.clk:hover td,td.clk:hover{background:var(--raised)}
 body.wheelfs .layers,body.wheelfs .menu{z-index:36}
 .stage.fs .wzoom{position:fixed;right:calc(14px + env(safe-area-inset-right,0px));bottom:auto;top:50%;transform:translateY(-50%)}
 @media (max-width:600px){.stage.fs .wzoom{top:calc(env(safe-area-inset-top,0px) + 92px);transform:none}}
+@media (max-width:860px) and (min-height:500px){
+ .stage.fs .wzoom{top:calc(var(--fsT0,62px) + 6px);left:50%;right:auto;bottom:auto;transform:translateX(-50%);flex-direction:row;align-items:center;gap:8px}
+ .stage.fs .wzoom .wlab{flex-direction:row;margin:0 4px 0 0;gap:8px}
+ .stage.fs .wheelwrap>.elemmini{top:auto;bottom:calc(var(--fsB0,200px) + 6px);left:50%;transform:translateX(-50%);flex-direction:row;align-items:center;gap:12px}
+ .stage.fs .wheelwrap>.elemmini .emcol{flex-direction:row;gap:6px}
+}
 .wheelwrap.fs .wzoom{right:calc(14px + env(safe-area-inset-right,0px));bottom:calc(14px + env(safe-area-inset-bottom,0px))}
 .mapwrap.fs,#stage>#acgWrap.fs{position:fixed;inset:0;z-index:33;max-width:none!important;width:auto!important;aspect-ratio:auto;border-radius:0;border:0;margin:0}
 .mapwrap.fs .wzoom{right:calc(14px + env(safe-area-inset-right,0px));bottom:calc(14px + env(safe-area-inset-bottom,0px))}
@@ -1355,7 +1367,8 @@ const applyTheme=()=>{const t=['oled','paper','retro','pastel'].includes(S.theme
 /* ---------- chart store ---------- */
 const NOW_CHART={id:'__now',name:'Sky now',folder:'',fav:false,now:true,place:'Durham, NC, USA',lat:35.994,lon:-78.899,tz:'America/New_York'};
 let lockSnap=null,charts=[],db=null,activeId='__now',otherId=null,mode='natal',offsetMin=0,tab='pos',zrOpen=null;
-try{const st=JSON.parse(localStorage.getItem('orrery.view')||'{}');if(st.activeId)activeId=st.activeId;if(st.mode)mode=st.mode;if(st.otherId)otherId=st.otherId;if(st.tab)tab=st.tab}catch(e){}
+// every visit or refresh opens on Sky now (natal); only the side tab is remembered
+try{const st=JSON.parse(localStorage.getItem('orrery.view')||'{}');if(st.tab)tab=st.tab}catch(e){}
 const saveView=()=>{try{localStorage.setItem('orrery.view',JSON.stringify({activeId,mode,otherId,tab}))}catch(e){}};
 const localCharts=()=>{try{return JSON.parse(localStorage.getItem('orrery.charts')||'[]')}catch(e){return[]}};
 const saveLocal=()=>{try{localStorage.setItem('orrery.charts',JSON.stringify(charts))}catch(e){}};
@@ -1890,7 +1903,13 @@ $('openSettings').onclick=()=>{const m=$('settingsModal');
 if(S.nowPlace){Object.assign(NOW_CHART,S.nowPlace)}else if(S.nowCity){const c=CITIES.find(x=>x[0]===S.nowCity);if(c){NOW_CHART.place=c[0];NOW_CHART.lat=c[1];NOW_CHART.lon=c[2];NOW_CHART.tz=c[3]}}
 document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeModals();closeLib();$('layersMenu').hidden=true;$('openLayers').setAttribute('aria-expanded','false')}});
 function renderLayers(){$('layersMenu').innerHTML=LAYERS.map(([k,l,d])=>`<label class="layer" for="ly-${k}"><input type="checkbox" id="ly-${k}" data-layer="${k}" ${S.layers[k]?'checked':''}><b>${l}</b><small>${d}</small></label>`).join('')}
-$('styleSeg').addEventListener('click',e=>{const b=e.target.closest('[data-cs]');if(!b)return;S.chartStyle=b.dataset.cs;saveSet();syncStyleSeg();renderAll()});
+{const CSQ=matchMedia('(max-width:420px)'),seg=$('styleSeg'),closeCs=()=>{const m=$('csMenu');if(m)m.remove();seg.classList.remove('open')};
+ seg.addEventListener('click',e=>{const mi=e.target.closest('#csMenu [data-csm]');if(mi){e.stopPropagation();S.chartStyle=mi.dataset.csm;saveSet();closeCs();syncStyleSeg();renderAll();return}
+  const b=e.target.closest('[data-cs]');if(!b)return;
+  if(CSQ.matches){e.stopPropagation();if($('csMenu')){closeCs();return}seg.classList.add('open');const m=document.createElement('div');m.className='menu csmenu';m.id='csMenu';m.setAttribute('role','menu');
+   m.innerHTML=[...seg.querySelectorAll('[data-cs]')].map(x=>`<button type="button" role="menuitemradio" data-csm="${x.dataset.cs}" aria-checked="${x.getAttribute('aria-pressed')==='true'}"><span class="csmi">${x.querySelector('svg').outerHTML}${x.title}</span></button>`).join('');seg.append(m);return}
+  S.chartStyle=b.dataset.cs;saveSet();syncStyleSeg();renderAll()});
+ document.addEventListener('click',e=>{if(!e.target.closest('#styleSeg'))closeCs()});CSQ.addEventListener('change',closeCs)}
 function syncStyleSeg(){document.querySelectorAll('#styleSeg [data-cs]').forEach(b=>b.setAttribute('aria-pressed',String((S.chartStyle||'western')===b.dataset.cs)))}
 syncStyleSeg();
 $('openLayers').onclick=e=>{e.stopPropagation();const m=$('layersMenu'),open=m.hidden;renderLayers();m.hidden=!open;if(open){const r=$('openLayers').getBoundingClientRect(),w=m.offsetWidth;m.style.right='auto';m.style.left=Math.max(12,Math.min(innerWidth-w-12,r.right-w))+'px';m.style.top=(r.bottom+8)+'px'}$('openLayers').setAttribute('aria-expanded',String(open))};
@@ -2071,7 +2090,7 @@ function mapFsSet(on){const W=$('acgWrap');W.classList.toggle('fs',on);document.
  const c=mapVB.x+mapVB.w/2,wasWorld=mapVB.w>=mapMaxW()-1;requestAnimationFrame(()=>{const r=W.getBoundingClientRect();mapRatio=on?r.height/r.width:1350/3600;if(wasWorld)mapWorld();else{mapVB.h=mapVB.w*mapRatio;mapVB.x=c-mapVB.w/2;clampVB()}renderAll()})}
 const FS_IN='<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg>',FS_OUT='<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M9 4v5H4M15 4v5h5M9 20v-5H4M15 20v-5h5"/></svg>';
 $('mapFs').innerHTML=FS_IN;
-function fsFit(){const W=$('stage');if(!W.classList.contains('fs'))return;const H=W.clientHeight;let t=0;for(const el of [$('chartBar'),$('relocBar')]){if(el.hidden||!el.offsetHeight)continue;t=Math.max(t,el.offsetTop+el.offsetHeight)}const d=W.querySelector('.dial');const b=d?H-d.offsetTop:0;W.style.setProperty('--fsT',t+'px');W.style.setProperty('--fsB',b+'px')}
+function fsFit(){const W=$('stage');if(!W.classList.contains('fs'))return;const H=W.clientHeight;let t=0;for(const el of [$('chartBar'),$('relocBar')]){if(el.hidden||!el.offsetHeight)continue;t=Math.max(t,el.offsetTop+el.offsetHeight)}const d=W.querySelector('.dial');let b=d?H-d.offsetTop:0;W.style.setProperty('--fsT0',t+'px');W.style.setProperty('--fsB0',b+'px');if(matchMedia('(max-width:860px) and (min-height:500px)').matches){const z=W.querySelector('.wzoom'),e=$('elemMini');t+=(z?z.offsetHeight:40)+12;b+=(e&&e.offsetHeight?e.offsetHeight:30)+12}W.style.setProperty('--fsT',t+'px');W.style.setProperty('--fsB',b+'px')}
 const fsRO=new ResizeObserver(()=>fsFit());addEventListener('resize',fsFit);
 function wheelFsSet(on){const W=$('stage');W.classList.toggle('fs',on);{const wl=document.querySelector('.wlab'),wz=$('wheelWrap').querySelector('.wzoom');if(on)wz.prepend(wl);else wz.before(wl)}if(on){[$('chartBar'),$('relocBar'),W.querySelector('.dial'),W].forEach(e=>e&&fsRO.observe(e));fsFit();requestAnimationFrame(fsFit)}else{fsRO.disconnect();W.style.removeProperty('--fsT');W.style.removeProperty('--fsB')}document.body.classList.toggle('mapfs',on);document.body.classList.toggle('wheelfs',on);const b=$('wFs');b.setAttribute('aria-pressed',String(on));b.title=b.ariaLabel=on?'Exit full window':'Fill the window';b.innerHTML=on?FS_OUT:FS_IN}
 $('wFs').innerHTML=FS_IN;$('wFs').onclick=()=>wheelFsSet(!$('stage').classList.contains('fs'));
