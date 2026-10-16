@@ -287,7 +287,7 @@ tr.clk:hover td,td.clk:hover{background:var(--raised)}
 .chartbar .icobtn{color:var(--fg)}
 .chartbar .icobtn[aria-expanded="true"]{background:var(--lilac)!important;color:var(--accent-ink)}
 .top .seg button.vbtn{display:inline-flex;align-items:center;gap:7px}
-#views{margin-left:18px}.top>.grow{display:none}.top>#openSettings{margin-left:auto}.top>#engineNote:empty{display:none}.top>#engineNote:not(:empty)~#openSettings{margin-left:0}.top>#engineNote{margin-left:auto}#hdrDonate{text-decoration:none}#hdrDonate .ico{width:25px;height:25px;margin:-2px -1px}@media (max-width:860px){#hdrDonate{display:none!important}}.top.tight .seg button.vbtn{padding:5px 4px;gap:4px;letter-spacing:.01em}
+#views{margin-left:18px}.top>.grow{display:none}.top>#openSettings{margin-left:auto}.top>#engineNote:empty{display:none}.top>#engineNote:not(:empty)~#openSettings{margin-left:0}.top>#engineNote{margin-left:auto}#hdrDonate{text-decoration:none}#hdrDonate .ico{width:25px;height:25px;margin:-2px -1px}.top.tight .seg button.vbtn{padding:5px 4px;gap:4px;letter-spacing:.01em}.top.novl .vlbl{display:none}.top.xs{column-gap:5px}.top.xs #views{margin-left:4px}.top.xs .seg button.vbtn{padding:4px 3px}.top.xs>#openSettings,.top.xs>#themeWrap>.icobtn,.top.xs>#hdrDonate{width:30px}.top.xs .icobtn .ico{width:19px;height:19px}
 .hlbl{display:none}
 @media (min-width:1200px){
  .top>#views{position:static;transform:none}
@@ -313,6 +313,11 @@ body.wheelfs .layers,body.wheelfs .menu{z-index:36}
  .stage.fs .wzoom .wlab{flex-direction:row;margin:0 4px 0 0;gap:8px}
  .stage.fs .wheelwrap>.elemmini{top:auto;bottom:calc(var(--fsB0,200px) + 6px);left:50%;transform:translateX(-50%);flex-direction:row;align-items:center;gap:12px}
  .stage.fs .wheelwrap>.elemmini .emcol{flex-direction:row;gap:6px}
+ .stage.fs{--fsb:min(44px,calc((100vw - 64px) / 7))}
+ .stage.fs .wzoom button,.stage.fs .wzoom .wlab button,.stage.fs .wheelwrap>.elemmini .emc,.stage.fs .wheelwrap>.elemmini .emc.mo{width:var(--fsb);height:var(--fsb)}
+ .stage.fs .wzoom button{font-size:1.3rem}.stage.fs .wzoom .wlab button{font-size:1.05rem}.stage.fs .wzoom .wlab button .sym{font-size:1rem}
+ .stage.fs .wheelwrap>.elemmini .emc .elg,.stage.fs .wheelwrap>.elemmini .emc.mo .elg{width:calc(var(--fsb) * .36);height:calc(var(--fsb) * .36);margin-top:calc(var(--fsb) * -.18)}
+ .stage.fs .wheelwrap>.elemmini .emc span,.stage.fs .wheelwrap>.elemmini .emc.mo span{font-size:calc(var(--fsb) * .21);bottom:calc(var(--fsb) * .1)}
 }
 .wheelwrap.fs .wzoom{right:calc(14px + env(safe-area-inset-right,0px));bottom:calc(14px + env(safe-area-inset-bottom,0px))}
 .mapwrap.fs,#stage>#acgWrap.fs{position:fixed;inset:0;z-index:33;max-width:none!important;width:auto!important;aspect-ratio:auto;border-radius:0;border:0;margin:0}
@@ -1716,10 +1721,10 @@ function wlSync(){[['wlDeg',S.wDeg!==false],['wlMin',S.wMin!==false],['wlSign',!
   const vis=e=>e&&e.offsetParent&&e.getBoundingClientRect().width>0,bar=$('chartBar'),btns=[...document.querySelectorAll('#chartBar button,#chartBar .seg,#relocBar button')].filter(vis);
   if(!vis(bar)||!btns.length)return;const W=document.documentElement.clientWidth,R=Math.max(...btns.map(b=>b.getBoundingClientRect().right)),sky=bar.querySelector('button').getBoundingClientRect().left;
   const big=innerWidth>=1200,defPad=innerWidth<=600?12:16;
-  const apply=(pr,ml,lbl,ti)=>{top.style.paddingRight=pr+'px';top.classList.toggle('tight',!!ti);views.style.marginLeft=ml==null?'':ml+'px';top.classList.toggle('nolbl',!lbl)};
+  const apply=(pr,ml,lbl,ti)=>{top.style.paddingRight=pr+'px';top.classList.toggle('tight',!!ti);top.classList.toggle('novl',ti>=2);top.classList.toggle('xs',ti>=3);views.style.marginLeft=ml==null?'':ml+'px';top.classList.toggle('nolbl',!lbl)};
   const thB=vis($('hdrDonate'))?$('hdrDonate'):$('themeWrap'),fits=()=>{const vr=views.getBoundingClientRect(),sr=setB.getBoundingClientRect(),tr=thB.getBoundingClientRect();return Math.abs(sr.top-vr.top)<12&&Math.abs(tr.top-vr.top)<12&&sr.left>=vr.right+8&&tr.right<=W+.5};
   const pr=Math.max(4,Math.round(W-R));let ml=null;if(big){views.style.marginLeft='0px';ml=Math.max(18,Math.round(sky-views.getBoundingClientRect().left))}
-  const m2=big?18:null,m3=big?10:null;for(const [p,m,l,t] of [[pr,ml,true],[pr,ml,false],[pr,m2,true],[pr,m2,false],[pr,m3,false,1],[defPad,m2,true],[defPad,m2,false],[defPad,null,false]]){apply(p,m,l&&big,t);if(fits())return}};
+  const m2=big?18:null,m3=big?10:null;for(const [p,m,l,t] of [[pr,ml,true],[pr,ml,false],[pr,m2,true],[pr,m2,false],[pr,m3,false,1],[defPad,m2,true],[defPad,m2,false],[defPad,null,false],[defPad,null,false,1],[pr,null,false,2],[defPad,null,false,2],[pr,null,false,3],[defPad,null,false,3]]){apply(p,m,l&&big,t);if(fits())return}};
  window.hdrFit=hdrFit;addEventListener('resize',hdrFit);new ResizeObserver(hdrFit).observe($('chartBar'));setTimeout(hdrFit,0);setTimeout(hdrFit,600);try{document.fonts.ready.then(hdrFit)}catch(e){}document.addEventListener('click',e=>{if(e.target.closest('.vbtn,.sidetog,[data-theme-opt],.thememenu button'))setTimeout(hdrFit,60)})}
 {const sideFit=()=>{const st=$('stage'),w=$('wheelWrap');if(!st||!w||w.hidden)return;const cs=getComputedStyle(st),inner=st.clientWidth-parseFloat(cs.paddingLeft)-parseFloat(cs.paddingRight),gap=(inner-w.offsetWidth)/2;w.style.setProperty('--side',Math.max(0,Math.min(90,gap-6))+'px')};new ResizeObserver(sideFit).observe($('stage'));new ResizeObserver(sideFit).observe($('wheelWrap'));addEventListener('resize',sideFit)}
 $('wLock').onclick=()=>{S.wheelLock=!S.wheelLock;lockSnap=null;saveSet();renderAll()};
