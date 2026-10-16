@@ -301,7 +301,7 @@ tr.clk:hover td,td.clk:hover{background:var(--raised)}
 @media (max-width:380px){#views{margin-left:6px}.top .seg button.vbtn{padding:5px 5px}}
 .stage.fs{position:fixed;inset:0;z-index:33;background:var(--bg);overflow:hidden;border:0;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;gap:8px;padding:calc(10px + env(safe-area-inset-top,0px)) 10px calc(10px + env(safe-area-inset-bottom,0px));--fsT:0px;--fsB:0px;--fsw:max(200px,min(calc(100vw - 16px),calc(100dvh - var(--fsT) - var(--fsB) - 16px)))}
 .stage.fs>.wheelwrap{position:absolute!important;z-index:0;left:calc(50% - var(--fsw)/2);top:calc(var(--fsT) + (100dvh - var(--fsT) - var(--fsB) - var(--fsw))/2);width:var(--fsw)!important;max-width:none!important;margin:0!important}
-.stage.fs>.chartbar,.stage.fs>.reloc,.stage.fs>.dial{position:relative;z-index:2;width:fit-content!important;max-width:min(760px,100%)!important;margin:0!important;background:color-mix(in srgb,var(--panel) 78%,transparent);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);border-radius:14px;padding:8px 10px;box-shadow:0 10px 30px -12px rgba(0,0,0,.55),0 0 0 1px color-mix(in srgb,var(--line) 70%,transparent)}
+.stage.fs>.chartbar,.stage.fs>.reloc,.stage.fs>.dial{position:relative;z-index:2;width:fit-content!important;max-width:min(760px,100%)!important;margin:0!important;background:color-mix(in srgb,var(--panel) 78%,transparent);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);border-radius:14px;padding:8px 10px;box-shadow:none;border:0}
 .stage.fs>.dial{margin-top:auto!important;width:min(760px,100%)!important}
 .stage.fs>.dial .note:empty{display:none}
 .stage.fs>.wheelwrap,.stage.fs #wheel{overflow:visible}
@@ -723,6 +723,13 @@ html[data-theme="retro"] .wzoom button,html[data-theme="retro"] .sidetog,html[da
 html[data-theme="retro"] .wzoom button:hover,html[data-theme="retro"] .sidetog:hover,html[data-theme="retro"] .maplayersbtn:hover{filter:none;background:#072a14;color:#9dffb5}
 html[data-theme="retro"] .wlab button{background:#03140a;color:#1f9a44;box-shadow:0 0 0 1px #0f4a22}
 html[data-theme="retro"] .wlab button[aria-pressed="true"]{color:#39ff6a;box-shadow:0 0 0 1px #147a34,0 0 8px rgba(57,255,106,.25)}
+
+/* flat buttons: no drop shadows (retro keeps its outline glow) */
+html:not([data-theme="retro"]) :is(.wzoom button,.wlab button,.emc,.sidetog,.maplayersbtn,.psec>summary,.top .seg button,.btn,.chip,.iconbtn,.tsel button){box-shadow:none!important}
+.stage.fs>.chartbar,.stage.fs>.reloc,.stage.fs>.dial{box-shadow:none!important;border:0!important}
+
+html[data-theme="oled"] .emc{background:linear-gradient(to top,color-mix(in srgb,var(--c) 26%,transparent) var(--p),var(--w-p1) var(--p))}
+html[data-theme="paper"] .emc{background:linear-gradient(to top,color-mix(in srgb,var(--c) 24%,transparent) var(--p),var(--w-p1) var(--p))}
 </style>
 <style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}img{max-width:100%}</style>
 </head>
@@ -1612,7 +1619,7 @@ function posTable(ch,title,ref){const keys=[...shownKeys(),...(ch.noHouses?[]:['
  for(const k of keys){const p=ch.pts[k],dg=dignity(k,p.lon),g=PT[k][0],isPl=!!GLYPH_SVG[k],isText=g.length>1&&!/[☀-⯿]/.test(g);
   h+=`<tr class="clk" data-obj="pt:${lastView&&ch===lastView.outer?'o':'i'}:${k}"><td class="g" ${isText?'style="font:600 .75rem var(--mono)"':''}>${isPl?svgGlyph(k):isText?g:g+VS}</td><td>${PT[k][1]}</td><td>${lonHtml(p.lon)}${p.speed<0&&!['node','snode'].includes(k)?' <span class="rx">℞</span>':''}</td><td class="mono">${cusps&&!['asc','mc','dsc','ic'].includes(k)?Calc.houseOf(p.lon,cusps):''}</td><td class="mono muted">${p.speed?(p.speed>0?'+':'−')+Math.abs(p.speed).toFixed(Math.abs(p.speed)<1?3:2)+'°':''}</td><td>${dg?`<span class="dig ${dg[0]}">${dg[1]}</span>`:''}</td>${Ly.decans?(()=>{const d=decanOf(p.lon);return `<td><span class="sym">${PT[d.ruler][0]+VS}</span> <span class="muted">${d.n}</span></td>`})():''}${Ly.terms?(()=>{const t=termOf(p.lon);return `<td><span class="sym">${PT[t][0]+VS}</span> <span class="muted">${PT[t][1]}</span></td>`})():''}${Ly.naks?(()=>{const n=nakOf(p.lon,ch.jd,ch.ayanamsa||0);return `<td>${NAKS[n.i]} <span class="muted mono">p${n.pada}</span></td>`})():''}</tr>`}
  h+='</tbody></table></div>';
- if(!ch.noHouses){const sk='cusps:'+title;h+=`<h3 class="sub">House cusps · ${HOUSES.find(x=>x[0]===ch.houseUsed)?.[1]||''}</h3><div class="tblwrap"><table><tbody>`;
+ if(!ch.noHouses&&ch.cusps&&!ch.cusps.slice(0,12).every(c=>{const v=n360(+c||0);return v<1/120||v>360-1/120})){const sk='cusps:'+title;h+=`<h3 class="sub">House cusps · ${HOUSES.find(x=>x[0]===ch.houseUsed)?.[1]||''}</h3><div class="tblwrap"><table><tbody>`;
   for(let r=0;r<6;r++)h+=`<tr><td class="mono muted clk" data-obj="house:${r+1}">${r+1}</td><td class="clk" data-obj="house:${r+1}">${lonHtml(ch.cusps[r])}</td><td class="mono muted clk" data-obj="house:${r+7}">${r+7}</td><td class="clk" data-obj="house:${r+7}">${lonHtml(ch.cusps[r+6])}</td></tr>`;h+='</tbody></table></div>'}
  return h}
 const EL_N=['Fire','Earth','Air','Water'],MO_N=['Cardinal','Fixed','Mutable'];
