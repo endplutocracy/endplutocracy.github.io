@@ -281,15 +281,12 @@ tr.clk:hover td,td.clk:hover{background:var(--raised)}
 .chartbar .icobtn{color:var(--fg)}
 .chartbar .icobtn[aria-expanded="true"]{background:var(--lilac)!important;color:var(--accent-ink)}
 .top .seg button.vbtn{display:inline-flex;align-items:center;gap:7px}
-#views{margin-left:18px}
-@media (min-width:1200px){#views{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);margin:0}}
+#views{margin-left:18px}.top>.grow{display:none}.top>#openSettings{margin-left:auto}.top>#engineNote:empty{display:none}.top>#engineNote:not(:empty)~#openSettings{margin-left:0}.top>#engineNote{margin-left:auto}#hdrDonate{text-decoration:none}@media (max-width:860px){#hdrDonate{display:none!important}}.top.tight .seg button.vbtn{padding:5px 4px;gap:4px;letter-spacing:.01em}
 .hlbl{display:none}
 @media (min-width:1200px){
- .top{display:grid;grid-template-columns:1fr auto auto auto 1fr;column-gap:10px}
- .top>.brand{grid-column:1;justify-self:start}.top>#views{position:static;transform:none;grid-column:2}
- .top>.grow{display:none}.top>#engineNote{grid-column:5;justify-self:end;grid-row:1}
- .top>#themeWrap{grid-column:3;grid-row:1}.top>#openSettings{grid-column:4;grid-row:1;margin-left:0}
- .top>#themeWrap>.icobtn,.top>#openSettings{width:auto;padding:0 13px 0 10px;display:inline-flex;align-items:center;gap:7px}
+ .top>#views{position:static;transform:none}
+ .top.nolbl .hlbl{display:none!important}.top.nolbl>#themeWrap>.icobtn,.top.nolbl>#openSettings,.top.nolbl>#hdrDonate{width:38px;padding:0;justify-content:center}
+ .top>#themeWrap>.icobtn,.top>#openSettings,.top>#hdrDonate{width:auto;padding:0 13px 0 10px;display:inline-flex;align-items:center;gap:7px}
  .hlbl{display:inline;font-family:var(--display);font-weight:600;font-size:.74rem;letter-spacing:.03em}
 }
 #openSettings .ico{width:18px;height:18px}#openSettings{width:34px;height:32px}
@@ -403,7 +400,7 @@ html[data-theme="pastel"] .cstyle button:not([aria-pressed="true"]):hover{backgr
 .stage.fs .elemmini{position:fixed;left:calc(14px + env(safe-area-inset-left,0px));top:50%;bottom:auto;transform:translateY(-50%);flex-direction:column-reverse;align-items:center;gap:6px}
 @media (min-width:981px){.stage.fs .elemmini{gap:9px}.stage.fs .emcol{gap:9px}.stage.fs .emc{width:50px;height:50px}.stage.fs .emc .elg{width:20px;height:20px}.stage.fs .emc span{font-size:.68rem;bottom:5px}.stage.fs .emc.mo{width:40px;height:40px}.stage.fs .emc.mo .elg{width:15px;height:15px;margin-top:-8px}.stage.fs .emc.mo span{font-size:.6rem;bottom:4px}}
 html[data-theme="retro"] .emc{background:linear-gradient(to top,rgba(57,255,106,.4) var(--p),#03140a var(--p));box-shadow:0 0 0 1px #147a34,0 0 8px rgba(57,255,106,.25)}
-@media (min-width:861px){.stage:not(.fs)>.wheelwrap{margin-top:-14px}}@media (max-width:860px){.stage:not(.fs)>.wheelwrap{margin-top:-6px}}
+@media (min-width:861px){.stage:not(.fs)>.wheelwrap{margin-top:-26px}}@media (max-width:860px){.stage:not(.fs)>.wheelwrap{margin-top:-12px}}
 .stage:not(.fs) .wheelwrap>.wzoom{right:calc(4px - var(--side,0px))}
 .stage:not(.fs) .wheelwrap>.wlab{right:calc(46px - var(--side,0px))}
 .stage:not(.fs) .wheelwrap>.elemmini{left:calc(4px - var(--side,0px))}
@@ -498,7 +495,7 @@ html[data-theme="retro"] *{scrollbar-color:#555 transparent}html[data-theme="pap
 .tsw-orrery{background:linear-gradient(135deg,#6f4283 50%,#2c2d2d 50%)}.tsw-oled{background:linear-gradient(135deg,#000 50%,#fff 50%)}.tsw-paper{background:linear-gradient(135deg,#fff 50%,#000 50%)}
 .rico{display:none;width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
 #reset .rlbl{display:none}#reset .rico{display:block}#reset{display:inline-grid;place-items:center;min-width:40px}
-@media (max-width:600px){#themeWrap{margin-left:auto}#openSettings{margin-left:0}}
+@media (max-width:600px){#openSettings{margin-left:auto}#themeWrap{margin-left:0}}
 @media (max-width:430px){.top .brand{font-size:0;gap:0;margin-right:0}.top .brand svg{width:28px;height:26px}}
 .sitefoot{max-width:760px;margin:28px auto 0;padding:22px 16px calc(28px + env(safe-area-inset-bottom,0px));border-top:1px solid var(--line);color:var(--muted);font-size:.82rem;line-height:1.6;text-align:center;display:grid;gap:12px;justify-items:center}
 .sitefoot p{margin:0}.sitefoot .btn{text-decoration:none;display:inline-block}
@@ -724,7 +721,7 @@ html[data-theme="retro"] .wlab button[aria-pressed="true"]{color:#39ff6a;box-sha
   <span class="grow"></span>
   <span class="note hide-sm" id="engineNote"></span>
   
-  <div class="menuwrap" id="themeWrap"><button class="iconbtn icobtn" id="openTheme" type="button" aria-label="Theme" title="Theme" aria-haspopup="menu" aria-expanded="false"><svg class="ico smico" viewBox="0 0 24 24" aria-hidden="true"><defs><mask id="smm"><rect width="24" height="24" fill="#fff" stroke="none"/><circle cx="7.50" cy="8.30" r="5.28" fill="#000" stroke="none"/></mask></defs><circle cx="10.2" cy="10.6" r="6.6" fill="currentColor" stroke="none" mask="url(#smm)"/><path fill="currentColor" stroke="none" d="M17.44 6.81L19.62 4.00L16.23 5.09ZM18.18 12.35L20.56 11.51L18.36 10.26ZM15.19 17.07L18.33 18.73L16.67 15.59ZM9.86 18.76L11.11 20.96L11.95 18.58ZM4.69 16.63L3.60 20.02L6.41 17.84Z"/></svg><span class="hlbl">Themes</span></button><div class="menu thememenu" id="themeMenu" role="menu" aria-label="Theme" hidden></div></div><button class="iconbtn icobtn" id="openSettings" type="button" aria-label="Settings" title="Settings"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg><span class="hlbl">Settings</span></button>
+  <button class="iconbtn icobtn" id="openSettings" type="button" aria-label="Settings" title="Settings"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg><span class="hlbl">Settings</span></button><div class="menuwrap" id="themeWrap"><button class="iconbtn icobtn" id="openTheme" type="button" aria-label="Theme" title="Theme" aria-haspopup="menu" aria-expanded="false"><svg class="ico smico" viewBox="0 0 24 24" aria-hidden="true"><defs><mask id="smm"><rect width="24" height="24" fill="#fff" stroke="none"/><circle cx="7.50" cy="8.30" r="5.28" fill="#000" stroke="none"/></mask></defs><circle cx="10.2" cy="10.6" r="6.6" fill="currentColor" stroke="none" mask="url(#smm)"/><path fill="currentColor" stroke="none" d="M17.44 6.81L19.62 4.00L16.23 5.09ZM18.18 12.35L20.56 11.51L18.36 10.26ZM15.19 17.07L18.33 18.73L16.67 15.59ZM9.86 18.76L11.11 20.96L11.95 18.58ZM4.69 16.63L3.60 20.02L6.41 17.84Z"/></svg><span class="hlbl">Themes</span></button><div class="menu thememenu" id="themeMenu" role="menu" aria-label="Theme" hidden></div></div><a class="iconbtn icobtn" id="hdrDonate" href="https://buymeacoffee.com/destinned" target="_blank" rel="noopener" aria-label="Donate" title="Donate"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><circle cx="15.5" cy="6" r="3.3"/><path d="M15.5 4.6v2.8"/><path d="M2.5 13.2h2.6v7.3H2.5z"/><path d="M5.1 14.4l3.4-1.5a2.4 2.4 0 0 1 1.8-.1l3.1 1.1a1.25 1.25 0 0 1-.7 2.4H9.6"/><path d="M5.1 19.4h7.6a3 3 0 0 0 2-.8l5.1-4.6a1.4 1.4 0 0 0-1.9-2.1l-3.9 2.9"/></svg><span class="hlbl">Donate</span></a>
 </div>
 
 <section class="tarot" id="tarotView" hidden>
@@ -1702,6 +1699,15 @@ $('back').onclick=()=>nudge(-1);$('fwd').onclick=()=>nudge(1);$('reset').onclick
 $('sideTog').onclick=()=>{S.sideCol=!$('chartView').classList.contains('sidecol');saveSet();sideSet(S.sideCol)};sideSet(!!S.sideCol);
 function wlSync(){[['wlDeg',S.wDeg!==false],['wlMin',S.wMin!==false],['wlSign',!!S.wSign]].forEach(([id,on])=>$(id).setAttribute('aria-pressed',String(on)))}wlSync();
 [['wlDeg','wDeg',true],['wlMin','wMin',true],['wlSign','wSign',false]].forEach(([id,k,d])=>$(id).onclick=e=>{e.stopPropagation();const cur=S[k]===undefined?d:!!S[k];S[k]=!cur;saveSet();wlSync();renderAll()});
+{const hdrFit=()=>{const top=document.querySelector('.top'),views=$('views'),brand=top&&top.querySelector('.brand'),setB=$('openSettings');if(!top||!views)return;
+  const vis=e=>e&&e.offsetParent&&e.getBoundingClientRect().width>0,bar=$('chartBar'),btns=[...document.querySelectorAll('#chartBar button,#chartBar .seg,#relocBar button')].filter(vis);
+  if(!vis(bar)||!btns.length)return;const W=document.documentElement.clientWidth,R=Math.max(...btns.map(b=>b.getBoundingClientRect().right)),sky=bar.querySelector('button').getBoundingClientRect().left;
+  const big=innerWidth>=1200,defPad=innerWidth<=600?12:16;
+  const apply=(pr,ml,lbl,ti)=>{top.style.paddingRight=pr+'px';top.classList.toggle('tight',!!ti);views.style.marginLeft=ml==null?'':ml+'px';top.classList.toggle('nolbl',!lbl)};
+  const thB=vis($('hdrDonate'))?$('hdrDonate'):$('themeWrap'),fits=()=>{const vr=views.getBoundingClientRect(),sr=setB.getBoundingClientRect(),tr=thB.getBoundingClientRect();return Math.abs(sr.top-vr.top)<12&&Math.abs(tr.top-vr.top)<12&&sr.left>=vr.right+8&&tr.right<=W+.5};
+  const pr=Math.max(4,Math.round(W-R));let ml=null;if(big){views.style.marginLeft='0px';ml=Math.max(18,Math.round(sky-views.getBoundingClientRect().left))}
+  const m2=big?18:null,m3=big?10:null;for(const [p,m,l,t] of [[pr,ml,true],[pr,ml,false],[pr,m2,true],[pr,m2,false],[pr,m3,false,1],[defPad,m2,true],[defPad,m2,false],[defPad,null,false]]){apply(p,m,l&&big,t);if(fits())return}};
+ window.hdrFit=hdrFit;addEventListener('resize',hdrFit);new ResizeObserver(hdrFit).observe($('chartBar'));setTimeout(hdrFit,0);setTimeout(hdrFit,600);try{document.fonts.ready.then(hdrFit)}catch(e){}document.addEventListener('click',e=>{if(e.target.closest('.vbtn,.sidetog,[data-theme-opt],.thememenu button'))setTimeout(hdrFit,60)})}
 {const sideFit=()=>{const st=$('stage'),w=$('wheelWrap');if(!st||!w||w.hidden)return;const cs=getComputedStyle(st),inner=st.clientWidth-parseFloat(cs.paddingLeft)-parseFloat(cs.paddingRight),gap=(inner-w.offsetWidth)/2;w.style.setProperty('--side',Math.max(0,Math.min(90,gap-6))+'px')};new ResizeObserver(sideFit).observe($('stage'));new ResizeObserver(sideFit).observe($('wheelWrap'));addEventListener('resize',sideFit)}
 $('wLock').onclick=()=>{S.wheelLock=!S.wheelLock;lockSnap=null;saveSet();renderAll()};
 let jog=null,raf=0,pending=0;const ticks=$('ticks');
