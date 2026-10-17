@@ -1,6 +1,6 @@
 // Destinned offline cache: serves the site from cache, refreshing it in the background.
-const CACHE='orrery-v2';
-const FILES=['./','index.html','manifest.webmanifest','fonts/fonts.css','fonts/poppins-500.woff','fonts/poppins-600.woff','fonts/poppins-700.woff','fonts/poppins-800.woff','fonts/manrope.woff','fonts/noto-sans-symbols.woff','fonts/noto-sans-symbols-2.woff','icons/favicon-192.png','icons/icon-192.png','icons/icon-512.png','icons/apple-touch-icon.png'];
+const CACHE='orrery-v4';
+const FILES=['./','index.html','manifest.webmanifest','fonts/fonts.css','fonts/poppins-500.woff','fonts/poppins-600.woff','fonts/poppins-700.woff','fonts/poppins-800.woff','fonts/manrope.woff','fonts/noto-sans-symbols.woff','fonts/noto-sans-symbols-2.woff','icons/favicon-192.png','icons/icon-192.png','icons/icon-512.png','icons/apple-touch-icon.png','data/asteroids.js','data/tarot-cards.js'];
 self.addEventListener('install',e=>{e.waitUntil(caches.open(CACHE).then(c=>c.addAll(FILES)).then(()=>self.skipWaiting()))});
 self.addEventListener('activate',e=>{e.waitUntil(caches.keys().then(ks=>Promise.all(ks.filter(k=>k!==CACHE).map(k=>caches.delete(k)))).then(()=>self.clients.claim()))});
 self.addEventListener('fetch',e=>{if(e.request.method!=='GET'||new URL(e.request.url).origin!==location.origin)return;
