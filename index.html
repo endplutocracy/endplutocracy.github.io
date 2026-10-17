@@ -21,19 +21,19 @@
 /* Layout: app shell — top bar, wheel + time dial on the left, tabbed tables on the right; chart library slides in as a drawer */
 /* Palette and type from the earlier Destinned site: charcoal, lilac, plum top bar, starfield; dark only by design */
 :root{
-  --bg:#2c2d2d; --bg-deep:#1d1e1e; --panel:#242525; --raised:#282929; --line:#444646; --fg:#cbcbcb; --muted:#a6a8a8; --accent:#b88ccf; --accent-dim:#87539b; --accent-ink:#2d2e2e; --lilac:#d4b8e3;
-  --bar:#6f4283; --bar-dark:#5d3a70; --bar-gradient:linear-gradient(160deg,#5d3a70,#2d2e2e);
+  --bg:#232424; --bg-deep:#181919; --panel:#1d1e1e; --raised:#222323; --line:#444646; --fg:#cbcbcb; --muted:#a6a8a8; --accent:#b88ccf; --accent-dim:#87539b; --accent-ink:#2d2e2e; --lilac:#d4b8e3;
+  --bar:#6f4283; --bar-dark:#5d3a70; --bar-gradient:linear-gradient(160deg,#5d3a70,#232424);
   --fire:#f2a7c6; --earth:#a9d1a0; --air:#9fbcef; --water:#bb9ff0; --hard:#ffb4b4; --soft:#9fd8c4; --minor:#d4b8e3; --asp-hard:#ff5c72; --asp-soft:#3fe0b0; --asp-tri:#5ea8ff; --asp-minor:#c99bff; --asp-conj:#ffd36b; --w-zodiac:#2e2637; --w-terms:#3a2f45; --w-decans:#33293e; --w-naks:#3d3149; --w-inner:#252029; --w-house:#2b2431; --w-line:#4b3e58; --w-grey:var(--panel); --w-p1:#3a2f45; --w-p2:#2e2538; --asp-field:var(--w-grey); --outer-band:#2a2131; --outer-line:#6e5585; --outer-fg:#e3cdf2; --outer-tick:#c99be6;
   --display:"Poppins",system-ui,-apple-system,"Segoe UI",sans-serif; --ui:system-ui,-apple-system,"Segoe UI",sans-serif; --mono:"Manrope","Avenir Next","Segoe UI",system-ui,sans-serif;
   --sym:"OrreryGlyph","Segoe UI Symbol","Apple Symbols","Noto Sans Symbols","Noto Sans Symbols 2","DejaVu Sans",sans-serif;
-  color-scheme:dark;
+  color-scheme:dark; --wwhite:#fff;
 }
 *{box-sizing:border-box}
 [hidden]{display:none!important}
 html,body{height:100%}
 body{background-color:var(--bg);color:var(--fg);font:400 14px/1.5 var(--ui);margin:0;
-  background-image:radial-gradient(1.2px 1.2px at 12% 18%,rgba(255,255,255,.7),transparent),radial-gradient(1px 1px at 34% 72%,rgba(184,140,207,.7),transparent),radial-gradient(1.5px 1.5px at 58% 28%,rgba(255,255,255,.6),transparent),radial-gradient(1px 1px at 81% 64%,rgba(255,255,255,.5),transparent),radial-gradient(1.2px 1.2px at 92% 12%,rgba(212,184,227,.7),transparent),radial-gradient(1px 1px at 7% 88%,rgba(255,255,255,.5),transparent),radial-gradient(1px 1px at 46% 50%,rgba(255,255,255,.4),transparent);
-  background-size:420px 420px,420px 420px,420px 420px,420px 420px,420px 420px,420px 420px,610px 610px}
+  background-image:radial-gradient(1.2px 1.2px at 12% 18%,rgba(255,255,255,.7),transparent),radial-gradient(1px 1px at 34% 72%,rgba(184,140,207,.7),transparent),radial-gradient(1.5px 1.5px at 58% 28%,rgba(255,255,255,.6),transparent),radial-gradient(1px 1px at 81% 64%,rgba(255,255,255,.5),transparent),radial-gradient(1.2px 1.2px at 92% 12%,rgba(212,184,227,.7),transparent),radial-gradient(1px 1px at 7% 88%,rgba(255,255,255,.5),transparent),radial-gradient(1px 1px at 46% 50%,rgba(255,255,255,.4),transparent),radial-gradient(1px 1px at 8% 11%,rgba(255,255,255,0.46),transparent),radial-gradient(1.6px 1.6px at 76% 9%,rgba(184,140,207,0.34),transparent),radial-gradient(1.1px 1.1px at 57% 55%,rgba(255,255,255,0.31),transparent),radial-gradient(0.8px 0.8px at 56% 9%,rgba(255,255,255,0.34),transparent),radial-gradient(1.6px 1.6px at 30% 82%,rgba(184,140,207,0.35),transparent),radial-gradient(1.3px 1.3px at 75% 76%,rgba(184,140,207,0.68),transparent),radial-gradient(1px 1px at 7% 73%,rgba(255,255,255,0.69),transparent),radial-gradient(1.6px 1.6px at 20% 71%,rgba(255,255,255,0.42),transparent),radial-gradient(0.8px 0.8px at 89% 25%,rgba(184,140,207,0.42),transparent),radial-gradient(0.8px 0.8px at 26% 49%,rgba(184,140,207,0.53),transparent),radial-gradient(0.8px 0.8px at 74% 9%,rgba(184,140,207,0.58),transparent),radial-gradient(1.1px 1.1px at 70% 56%,rgba(255,255,255,0.5),transparent),radial-gradient(1.6px 1.6px at 60% 48%,rgba(255,255,255,0.49),transparent),radial-gradient(1px 1px at 91% 33%,rgba(255,255,255,0.62),transparent),radial-gradient(0.8px 0.8px at 65% 45%,rgba(184,140,207,0.42),transparent),radial-gradient(1.3px 1.3px at 11% 17%,rgba(212,184,227,0.42),transparent),radial-gradient(1.1px 1.1px at 45% 21%,rgba(212,184,227,0.37),transparent),radial-gradient(1px 1px at 87% 11%,rgba(212,184,227,0.32),transparent);
+  background-size:420px 420px,420px 420px,420px 420px,420px 420px,420px 420px,420px 420px,610px 610px,350px 350px,470px 470px,530px 530px,690px 690px,770px 770px,350px 350px,470px 470px,530px 530px,690px 690px,770px 770px,350px 350px,470px 470px,530px 530px,690px 690px,770px 770px,350px 350px,470px 470px,530px 530px}
 button,select,input{font:inherit;color:inherit}
 button{cursor:pointer}
 :focus-visible{outline:2px solid var(--accent);outline-offset:2px}
@@ -287,15 +287,15 @@ tr.clk:hover td,td.clk:hover{background:var(--raised)}
 .chartbar .icobtn{color:var(--fg)}
 .chartbar .icobtn[aria-expanded="true"]{background:var(--lilac)!important;color:var(--accent-ink)}
 .top .seg button.vbtn{display:inline-flex;align-items:center;gap:7px}
-#views{margin-left:18px}.top>.grow{display:none}.top>#openSettings{margin-left:auto}.top>#engineNote:empty{display:none}.top>#engineNote:not(:empty)~#openSettings{margin-left:0}.top>#engineNote{margin-left:auto}#hdrDonate{text-decoration:none}#hdrDonate .ico{width:25px;height:25px;margin:-2px -1px}.top.tight .seg button.vbtn{padding:5px 4px;gap:4px;letter-spacing:.01em}.top.novl .vlbl{display:none}.top.xs{column-gap:5px}.top.xs #views{margin-left:4px}.top.xs .seg button.vbtn{padding:4px 3px}.top.xs>#openSettings,.top.xs>#themeWrap>.icobtn,.top.xs>#hdrDonate{width:30px}.top.xs .icobtn .ico{width:19px;height:19px}
+#views{margin-left:18px}.top>.grow{display:none}.top>#openSettings{margin-left:auto}.top>#engineNote:empty{display:none}.top>#engineNote:not(:empty)~#openSettings{margin-left:0}.top>#engineNote{margin-left:auto}#hdrDonate{text-decoration:none}#hdrDonate .ico{width:23px;height:23px;margin:-2px -1px}.top.tight .seg button.vbtn{padding:5px 4px;gap:4px;letter-spacing:.01em}.top.novl .vlbl{display:none}.top.xs{column-gap:5px}.top.xs #views{margin-left:4px}.top.xs .seg button.vbtn{padding:4px 3px}.top.xs>#openSettings,.top.xs>#themeWrap>.icobtn,.top.xs>#hdrDonate{width:30px}.top.xs .icobtn .ico{width:19px;height:19px}
 .hlbl{display:none}
 @media (min-width:1200px){
  .top>#views{position:static;transform:none}
- .top.nolbl .hlbl{display:none!important}.top.nolbl>#themeWrap>.icobtn,.top.nolbl>#openSettings,.top.nolbl>#hdrDonate{width:38px;padding:0;justify-content:center}
+ .top.nolbl .hlbl{display:none!important}.top.nolbl>#themeWrap>.icobtn,.top.nolbl>#openSettings,.top.nolbl>#hdrDonate{width:34px;padding:0;justify-content:center}
  .top>#themeWrap>.icobtn,.top>#openSettings,.top>#hdrDonate{width:auto;padding:0 13px 0 10px;display:inline-flex;align-items:center;gap:7px}
  .hlbl{display:inline;font-family:var(--display);font-weight:600;font-size:.74rem;letter-spacing:.03em}
 }
-#openSettings .ico{width:18px;height:18px}#openSettings{width:34px;height:32px}
+#openSettings .ico{width:18px;height:18px}#openSettings,#openTheme,#hdrDonate{width:34px;height:32px}#openTheme .ico{width:19px;height:19px}
 @media (max-width:820px){.vlbl{display:none}}
 @media (max-width:600px){#views{margin-left:10px}.top{column-gap:6px}}
 @media (max-width:380px){#views{margin-left:6px}.top .seg button.vbtn{padding:5px 5px}}
@@ -509,7 +509,7 @@ html[data-theme="retro"] *{scrollbar-color:#555 transparent}html[data-theme="pap
 .thememenu button{justify-content:flex-start;gap:12px}.thememenu .tml{flex:none}.tmi{display:inline-grid;place-items:center;width:20px;height:20px;color:var(--lilac)}.tmi svg{width:20px;height:20px;display:block}.thememenu button[aria-checked="true"] .tmi{color:inherit}.tchk{color:inherit;font-weight:700}
 .thememenu b{display:block;font:600 .85rem var(--display)}.thememenu small{display:block;color:var(--muted);font-size:.74rem;font-weight:400}
 .tsw{width:22px;height:22px;border-radius:50%;flex:none;box-shadow:0 0 0 1px rgba(128,128,128,.5)}
-.tsw-orrery{background:linear-gradient(135deg,#6f4283 50%,#2c2d2d 50%)}.tsw-oled{background:linear-gradient(135deg,#000 50%,#fff 50%)}.tsw-paper{background:linear-gradient(135deg,#fff 50%,#000 50%)}
+.tsw-orrery{background:linear-gradient(135deg,#6f4283 50%,#232424 50%)}.tsw-oled{background:linear-gradient(135deg,#000 50%,#fff 50%)}.tsw-paper{background:linear-gradient(135deg,#fff 50%,#000 50%)}
 .rico{display:none;width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
 #reset .rlbl{display:none}#reset .rico{display:block}#reset{display:inline-grid;place-items:center;min-width:40px}
 @media (max-width:600px){#openSettings{margin-left:auto}#themeWrap{margin-left:0}.top>#views{margin-left:auto!important}.top>#openSettings{margin-left:16px!important}.top.xs>#openSettings{margin-left:10px!important}}
@@ -730,6 +730,17 @@ html:not([data-theme="retro"]) :is(.wzoom button,.wlab button,.emc,.sidetog,.map
 
 html[data-theme="oled"] .emc{background:linear-gradient(to top,color-mix(in srgb,var(--c) 26%,transparent) var(--p),var(--w-p1) var(--p))}
 html[data-theme="paper"] .emc{background:linear-gradient(to top,color-mix(in srgb,var(--c) 24%,transparent) var(--p),var(--w-p1) var(--p))}
+
+html[data-theme="paper"]{--wwhite:#111}html[data-theme="pastel"]{--wwhite:#6b2546}html[data-theme="retro"]{--wwhite:#39ff6a}
+
+.vargaseg{display:flex;flex-wrap:wrap;gap:4px;border:0;background:none;padding:0}.vargaseg button{border:1px solid var(--line)!important;border-radius:8px;padding:4px 7px;font:600 .74rem var(--mono);color:var(--fg);background:transparent}
+.vargaseg button[aria-pressed="true"]{background:var(--lilac);color:var(--accent-ink);border-color:var(--lilac)!important}
+.vgrid th,.vgrid td{text-align:center;padding:5px 4px!important;font-size:.82rem}.vgrid td:first-child{text-align:left}.vgrid td.vgo{background:color-mix(in srgb,var(--lilac) 16%,transparent);border-radius:6px}
+.tag{display:inline-block;font-size:.68rem;padding:1px 6px;border-radius:999px;border:1px solid var(--lilac);color:var(--lilac);vertical-align:1px;margin-left:4px}
+.vkar td{white-space:normal;vertical-align:middle}.vkar td:last-child{min-width:12em}
+.poselem{margin-bottom:18px;padding-bottom:6px;border-bottom:1px solid var(--line)}.poselem>h3.sub:first-child{margin-top:0}
+:root:not([data-theme="oled"]):not([data-theme="paper"]):not([data-theme="retro"]):not([data-theme="pastel"]) .emc{background:linear-gradient(to top,color-mix(in srgb,var(--c) 40%,#1d1e1e) var(--p),var(--w-p1) var(--p))}
+:root:not([data-theme="oled"]):not([data-theme="paper"]):not([data-theme="retro"]):not([data-theme="pastel"]) .emc span{color:#fff;text-shadow:0 0 3px rgba(0,0,0,.75),0 0 1px rgba(0,0,0,.9)}
 </style>
 <style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}img{max-width:100%}</style>
 </head>
@@ -849,7 +860,7 @@ html[data-theme="paper"] .emc{background:linear-gradient(to top,color-mix(in srg
       <button role="tab" data-tab="pos" aria-selected="true">Positions</button>
       <button role="tab" data-tab="asp" aria-selected="false">Aspects</button>
       <button role="tab" data-tab="zr" aria-selected="false">Releasing</button>
-      <button role="tab" data-tab="elem" aria-selected="false">Elements</button><button role="tab" data-tab="info" aria-selected="false">Chart</button>
+      <button role="tab" data-tab="ved" aria-selected="false">Vedic</button><button role="tab" data-tab="info" aria-selected="false">Chart</button>
     </div></div>
     <div class="pane" id="pane"></div>
   </div>
@@ -1470,33 +1481,46 @@ const MOON_PHASE_NOTES={'New Moon':'Born near the New Moon, the Moon and Sun are
 'Last Quarter':'The Last Quarter Moon is a waning square to the Sun, a crisis in consciousness. It brings a reorienting nature that questions inherited beliefs and quietly turns toward what comes next.',
 'Waning Crescent':'A Waning Crescent (balsamic) Moon is the dark of the cycle, a phase of release, distillation and preparation that is often visionary and oriented toward the future or the collective.'};
 function moonPhaseName(E){E=((E%360)+360)%360;return E<10||E>=350?'New Moon':E<80?'Waxing Crescent':E<100?'First Quarter':E<170?'Waxing Gibbous':E<190?'Full Moon':E<260?'Waning Gibbous':E<280?'Last Quarter':'Waning Crescent'}
+
+// size every planet glyph by its visible ink, so font glyphs and drawn glyphs read as the same size
+const GLYPH_INK=new Map();let glyphCtx=null;
+function glyphInk(txt){if(GLYPH_INK.has(txt))return GLYPH_INK.get(txt);try{glyphCtx=glyphCtx||document.createElement('canvas').getContext('2d');const fam=getComputedStyle(document.documentElement).getPropertyValue('--sym').trim()||'sans-serif';glyphCtx.font=`300 100px ${fam}`;const m=glyphCtx.measureText(txt),r={L:m.actualBoundingBoxLeft,R:m.actualBoundingBoxRight,A:m.actualBoundingBoxAscent,D:m.actualBoundingBoxDescent};if(!(r.L+r.R>1&&r.A+r.D>1))return null;GLYPH_INK.set(txt,r);return r}catch(e){return null}}
+const gMet=(w,h)=>.5*Math.max(w,h)+.5*Math.sqrt(w*h);
+function normGlyphs(list){list.forEach(g=>{try{
+ if(g.svg){const bb=g.el.getBBox(),vb=g.el.viewBox.baseVal,m=gMet(bb.width,bb.height);if(!(m>0)||!vb||!vb.width)return;const sz=g.T*vb.width/m;g.el.setAttribute('width',sz);g.el.setAttribute('height',sz);g.el.setAttribute('x',g.cx-(bb.x+bb.width/2-vb.x)/vb.width*sz);g.el.setAttribute('y',g.cy-(bb.y+bb.height/2-vb.y)/vb.height*sz);return}
+ const r=glyphInk(g.txt);if(!r)return;const fs=g.T*100/gMet(r.L+r.R,r.A+r.D),k=fs/100;g.el.setAttribute('font-size',fs.toFixed(2));g.el.setAttribute('text-anchor','start');g.el.setAttribute('dominant-baseline','alphabetic');g.el.setAttribute('x',(g.cx-(r.R-r.L)/2*k).toFixed(2));g.el.setAttribute('y',(g.cy-(r.D-r.A)/2*k).toFixed(2))}catch(e){}})}
+try{document.fonts.ready.then(()=>{GLYPH_INK.clear();try{renderAll()}catch(e){}})}catch(e){}
+const P_EL={sun:'fire',mars:'fire',jupiter:'fire',moon:'water',neptune:'water',pluto:'water',mercury:'air',uranus:'air',venus:'earth',saturn:'earth'},pElCol=k=>P_EL[k]?`var(--${P_EL[k]})`:'var(--wwhite)';
 function drawPlanets(g,chart,rGlyph,rDeg,rTickOut,rTickIn,big,small,rEdge){const which=lastView&&chart===lastView.outer?'o':'i';
  const items=shownKeys().filter(k=>chart.pts[k]&&!(chart.noHouses&&[...LOTS,'vertex'].includes(k))).map(k=>({k,lon:chart.pts[k].lon,sp:chart.pts[k].speed}));
  const SEP=big?9:8.2;items.forEach(o=>{o.f=1;o.w=SEP/2});
  for(let it=0;it<3;it++){spread(items,SEP);items.forEach(o=>{o.f=o.cn>1?Math.max(.72,1-.09*(o.cn-1)):1;o.w=SEP/2*o.f})}
- const placed=spread(items,SEP);
+ const placed=spread(items,SEP),GN=[],gT=o=>(big?31:small?25:26)*.72*(which==='o'?1:.95)*o.f*(['sun','moon','fortune'].includes(o.k)?.86:1);
  // one label scale for the whole chart, set by the planet that needs the most room
- let K=1;const LI=new Map();placed.forEach(o=>{const L=labInfo(o);LI.set(o,L);K=Math.min(K,L.kn)});
- function labInfo(o){const f=deg(o.lon),rx=o.sp<0&&!['node','snode'].includes(o.k),col=rx?'var(--fire)':which==='o'?'var(--outer-tick)':'var(--fg)',op=which==='o'?.95:rx?.95:.8,gh=(big?31:small?25:26)/2*o.f,fsz=big?13:small?10.5:12;
+ let K=1;const LI=new Map();placed.forEach(o=>{const L=labInfo(o);LI.set(o,L)});
+ // every planet's degree/sign/minute/R sits on the same ring: each slot is as deep as the widest label of that kind
+ const SL={},SC={};LI.forEach(L=>L.parts.forEach(p=>{SL[p[0]]=Math.max(SL[p[0]]||0,L.ext(p,1))}));
+ {const L0=LI.values().next().value;if(L0){const kinds=['d','s','t','r'].filter(t=>SL[t]),tot=kinds.reduce((a,t)=>a+SL[t]+2,0),room=L0.top-L0.lim;K=tot>room?Math.max(.72,room/tot):1;let rr=L0.top;kinds.forEach(t=>{SC[t]=rr-SL[t]*K/2;rr-=SL[t]*K+2*K})}}
+ function labInfo(o){const f=deg(o.lon),rx=o.sp<0&&!['node','snode'].includes(o.k),col=which==='o'?'var(--outer-tick)':'var(--wwhite)',op=which==='o'?.95:1,gh=(big?31:small?25:26)/2*o.f,fsz=big?13:small?10.5:12;
    const parts=[];if(S.wDeg!==false)parts.push(['d',f.dd+'°']);if(S.wSign)parts.push(['s',f.s]);if(S.wMin!==false)parts.push(['t',String(f.mm).padStart(2,'0')+'′']);if(rx)parts.push(['r','R']);
-   const [ux0,uy0]=pt(o.show,100),ux=Math.abs(ux0-C)/100,uy=Math.abs(uy0-C)/100,lim=which==='o'?rTickOut-(lastView&&lastView.ob||84)+1:rTickIn+1,top=rGlyph-gh+1.5;
+   const [ux0,uy0]=pt(o.show,100),ux=Math.abs(ux0-C)/100,uy=Math.abs(uy0-C)/100,lim=which==='o'?rTickOut-(lastView&&lastView.ob||84)+1:rTickIn+1,top=rGlyph-(big?31:small?25:26)/2+1.5;
    const ext=([t,v],k)=>{const z=t==='d'?fsz*1.15:t==='r'?fsz*.85:fsz;return t==='s'?(fsz+1)*(ux*1+uy*1)*k:(ux*String(v).length*z*.6+uy*z*1.05)*k};
-   const tot=parts.reduce((a,p)=>a+ext(p,1)+2,0),kn=tot>top-lim?Math.max(.72,(top-lim)/tot):1;return {parts,col,op,fsz,top,ext,kn}}
+   const tot=parts.reduce((a,p)=>a+ext(p,1)+2,0),kn=tot>top-lim?Math.max(.72,(top-lim)/tot):1;return {parts,col,op,fsz,top,ext,kn,lim}}
  placed.forEach(o=>{
   const [a,b]=pt(o.lon,rTickOut),[c,d]=pt(o.lon,rTickIn);const ow=which==='o';g.append(el('line',{x1:a,y1:b,x2:c,y2:d,stroke:ow?'var(--outer-tick)':'var(--accent)','stroke-width':2}));
   if(rEdge){const gr=(big?31:small?25:26)/2*o.f+2,tl=ow?10:7,lc=ow?'var(--outer-tick)':'var(--accent)';if(!ow){const [e1,e2]=pt(o.lon,rEdge),[e3,e4]=pt(o.lon,rEdge-tl);g.append(el('line',{x1:e1,y1:e2,x2:e3,y2:e4,stroke:lc,'stroke-width':1.6}))}
    const [l1,l2]=pt(o.show,rGlyph+gr),[l3,l4]=pt(o.lon,rEdge-tl);g.append(el('line',{x1:l1,y1:l2,x2:l3,y2:l4,stroke:lc,'stroke-width':.8,opacity:.7,class:'glink'}))}
   const [x,y]=pt(o.show,rGlyph),txt=PT[o.k][0],isText=txt.length>1&&!/[☀-⯿]/.test(txt);
-  if(o.k==='moon'&&!chart.pts.sun){}else if(WHEEL_SVG[o.k]){const col=ow?'var(--outer-fg)':o.k==='sun'||o.k==='moon'?'var(--accent)':'var(--fg)',mE=o.k==='moon'?chart.pts.moon.lon-chart.pts.sun.lon:0,gs=o.k==='moon'?{vb:'0 0 24 24',fill:false,parts:moonPhaseParts(mE,col)}:WHEEL_SVG[o.k],sz=(big?31:small?25:26)*(o.k==='sun'||o.k==='fortune'||o.k==='moon'?.8:1)*(ow?1:.95)*o.f,ps=el('svg',{x:x-sz/2,y:y-sz/2,width:sz,height:sz,viewBox:gs.vb,fill:gs.fill?col:'none',stroke:gs.fill?'none':col,'stroke-width':o.k==='sun'||o.k==='fortune'||o.k==='moon'?1.35:1.25,'stroke-linecap':'round','stroke-linejoin':'round',color:col,overflow:'visible'});ps.innerHTML=gs.parts;ps.append(el('title',{},`${PT[o.k][1]}${o.k==='moon'?' ('+moonPhaseName(mE)+')':''} ${deg(o.lon).txt} ${SIGN_N[deg(o.lon).s]}${o.sp<0?' (retrograde)':''}`));g.append(ps)}
-  const t=WHEEL_SVG[o.k]&&(o.k!=='moon'||chart.pts.sun)?el('g',{}):el('text',{x,y:o.k==='mars'?y-(big?6:4.5)*o.f:y,'text-anchor':'middle','dominant-baseline':'central','font-weight':isText?400:300,'font-size':(isText?(small?14:17):(big?32.5:small?25.5:27)*(({mars:1.25,venus:1.15,node:.88,snode:.88})[o.k]||1))*(ow?1:.95)*o.f,fill:ow?'var(--outer-fg)':o.k==='sun'||o.k==='moon'?'var(--accent)':o.k==='node'||o.k==='snode'?'var(--lilac)':'var(--fg)','font-family':isText?'var(--mono)':'var(--sym)'},isText?txt:txt+VS);
-  const ti=el('title',{},`${PT[o.k][1]} ${deg(o.lon).txt} ${SIGN_N[deg(o.lon).s]}${o.sp<0?' (retrograde)':''}`);t.append(ti);g.append(t);
+  if(o.k==='moon'&&!chart.pts.sun){}else if(WHEEL_SVG[o.k]){const col=pElCol(o.k),mE=o.k==='moon'?chart.pts.moon.lon-chart.pts.sun.lon:0,gs=o.k==='moon'?{vb:'0 0 24 24',fill:false,parts:moonPhaseParts(mE,col)}:WHEEL_SVG[o.k],sz=(big?31:small?25:26)*(o.k==='sun'||o.k==='fortune'||o.k==='moon'?.8:1)*(ow?1:.95)*o.f,ps=el('svg',{x:x-sz/2,y:y-sz/2,width:sz,height:sz,viewBox:gs.vb,fill:gs.fill?col:'none',stroke:gs.fill?'none':col,'stroke-width':o.k==='sun'||o.k==='fortune'||o.k==='moon'?1.35:1.25,'stroke-linecap':'round','stroke-linejoin':'round',color:col,overflow:'visible'});ps.innerHTML=gs.parts;ps.append(el('title',{},`${PT[o.k][1]}${o.k==='moon'?' ('+moonPhaseName(mE)+')':''} ${deg(o.lon).txt} ${SIGN_N[deg(o.lon).s]}${o.sp<0?' (retrograde)':''}`));g.append(ps);GN.push({el:ps,svg:1,cx:x,cy:y,T:gT(o)})}
+  const t=WHEEL_SVG[o.k]&&(o.k!=='moon'||chart.pts.sun)?el('g',{}):el('text',{x,y:o.k==='mars'?y-(big?6:4.5)*o.f:y,'text-anchor':'middle','dominant-baseline':'central','font-weight':isText?400:300,'font-size':(isText?(small?14:17):(big?32.5:small?25.5:27)*(({mars:1.25,venus:1.15,node:.88,snode:.88})[o.k]||1))*(ow?1:.95)*o.f,fill:pElCol(o.k),'font-family':isText?'var(--mono)':'var(--sym)'},isText?txt:txt+VS);
+  const ti=el('title',{},`${PT[o.k][1]} ${deg(o.lon).txt} ${SIGN_N[deg(o.lon).s]}${o.sp<0?' (retrograde)':''}`);t.append(ti);g.append(t);if(t.tagName==='text'&&!isText)GN.push({el:t,cx:x,cy:y,T:gT(o),txt:txt+VS});
   {const {parts,col,op,fsz,top,ext}=LI.get(o),k=K;
-   let rr=top;const pos=parts.map(p=>{const e=ext(p,k);const c=rr-e/2;rr-=e+2*k;return c});
+   const pos=parts.map(p=>SC[p[0]]);
    parts.forEach(([t,v],i)=>{const [dx,dy]=pt(o.show,pos[i]);
     if(t==='s')g.append(el('text',{x:dx,y:dy,'text-anchor':'middle','dominant-baseline':'central','font-size':(fsz+1)*k,'font-weight':300,fill:S.elemColors?`var(--${ELEM[v%4]})`:col,'font-family':'var(--sym)',class:'wlab-s'},SIGN_G[v]+VS));
-    else g.append(el('text',{x:dx,y:dy,'text-anchor':'middle','dominant-baseline':'central','font-size':(t==='d'?fsz*1.15:t==='r'?fsz*.85:fsz-1)*k,'font-weight':t==='d'||t==='r'?600:500,fill:col,opacity:op,'font-family':'var(--mono)'},v))})}
+    else g.append(el('text',{x:dx,y:dy,'text-anchor':'middle','dominant-baseline':'central','font-size':(t==='d'?fsz*1.15:t==='r'?fsz*.85:fsz-1)*k,'font-weight':t==='d'||t==='r'?600:500,fill:t==='r'?'var(--fire)':col,opacity:op,'font-family':'var(--mono)'},v))})}
   g.append(hit({cx:x,cy:y,r:(big?21:small?15:18)*o.f,fill:'transparent'},`pt:${which}:${o.k}`));
- });}
+ });normGlyphs(GN);}
 function aspectCls(a){return a.k==='conj'?'conj':a.cls==='minor'?'minr':(a.k==='squ'||a.k==='opp')?'hard':a.k==='tri'?'tri':'soft'}
 function aspectColor(a){return `var(--${({conj:'asp-conj',minr:'asp-minor',hard:'asp-hard',soft:'asp-soft',tri:'asp-tri'})[aspectCls(a)]})`}
 function aspectPairs(c1,c2){const keys1=aspKeys(c1),keys2=c2?aspKeys(c2):keys1;const out=[];
@@ -1515,6 +1539,68 @@ function starHits(ch){const out=[];if(!S.layers.stars)return out;const keys=[...
 /* ---------- Vedic (North / South Indian) chart styles ---------- */
 const VED_KEYS=['sun','moon','mars','mercury','jupiter','venus','saturn','node','snode','uranus','neptune','pluto'];
 const VED_AB={sun:'Su',moon:'Mo',mars:'Ma',mercury:'Me',jupiter:'Ju',venus:'Ve',saturn:'Sa',node:'Ra',snode:'Ke',uranus:'Ur',neptune:'Ne',pluto:'Pl'};
+
+/* ---------- Vedic data: Jaimini chara karakas and Parashari divisional charts ---------- */
+const VARGAS=[
+ ['D1','Rasi','The body and the whole life; the root chart'],
+ ['D2','Hora','Wealth and resources'],
+ ['D3','Drekkana','Siblings, courage and initiative'],
+ ['D4','Chaturthamsa','Home, property and fixed assets'],
+ ['D7','Saptamsa','Children and creative legacy'],
+ ['D9','Navamsa','Marriage, dharma and the inner strength of each planet'],
+ ['D10','Dasamsa','Career, status and public action'],
+ ['D12','Dvadasamsa','Parents and ancestry'],
+ ['D16','Shodasamsa','Vehicles, comforts and happiness'],
+ ['D20','Vimsamsa','Spiritual practice and devotion'],
+ ['D24','Chaturvimsamsa','Learning and education'],
+ ['D27','Bhamsa','Strengths and weaknesses'],
+ ['D30','Trimsamsa','Misfortunes and hidden difficulties'],
+ ['D40','Khavedamsa','Maternal legacy; auspicious and inauspicious effects'],
+ ['D45','Akshavedamsa','Paternal legacy; character'],
+ ['D60','Shashtiamsa','Past karma; the finest test of any placement']];
+function vargaSign(lon,D){lon=n360(lon);const s=Math.floor(lon/30),d=lon-s*30,odd=s%2===0,q=s%3,el=s%4,P=n=>Math.min(n-1,Math.floor(d/(30/n)));
+ switch(D){
+  case 1:return s;
+  case 2:return odd?(d<15?4:3):(d<15?3:4);
+  case 3:return (s+4*P(3))%12;
+  case 4:return (s+3*P(4))%12;
+  case 7:return ((odd?s:s+6)+P(7))%12;
+  case 9:return Math.floor(lon/(10/3))%12;
+  case 10:return ((odd?s:s+8)+P(10))%12;
+  case 12:return (s+P(12))%12;
+  case 16:return ([0,4,8][q]+P(16))%12;
+  case 20:return ([0,8,4][q]+P(20))%12;
+  case 24:return ((odd?4:3)+P(24))%12;
+  case 27:return ([0,3,6,9][el]+P(27))%12;
+  case 30:return odd?(d<5?0:d<10?10:d<18?8:d<25?2:6):(d<5?1:d<12?5:d<20?11:d<25?9:7);
+  case 40:return ((odd?0:6)+P(40))%12;
+  case 45:return ([0,4,8][q]+P(45))%12;
+  case 60:return (s+P(60))%12;}return s}
+const KARAKAS=[['AK','Atmakaraka','The soul; the central lesson and desire of this life'],['AmK','Amatyakaraka','Career, counsel and the means of fulfilling the soul’s aims'],['BK','Bhratrikaraka','Siblings, courage and teachers'],['MK','Matrikaraka','The mother, home and emotional nourishment'],['PK','Putrakaraka','Children, creativity and students'],['GK','Gnatikaraka','Rivals, obstacles, illness and debts to overcome'],['DK','Darakaraka','The spouse and close partnerships']];
+const VED_SEVEN=['sun','moon','mars','mercury','jupiter','venus','saturn'];
+const SL=['mars','venus','mercury','moon','sun','mercury','venus','mars','jupiter','saturn','saturn','jupiter'];
+let vedVarga='D9';
+function renderVedicData(v){const ch=v.inner;if(!ch||!ch.pts.sun)return '<p class="muted">No chart loaded.</p>';
+ const sid=k=>ch.pts[k].lon;
+ const sg=si=>`<span class="sym" style="color:var(--${ELEM[si%4]})">${SIGN_G[si]}${VS}</span>`;
+ // chara karakas: highest degree within sign = Atmakaraka
+ const kar=VED_SEVEN.filter(k=>ch.pts[k]).map(k=>{const L=sid(k);return {k,L,d:L%30}}).sort((a,b)=>b.d-a.d);
+ let h=`<p class="note" style="margin:0 0 10px">${S.zodiac==='tropical'?'Tropical positions, matching your zodiac setting. Switch to sidereal in Settings for a traditional Jyotish reading.':'Sidereal positions, matching your zodiac setting.'} Click a row for details.</p><h3 class="sub">Chara karakas</h3><p class="note">Jaimini’s seven variable significators, ranked by each planet’s degree within its sign.</p><div class="tblwrap"><table class="vkar"><thead><tr><th>Karaka</th><th>Planet</th><th>Degree</th><th>Signifies</th></tr></thead><tbody>`;
+ kar.forEach((o,i)=>{const K=KARAKAS[i];if(!K)return;const dd=Math.floor(o.d),mm=Math.floor((o.d-dd)*60);h+=`<tr class="clk" data-obj="pt:i:${o.k}"><td><strong>${K[0]}</strong><br><span class="muted" style="font-size:.78rem">${K[1]}</span></td><td>${glyphHtml(o.k)} ${PT[o.k][1]}</td><td class="mono">${String(dd).padStart(2,'0')}°${String(mm).padStart(2,'0')}′ ${sg(Math.floor(o.L/30))}</td><td class="muted" style="font-size:.82rem">${K[2]}</td></tr>`});
+ h+='</tbody></table></div>';
+ // divisional charts
+ const keys=[...(ch.noHouses||!ch.pts.asc?[]:['asc']),...VED_SEVEN,'node','snode'].filter(k=>ch.pts[k]||k==='snode'&&ch.pts.node);
+ const L=k=>k==='snode'&&!ch.pts.snode?n360(sid('node')+180):sid(k),nm=k=>k==='asc'?'Lagna':PT[k][1],gl=k=>k==='asc'?'<span class="mono" style="font-weight:700">La</span>':glyphHtml(k);
+ const D=+vedVarga.slice(1),vinfo=VARGAS.find(x=>x[0]===vedVarga);
+ h+=`<h3 class="sub">Divisional charts</h3><div class="seg vargaseg" role="group" aria-label="Divisional chart">${VARGAS.map(x=>`<button type="button" data-varga="${x[0]}" aria-pressed="${x[0]===vedVarga}" title="${x[1]}">${x[0]}</button>`).join('')}</div>
+ <p class="note" style="margin:8px 0"><strong>${vinfo[0]} ${vinfo[1]}</strong> · ${vinfo[2]}.</p><div class="tblwrap"><table><thead><tr><th>Point</th><th>Sign</th><th>Lord</th>${D!==1?'<th>D1 sign</th>':''}</tr></thead><tbody>`;
+ keys.forEach(k=>{const lo=L(k),vs=vargaSign(lo,D),rs=Math.floor(lo/30),vg=D!==1&&vs===rs;h+=`<tr class="clk" data-obj="pt:i:${k==='snode'&&!ch.pts.snode?'node':k}"><td>${gl(k)} ${nm(k)}</td><td>${sg(vs)} ${SIGN_N[vs]}${vg?` <span class="tag" title="Same sign as in the D1">${D===9?'Vargottama':'same as D1'}</span>`:''}</td><td>${glyphHtml(SL[vs])} ${PT[SL[vs]][1]}</td>${D!==1?`<td class="muted">${sg(rs)} ${SIGN_N[rs]}</td>`:''}</tr>`});
+ h+='</tbody></table></div>';
+ // overview across the main vargas
+ const MAIN=[1,2,3,4,7,9,10,12,16,20,24,27,30,40,45,60];
+ h+=`<h3 class="sub">All divisions at a glance</h3><div class="tblwrap"><table class="vgrid"><thead><tr><th></th>${MAIN.map(d=>`<th class="mono">D${d}</th>`).join('')}</tr></thead><tbody>${keys.map(k=>{const lo=L(k),r=Math.floor(lo/30);return `<tr><td>${gl(k)}</td>${MAIN.map(d=>{const x=vargaSign(lo,d);return `<td title="${nm(k)} D${d}: ${SIGN_N[x]}"${d!==1&&x===r?' class="vgo"':''}>${sg(x)}</td>`}).join('')}</tr>`}).join('')}</tbody></table></div><p class="note">Highlighted cells fall in the same sign as the D1.</p>`;
+ return h}
+document.addEventListener('click',e=>{const b=e.target.closest('[data-varga]');if(!b)return;vedVarga=b.dataset.varga;renderAll()});
 function vedLon(ch,lon){return S.zodiac==='tropical'?n360(lon-Calc.ayanamsa(ch.jd,'lahiri')):lon}
 function vedItems(ch,which){const keys=[...VED_KEYS,...astKeys(ch),...Object.keys(S.show).filter(k=>S.show[k]&&!['node','snode'].includes(k))];const seen=new Set();
  return keys.filter(k=>{if(seen.has(k)||!ch.pts[k]||(ch.noHouses&&[...LOTS,'vertex'].includes(k)))return false;seen.add(k);return true}).map(k=>{const lon=vedLon(ch,ch.pts[k].lon);return {k,lon,sign:Math.floor(lon/30),deg:Math.floor(lon%30),rx:ch.pts[k].speed<0&&!['node','snode'].includes(k),which}})}
@@ -1567,7 +1653,7 @@ function renderVedic(v){svg.replaceChildren();const inner=v.inner,outer=v.outer,
   }
  const note=$('stageNote');if(note)note.textContent=(v.notes||[]).join(' ');}
 
-const angLabA=lon=>{const d=((lon%30)+30)%30-15;return Math.abs(d)<5.8?lon-d+(d<0?-5.8:5.8):lon};
+const angLabA=lon=>lon,angLabOp=lon=>{const d=Math.abs(((lon%30)+30)%30-15);return d<5.8?.45:d<7.5?.45+(d-5.8)/1.7*.55:1};
 function renderWheel(v){
  if(S.chartStyle==='north'||S.chartStyle==='south'){renderVedic(v);return}
  svg.replaceChildren();const inner=v.inner,outer=v.outer,bi=!!outer,Ly=S.layers;
@@ -1595,7 +1681,7 @@ function renderWheel(v){
    svg.append(el('line',{x1:a,y1:b,x2:x,y2:y,stroke:'var(--line)','stroke-width':1,opacity:1}));
    const mid=c+n360(inner.cusps[(i+1)%12]-c)/2,[hx,hy]=pt(mid,IN-14);svg.append(hit({d:sector(IN,IN-26,c,inner.cusps[(i+1)%12]),fill:'transparent'},`house:${i+1}`));svg.append(el('text',{x:hx,y:hy,'text-anchor':'middle','dominant-baseline':'central','font-size':12,fill:'var(--muted)','font-family':'var(--mono)'},i+1))});
   [['asc','AC'],['mc','MC'],['dsc','DC'],['ic','IC']].forEach(([k,l])=>{const lon=inner.pts[k].lon;const pin=bi&&mode==='progressed',rE=pin?base-OB:base;{if(!pin){const [t1,t2]=pt(lon,Z2+14),[t3,t4]=pt(lon,Z2);svg.append(el('line',{x1:t1,y1:t2,x2:t3,y2:t4,stroke:'var(--lilac)','stroke-width':2.6,'stroke-linecap':'round',class:'angtick'}))}const [t5,t6]=pt(lon,rE),[t7,t8]=pt(lon,rE-12);svg.append(el('line',{x1:t5,y1:t6,x2:t7,y2:t8,stroke:'var(--lilac)','stroke-width':2.6,class:'angtick'}))}const [lx,ly]=pin?pt(lon+(k==='asc'||k==='dsc'?-4.2:4.2),rE-20):pt(angLabA(lon),Z2+28);
-   svg.append(el('text',{x:lx,y:ly,'text-anchor':'middle','dominant-baseline':'central','font-size':pin?12:13,'font-weight':700,fill:'var(--lilac)','font-family':'var(--mono)'},l));svg.append(hit({cx:lx,cy:ly,r:14,fill:'transparent'},`pt:i:${k}`))});}
+   svg.append(el('text',{x:lx,y:ly,'text-anchor':'middle','dominant-baseline':'central','font-size':pin?12:13,'font-weight':700,fill:'var(--lilac)','font-family':'var(--mono)',opacity:pin?1:angLabOp(lon).toFixed(2)},l));svg.append(hit({cx:lx,cy:ly,r:14,fill:'transparent'},`pt:i:${k}`))});}
  const pairs=aspectPairs(inner,outer||null).filter(p=>p.asp.k!=='conj');
  const aspR=IN-26;svg.append(el('circle',{cx:C,cy:C,r:aspR,fill:'var(--asp-field)',stroke:'none'}));pairs.forEach(p=>{const [x1,y1]=pt((outer||inner).pts[p.b].lon,aspR),[x2,y2]=pt(inner.pts[p.a].lon,aspR);
   svg.append(el('line',{x1,y1,x2,y2,stroke:aspectColor(p.asp),'stroke-width':(p.asp.orb<1?1.1:p.asp.orb<3?.8:.6)*(outer?.75:1),'stroke-linecap':'round',opacity:p.asp.cls==='minor'?.85:1,'stroke-dasharray':p.asp.cls==='minor'?'5 4':'none'}));svg.append(hit({x1,y1,x2,y2,stroke:'transparent','stroke-width':12},`asp:${bi?'o':'i'}:${p.b}:${p.a}`))});
@@ -1699,7 +1785,7 @@ function renderAll(){const A=byId(activeId);if(view==='eph'){try{saveEphState();
  document.querySelectorAll('#tabs button').forEach(b=>b.setAttribute('aria-selected',b.dataset.tab===tab));
  if(infoObj&&!$('info').hidden){const h=infoFor(infoObj);if(h)$('infoBody').innerHTML=h;else hideInfo()}
  const P=$('pane');if(mode==='acg'){P.innerHTML=renderAcgPanel(v);acgPanelWire();mlRender(v);saveView();return}
- P.innerHTML=tab==='pos'?renderPositions(v):tab==='asp'?renderAspects(v):tab==='zr'?renderZR():tab==='elem'?elemBalance(v.inner):renderInfo(v);
+ if(tab==='elem')tab='pos';P.innerHTML=tab==='pos'?(()=>{let e='';try{e=v.inner&&v.inner.pts.sun?`<div class="poselem">${elemBalance(v.inner)}</div>`:''}catch(_){}return e+renderPositions(v)})():tab==='asp'?renderAspects(v):tab==='zr'?renderZR():tab==='ved'?renderVedicData(v):renderInfo(v);
  saveView();}
 
 /* ---------- interactions ---------- */
@@ -2419,7 +2505,7 @@ function infoPoint(which,k){const ch=chartOf(which),p=ch.pts[k];if(!p)return nul
  <p class="il">Interpretation</p><p class="interp">${esc(pointText(which,k,p,inner,house))}</p>
  ${k==='moon'&&ch.pts.sun?`<p>${MOON_PHASE_NOTES[moonPhaseName(n360(p.lon-ch.pts.sun.lon))]}</p>`:''}
  ${POINT_NOTES[k]?`<p>${POINT_NOTES[k]}</p>`:''}
- ${asp.length?`<p class="il">Aspects</p><ul>${asp.map(a=>`<li class="clk" data-obj="asp:${v.outer?(which==='o'?'o':'o'):'i'}:${v.outer?(which==='o'?k:a.other):k}:${v.outer?(which==='o'?a.other:k):a.other}">${glyphHtml(k)} <span class="${aspectCls(a.asp)}">${a.asp.g} ${a.asp.n}</span> ${glyphHtml(a.other)} ${PT[a.other][1]}${a.otherSide&&v.outer?` <span class="muted">(${esc(a.otherSide)})</span>`:''} <span class="muted mono">${a.asp.orb.toFixed(2)}° ${a.asp.applying?'a':'s'}</span></li>`).join('')}</ul>`:'<p class="il">No aspects within orb</p>'}
+ ${asp.length?`<p class="il">Aspects</p><ul>${asp.map(a=>`<li class="clk" data-obj="asp:${v.outer?(which==='o'?'o':'o'):'i'}:${v.outer?(which==='o'?k:a.other):k}:${v.outer?(which==='o'?a.other:k):a.other}">${glyphHtml(k)} <span class="${aspectCls(a.asp)}">${a.asp.g} ${a.asp.n}</span> ${glyphHtml(a.other)} ${PT[a.other][1]}${a.otherSide&&v.outer?` <span class="muted">(${esc(a.otherSide)})</span>`:''}${(()=>{const oc=v.outer&&which==='i'?v.outer:v.inner,op=oc&&oc.pts[a.other];return op&&!v.inner.noHouses&&v.inner.cusps?` <span class="muted">· ${ord(Calc.houseOf(op.lon,v.inner.cusps))}</span>`:''})()} <span class="muted mono">${a.asp.orb.toFixed(2)}° ${a.asp.applying?'a':'s'}</span></li>`).join('')}</ul>`:'<p class="il">No aspects within orb</p>'}
  ${stars.length?`<p class="il">Fixed stars</p><ul>${stars.map(o=>`<li class="clk" data-obj="star:${o.st[0]}">✦ ${o.st[0]} <span class="muted mono">${o.d.toFixed(2)}°</span></li>`).join('')}</ul>`:''}`}
 function infoSign(s){const v=lastView,inner=v.inner,[el2,mod,rul,modern,ex,fall]=SIGN_INFO[s];
  const det=RULER[(s+6)%12],inSign=Object.keys(inner.pts).filter(k=>PT[k]&&shownKeys().concat(['asc','mc']).includes(k)&&Math.floor(inner.pts[k].lon/30)===s);
@@ -2465,12 +2551,12 @@ function aspectText(which,a,b,asp){const v=lastView,o=v.outer,inner=v.inner,nm=k
  const x=MEANING[a],y=MEANING[b],fn=ASP_TEXT[asp.k]||ASP_TEXT.qui;return cap(fn(x?`${A} (${x})`:A,y?`${B} (${y})`:B))+tight+ctx}
 function infoAspect(which,a,b){const v=lastView,c1=which==='o'?v.outer:v.inner,c2=v.inner;const p1=c1.pts[a],p2=c2.pts[b];if(!p1||!p2)return null;
  const orbs=which==='o'?Object.fromEntries(Object.entries(S.orbs).map(([k,x])=>[k,Math.max(1,x*(mode==='transits'||mode==='progressed'?S.transitOrb:0.75))])):S.orbs;
- const asp=Calc.aspectBetween(p1,p2,orbs,S.aspects);if(!asp)return null;const sep=Math.abs(n360(p1.lon-p2.lon+180)-180);
+ const asp=Calc.aspectBetween(p1,p2,orbs,S.aspects);if(!asp)return null;const hs=lon=>(!c2.noHouses&&c2.cusps)?` · ${ord(Calc.houseOf(lon,c2.cusps))} house`:'';const sep=Math.abs(n360(p1.lon-p2.lon+180)-180);
  const nature={conj:'Blending; depends on the planets involved',sext:'Harmonious, an opportunity',squ:'Tense, a challenge to act on',tri:'Harmonious, flowing',opp:'Tense, polarity and awareness',qcx:'Adjustment between unrelated signs'}[asp.k]||'Minor aspect';
  return `<p class="kicker">Aspect${which==='o'?' · '+esc(v.outer.label)+' to natal':''}</p><h4><span class="big">${glyphHtml(a)}</span><span class="${aspectCls(asp)}" style="font-family:var(--sym);font-size:1.4rem">${asp.g}</span><span class="big">${glyphHtml(b)}</span></h4>
  <dl><dt>Aspect</dt><dd><span class="${aspectCls(asp)}">${asp.n}</span> (${asp.a}°)</dd><dt>Between</dt><dd>${PT[a][1]}${which==='o'?' ('+esc(v.outer.label)+')':''} and ${PT[b][1]}</dd>
  <dt>Separation</dt><dd>${sep.toFixed(3)}°</dd><dt>Orb</dt><dd>${asp.orb.toFixed(2)}° · ${asp.applying?'applying':'separating'}</dd><dt>Nature</dt><dd>${nature}</dd>
- <dt>${PT[a][1]}</dt><dd>${dms(p1.lon)}</dd><dt>${PT[b][1]}</dt><dd>${dms(p2.lon)}</dd></dl>
+ <dt>${PT[a][1]}</dt><dd>${dms(p1.lon)}${hs(p1.lon)}</dd><dt>${PT[b][1]}</dt><dd>${dms(p2.lon)}${hs(p2.lon)}</dd></dl>
  <p class="il">Interpretation</p><p class="interp">${esc(aspectText(which,a,b,asp))}</p>
  <ul><li class="clk" data-obj="pt:${which}:${a}">Open ${PT[a][1]} →</li><li class="clk" data-obj="pt:i:${b}">Open ${PT[b][1]} →</li></ul>`}
 /* --- midpoints (nearer midpoint) and their hard-aspect contacts --- */
