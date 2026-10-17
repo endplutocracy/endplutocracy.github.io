@@ -520,7 +520,7 @@ html[data-theme="retro"] *{scrollbar-color:#555 transparent}html[data-theme="pap
 .readpg{max-width:860px;margin:0 auto;display:grid;gap:18px}
 .readh{font:700 clamp(1.5rem,3.5vw,2.2rem)/1.15 var(--display);margin:0;color:var(--fg)}
 .readlead{font-size:1.02rem;line-height:1.65;color:var(--fg);margin:0;max-width:62ch}
-.readgrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.readgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
 .readcard{background:var(--panel);border-radius:16px;padding:16px 18px;box-shadow:0 0 0 1px rgba(255,255,255,.05);display:grid;gap:6px;align-content:start}
 .readcard.primary{box-shadow:0 0 0 1px rgba(255,255,255,.05)}
 .readcard h3{margin:0;font:600 1.02rem var(--display);color:var(--fg)}.readcard p{margin:0;color:var(--muted);line-height:1.55;font-size:.9rem}
@@ -750,7 +750,10 @@ html[data-theme="paper"]{--wwhite:#111}html[data-theme="pastel"]{--wwhite:#6b254
 .ilink{display:flex;align-items:center;gap:12px;width:100%;margin-top:14px;padding:12px 0 2px;border:0;border-top:1px solid var(--line);border-radius:0;background:none;color:var(--fg);text-align:left;cursor:pointer}
 .ilink .ilt{display:grid;gap:4px;flex:1}.ilink .ilk{font:600 .68rem var(--display);letter-spacing:.14em;text-transform:uppercase;color:var(--accent)}
 .ilink .ilh{display:flex;align-items:baseline;gap:10px;font:700 1rem var(--display);letter-spacing:.03em}.ilink .ilg{font-family:var(--sym);font-size:1.7rem;font-weight:400;line-height:1}
-.ilink .ilc{width:20px;height:20px;fill:none;stroke:var(--accent);stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex:none;transition:transform .15s}.ilink:hover .ilc{transform:translateX(4px)}.ilink:hover .ilh{color:var(--lilac)}
+.ilink .ilc{width:16px;height:16px;fill:var(--lilac);stroke:none;flex:none;transition:transform .25s ease}.ilink:hover .ilc{transform:rotate(45deg)}.ilink:hover .ilh{color:var(--lilac)}
+.yrow.clk{cursor:pointer;transition:filter .15s}.yrow.clk:hover{filter:brightness(1.12)}
+.disc{display:grid;justify-items:center;gap:8px}.disc summary{list-style:none;cursor:pointer;display:inline-flex;align-items:center;gap:8px;color:var(--fg);padding:4px 8px;border-radius:8px}.disc summary::-webkit-details-marker{display:none}
+.disc summary svg{width:12px;height:12px;fill:var(--lilac);transition:transform .25s ease}.disc summary:hover svg{transform:rotate(45deg)}.disc[open] summary svg{transform:rotate(45deg)}.disc[open] summary:hover svg{transform:rotate(90deg)}
 </style>
 <style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}img{max-width:100%}</style>
 </head>
@@ -788,14 +791,15 @@ html[data-theme="paper"]{--wwhite:#111}html[data-theme="pastel"]{--wwhite:#6b254
 <section class="readview" id="readView" hidden>
  <div class="readpg">
   <h1 class="readh">Let me read your stars</h1>
-  <p class="readlead">Thanks for visiting my site! I’m Dvstin, and I’m excited to get into your chart and help you with anything you need. All readings are personally written and interpreted by me, not AI. I use AI to help me create tools that further my effectiveness, but I will not use AI for interpretations in personal readings. I study your birth chart by hand and write up what I see in plain language.</p>
+  <p class="readlead">Thanks for visiting my site! I’m Dvstin, and I’m excited to get into your chart and help you with anything you need. All readings are personally written and interpreted by me, not AI. I use AI to help me create tools that further my effectiveness, but I will not use AI for interpretations in personal readings.</p>
   <div class="readgrid">
    <div class="readcard primary"><span class="readprice">$108</span><h3>Natal chart reading</h3><p>A written reading of your birth chart: your core temperament and motivations, strengths and growing edges, relationships, work and direction, and the main timing themes coming up for you. Tell me anything you’d especially like me to look at, and I’ll make sure it’s covered.</p></div>
-   <div class="readcard"><span class="readtag">Add-on</span><span class="readprice">+$49</span><h3>Astrocartography</h3><p>See where in the world your planetary lines fall and what that means for the places you’ve lived, the places you’re considering and the places you’d like to visit, whether you’re looking for love, career, rest or a fresh start.</p></div>
-   <div class="readcard"><span class="readtag">Add-on</span><span class="readprice">+$49</span><h3>Palmistry</h3><p>A reading of your hands alongside your chart. After you reach out, I’ll send simple instructions for taking clear photos of both palms.</p></div>
+   <div class="readcard"><span class="readprice">$49</span><h3>Astrocartography</h3><p>See where in the world your planetary lines fall and what that means for the places you’ve lived, the places you’re considering and the places you’d like to visit, whether you’re looking for love, career, rest or a fresh start. Order it on its own or alongside a natal reading.</p></div>
+   <div class="readcard"><span class="readprice">$49</span><h3>Palmistry</h3><p>A reading of your hands, on its own or alongside your chart. After you reach out, I’ll send simple instructions for taking clear photos of both palms.</p></div>
+   <div class="readcard"><span class="readprice">$19</span><h3>Ask a question</h3><p>One focused question answered from your chart, such as timing for a move, a relationship or a career decision. A short, direct written answer.</p></div>
   </div>
   <h2 class="readsub">How it works</h2>
-  <ol class="readsteps"><li><b>Send a request</b> with your birth details and any add-ons using the form below.</li><li><b>I’ll reply by email</b> to confirm your details, answer questions and arrange payment.</li><li><b>Your written reading</b> arrives by email once it’s ready.</li></ol>
+  <ol class="readsteps"><li><b>Send a request</b> with your birth details and the readings you’d like using the form below.</li><li><b>I’ll reply by email</b> to confirm your details, answer questions and arrange payment.</li><li><b>Your written reading</b> arrives by email once it’s ready.</li></ol>
   <h2 class="readsub" id="readFormTitle">Request a reading</h2>
   <form class="readform" id="readForm" novalidate>
    <div class="fgrid">
@@ -806,12 +810,14 @@ html[data-theme="paper"]{--wwhite:#111}html[data-theme="pastel"]{--wwhite:#6b254
     <label class="chk full" for="rTimeUnk"><input type="checkbox" id="rTimeUnk"> I don’t know my birth time</label>
     <label class="l full" for="rPlace">Birth place (city, region, country)<input class="f" id="rPlace" name="birth_place" required></label>
    </div>
-   <fieldset class="readadd"><legend>Add-ons</legend>
-    <label class="chk" for="rAcg"><input type="checkbox" id="rAcg" value="Astrocartography"> Astrocartography <span class="muted">+$49</span></label>
-    <label class="chk" for="rPalm"><input type="checkbox" id="rPalm" value="Palmistry"> Palmistry <span class="muted">+$49</span></label>
+   <fieldset class="readadd"><legend>Choose your readings</legend>
+    <label class="chk" for="rNatal"><input type="checkbox" id="rNatal" value="Natal chart reading" data-price="108" checked> Natal chart reading <span class="muted">$108</span></label>
+    <label class="chk" for="rAcg"><input type="checkbox" id="rAcg" value="Astrocartography" data-price="49"> Astrocartography <span class="muted">$49</span></label>
+    <label class="chk" for="rPalm"><input type="checkbox" id="rPalm" value="Palmistry" data-price="49"> Palmistry <span class="muted">$49</span></label>
+    <label class="chk" for="rAsk"><input type="checkbox" id="rAsk" value="Ask a question" data-price="19"> Ask a question <span class="muted">$19</span></label>
    </fieldset>
    <p class="readtotal" id="rTotal">Total: <b>$108</b> <span class="muted">(natal chart reading)</span></p>
-   <label class="l full" for="rMsg">Anything you’d like me to focus on? (optional)<textarea class="f" id="rMsg" name="message" rows="5" placeholder="Questions, areas of life, places you’re considering…"></textarea></label>
+   <label class="l full" for="rMsg"><span id="rMsgLbl">Anything you’d like me to focus on? (optional)</span><textarea class="f" id="rMsg" name="message" rows="5" placeholder="Questions, areas of life, places you’re considering…"></textarea></label>
    <input type="text" name="_honey" id="rHoney" tabindex="-1" autocomplete="off" style="position:absolute;left:-9999px" aria-hidden="true">
    <div class="readactions"><button class="btn" type="submit" id="rSend">Send request</button><button class="btn ghost" type="button" id="rFill" hidden>Fill in from the open chart</button></div>
    <p class="err" id="rErr" hidden></p>
@@ -877,7 +883,7 @@ html[data-theme="paper"]{--wwhite:#111}html[data-theme="pastel"]{--wwhite:#6b254
 </div>
 
 <footer class="sitefoot">
-  <p><strong>Hi! Full Disclosure:</strong><br>This site was created with the help of AI, which is one of the many reasons I’m making it free to use. It may make mistakes or have bugs here and there, but I’m constantly updating it to add features and fix issues as I notice them. It isn’t perfect, but I wanted a tool that fit my needs and thought it might help someone else too. This site does cost money to run, so if you’d like to support this effort, please donate any amount you feel is fair. Or get a personal reading from me.</p>
+  <details class="disc"><summary><strong>Hi! Full Disclosure:</strong><svg viewBox="6 8.4 7.2 7.2" aria-hidden="true"><path d="M9.6 8.4 L10.5 11.1 L13.2 12 L10.5 12.9 L9.6 15.6 L8.7 12.9 L6 12 L8.7 11.1 Z"/></svg></summary><p>This site was created with the help of AI, which is one of the many reasons I’m making it free to use. It may make mistakes or have bugs here and there, but I’m constantly updating it to add features and fix issues as I notice them. It isn’t perfect, but I wanted a tool that fit my needs and thought it might help someone else too. This site does cost money to run, so if you’d like to support this effort, please donate any amount you feel is fair. Or get a personal reading from me.</p></details>
   <div class="footbtns"><a class="btn" id="donateBtn" href="https://buymeacoffee.com/destinned" target="_blank" rel="noopener">Donate</a><button class="btn" type="button" id="readBtn">Get a Reading</button></div>
 </footer>
 <div class="scrim" id="scrim" hidden></div>
@@ -1595,9 +1601,23 @@ const KAR_TXT=[
  'The Putrakaraka signifies children, creativity, intelligence and students or followers. It shows what the person brings into being and passes on, whether through family, art or teaching.',
  'The Gnatikaraka signifies rivals, relatives who compete, illness, debts and obstacles. It shows the struggles that build strength and the areas where service, discipline or healing are required.',
  'The Darakaraka is the planet with the lowest degree in its sign. It signifies the spouse and significant partners, describing the qualities sought and met in close relationships, and often in business partnerships as well.'];
+const KAR_P={sun:{q:'authority, visibility, pride and the need to shine',who:'confident and dignified, sometimes proud',ak:'to lead with humility and to find a sense of worth that does not depend on recognition'},
+ moon:{q:'feeling, care, receptivity and connection with the public',who:'nurturing, sensitive and changeable',ak:'to find emotional steadiness and to care for others without losing yourself'},
+ mars:{q:'courage, drive, competition and decisive action',who:'energetic, brave and quick to act',ak:'to use strength wisely, choosing courage over aggression'},
+ mercury:{q:'intellect, speech, trade and adaptability',who:'clever, talkative and youthful in spirit',ak:'to align words with truth and use intelligence honestly'},
+ jupiter:{q:'wisdom, teaching, faith and growth',who:'generous, principled and learned',ak:'to grow in genuine wisdom while staying humble about what you know'},
+ venus:{q:'love, beauty, pleasure and harmony',who:'charming, artistic and affectionate',ak:'to refine desire and to love without clinging to comfort or pleasure'},
+ saturn:{q:'discipline, duty, endurance and time',who:'serious, responsible and mature',ak:'patience and service through responsibility, delay and hard work'}};
+const KAR_F=[(P,p)=>`As Atmakaraka, ${P} makes ${p.q} the heart of the soul’s journey. The central lesson is learning ${p.ak}. Periods of ${P} and its condition in the chart are especially significant.`,
+ (P,p)=>`As Amatyakaraka, ${P} shapes career and the means of reaching your aims through ${p.q}. Work that uses these qualities, and advisers who are ${p.who}, tend to serve your purpose best.`,
+ (P,p)=>`As Bhratrikaraka, ${P} describes siblings, allies and teachers as ${p.who}, and shows courage and effort expressed through ${p.q}.`,
+ (P,p)=>`As Matrikaraka, ${P} colours the experience of mother and home. She may be seen as ${p.who}, and emotional security is found through ${p.q}.`,
+ (P,p)=>`As Putrakaraka, ${P} describes children, students and creative work as ${p.who}. What you bring into being carries the stamp of ${p.q}.`,
+ (P,p)=>`As Gnatikaraka, ${P} shows the obstacles and rivals you meet: challenges tend to arise around ${p.q}, and working through them builds real strength.`,
+ (P,p)=>`As Darakaraka, ${P} describes the spouse or significant partner as ${p.who}, and partnership brings ${p.q} into your life.`];
 function infoKar(i){const v=lastView,ch=v&&v.inner;if(!ch)return null;const kar=VED_SEVEN.filter(k=>ch.pts[k]).map(k=>{const L=ch.pts[k].lon;return {k,L,d:L%30}}).sort((a,b)=>b.d-a.d),o=kar[i],K=KARAKAS[i];if(!o||!K)return null;
  const dd=Math.floor(o.d),mm=Math.floor((o.d-dd)*60),s=Math.floor(o.L/30);
- return `<p class="kicker">Chara karaka</p><h4><span class="big">${glyphHtml(o.k)}</span>${K[1]}</h4><dl><dt>Planet</dt><dd>${PT[o.k][1]}</dd><dt>Degree in sign</dt><dd>${String(dd).padStart(2,'0')}°${String(mm).padStart(2,'0')}′ ${SIGN_N[s]}</dd><dt>Rank</dt><dd>${i+1} of 7</dd><dt>Signifies</dt><dd>${K[2]}</dd></dl><p class="il">About</p><p class="interp">${KAR_TXT[i]}</p><p class="note">Chara (variable) karakas change from chart to chart: the seven visible planets are ranked by how far each has travelled through its sign. ${S.zodiac==='tropical'?'Calculated with tropical positions, following your zodiac setting.':'Calculated with sidereal positions.'}</p><button type="button" class="ilink" data-obj="pt:i:${o.k}"><span class="ilt"><span class="ilk">View planet</span><span class="ilh"><span class="ilg">${glyphHtml(o.k)}</span>${PT[o.k][1]} in ${SIGN_N[s]}</span></span><svg class="ilc" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></button>`}
+ return `<p class="kicker">Chara karaka</p><h4><span class="big">${glyphHtml(o.k)}</span>${K[1]}</h4><dl><dt>Planet</dt><dd>${PT[o.k][1]}</dd><dt>Degree in sign</dt><dd>${String(dd).padStart(2,'0')}°${String(mm).padStart(2,'0')}′ ${SIGN_N[s]}</dd><dt>Rank</dt><dd>${i+1} of 7</dd><dt>Signifies</dt><dd>${K[2]}</dd></dl>${KAR_P[o.k]?`<p class="il">${PT[o.k][1]} as ${K[1]}</p><p class="interp">${KAR_F[i](PT[o.k][1],KAR_P[o.k])}</p>`:''}<p class="il">About the ${K[1]}</p><p class="interp">${KAR_TXT[i]}</p><p class="note">Chara (variable) karakas change from chart to chart: the seven visible planets are ranked by how far each has travelled through its sign. ${S.zodiac==='tropical'?'Calculated with tropical positions, following your zodiac setting.':'Calculated with sidereal positions.'}</p><button type="button" class="ilink" data-obj="pt:i:${o.k}"><span class="ilt"><span class="ilk">View planet</span><span class="ilh"><span class="ilg">${glyphHtml(o.k)}</span>${PT[o.k][1]} in ${SIGN_N[s]}</span></span><svg class="ilc" viewBox="6 8.4 7.2 7.2" aria-hidden="true"><path d="M9.6 8.4 L10.5 11.1 L13.2 12 L10.5 12.9 L9.6 15.6 L8.7 12.9 L6 12 L8.7 11.1 Z"/></svg></button>`}
 const VED_SEVEN=['sun','moon','mars','mercury','jupiter','venus','saturn'];
 const SL=['mars','venus','mercury','moon','sun','mercury','venus','mars','jupiter','saturn','saturn','jupiter'];
 let vedVarga='D9',vedVOpen=false;
@@ -1641,10 +1661,44 @@ function yogaCalc(ch){const sg={},P=VED_SEVEN.filter(k=>ch.pts[k]);P.forEach(k=>
  if(same('saturn','rahu'))add(D,'Shrapit dosha',['saturn','rahu'],`Saturn shares ${SIGN_N[sg.saturn]} with Rahu.`,'Delays and burdens that ask for patience and service.');
  if(same('mars','rahu'))add(D,'Angarak dosha',['mars','rahu'],`Mars shares ${SIGN_N[sg.mars]} with Rahu.`,'Volatile energy, anger or accidents; calls for disciplined use of force.');
  return {Y,D,hasL,g}}
-function yogaHtml(ch){const {Y,D,hasL,g}=yogaCalc(ch),row=(o,cls)=>`<div class="yrow ${cls}"><div class="yh"><strong>${o.name}</strong><span class="yg">${o.keys.map(g).join(' ')}</span></div><div class="yw">${o.why}</div><div class="ya muted">${o.about}</div></div>`;
+
+const YOGA_INFO={
+ 'Gajakesari yoga':['Jupiter in an angle (1st, 4th, 7th or 10th) from the Moon.','Gaja means elephant and kesari lion: the yoga promises the strength and dignity of both. Jupiter steadies and widens the Moon, so the mind is generous, hopeful and respected, and the person tends to recover from setbacks. It is one of the most frequently quoted yogas, and also one of the most common, so its results depend on the dignity of Jupiter and the Moon and on the houses they rule.'],
+ 'Budhaditya yoga':['The Sun and Mercury in the same sign.','A union of the Sun (self, authority) and Mercury (intellect, speech). It gives a quick, articulate mind, skill in study, writing or business, and recognition for intelligence. Because Mercury is never far from the Sun the yoga is very common; it works best when Mercury is more than a few degrees from the Sun and not combust.'],
+ 'Chandra-Mangala yoga':['The Moon and Mars together, or opposite each other.','Feeling (Moon) joined with drive (Mars). Classical texts associate it with earning through enterprise, trade or bold action, and with a temperament that converts emotion directly into action. It can be impulsive, but it rarely lacks initiative.'],
+ 'Ruchaka yoga':['Mars in its own sign (Aries, Scorpio) or exalted (Capricorn), in an angle from the Lagna.','One of the five Pancha Mahapurusha ("great person") yogas. Mars at full strength in an angle gives courage, physical vitality, a commanding presence and success in competitive, athletic, military or technical fields.'],
+ 'Bhadra yoga':['Mercury in its own sign (Gemini, Virgo) or exalted (Virgo), in an angle from the Lagna.','A Pancha Mahapurusha yoga of intellect: eloquence, wit, learning, skill with numbers and words, and success in commerce, writing, teaching or advisory work.'],
+ 'Hamsa yoga':['Jupiter in its own sign (Sagittarius, Pisces) or exalted (Cancer), in an angle from the Lagna.','Hamsa, the swan, is a symbol of discernment. This Pancha Mahapurusha yoga gives virtue, wisdom, a good reputation and a natural role as teacher, counsellor or spiritual guide.'],
+ 'Malavya yoga':['Venus in its own sign (Taurus, Libra) or exalted (Pisces), in an angle from the Lagna.','A Pancha Mahapurusha yoga of refinement: beauty, charm, artistic talent, enjoyment of comfort and luxury, and good relationships.'],
+ 'Sasa yoga':['Saturn in its own sign (Capricorn, Aquarius) or exalted (Libra), in an angle from the Lagna.','A Pancha Mahapurusha yoga of authority earned through endurance: discipline, organisational ability and command over people or institutions, often rising steadily over a long career.'],
+ 'Sunapha yoga':['Planets other than the Sun and Nodes in the 2nd from the Moon.','Planets ahead of the Moon support the mind with resources. It is associated with self-earned wealth, intelligence and a good name; the nature of the planets shows how that support arrives.'],
+ 'Anapha yoga':['Planets other than the Sun and Nodes in the 12th from the Moon.','Planets behind the Moon give an inner reserve: good health, dignity, a pleasing character and freedom from want, often expressed quietly.'],
+ 'Durudhara yoga':['Planets other than the Sun and Nodes on both sides of the Moon (2nd and 12th).','The Moon is held between supporters. It gives wealth, generosity, comforts and helpful people, combining the qualities of Sunapha and Anapha.'],
+ 'Kemadruma':['No planet other than the Sun and Nodes in the 2nd or 12th from the Moon.','An isolated Moon: the mind lacks support, which classical texts link with loneliness, anxiety or fluctuating resources. It is very often cancelled, for example when planets occupy angles from the Moon or the Lagna, or when the Moon itself is in an angle, and a cancelled Kemadruma is treated as having little effect.'],
+ 'Adhi yoga':['Mercury, Venus or Jupiter in the 6th, 7th or 8th from the Moon.','Benefics placed around the point opposite the Moon. It is associated with leadership, comfort, good health and victory over rivals; the more benefics involved, the stronger it is said to be.'],
+ 'Vesi yoga':['Planets other than the Moon in the 2nd from the Sun.','A planet rising after the Sun colours the will. It gives truthfulness, effort and steady progress, with the planet involved describing the style.'],
+ 'Vosi yoga':['Planets other than the Moon in the 12th from the Sun.','A planet rising before the Sun gives skill, learning, memory and generosity.'],
+ 'Ubhayachari yoga':['Planets other than the Moon on both sides of the Sun.','The Sun is supported on both sides: capability, balance, eloquence and recognition, with qualities of both Vesi and Vosi.'],
+ 'Parivartana yoga':['Two planets each in a sign ruled by the other.','A mutual exchange joins the two planets as if they were together, linking the affairs of the houses they rule. Exchanges between good houses are strongly constructive; exchanges involving the 6th, 8th or 12th can bring change through difficulty.'],
+ 'Raja yoga':['The lord of an angle (1, 4, 7, 10) joined with the lord of a trine (1, 5, 9).','Angles are the pillars of action and trines the houses of grace and merit. When their lords combine, effort meets fortune, giving status, authority and success in worldly aims. Strength depends on the dignity of the planets and the houses they occupy.'],
+ 'Yogakaraka':['A single planet that rules both an angle and a trine from the Lagna.','Such a planet carries Raja yoga results by itself, and its periods (dashas) are usually productive. Examples: Saturn for Taurus and Libra rising, Mars for Cancer and Leo rising, Venus for Capricorn and Aquarius rising.'],
+ 'Dhana yoga':['The lord of a wealth house (2nd or 11th) joined with the lord of the Lagna or a trine.','Combinations for earning and keeping money. The 2nd is accumulated wealth and the 11th gains; linking them to the self or to fortune shows wealth flowing to the person.'],
+ 'Viparita Raja yoga':['The lord of the 6th, 8th or 12th placed in the 6th, 8th or 12th.','"Reversed" Raja yoga: the lords of difficult houses weaken one another, so success comes through crisis, loss or the downfall of rivals. Harsha (6th lord) gives health and victory, Sarala (8th lord) resilience and fearlessness, Vimala (12th lord) frugality, independence and a clean name.'],
+ 'Amala yoga':['A natural benefic in the 10th house.','Amala means spotless: a benefic in the house of action gives an ethical reputation, charitable conduct and lasting good fame.'],
+ 'Mangal dosha (Manglik)':['Mars in the 1st, 2nd, 4th, 7th, 8th or 12th from the Lagna (also checked from the Moon and Venus).','Traditionally examined before marriage. Mars in these houses is said to bring heat, impatience or friction into partnership. There are many recognised cancellations: Mars in its own or exaltation sign, certain Lagnas, aspects from Jupiter, age (often after 28) and, most commonly, when both partners have it. It is a reason to understand temperament, not a verdict on marriage.'],
+ 'Kaal Sarp dosha':['All seven planets on one side of the Rahu–Ketu axis.','The planets are "held" between the Nodes, which is read as life concentrated around nodal themes: intense or fated periods, delays followed by sudden release, and a strong sense of purpose. Its classical basis is debated and many astrologers give it little weight unless other factors agree.'],
+ 'Grahan dosha (Sun)':['The Sun in the same sign as Rahu or Ketu.','An eclipse combination for the Sun: confidence, recognition or the relationship with the father and authority can feel obscured, and the person may work hard to be seen clearly.'],
+ 'Grahan dosha (Moon)':['The Moon in the same sign as Rahu or Ketu.','An eclipse combination for the Moon: a sensitive, sometimes turbulent mind, strong intuition and emotional extremes. Calming routines and supportive company are traditionally recommended.'],
+ 'Pitra dosha':['The Sun with Rahu (other versions involve the 9th house and its lord).','Read as karma inherited through the paternal line: unfinished business of the ancestors that shows up as obstacles until acknowledged. Remedies are usually acts of remembrance and charity.'],
+ 'Guru Chandala dosha':['Jupiter in the same sign as Rahu.','Rahu mixes with the planet of wisdom and tradition. It can bring unconventional beliefs, questioning of teachers, or ethical shortcuts, and also original thinking that breaks with orthodoxy.'],
+ 'Shrapit dosha':['Saturn in the same sign as Rahu.','Literally a "cursed" combination: delays, burdens and slow progress that ask for patience, humility and service. Its effects ease with maturity and steady effort.'],
+ 'Angarak dosha':['Mars in the same sign as Rahu.','Volatile energy: anger, risk-taking or accidents if unchecked, and great drive when channelled into sport, engineering or other disciplined action.']};
+function infoYoga(kind,i){const ch=lastView&&lastView.inner;if(!ch)return null;const r=yogaCalc(ch),o=(kind==='Y'?r.Y:r.D)[i];if(!o)return null;const base=o.name.replace(/ \(.*\)$/,'').trim(),I=YOGA_INFO[o.name]||YOGA_INFO[base]||['',o.about],canc=/cancelled here|reduced because/.test(o.why);
+ return `<p class="kicker">${kind==='Y'?'Yoga':'Dosha'}${canc?' · weakened':''}</p><h4><span class="big">${o.keys.map(r.g).join(' ')}</span>${o.name}</h4><dl><dt>In this chart</dt><dd>${o.why}</dd>${I[0]?`<dt>Formed when</dt><dd>${I[0]}</dd>`:''}</dl><p class="il">About</p><p class="interp">${I[1]}</p><p class="note">Houses are counted whole-sign from the Lagna, using ${S.zodiac==='tropical'?'tropical':'sidereal'} signs. Yogas and doshas show tendencies; their strength depends on the dignity of the planets involved and the periods (dashas) that activate them.</p>`}
+function yogaHtml(ch){const {Y,D,hasL,g}=yogaCalc(ch),row=(o,cls)=>`<div class="yrow ${cls} clk" data-obj="yoga:${cls.startsWith('yo')?'Y':'D'}:${(cls.startsWith('yo')?Y:D).indexOf(o)}"><div class="yh"><strong>${o.name}</strong><span class="yg">${o.keys.map(g).join(' ')}</span></div><div class="yw">${o.why}</div><div class="ya muted">${o.about}</div></div>`;
  const doshas=D.filter(d=>!/cancelled here/.test(d.why)),canc=D.filter(d=>/cancelled here/.test(d.why)),ALLD=['Mangal dosha (Manglik)','Kaal Sarp dosha','Kemadruma','Grahan dosha (Sun)','Grahan dosha (Moon)','Pitra dosha','Guru Chandala dosha','Shrapit dosha','Angarak dosha'],absent=ALLD.filter(n=>!D.some(d=>d.name===n));
  return `<h3 class="sub">Yogas</h3>${hasL?'':'<p class="note">This chart has no birth time, so yogas that depend on the Lagna are left out.</p>'}${Y.length?`<div class="ylist">${Y.map(o=>row(o,'yo')).join('')}</div>`:'<p class="muted">None of the listed yogas are formed.</p>'}
- <h3 class="sub">Doshas</h3>${doshas.length||canc.length?`<div class="ylist">${doshas.map(o=>row(o,'do')).join('')}${canc.map(o=>row(o,'do cancel')).join('')}</div>`:'<p class="muted">None of the listed doshas are present.</p>'}${absent.length?`<p class="note">Not present: ${absent.join(', ')}.</p>`:''}<p class="note">Houses are counted whole-sign from the Lagna. Yogas and doshas describe tendencies and are always weighed against the strength of the planets involved.</p>`}
+ <h3 class="sub">Doshas</h3>${doshas.length||canc.length?`<div class="ylist">${doshas.map(o=>row(o,'do')).join('')}${canc.map(o=>row(o,'do cancel')).join('')}</div>`:'<p class="muted">None of the listed doshas are present.</p>'}${absent.length?`<p class="note">Not found in this chart: ${absent.join(', ')}.</p>`:''}<p class="note">Houses are counted whole-sign from the Lagna. Yogas and doshas describe tendencies and are always weighed against the strength of the planets involved.</p>`}
 function renderVedicData(v){const ch=v.inner;if(!ch||!ch.pts.sun)return '<p class="muted">No chart loaded.</p>';
  const sid=k=>ch.pts[k].lon;
  const sg=si=>`<span class="sym" style="color:var(--${ELEM[si%4]})">${SIGN_G[si]}${VS}</span>`;
@@ -1772,7 +1826,7 @@ function posTable(ch,title,ref){const keys=[...shownKeys(),...(ch.noHouses?[]:['
  for(const k of keys){const p=ch.pts[k],dg=dignity(k,p.lon),g=PT[k][0],isPl=!!GLYPH_SVG[k],isText=g.length>1&&!/[☀-⯿]/.test(g);
   h+=`<tr class="clk" data-obj="pt:${lastView&&ch===lastView.outer?'o':'i'}:${k}"><td class="g" ${isText?'style="font:600 .75rem var(--mono)"':''}>${isPl?svgGlyph(k):isText?g:g+VS}</td><td>${PT[k][1]}</td><td>${lonHtml(p.lon)}${p.speed<0&&!['node','snode'].includes(k)?' <span class="rx">℞</span>':''}</td><td class="mono">${cusps&&!['asc','mc','dsc','ic'].includes(k)?Calc.houseOf(p.lon,cusps):''}</td><td class="mono muted">${p.speed?(p.speed>0?'+':'−')+Math.abs(p.speed).toFixed(Math.abs(p.speed)<1?3:2)+'°':''}</td><td>${dg?`<span class="dig ${dg[0]}">${dg[1]}</span>`:''}</td>${Ly.decans?(()=>{const d=decanOf(p.lon);return `<td><span class="sym">${PT[d.ruler][0]+VS}</span> <span class="muted">${d.n}</span></td>`})():''}${Ly.terms?(()=>{const t=termOf(p.lon);return `<td><span class="sym">${PT[t][0]+VS}</span> <span class="muted">${PT[t][1]}</span></td>`})():''}${Ly.naks?(()=>{const n=nakOf(p.lon,ch.jd,ch.ayanamsa||0);return `<td>${NAKS[n.i]} <span class="muted mono">p${n.pada}</span></td>`})():''}</tr>`}
  h+='</tbody></table></div>';
- if(!ch.noHouses&&ch.cusps&&!ch.cusps.slice(0,12).every(c=>{const v=n360(+c||0);return v<1/120||v>360-1/120})){const sk='cusps:'+title;h+=`<h3 class="sub">House cusps · ${HOUSES.find(x=>x[0]===ch.houseUsed)?.[1]||''}</h3><div class="tblwrap"><table><tbody>`;
+ if(!ch.noHouses&&ch.houseUsed!=='whole'&&ch.cusps&&!ch.cusps.slice(0,12).every(c=>{const v=n360(+c||0);return v<1/120||v>360-1/120})){const sk='cusps:'+title;h+=`<h3 class="sub">House cusps · ${HOUSES.find(x=>x[0]===ch.houseUsed)?.[1]||''}</h3><div class="tblwrap"><table><tbody>`;
   for(let r=0;r<6;r++)h+=`<tr><td class="mono muted clk" data-obj="house:${r+1}">${r+1}</td><td class="clk" data-obj="house:${r+1}">${lonHtml(ch.cusps[r])}</td><td class="mono muted clk" data-obj="house:${r+7}">${r+7}</td><td class="clk" data-obj="house:${r+7}">${lonHtml(ch.cusps[r+6])}</td></tr>`;h+='</tbody></table></div>'}
  return h}
 const EL_N=['Fire','Earth','Air','Water'],MO_N=['Cardinal','Fixed','Mutable'];
@@ -2573,7 +2627,7 @@ function infoPoint(which,k){const ch=chartOf(which),p=ch.pts[k];if(!p)return nul
  ${k==='moon'&&ch.pts.sun?`<p>${MOON_PHASE_NOTES[moonPhaseName(n360(p.lon-ch.pts.sun.lon))]}</p>`:''}
  ${POINT_NOTES[k]?`<p>${POINT_NOTES[k]}</p>`:''}
  ${asp.length?`<p class="il">Aspects</p><ul>${asp.map(a=>`<li class="clk" data-obj="asp:${v.outer?(which==='o'?'o':'o'):'i'}:${v.outer?(which==='o'?k:a.other):k}:${v.outer?(which==='o'?a.other:k):a.other}">${glyphHtml(k)} <span class="${aspectCls(a.asp)}">${a.asp.g} ${a.asp.n}</span> ${glyphHtml(a.other)} ${PT[a.other][1]}${a.otherSide&&v.outer?` <span class="muted">(${esc(a.otherSide)})</span>`:''}${(()=>{const oc=v.outer&&which==='i'?v.outer:v.inner,op=oc&&oc.pts[a.other];return op&&!v.inner.noHouses&&v.inner.cusps?` <span class="muted">· ${ord(Calc.houseOf(op.lon,v.inner.cusps))}</span>`:''})()} <span class="muted mono">${a.asp.orb.toFixed(2)}° ${a.asp.applying?'a':'s'}</span></li>`).join('')}</ul>`:'<p class="il">No aspects within orb</p>'}
- ${stars.length?`<p class="il">Fixed stars</p><ul>${stars.map(o=>`<li class="clk" data-obj="star:${o.st[0]}">✦ ${o.st[0]} <span class="muted mono">${o.d.toFixed(2)}°</span></li>`).join('')}</ul>`:''}`}
+ ${stars.length?`<p class="il">Fixed stars conjunct</p><ul>${stars.map(o=>`<li class="clk" data-obj="star:${o.st[0]}">✦ ${o.st[0]} <span class="muted mono">${o.d.toFixed(2)}°</span></li>`).join('')}</ul>`:''}`}
 function infoSign(s){const v=lastView,inner=v.inner,[el2,mod,rul,modern,ex,fall]=SIGN_INFO[s];
  const det=RULER[(s+6)%12],inSign=Object.keys(inner.pts).filter(k=>PT[k]&&shownKeys().concat(['asc','mc']).includes(k)&&Math.floor(inner.pts[k].lon/30)===s);
  const houses=inner.noHouses?[]:inner.cusps.map((c,i)=>Math.floor(c/30)===s?i+1:null).filter(Boolean);
@@ -2653,7 +2707,7 @@ function infoNak(i){const inner=lastView.inner,w=360/27,ay=Calc.ayanamsa(inner.j
  return `<p class="kicker">Nakshatra</p><h4><span class="big" style="font:700 1.2rem var(--display)">${i+1}</span>${NAKS[i]}</h4><dl><dt>Lord</dt><dd>${NAK_LORD[i%9]}</dd><dt>Deity</dt><dd>${NAK_INFO[i][0]}</dd><dt>Symbol</dt><dd>${NAK_INFO[i][1]}</dd><dt>Sidereal span</dt><dd>${(i*w).toFixed(2)}°–${((i+1)*w).toFixed(2)}° (Lahiri)</dd><dt>On this wheel</dt><dd>${dms(a)} → ${dms(n360(a+w))}</dd><dt>Padas</dt><dd>four of 3°20′ each</dd></dl><p class="il">About</p><p class="interp">${NAK_INFO[i][2]}</p>${inn.length?`<p class="il">Points here</p><ul>${inn.map(k=>{const n=nakOf(inner.pts[k].lon,inner.jd,inner.ayanamsa||0);return `<li class="clk" data-obj="pt:i:${k}">${glyphHtml(k)} ${PT[k][1]} <span class="muted">pada ${n.pada}</span></li>`}).join('')}</ul>`:''}`}
 function infoFor(obj){const [t,...r]=obj.split(':');if(t==='tarot')return infoTarot(+r[0]);if(t==='zr')return infoZR(r[0]);if(!lastView)return null;if(t==='acgline')return infoAcgLine(r[0],r[1]);if(t==='paran')return infoParan(+r[0]);if(t==='ls')return infoLS(r[0]);if(t==='asl')return infoAsl(+r[0]);if(t==='acgpt')return infoAcgPt(+r[0],+r[1]);if(t==='reloc'){setReloc(+r[0],+r[1]);return null}
  if(t==='pt')return infoPoint(r[0],r[1]);if(t==='sign')return infoSign(+r[0]);if(t==='house')return infoHouse(+r[0]);if(t==='asp')return infoAspect(r[0],r[1],r[2]);
- if(t==='kar')return infoKar(+r[0]);if(t==='star')return infoStar(r.join(':'));if(t==='elem'||t==='mode')return infoElem(t,+r[0]);if(t==='mid')return infoMid(r[0],r[1]);if(t==='decan')return infoDecan(+r[0]);if(t==='term')return infoTerm(+r[0],+r[1]);if(t==='nak')return infoNak(+r[0]);return null}
+ if(t==='kar')return infoKar(+r[0]);if(t==='yoga')return infoYoga(r[0],+r[1]);if(t==='star')return infoStar(r.join(':'));if(t==='elem'||t==='mode')return infoElem(t,+r[0]);if(t==='mid')return infoMid(r[0],r[1]);if(t==='decan')return infoDecan(+r[0]);if(t==='term')return infoTerm(+r[0],+r[1]);if(t==='nak')return infoNak(+r[0]);return null}
 let infoObj=null;
 
 // optically centre a glyph on the capital height of the title text beside it (font glyphs carry very different ink boxes)
@@ -2662,7 +2716,7 @@ function alignGlyphs(root){let ctx=null;const C=()=>ctx||(ctx=document.createEle
   h.querySelectorAll('.sym,.plg').forEach(g=>{g.style.transform='';const m=document.createElement('span');m.style.cssText='display:inline-block;width:0;height:0;vertical-align:baseline';g.parentNode.insertBefore(m,g);const base=m.getBoundingClientRect().top;m.remove();
    let inkC;if(g.tagName.toLowerCase()==='svg'){const r=g.getBoundingClientRect();inkC=(r.top+r.bottom)/2}else{const gs=getComputedStyle(g);C().font=`${gs.fontWeight} ${gs.fontSize} ${gs.fontFamily}`;const t=C().measureText(g.textContent);if(!(t.actualBoundingBoxAscent+t.actualBoundingBoxDescent>0))return;inkC=base-(t.actualBoundingBoxAscent-t.actualBoundingBoxDescent)/2}
    const hb=h.getBoundingClientRect(),capC=base-capA/2,d=capC-inkC;if(Math.abs(d)<.3)return;g.style.display=g.tagName.toLowerCase()==='svg'?'':'inline-block';g.style.transform=`translateY(${d.toFixed(2)}px)`})})}
-function showInfo(obj,x,y){const html=infoFor(obj);if(!html)return;infoObj=obj;const box=$('info');$('infoBody').innerHTML=html;box.hidden=false;try{alignGlyphs($('infoBody'))}catch(e){}
+function showInfo(obj,x,y){const html=infoFor(obj);if(!html)return;infoObj=obj;const box=$('info');$('infoBody').innerHTML=html;box.hidden=false;box.scrollTop=0;$('infoBody').scrollTop=0;try{alignGlyphs($('infoBody'))}catch(e){}
  if(x!=null){const w=box.offsetWidth,h=box.offsetHeight,vw=innerWidth,vh=innerHeight;let L=x+16,T=y-20;if(L+w>vw-12)L=x-w-16;if(L<12)L=12;if(T+h>vh-12)T=vh-h-12;if(T<70)T=70;box.style.left=L+'px';box.style.top=T+'px'}
  $('infoClose').focus({preventScroll:true})}
 function hideInfo(){$('info').hidden=true;infoObj=null}
@@ -2924,25 +2978,26 @@ $('zrView').addEventListener('click',e=>{const o=e.target.closest('[data-obj^="z
  const x=e.target.closest('[data-zx]');if(x){const k=x.dataset.zx;zrOpenSet.has(k)?zrOpenSet.delete(k):zrOpenSet.add(k);const top=k.split('.')[1];if(k.split('.').length===2&&zrSel!==+top){zrSel=+top;zrSel2=zrSel3=null}renderZRPage()}});
 
 /* ---------- personal readings page ---------- */
-const READ_TO='dvstin@tuta.com';
+const READ_TO='dvstin@tuta.com',READ_FORM_ID='8ab99be026709d993bf6ca634fd0fd45';
 $('readBtn').onclick=()=>setView('reading');
 function noOrphans(root){(root||document).querySelectorAll('.readpg p,.readpg li,.sitefoot p,.readcard p').forEach(el=>{const w=document.createTreeWalker(el,NodeFilter.SHOW_TEXT);let last=null,n;while(n=w.nextNode())if(n.nodeValue.trim())last=n;if(last)last.nodeValue=last.nodeValue.replace(/\s+(\S+\s*)$/,'\u00a0$1')})}
 noOrphans();
-const READ_BASE=108,READ_ADD=49;
-function readTotal(){const n=[$('rAcg'),$('rPalm')].filter(x=>x.checked);const t=READ_BASE+READ_ADD*n.length;$('rTotal').innerHTML=`Total: <b>$${t}</b> <span class="muted">(natal chart reading${n.map(x=>' + '+x.value.toLowerCase()).join('')})</span>`;return t}
-$('rAcg').addEventListener('change',readTotal);$('rPalm').addEventListener('change',readTotal);
+const READ_OPTS=()=>['rNatal','rAcg','rPalm','rAsk'].map($);
+function readTotal(){const n=READ_OPTS().filter(x=>x.checked),t=n.reduce((a,x)=>a+(+x.dataset.price),0);$('rTotal').innerHTML=n.length?`Total: <b>$${t}</b> <span class="muted">(${n.map(x=>x.value.toLowerCase()).join(' + ')})</span>`:'<span class="muted">Choose at least one reading.</span>';
+ const ask=$('rAsk').checked;$('rMsgLbl').textContent=ask?'Your question'+(n.length>1?', and anything else you’d like me to focus on':''):'Anything you’d like me to focus on? (optional)';$('rMsg').placeholder=ask?'Ask one clear question, with any background that helps…':'Questions, areas of life, places you’re considering…';return t}
+READ_OPTS().forEach(x=>x.addEventListener('change',readTotal));
 function prepReading(){readTotal();const A=byId(activeId);$('rFill').hidden=!!A.now;$('rTimeUnk').onchange=()=>{$('rTime').disabled=$('rTimeUnk').checked};}
 $('rFill').onclick=()=>{const A=byId(activeId);if(A.now)return;$('rName').value=$('rName').value||A.name;$('rDate').value=`${A.y}-${String(A.mo).padStart(2,'0')}-${String(A.d).padStart(2,'0')}`;
  if(A.timeUnknown){$('rTimeUnk').checked=true;$('rTime').disabled=true;$('rTime').value=''}else{$('rTimeUnk').checked=false;$('rTime').disabled=false;$('rTime').value=`${String(A.h).padStart(2,'0')}:${String(A.mi).padStart(2,'0')}`}
  $('rPlace').value=A.place||'';toast('Filled in from '+A.name)};
-function readingText(d){return `Reading request\n\nName: ${d.name}\nEmail: ${d.email}\nBirth date: ${d.birth_date}\nBirth time: ${d.birth_time}\nBirth place: ${d.birth_place}\nAdd-ons: ${d.addons}\nTotal: ${d.total}\n\nFocus / questions:\n${d.message||'(none)'}\n`}
+function readingText(d){return `Reading request\n\nName: ${d.name}\nEmail: ${d.email}\nBirth date: ${d.birth_date}\nBirth time: ${d.birth_time}\nBirth place: ${d.birth_place}\nReadings: ${d.readings}\nTotal: ${d.total}\n\nFocus / questions:\n${d.message||'(none)'}\n`}
 $('readForm').addEventListener('submit',async e=>{e.preventDefault();const err=$('rErr');err.hidden=true;if($('rHoney').value)return;
  const d={name:$('rName').value.trim(),email:$('rEmail').value.trim(),birth_date:$('rDate').value,birth_time:$('rTimeUnk').checked?'Unknown':($('rTime').value||''),birth_place:$('rPlace').value.trim(),
-  addons:[$('rAcg'),$('rPalm')].filter(x=>x.checked).map(x=>x.value).join(', ')||'None',total:'$'+readTotal(),message:$('rMsg').value.trim()};
- const miss=[];if(!d.name)miss.push('your name');if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(d.email))miss.push('a valid email');if(!d.birth_date)miss.push('your birth date');if(!d.birth_time)miss.push('your birth time (or tick “I don’t know”)');if(!d.birth_place)miss.push('your birth place');
+  readings:READ_OPTS().filter(x=>x.checked).map(x=>x.value).join(', ')||'None',total:'$'+readTotal(),message:$('rMsg').value.trim()};
+ const miss=[];if(!READ_OPTS().some(x=>x.checked))miss.push('at least one reading');if($('rAsk').checked&&!d.message)miss.push('your question');if(!d.name)miss.push('your name');if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(d.email))miss.push('a valid email');if(!d.birth_date)miss.push('your birth date');if(!d.birth_time)miss.push('your birth time (or tick “I don’t know”)');if(!d.birth_place)miss.push('your birth place');
  if(miss.length){err.hidden=false;err.textContent='Please add '+andList(miss.join(', '))+'.';return}
  const btn=$('rSend');btn.disabled=true;btn.textContent='Sending…';let ok=false;
- try{const r=await fetch('https://formsubmit.co/ajax/'+READ_TO,{method:'POST',headers:{'Content-Type':'application/json',Accept:'application/json'},body:JSON.stringify({...d,_subject:`Reading request from ${d.name}`,_replyto:d.email,_template:'table',_captcha:'false'})});
+ try{const r=await fetch('https://formsubmit.co/ajax/'+READ_FORM_ID,{method:'POST',headers:{'Content-Type':'application/json',Accept:'application/json'},body:JSON.stringify({...d,_subject:`Reading request from ${d.name}`,_replyto:d.email,_template:'table',_captcha:'false'})});
   if(r.ok){const j=await r.json().catch(()=>({}));ok=!(j&&(j.success===false||j.success==='false'))}}catch(x){ok=false}
  btn.disabled=false;btn.textContent='Send request';
  const mail=`mailto:${READ_TO}?subject=${encodeURIComponent('Reading request from '+d.name)}&body=${encodeURIComponent(readingText(d))}`;
