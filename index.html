@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 <meta name="description" content="Free astrology charts: natal, transits, synastry, returns, astrocartography, ephemeris and Vedic tools, plus personal readings by Dvstin.">
 <meta name="robots" content="index,follow,max-image-preview:large">
 <link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2026%2024%22%3E%3Cdefs%3E%3Cmask%20id%3D%22m%22%3E%3Crect%20width%3D%2226%22%20height%3D%2224%22%20fill%3D%22%23fff%22/%3E%3Ccircle%20cx%3D%229%22%20cy%3D%2210%22%20r%3D%228.6%22%20fill%3D%22%23000%22/%3E%3C/mask%3E%3C/defs%3E%3Ccircle%20cx%3D%2214%22%20cy%3D%2212%22%20r%3D%2210%22%20fill%3D%22%23b88ccf%22%20mask%3D%22url%28%23m%29%22/%3E%3Cpath%20d%3D%22M9.6%208.4%20L10.5%2011.1%20L13.2%2012%20L10.5%2012.9%20L9.6%2015.6%20L8.7%2012.9%20L6%2012%20L8.7%2011.1%20Z%22%20fill%3D%22%23b88ccf%22/%3E%3C/svg%3E">
@@ -782,6 +782,7 @@ html[data-theme="paper"]{--wwhite:#111}html[data-theme="pastel"]{--wwhite:#6b254
 .mapwrap.fs .wzoom button{width:48px!important;height:48px!important;font-size:1.45rem!important}.mapwrap.fs .wzoom svg{width:22px;height:22px}
 @media (min-width:981px){.mapwrap.fs .wzoom{top:calc(88px + env(safe-area-inset-top,0px))!important;right:calc(14px + env(safe-area-inset-right,0px))!important}.mapwrap.fs .wzoom button{width:56px!important;height:56px!important;font-size:1.7rem!important}.mapwrap.fs .wzoom svg{width:24px;height:24px}}
 .mapwrap.fs .maplayersbtn{width:48px!important;height:48px!important}@media (min-width:981px){.mapwrap.fs .maplayersbtn{width:56px!important;height:56px!important}.mapwrap.fs .maplayersbtn svg{width:26px;height:26px}}
+html{touch-action:manipulation}
 </style>
 <style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}img{max-width:100%}</style>
 </head>
@@ -2349,6 +2350,7 @@ document.addEventListener('keydown',e=>{if(e.key!=='Escape')return;const m=$('ma
 addEventListener('resize',()=>{if($('acgWrap').classList.contains('fs'))mapFsSet(true)});
 $('map').addEventListener('wheel',e=>{e.preventDefault();const p=svgPt(e),dy=e.deltaMode===1?e.deltaY*16:e.deltaY;const f=Math.min(1.2,Math.max(1/1.2,Math.exp(dy*(e.ctrlKey?0.006:0.0012))));zoomMap(f,p.x,p.y)},{passive:false});
 let drag=null;const mapPtrs=new Map();let mapPinch=null;
+/* no page-level pinch zoom: the map and wheel handle their own pinch */['gesturestart','gesturechange','gestureend'].forEach(t=>document.addEventListener(t,e=>e.preventDefault(),{passive:false}));document.addEventListener('touchmove',e=>{if(e.touches.length>1)e.preventDefault()},{passive:false});window.addEventListener('wheel',e=>{if(e.ctrlKey&&!e.defaultPrevented)e.preventDefault()},{passive:false});
 ['acgWrap','wheelWrap'].forEach(id=>{const el=$(id);['gesturestart','gesturechange','gestureend'].forEach(t=>el.addEventListener(t,e=>e.preventDefault(),{passive:false}));el.addEventListener('touchmove',e=>{if(e.touches.length>1)e.preventDefault()},{passive:false})});
 /* base map drawn into a canvas (one bitmap per view) instead of live SVG paths */
 let mbPaths=null,mbStyle=null,mbRaf=0,mbCaps=[],mbCapSt=null;
