@@ -286,7 +286,8 @@ tr.clk:hover td,td.clk:hover{background:var(--raised)}
 @media (max-width:380px){.top .brand{font-size:1.05rem}.top .brand svg{width:22px}}
 @media (max-width:860px){#zrView .eph-main{order:-1}#zrView .eph-side{border-bottom:0;border-top:1px solid var(--line)}}
 .wzoom button:disabled{opacity:.45;cursor:default}
-.mapwrap .wzoom{right:10px;bottom:10px}
+.mapwrap .wzoom{right:10px;bottom:auto;top:10px}
+@media (max-width:600px){.mapwrap:not(.fs) .wzoom{flex-direction:row;top:8px;right:8px;gap:6px}.mapwrap:not(.fs) .wzoom button{width:34px;height:34px;font-size:1.1rem}}
 .chartbar{display:flex;align-items:center;gap:8px;flex-wrap:wrap;max-width:760px;width:100%;margin-inline:auto}
 .chartbar .grow{display:none}
 #styleSeg{margin-left:auto}.chartbar #openLayers{margin-left:auto}#styleSeg:not([hidden])~#openLayers{margin-left:2px}
@@ -2289,7 +2290,7 @@ function renderMap(v){const map=$('map'),ch=v.inner,A=byId(activeId),T=acgT();tr
  if(!A.now)h+=pin(A.lat,A.lon,'Birthplace: '+(A.place||''),'#ffffff','star');
  if(A.cur)h+=pin(A.cur.lat,A.cur.lon,'Current city: '+A.cur.place,'#b88ccf','dot');
  if(mapPin)h+=pin(mapPin.b,mapPin.l,mapPin.label||'Selected place','#ffd36b','dot');
- let cl='';mbCaps=[];const cvx0=mapVB.x-mapVB.w/2-40,cvx1=mapVB.x+mapVB.w*1.5+40,cvy0=mapVB.y-mapVB.h/2-40,cvy1=mapVB.y+mapVB.h*1.5+40;if(S.acgCaps!==false){const nat=mapVB.w<=1500,sta=mapVB.w<=800;if(nat||sta){const f0=mapVB.w/88,f1=mapVB.w/104,rr=mapVB.w/520,boxes=[];MAP_CAPS.forEach(([n,b,l,t])=>{if(t===0&&!nat||t===1&&!sta)return;const x=lonX(l),y=latY(b),f=t?f1:f0;
+ let cl='';mbCaps=[];const cvx0=mapVB.x-mapVB.w/2-40,cvx1=mapVB.x+mapVB.w*1.5+40,cvy0=mapVB.y-mapVB.h/2-40,cvy1=mapVB.y+mapVB.h*1.5+40;if(S.acgCaps!==false){const nat=mapVB.w<=300,sta=mapVB.w<=300;if(nat||sta){const f0=mapVB.w/88,f1=mapVB.w/104,rr=mapVB.w/520,boxes=[];MAP_CAPS.forEach(([n,b,l,t])=>{if(t===0&&!nat||t===1&&!sta)return;const x=lonX(l),y=latY(b),f=t?f1:f0;
   const bx=[x-rr,y-f*.6,x+rr*1.8+n.length*f*.56,y+f*.6];if(boxes.some(q=>bx[0]<q[2]&&bx[2]>q[0]&&bx[1]<q[3]&&bx[3]>q[1]))return;boxes.push(bx);
   if(y<cvy0||y>cvy1)return;for(const off of [-3600,0,3600]){const X=x+off;if(X<cvx0||X>cvx1)continue;mbCaps.push([X,y,t?rr*.8:rr,X+rr*1.8,f,t,n])}})}}
  const bkey=(det?'d':'n')+(document.documentElement.dataset.theme||'');
