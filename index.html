@@ -6,7 +6,7 @@
 <meta name="description" content="Free astrology charts: natal, transits, synastry, returns, astrocartography, ephemeris and Vedic tools, plus personal readings by Dvstin.">
 <meta name="robots" content="index,follow,max-image-preview:large">
 <link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2026%2024%22%3E%3Cdefs%3E%3Cmask%20id%3D%22m%22%3E%3Crect%20width%3D%2226%22%20height%3D%2224%22%20fill%3D%22%23fff%22/%3E%3Ccircle%20cx%3D%229%22%20cy%3D%2210%22%20r%3D%228.6%22%20fill%3D%22%23000%22/%3E%3C/mask%3E%3C/defs%3E%3Ccircle%20cx%3D%2214%22%20cy%3D%2212%22%20r%3D%2210%22%20fill%3D%22%23b88ccf%22%20mask%3D%22url%28%23m%29%22/%3E%3Cpath%20d%3D%22M9.6%208.4%20L10.5%2011.1%20L13.2%2012%20L10.5%2012.9%20L9.6%2015.6%20L8.7%2012.9%20L6%2012%20L8.7%2011.1%20Z%22%20fill%3D%22%23b88ccf%22/%3E%3C/svg%3E">
-<title>Destinned · Free Astrology Charts &amp; Readings</title>
+<title>Destinned · The Free Astrology Tool</title>
 <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebSite","@id":"https://destinned.com/#website","url":"https://destinned.com/","name":"Destinned","description":"Free astrology chart software and personal astrology readings."},{"@type":"WebApplication","@id":"https://destinned.com/#app","url":"https://destinned.com/","name":"Destinned","applicationCategory":"LifestyleApplication","operatingSystem":"Any (web browser)","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"description":"Free astrology chart software: natal, transit, synastry, progressed, solar and lunar return, composite and draconic charts; Western, North Indian and South Indian chart styles; astrocartography maps with local space and parans; ephemeris and aspect search; zodiacal releasing; Vedic chara karakas, divisional charts (D1–D60), yogas and doshas; and a tarot spread.","featureList":["Natal, transit, synastry and progressed charts","Solar and lunar returns, composite and draconic charts","Western, North Indian and South Indian chart styles","Astrocartography maps with parans and local space lines","Ephemeris and exact aspect search","Zodiacal releasing timelines","Vedic chara karakas, divisional charts, yogas and doshas","Celtic Cross tarot spread"]},{"@type":"Person","@id":"https://destinned.com/#dvstin","name":"Dvstin","jobTitle":"Astrologer"},{"@type":"Service","serviceType":"Astrology reading","provider":{"@id":"https://destinned.com/#dvstin"},"name":"Personal astrology readings by Dvstin","url":"https://destinned.com/?view=readings","description":"Personally written astrology readings, interpreted by hand without AI.","hasOfferCatalog":{"@type":"OfferCatalog","name":"Readings","itemListElement":[{"@type":"Offer","price":"108","priceCurrency":"USD","itemOffered":{"@type":"Service","name":"Natal chart reading","description":"A written reading of your birth chart: temperament and motivations, strengths, relationships, work and direction, and upcoming timing themes."}},{"@type":"Offer","price":"49","priceCurrency":"USD","itemOffered":{"@type":"Service","name":"Astrocartography reading","description":"Where your planetary lines fall around the world and what they mean for places you have lived, are considering or want to visit."}},{"@type":"Offer","price":"49","priceCurrency":"USD","itemOffered":{"@type":"Service","name":"Palmistry reading","description":"A reading of your hands from photos of both palms."}},{"@type":"Offer","price":"19","priceCurrency":"USD","itemOffered":{"@type":"Service","name":"Ask a question","description":"One focused question answered from your chart."}}]}}]}</script>
 <link rel="stylesheet" href="fonts/fonts.css">
 <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
@@ -14,7 +14,7 @@
 <link rel="manifest" href="manifest.webmanifest">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Destinned">
-<meta property="og:title" content="Destinned · Free Astrology Charts &amp; Readings">
+<meta property="og:title" content="Destinned · The Free Astrology Tool">
 <meta property="og:description" content="Free astrology charts: natal, transits, synastry, returns, astrocartography, ephemeris and Vedic tools, plus personal readings by Dvstin.">
 <meta property="og:image" content="https://destinned.com/og-image.png">
 <meta property="og:image:width" content="1200">
@@ -22,7 +22,7 @@
 <meta property="og:image:alt" content="Destinned astrology chart wheel">
 <meta property="og:url" content="https://destinned.com/">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Destinned · Free Astrology Charts &amp; Readings">
+<meta name="twitter:title" content="Destinned · The Free Astrology Tool">
 <meta name="twitter:description" content="Free astrology charts: natal, transits, synastry, returns, astrocartography, ephemeris and Vedic tools, plus personal readings by Dvstin.">
 <meta name="twitter:image" content="https://destinned.com/og-image.png">
 <link rel="canonical" href="https://destinned.com/">
@@ -796,6 +796,7 @@ html{touch-action:manipulation}
 .top.ctr>#openSettings{margin-left:0!important}
 .top.ctr>.brand{margin-right:0!important}
 .top .brand{cursor:pointer;-webkit-user-select:none;user-select:none}
+.stage.vedic .wlab,.stage.vedic #elemMini{display:none!important}
 </style>
 <style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}img{max-width:100%}</style>
 </head>
@@ -1767,7 +1768,7 @@ function renderVedicData(v){const ch=v.inner;if(!ch||!ch.pts.sun)return '<p clas
 document.addEventListener('click',e=>{const t=e.target.closest('[data-vtog]');if(t){vedVOpen=t.getAttribute('aria-expanded')!=='true';if(!vedVOpen&&VARGAS.findIndex(x=>x[0]===vedVarga)>=8)vedVarga='D9';renderAll();return}const b=e.target.closest('[data-varga]');if(!b)return;vedVarga=b.dataset.varga;renderAll()});
 function vedLon(ch,lon){return S.zodiac==='tropical'?n360(lon-Calc.ayanamsa(ch.jd,'lahiri')):lon}
 function vedItems(ch,which){const keys=[...VED_KEYS,...astKeys(ch),...Object.keys(S.show).filter(k=>S.show[k]&&!['node','snode'].includes(k))];const seen=new Set();
- return keys.filter(k=>{if(seen.has(k)||!ch.pts[k]||(ch.noHouses&&[...LOTS,'vertex'].includes(k)))return false;seen.add(k);return true}).map(k=>{const lon=vedLon(ch,ch.pts[k].lon);return {k,lon,sign:Math.floor(lon/30),deg:Math.floor(lon%30),rx:ch.pts[k].speed<0&&!['node','snode'].includes(k),which}})}
+ return keys.filter(k=>{if(seen.has(k)||!ch.pts[k]||(ch.noHouses&&[...LOTS,'vertex'].includes(k)))return false;seen.add(k);return true}).map(k=>{const lon=vedLon(ch,ch.pts[k].lon);return {k,lon,raw:ch.pts[k].lon,sign:Math.floor(lon/30),deg:Math.floor(lon%30),rx:ch.pts[k].speed<0&&!['node','snode'].includes(k),which}})}
 function vedLabel(it,fs){const g=el('g',{});const ow=it.which==='o',col=ow?'var(--outer-fg)':it.k==='sun'||it.k==='moon'?'var(--accent)':it.k==='node'||it.k==='snode'?'var(--lilac)':'var(--fg)';
  const txt=PT[it.k][0],isText=txt.length>1&&!/[☀-⯿]/.test(txt);
  let t;if(GLYPH_SVG[it.k]){const gs=GLYPH_SVG[it.k],sz=fs*.82;t=el('svg',{x:-sz,y:-sz/2,width:sz,height:sz,viewBox:gs.vb,fill:gs.fill?col:'none',stroke:gs.fill?'none':col,'stroke-width':1.3,'stroke-linecap':'round',overflow:'visible'});t.innerHTML=gs.parts}
@@ -1783,10 +1784,13 @@ function renderVedic(v){svg.replaceChildren();const inner=v.inner,outer=v.outer,
  const items=[...vedItems(inner,'i'),...(outer?vedItems(outer,'o'):[])];
  const ascS=inner.noHouses?Math.floor(vedLon(inner,inner.pts.sun.lon)/30):Math.floor(vedLon(inner,inner.pts.asc.lon)/30);
  const ascLon=inner.noHouses?null:vedLon(inner,inner.pts.asc.lon);
+ const bhava=!inner.noHouses&&inner.houseUsed&&inner.houseUsed!=='whole'&&Array.isArray(inner.cusps)&&inner.cusps.length>=12,hName=bhava?((HOUSES.find(h=>h[0]===inner.houseUsed)||[])[1]||'whole signs'):'whole signs';
+ if(bhava)items.forEach(it=>{it.house=['asc','dsc'].includes(it.k)?(it.k==='asc'?1:7):['mc','ic'].includes(it.k)?(it.k==='mc'?10:4):Calc.houseOf(it.raw,inner.cusps)});
+ const cuspSign=h=>Math.floor(vedLon(inner,inner.cusps[h])/30);
  const P=30,L=740,X=v=>P+v*L,F=(p)=>p.map(([a,b])=>`${X(a).toFixed(1)},${X(b).toFixed(1)}`).join(' ');
  const line='var(--w-line)',lw=1.6,fs=(outer?25:29)*1.5;
  svg.append(el('rect',{x:P,y:P,width:L,height:L,rx:14,fill:'var(--w-grey)',stroke:line,'stroke-width':lw}));
- const info=(cx,cy)=>{const A=byId(activeId),t=[[outer?`${(MODES.find(m=>m[0]===mode)||MODES[0])[1]}`:'Rasi (D1)',30,'var(--lilac)',700],[A.name,25,'var(--fg)',500],[`Lahiri sidereal · whole signs`,19,'var(--muted)',400]];
+ const info=(cx,cy)=>{const A=byId(activeId),t=[[outer?`${(MODES.find(m=>m[0]===mode)||MODES[0])[1]}`:'Rasi (D1)',30,'var(--lilac)',700],[A.name,25,'var(--fg)',500],[`Lahiri sidereal · ${hName}`,19,'var(--muted)',400]];
   if(!inner.noHouses)t.push([`Lagna ${deg(ascLon).txt} ${SIGN_N[ascS]}`,19,'var(--muted)',400]);
   t.forEach(([s,f,c,w],i)=>svg.append(el('text',{x:cx,y:cy+(i-(t.length-1)/2)*38,'text-anchor':'middle','dominant-baseline':'central','font-size':f,'font-weight':w,fill:c,'font-family':i===0?'var(--display)':'var(--body,inherit)','letter-spacing':i===0?'.08em':'0'},i===0?s.toUpperCase():s)))};
  if(style==='south'){const cell=L/4,pos=[[1,0],[2,0],[3,0],[3,1],[3,2],[3,3],[2,3],[1,3],[0,3],[0,2],[0,1],[0,0]];// Aries..Pisces
@@ -1794,7 +1798,7 @@ function renderVedic(v){svg.replaceChildren();const inner=v.inner,outer=v.outer,
   pos.forEach(([c,r],s)=>{const x=P+c*cell,y=P+r*cell;svg.append(el('rect',{x,y,width:cell,height:cell,fill:s===ascS&&!inner.noHouses?'var(--w-p2)':'var(--w-p1)',stroke:line,'stroke-width':lw}));
    svg.append(hit({x,y,width:cell,height:cell,fill:'transparent'},`sign:${s}`));
    {const tg=el('text',{x:x+11,y:y+26,'font-size':22,fill:S.elemColors?`var(--${ELEM[s%4]})`:'var(--muted)'});const a=el('tspan',{'font-family':'var(--sym)','font-weight':300,'font-size':25},SIGN_G[s]+VS),b=el('tspan',{dx:6,'font-family':'var(--body,inherit)','font-weight':500},SIGN_N[s]);tg.append(a,b);svg.append(tg)}
-   const hn=((s-ascS+12)%12)+1;svg.append(el('text',{x:x+cell-11,y:y+cell-14,'text-anchor':'end','font-size':18,fill:'var(--muted)','font-family':'var(--mono)'},String(hn)));
+   const hn=bhava?[...Array(12).keys()].filter(h=>cuspSign(h)===s).map(h=>h+1).join('·'):((s-ascS+12)%12)+1;if(hn!=='')svg.append(el('text',{x:x+cell-11,y:y+cell-14,'text-anchor':'end','font-size':18,fill:'var(--muted)','font-family':'var(--mono)'},String(hn)));
    if(s===ascS&&!inner.noHouses){svg.append(el('line',{x1:x,y1:y+cell*.74,x2:x+cell*.26,y2:y+cell,stroke:'var(--accent)','stroke-width':2}));svg.append(el('text',{x:x+cell/2,y:y+cell-16,'text-anchor':'middle','font-size':19,'font-weight':700,fill:'var(--accent)','font-family':'var(--mono)','letter-spacing':'.06em'},'AC'))}
    const its=items.filter(i=>i.sign===s);vedDraw(svg,vedPlace(its,x+cell/2,y+cell/2+6,cell-12,cell-70,fs))});
   info(P+L/2,P+L/2)}
@@ -1803,14 +1807,14 @@ function renderVedic(v){svg.replaceChildren();const inner=v.inner,outer=v.outer,
   const H=[[T,Q1,C,Q2],[TL,T,Q1],[TL,Q1,Lm],[Lm,Q1,C,Q4],[Lm,Q4,BL],[BL,Q4,B],[B,Q4,C,Q3],[B,Q3,BR],[BR,Q3,R],[R,Q3,C,Q2],[R,Q2,TR],[TR,Q2,T]];
   // label anchor (centre of the region) and sign-number spot (toward the centre)
   const cen=p=>[p.reduce((a,q)=>a+q[0],0)/p.length,p.reduce((a,q)=>a+q[1],0)/p.length];
-  H.forEach((poly,h)=>{const s=(ascS+h)%12,diamond=poly.length===4;svg.append(el('polygon',{points:F(poly),fill:diamond?(h===0?'var(--w-p2)':'var(--w-p1)'):'var(--w-p1)',stroke:line,'stroke-width':lw,'stroke-linejoin':'round'}));
+  H.forEach((poly,h)=>{const s=bhava?cuspSign(h):(ascS+h)%12,diamond=poly.length===4;svg.append(el('polygon',{points:F(poly),fill:diamond?(h===0?'var(--w-p2)':'var(--w-p1)'):'var(--w-p1)',stroke:line,'stroke-width':lw,'stroke-linejoin':'round'}));
    const [cx,cy]=cen(poly);svg.append(hit({points:F(poly),fill:'transparent'},`sign:${s}`));
    // sign number near the inner vertex
    const inner_=diamond?C:poly.find(p=>p!==TL&&p!==TR&&p!==BL&&p!==BR&&(p===Q1||p===Q2||p===Q3||p===Q4));
    const nx=cx+(inner_[0]-cx)*(diamond?.8:.72),ny=cy+(inner_[1]-cy)*(diamond?.8:.72);
    {const tg=el('text',{x:X(nx),y:X(ny),'text-anchor':'middle','dominant-baseline':'central','font-size':22,'font-weight':600,fill:S.elemColors?`var(--${ELEM[s%4]})`:'var(--muted)'});tg.append(el('tspan',{'font-family':'var(--mono)'},String(s+1)),el('tspan',{dx:4,'font-family':'var(--sym)','font-weight':300,'font-size':25},SIGN_G[s]+VS));tg.append(el('title',{},SIGN_N[s]));svg.append(tg)}
    if(h===0&&!inner.noHouses)svg.append(el('text',{x:X(.5),y:X(.07),'text-anchor':'middle','dominant-baseline':'central','font-size':19,'font-weight':700,fill:'var(--accent)','font-family':'var(--mono)','letter-spacing':'.06em'},'AC'));
-   const its=items.filter(i=>i.sign===s),wide=!diamond&&poly.filter(p=>p[1]===0||p[1]===1).length===2;
+   const its=bhava?items.filter(i=>i.house===h+1):items.filter(i=>i.sign===s),wide=!diamond&&poly.filter(p=>p[1]===0||p[1]===1).length===2;
    let lx=cx,ly=cy,w,hh;if(diamond){w=L*.27;hh=L*.24;if(h===0)ly=cy-.03;if(h===6)ly=cy+.03;if(h===3)lx=cx-.03;if(h===9)lx=cx+.03}
    else if(wide){w=L*.3;hh=L*.12;ly=cy+(cy<.5?-.01:.01)}else{w=L*.13;hh=L*.3;lx=cx+(cx<.5?-.012:.012)}
    vedDraw(svg,vedPlace(its,X(lx),X(ly),w,hh,diamond?fs:fs*.9))});
@@ -1819,7 +1823,7 @@ function renderVedic(v){svg.replaceChildren();const inner=v.inner,outer=v.outer,
 
 const angLabA=lon=>lon,angLabOp=lon=>{const d=Math.abs(((lon%30)+30)%30-15);return d<5.8?.45:d<7.5?.45+(d-5.8)/1.7*.55:1};
 function renderWheel(v){
- if(S.chartStyle==='north'||S.chartStyle==='south'){renderVedic(v);return}
+ {const ved=S.chartStyle==='north'||S.chartStyle==='south';$('stage').classList.toggle('vedic',ved);if(ved){renderVedic(v);return}}
  svg.replaceChildren();const inner=v.inner,outer=v.outer,bi=!!outer,Ly=S.layers;
  const ascLon=inner.noHouses?0:inner.pts.asc.lon;rot=180-(inner.locked&&lockSnap?lockSnap.asc:ascLon);
  const nr=['terms','decans','naks'].filter(k=>Ly[k]).length;
@@ -2343,7 +2347,8 @@ function acgPanelWire(){const q=$('acgQ');if(!q)return;placePicker(q,$('acgSugg'
 function centerMap(b,l){const w=Math.min(mapVB.w,1400),h=w*mapVB.h/mapVB.w;mapVB={x:lonX(l)-w/2,y:latY(b)-h/2,w,h};clampVB()}
 const mapVBs=()=>`${mapVB.x-mapVB.w/2} ${mapVB.y-mapVB.h/2} ${mapVB.w*2} ${mapVB.h*2}`;
 let mapRatio=1350/3600;const mapMaxW=()=>Math.min(3600,1500/mapRatio);
-function clampVB(){mapVB.w=Math.min(mapMaxW(),Math.max(160,mapVB.w));mapVB.h=mapVB.w*mapRatio;let sh=0;const cx=mapVB.x+mapVB.w/2;if(cx<0)sh=3600;else if(cx>=3600)sh=-3600;mapVB.x+=sh;
+const mapMinW=()=>($('acgWrap').clientWidth||800)<700?105:160;
+function clampVB(){mapVB.w=Math.min(mapMaxW(),Math.max(mapMinW(),mapVB.w));mapVB.h=mapVB.w*mapRatio;let sh=0;const cx=mapVB.x+mapVB.w/2;if(cx<0)sh=3600;else if(cx>=3600)sh=-3600;mapVB.x+=sh;
  const top=0,bot=1800;if(mapVB.h>=bot-top)mapVB.y=(top+bot-mapVB.h)/2;else mapVB.y=Math.min(bot-mapVB.h,Math.max(top,mapVB.y));return sh}
 let zt=0;function zoomMap(f,cx,cy){mgBegin();const nx=cx??mapVB.x+mapVB.w/2,ny=cy??mapVB.y+mapVB.h/2;mapVB.w*=f;mapVB.h*=f;mapVB.x=nx-(nx-mapVB.x)*f;mapVB.y=ny-(ny-mapVB.y)*f;clampVB();mgApply();if(!mapPtrs.size)mgEnd(160)}
 function mapZoomUI(){const z=mapVB.w<mapMaxW()-1;$('mapReset').hidden=!z;$('mapOut').disabled=!z}
@@ -2944,7 +2949,7 @@ addEventListener('rwsload',()=>{try{if(view==='tarot')renderTarot()}catch(e){}})
 addEventListener('astload',()=>{try{AST=null;renderAll()}catch(e){}});
 
 /* ---------- SEO: each section gets its own shareable address, title and description ---------- */
-const SEO_VIEWS={chart:['','Destinned · Free Astrology Charts & Readings','Free astrology charts: natal, transits, synastry, returns, astrocartography, ephemeris and Vedic tools, plus personal readings by Dvstin.'],
+const SEO_VIEWS={chart:['','Destinned · The Free Astrology Tool','Free astrology charts: natal, transits, synastry, returns, astrocartography, ephemeris and Vedic tools, plus personal readings by Dvstin.'],
  acg:['astrocartography','Free Astrocartography Map · Destinned','Free astrocartography map: see where your planetary lines, parans and local space lines fall around the world, and search any city.'],
  eph:['ephemeris','Ephemeris & Aspect Search · Destinned','Free ephemeris and exact aspect search: find when planets aspect each other or your birth chart, and export the results.'],
  zr:['zodiacal-releasing','Zodiacal Releasing Calculator · Destinned','Free zodiacal releasing calculator: see your levels 1 to 4 from the Lots of Spirit, Fortune and more, with peak periods and loosing of the bond.'],
