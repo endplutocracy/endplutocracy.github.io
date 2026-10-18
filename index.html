@@ -796,7 +796,6 @@ html{touch-action:manipulation}
 .top.ctr>#openSettings{margin-left:0!important}
 .top.ctr>.brand{margin-right:0!important}
 .top .brand{cursor:pointer;-webkit-user-select:none;user-select:none}
-@media (min-width:981px){.main.sidecol #stage:not(.fs){padding-left:calc(16px + max(0px,var(--cx,0px)*2));padding-right:calc(16px + max(0px,var(--cx,0px)*-2))}}
 </style>
 <style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}img{max-width:100%}</style>
 </head>
@@ -1981,12 +1980,7 @@ function wlSync(){[['wlDeg',S.wDeg!==false],['wlMin',S.wMin!==false],['wlSign',!
   const thB=vis($('hdrDonate'))?$('hdrDonate'):$('themeWrap'),fits=c=>{const vr=views.getBoundingClientRect(),sr=setB.getBoundingClientRect(),tr=thB.getBoundingClientRect(),br2=brand?brand.getBoundingClientRect():vr;
    const row=Math.abs(br2.top+br2.height/2-(vr.top+vr.height/2))<14&&Math.abs(sr.top-vr.top)<12&&Math.abs(tr.top-vr.top)<12&&sr.left>=vr.right+8&&tr.right<=W+.5;return row&&(!c||vr.left>=br2.right+12)};
   for(const [c,t] of [[1,0],[1,1],[0,0],[0,1],[0,2],[0,3]]){apply(c,t);if(fits(c))return}};
- window.hdrFit=hdrFit;
- /* panel hidden on large screens: shift the stage contents so the chart sits under the centred page buttons */
- const stageCtr=()=>{const st=$('stage'),v=$('views'),on=innerWidth>=981&&$('chartView').classList.contains('sidecol')&&!st.classList.contains('fs')&&v.offsetParent;
-  if(!on){st.style.removeProperty('--cx');return}const prev=parseFloat(st.style.getPropertyValue('--cx'))||0,cs=getComputedStyle(st),r=st.getBoundingClientRect(),pl=parseFloat(cs.paddingLeft),pr=parseFloat(cs.paddingRight);
-  const c0=r.left+(pl+r.width-pr)/2-prev,vr=v.getBoundingClientRect(),d=Math.round((vr.left+vr.right)/2-c0);if(d!==prev)st.style.setProperty('--cx',d+'px')};
- window.stageCtr=stageCtr;addEventListener('resize',()=>requestAnimationFrame(stageCtr));setTimeout(stageCtr,0);setTimeout(stageCtr,700);try{document.fonts.ready.then(stageCtr)}catch(e){}document.addEventListener('click',e=>{if(e.target.closest('.vbtn,.sidetog,#wFs'))setTimeout(stageCtr,80)});{const br=document.querySelector('.top .brand'),go=()=>{const b=document.querySelector('#views [data-view=chart]');if(b)b.click()};br.addEventListener('click',go);br.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();go()}})}addEventListener('resize',hdrFit);new ResizeObserver(hdrFit).observe($('chartBar'));setTimeout(hdrFit,0);setTimeout(hdrFit,600);try{document.fonts.ready.then(hdrFit)}catch(e){}document.addEventListener('click',e=>{if(e.target.closest('.vbtn,.sidetog,[data-theme-opt],.thememenu button'))setTimeout(hdrFit,60)})}
+ window.hdrFit=hdrFit;{const br=document.querySelector('.top .brand'),go=()=>{const b=document.querySelector('#views [data-view=chart]');if(b)b.click()};br.addEventListener('click',go);br.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();go()}})}addEventListener('resize',hdrFit);new ResizeObserver(hdrFit).observe($('chartBar'));setTimeout(hdrFit,0);setTimeout(hdrFit,600);try{document.fonts.ready.then(hdrFit)}catch(e){}document.addEventListener('click',e=>{if(e.target.closest('.vbtn,.sidetog,[data-theme-opt],.thememenu button'))setTimeout(hdrFit,60)})}
 {const sideFit=()=>{const st=$('stage'),w=$('wheelWrap');if(!st||!w||w.hidden)return;const cs=getComputedStyle(st),inner=st.clientWidth-parseFloat(cs.paddingLeft)-parseFloat(cs.paddingRight),gap=(inner-w.offsetWidth)/2;w.style.setProperty('--side',Math.max(0,Math.min(90,gap-6))+'px')};new ResizeObserver(sideFit).observe($('stage'));new ResizeObserver(sideFit).observe($('wheelWrap'));addEventListener('resize',sideFit)}
 $('wLock').onclick=()=>{S.wheelLock=!S.wheelLock;lockSnap=null;saveSet();renderAll()};
 let jog=null,raf=0,pending=0;const ticks=$('ticks');
