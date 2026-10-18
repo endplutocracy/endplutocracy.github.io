@@ -2275,18 +2275,20 @@ function lineDist(L,b,l){if(L.mer!=null){const dl=Math.abs(w180b(l-L.mer));if(dl
 function monoMap(h){const t=document.documentElement.dataset.theme;if(t==='retro')return h.replace(/(stroke|fill)="#([0-9a-fA-F]{6})"/g,(m,a,c)=>{if(c.toLowerCase()==='1b2230')return `${a}="#020a04"`;const r=parseInt(c.slice(0,2),16),g=parseInt(c.slice(2,4),16),b=parseInt(c.slice(4,6),16),L=(.2126*r+.7152*g+.0722*b)/255,v=.45+L*.55;return `${a}="rgb(${Math.round(40*v)},${Math.round(255*v)},${Math.round(90*v)})"`});if(t!=='oled'&&t!=='paper')return h;
  return h.replace(/(stroke|fill)="#([0-9a-fA-F]{6})"/g,(m,a,c)=>{if(c.toLowerCase()==='1b2230')return `${a}="${t==='oled'?'#000000':'#ffffff'}"`;const r=parseInt(c.slice(0,2),16),g=parseInt(c.slice(2,4),16),b=parseInt(c.slice(4,6),16),L=(.2126*r+.7152*g+.0722*b)/255;
   const v=Math.round(t==='oled'?140+L*115:20+(1-L)*30+L*90);const x=v.toString(16).padStart(2,'0');return `${a}="#${x}${x}${x}"`})}
-function renderMap(v){const map=$('map'),ch=v.inner,A=byId(activeId),T=acgT();try{if(MG){MG=null;clearTimeout(mgT);mapTx(0,0,1)}}catch(e){}map.setAttribute('viewBox',mapVBs());map.style.setProperty('--mts',(3*Math.min(1,mapVB.w/3600)).toFixed(3));mapZoomUI();
+function renderMap(v){const map=$('map'),ch=v.inner,A=byId(activeId),T=acgT();try{if(MG){MG=null;clearTimeout(mgT);mapTx(0,0,1)}}catch(e){}map.setAttribute('viewBox',mapVBs());mapZoomUI();
  const det=S.acgDetail!==false;
  let h='';
  const fs=mapVB.w/58,fs2=mapVB.w/80;
- v.acg=acgLines(ch);v.parans=T.paran?acgParans(ch):[];v.ls=T.ls?localSpace(ch,lsOrigin(A)):[];v.asl=T.asp?aspectLinesAcg(ch):[];
- v.parans.forEach((P,i)=>{const y=latY(P.lat),d=`M-4000 ${y}H8000`,c=PARAN_COL;h+=`<path class="acg" d="${d}" stroke="${c}" stroke-opacity=".8" stroke-width=".85" style="stroke-width:.85px" stroke-dasharray="${'CA'.includes(P.e1)||'CA'.includes(P.e2)?'none':'5 5'}"/><path class="acghit" d="${d}" data-obj="paran:${i}"><title>${PT[P.p][1]} ${EVN[P.e1]} / ${PT[P.q][1]} ${EVN[P.e2]} · ${Math.abs(P.lat).toFixed(2)}°${P.lat>=0?'N':'S'}</title></path>`});
- v.ls.forEach(L=>{const d=segPath(L.pts),c=LS_COL[L.k]||'#7fd8c8';h+=`<path class="acg" d="${d}" stroke="${c}" stroke-dasharray="1 5" style="stroke-width:1.5px"/><path class="acghit" d="${d}" data-obj="ls:${L.k}"><title>${PT[L.k][1]} local space · ${L.az.toFixed(0)}° ${compass(L.az)}</title></path>`});
- if(v.ls.length){const o=v.ls[0].origin,x=lonX(o.lon),y=latY(o.lat);v.ls.forEach(L=>{const r=fs*2.6,a=(L.az-90)*DR;h+=``})}
- v.asl.forEach((L,i)=>{const d=segPath(L.pts),c=ASPL_COL[L.a];h+=`<path class="acg" d="${d}" stroke="${c}" stroke-opacity=".85" stroke-dasharray="${L.ang==='MC'?'10 4 2 4':'3 4'}" style="stroke-width:1px"/><path class="acghit" d="${d}" data-obj="asl:${i}"><title>${PT[L.k][1]} ${ASPL_N[L.a][0]} to ${L.ang}</title></path>`;
-  if(L.ang==='MC')h+=``});
- if(T.planet)v.acg.forEach(L=>{const d=segPath(L.pts),c=ACG_COL[L.k]||'#ddd';h+=`<path class="acg" d="${d}" stroke="${c}" stroke-dasharray="${ACG_ANG[L.a][2]}"/><path class="acghit" d="${d}" data-obj="acgline:${L.k}:${L.a}"><title>${PT[L.k][1]} ${L.a}</title></path>`;
-  if(L.a==='MC'||L.a==='IC'){const x=lonX(L.mer);h+=``}});
+ const lso=T.ls?lsOrigin(A):null,gkey=JSON.stringify([ch.jd,acgKeys(),T,S.acgFocus,S.acgAsp,S.node,lso&&[lso.lat,lso.lon]]);
+ if(!acgGeo||acgGeo.key!==gkey)acgGeo={key:gkey,acg:acgLines(ch),parans:T.paran?acgParans(ch):[],ls:T.ls?localSpace(ch,lso):[],asl:T.asp?aspectLinesAcg(ch):[]};
+ v.acg=acgGeo.acg;v.parans=acgGeo.parans;v.ls=acgGeo.ls;v.asl=acgGeo.asl;
+ const lkey=gkey+(document.documentElement.dataset.theme||'');
+ if(!mbLines||mbLines.key!==lkey||!$('mLines')||!$('mLines').childElementCount){const L2=[],add=(d,c,w,da,a)=>L2.push({p:new Path2D(d),c:acgCol(c),w,dash:da&&da!=='none'?da.split(' ').map(Number):[],a:a||1});
+  v.parans.forEach((P,i)=>{const y=latY(P.lat),d=`M-4000 ${y}H8000`;add(d,PARAN_COL,.85,'CA'.includes(P.e1)||'CA'.includes(P.e2)?'none':'5 5',.8);h+=`<path class="acghit" d="${d}" data-obj="paran:${i}"><title>${PT[P.p][1]} ${EVN[P.e1]} / ${PT[P.q][1]} ${EVN[P.e2]} · ${Math.abs(P.lat).toFixed(2)}°${P.lat>=0?'N':'S'}</title></path>`});
+  v.ls.forEach(L=>{const d=segPath(L.pts);add(d,LS_COL[L.k]||'#7fd8c8',1.5,'1 5');h+=`<path class="acghit" d="${d}" data-obj="ls:${L.k}"><title>${PT[L.k][1]} local space · ${L.az.toFixed(0)}° ${compass(L.az)}</title></path>`});
+  v.asl.forEach((L,i)=>{const d=segPath(L.pts);add(d,ASPL_COL[L.a],1,L.ang==='MC'?'10 4 2 4':'3 4',.85);h+=`<path class="acghit" d="${d}" data-obj="asl:${i}"><title>${PT[L.k][1]} ${ASPL_N[L.a][0]} to ${L.ang}</title></path>`});
+  if(T.planet)v.acg.forEach(L=>{const d=segPath(L.pts);add(d,ACG_COL[L.k]||'#ddd',1.3,ACG_ANG[L.a][2]);h+=`<path class="acghit" d="${d}" data-obj="acgline:${L.k}:${L.a}"><title>${PT[L.k][1]} ${L.a}</title></path>`});
+  mbLines={key:lkey,list:L2,hit:h};h=''}
  const pin=(b,l,label,col,shape)=>{const x=lonX(l),y=latY(b),r=mapVB.w/170;return `<g data-obj="acgpt:${b.toFixed(3)}:${l.toFixed(3)}" style="cursor:pointer">${shape==='star'?`<path d="M${x} ${y-r*1.6}L${x+r*.45} ${y-r*.45}L${x+r*1.6} ${y}L${x+r*.45} ${y+r*.45}L${x} ${y+r*1.6}L${x-r*.45} ${y+r*.45}L${x-r*1.6} ${y}L${x-r*.45} ${y-r*.45}Z" fill="${col}" stroke="#1b2230" stroke-width="1.5" vector-effect="non-scaling-stroke"/>`:`<circle cx="${x}" cy="${y}" r="${r}" fill="${col}" stroke="#1b2230" stroke-width="2" vector-effect="non-scaling-stroke"/>`}<title>${esc(label)}</title></g>`};
  if(!A.now)h+=pin(A.lat,A.lon,'Birthplace: '+(A.place||''),'#ffffff','star');
  if(A.cur)h+=pin(A.cur.lat,A.cur.lon,'Current city: '+A.cur.place,'#b88ccf','dot');
@@ -2299,11 +2301,12 @@ function renderMap(v){const map=$('map'),ch=v.inner,A=byId(activeId),T=acgT();tr
   for(let l=-150;l<=180;l+=30)st+=`<path class="grat" d="M${lonX(l)} 0V1800"/>`;for(let b=-60;b<=60;b+=30)st+=`<path class="grat" d="M0 ${latY(b)}H3600"/>`;
   st+=`<path class="land" d="${MAP_LAND}"/>${det?`<path class="adm1" id="mAdm" d="${MAP_ADM1}"/>`:''}<path class="border" d="${MAP_BORDERS}"/>`;
   const fade=`<defs><linearGradient id="mfT" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1b2230"/><stop offset="1" stop-color="#1b2230" stop-opacity="0"/></linearGradient><linearGradient id="mfB" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#1b2230"/><stop offset="1" stop-color="#1b2230" stop-opacity="0"/></linearGradient></defs>`;
-  try{mbStyle=null;mbCapSt=null}catch(e){}map.innerHTML=`${fade}<g id="mCaps"></g><g id="mLines"></g><rect x="-8000" y="0" width="20000" height="120" fill="url(#mfT)" pointer-events="none"/><rect x="-8000" y="1680" width="20000" height="120" fill="url(#mfB)" pointer-events="none"/>`;map.dataset.bkey=bkey}
+  try{mbStyle=null;mbCapSt=null}catch(e){}map.innerHTML=`${fade}<g id="mCaps"></g><g id="mLines"></g><g id="mPins"></g><rect x="-8000" y="0" width="20000" height="120" fill="url(#mfT)" pointer-events="none"/><rect x="-8000" y="1680" width="20000" height="120" fill="url(#mfB)" pointer-events="none"/>`;map.dataset.bkey=bkey}
  map.classList.toggle('far',mapVB.w>2400);
  $('mCaps').innerHTML='';mbQueue();
  try{mbQueue()}catch(e){}
- h=monoMap(h);$('mLines').innerHTML=`<g>${h}</g><g transform="translate(-3600 0)">${h}</g><g transform="translate(3600 0)">${h}</g>`}
+ h=monoMap(h);if($('mLines').dataset.k!==mbLines.key){const x=mbLines.hit;$('mLines').innerHTML=`<g>${x}</g><g transform="translate(-3600 0)">${x}</g><g transform="translate(3600 0)">${x}</g>`;$('mLines').dataset.k=mbLines.key}
+ $('mPins').innerHTML=`<g>${h}</g><g transform="translate(-3600 0)">${h}</g><g transform="translate(3600 0)">${h}</g>`}
 function acgControls(v){const A=byId(activeId),all=[...Calc.BODY_KEYS,'node',...(S.layers.asteroids?Calc.AST_KEYS:[])],on=S.acgShow||Calc.BODY_KEYS,T=acgT(),f=S.acgFocus||'sun',asel=S.acgAsp||['squ','tri'],lso=S.lsOrigin||'birth';
  return `<div class="acgopts"><label class="chk" for="acgDet"><input type="checkbox" id="acgDet" ${S.acgDetail!==false?'checked':''}> States and provinces</label><label class="chk" for="acgCap"><input type="checkbox" id="acgCap" ${S.acgCaps!==false?'checked':''}> Capital cities</label></div><p class="note" style="margin:2px 0 6px">Borders and labels appear as you zoom in.</p><h3 class="sub hrow">Line types<span class="allnone"><button type="button" class="linkbtn" data-acgall="types" data-v="1">Select all</button><button type="button" class="linkbtn" data-acgall="types" data-v="0">Clear all</button></span></h3><div class="acgleg">${[['planet','Planet lines','linear-gradient(90deg,#ffcf5a,#ff6b6b,#7fe0a6,#6f9dff)'],['paran','Parans',PARAN_COL],['ls','Local space','linear-gradient(90deg,#8ff5dc,#3fd1b0,#2c8db0)'],['asp','Aspect lines','linear-gradient(90deg,#3fe0b0,#5ea8ff,#ff5c72)']].map(([k,l,c])=>`<label for="acgt-${k}"><input type="checkbox" id="acgt-${k}" data-acgt="${k}" ${T[k]?'checked':''}><i style="background:${c}"></i>${l}</label>`).join('')}</div>
  ${T.paran||T.asp?`<div class="two" style="margin-top:10px"><label class="l" for="acgFocus">${T.paran&&T.asp?'Parans and aspect lines for':T.paran?'Parans for':'Aspect lines for'}<select class="f" id="acgFocus"><option value="all" ${f==='all'?'selected':''}>All shown planets</option>${all.filter(k=>on.includes(k)).map(k=>`<option value="${k}" ${f===k?'selected':''}>${PT[k][1]}</option>`).join('')}</select></label>${T.ls?`<label class="l" for="lsOrigin">Local space from<select class="f" id="lsOrigin"><option value="birth" ${lso==='birth'?'selected':''}>Birthplace</option>${A.cur?`<option value="current" ${lso==='current'?'selected':''}>Current city</option>`:''}${mapPin?`<option value="pin" ${lso==='pin'?'selected':''}>Selected place</option>`:''}</select></label>`:''}</div>`:T.ls?`<div class="two" style="margin-top:10px"><label class="l" for="lsOrigin">Local space from<select class="f" id="lsOrigin"><option value="birth" ${lso==='birth'?'selected':''}>Birthplace</option>${A.cur?`<option value="current" ${lso==='current'?'selected':''}>Current city</option>`:''}${mapPin?`<option value="pin" ${lso==='pin'?'selected':''}>Selected place</option>`:''}</select></label></div>`:''}
@@ -2353,7 +2356,7 @@ let drag=null;const mapPtrs=new Map();let mapPinch=null;
 /* no page-level pinch zoom: the map and wheel handle their own pinch */['gesturestart','gesturechange','gestureend'].forEach(t=>document.addEventListener(t,e=>e.preventDefault(),{passive:false}));document.addEventListener('touchmove',e=>{if(e.touches.length>1)e.preventDefault()},{passive:false});window.addEventListener('wheel',e=>{if(e.ctrlKey&&!e.defaultPrevented)e.preventDefault()},{passive:false});
 ['acgWrap','wheelWrap'].forEach(id=>{const el=$(id);['gesturestart','gesturechange','gestureend'].forEach(t=>el.addEventListener(t,e=>e.preventDefault(),{passive:false}));el.addEventListener('touchmove',e=>{if(e.touches.length>1)e.preventDefault()},{passive:false})});
 /* base map drawn into a canvas (one bitmap per view) instead of live SVG paths */
-let mbPaths=null,mbStyle=null,mbRaf=0,mbCaps=[],mbCapSt=null;
+let mbPaths=null,mbStyle=null,mbRaf=0,mbCaps=[],mbCapSt=null,mbLines=null,acgGeo=null;
 function mbReadStyle(){const g=$('mapStyle'),cs=q=>getComputedStyle(g.querySelector(q)),px=v=>parseFloat(v)||0;
  const L=cs('.land'),B=cs('.border'),A=cs('.adm1'),G=cs('.grat'),R=cs('rect');
  return {bg:R.fill,land:[L.fill,L.stroke,px(L.strokeWidth)],border:[B.stroke,px(B.strokeWidth)],adm:[A.stroke,px(A.strokeWidth),(A.strokeDasharray||'').split(/[ ,]+/).map(parseFloat).filter(x=>x>0)],grat:[G.stroke,px(G.strokeWidth)]}}
@@ -2368,7 +2371,7 @@ function drawBase(){mbRaf=0;const cv=$('mapBase');if(!cv||mode!=='acg'||$('acgWr
   ctx.fillStyle=st.land[0];ctx.fill(mbPaths.land);ctx.strokeStyle=st.land[1];ctx.lineWidth=lw(st.land[2]);ctx.lineJoin='round';ctx.stroke(mbPaths.land);
   if(det){ctx.save();ctx.strokeStyle=st.adm[0];ctx.lineWidth=lw(st.adm[1]);if(st.adm[2].length)ctx.setLineDash(st.adm[2].map(lw));ctx.stroke(mbPaths.adm);ctx.restore()}
   ctx.strokeStyle=st.border[0];ctx.lineWidth=lw(st.border[1]);ctx.stroke(mbPaths.border)}
- mbDrawCaps(ctx,k,ox,oy,vx,vy,dpr)}
+ mbDrawCaps(ctx,k,ox,oy,vx,vy,dpr);mbDrawLines(ctx,k,ox,oy,vx,vy,vw,dpr)}
 function mbReadCapStyle(){const m=$('map'),g=document.createElementNS('http://www.w3.org/2000/svg','g');g.setAttribute('visibility','hidden');g.innerHTML='<g class="cap"><circle r="1"/><text>x</text></g><g class="cap s"><circle r="1"/><text>x</text></g>';m.append(g);
  const rd=sel=>{const c=getComputedStyle(g.querySelector(sel+' circle')),t=getComputedStyle(g.querySelector(sel+' text'));return {dot:c.fill,dotStroke:c.stroke,fill:t.fill,halo:t.stroke,font:`${t.fontWeight} {S}px ${t.fontFamily}`}};
  const r={n:rd('.cap:not(.s)'),s:rd('.cap.s')};g.remove();return r}
@@ -2376,17 +2379,26 @@ function mbDrawCaps(ctx,k,ox,oy,vx,vy,dpr){if(!mbCaps.length)return;if(!mbCapSt)
  ctx.setTransform(k,0,0,k,ox-vx*k,oy-vy*k);ctx.lineJoin='round';ctx.textBaseline='middle';ctx.textAlign='left';
  for(const [X,y,r,tx,f,t,n] of mbCaps){const st=t?mbCapSt.s:mbCapSt.n;ctx.beginPath();ctx.arc(X,y,r,0,Math.PI*2);ctx.fillStyle=st.dot;ctx.fill();if(st.dotStroke&&st.dotStroke!=='none'){ctx.strokeStyle=st.dotStroke;ctx.lineWidth=dpr/k;ctx.stroke()}
   ctx.font=st.font.replace('{S}',f.toFixed(2));if(st.halo&&st.halo!=='none'){ctx.strokeStyle=st.halo;ctx.lineWidth=halo;ctx.strokeText(n,tx,y)}ctx.fillStyle=st.fill;ctx.fillText(n,tx,y)}}
+function mbDrawLines(ctx,k,ox,oy,vx,vy,vw,dpr){if(!mbLines||!mbLines.list.length)return;const u=dpr/k;ctx.lineCap='round';ctx.lineJoin='round';
+ for(const off of [-3600,0,3600]){if(off+3600<vx||off>vx+vw)continue;ctx.setTransform(k,0,0,k,ox+(off-vx)*k,oy-vy*k);
+  for(const L of mbLines.list){ctx.strokeStyle=L.c;ctx.globalAlpha=L.a;ctx.lineWidth=L.w*u;ctx.setLineDash(L.dash.length?L.dash.map(x=>x*u):[]);ctx.stroke(L.p)}}
+ ctx.globalAlpha=1;ctx.setLineDash([])}
+/* line colour for the current theme: same mapping the SVG lines used (monoMap + pastel filter) */
+function acgCol(c){const t=document.documentElement.dataset.theme;let o=monoMap(`stroke="${c}"`).slice(8,-1);if(t!=='pastel'||!/^#[0-9a-f]{6}$/i.test(o))return o;
+ let [r,g,b]=[1,3,5].map(i=>parseInt(o.slice(i,i+2),16)*.72),s=1.5;const R=(.213+.787*s)*r+(.715-.715*s)*g+(.072-.072*s)*b,G=(.213-.213*s)*r+(.715+.285*s)*g+(.072-.072*s)*b,B=(.213-.213*s)*r+(.715-.715*s)*g+(.072+.928*s)*b;
+ return `rgb(${[R,G,B].map(x=>Math.round(Math.max(0,Math.min(255,x)))).join(',')})`}
 function mbQueue(){if(!mbRaf)mbRaf=requestAnimationFrame(drawBase)}
 new MutationObserver(mbQueue).observe($('map'),{attributes:true,attributeFilter:['viewBox']});
 new ResizeObserver(mbQueue).observe($('acgWrap'));
-const mapTx=(x,y,sc=1)=>{const w=$('acgWrap');w.style.setProperty('--mtx',x+'px');w.style.setProperty('--mty',y+'px');w.style.setProperty('--ms',sc)};
+/* transform set on the two layers directly, so the SVG subtree is not restyled every frame */
+const mapTx=(x,y,sc=1)=>{const t=x||y||sc!==1?`translate(${x}px,${y}px) scale(${sc})`:'';for(const id of ['map','mapBase']){const e=$(id);if(e)e.style.transform=t}};
 /* gesture preview: move/scale the already-drawn layers with a GPU transform, redraw once when the gesture ends */
 let MG=null,mgT=0;
 function mgBegin(){if(!MG)MG={b:{...mapVB}}}
 function mgApply(){if(!MG)mgBegin();const W=$('acgWrap').clientWidth,H=$('acgWrap').clientHeight,k1=W/mapVB.w,sc=MG.b.w/mapVB.w;let dx=(MG.b.x+MG.b.w/2)-(mapVB.x+mapVB.w/2);dx=((dx%3600)+5400)%3600-1800;const dy=(MG.b.y+MG.b.h/2)-(mapVB.y+mapVB.h/2),tx=k1*dx,ty=k1*dy;
  if(sc<.55||sc>3.5||Math.abs(tx)>W*.45||Math.abs(ty)>H*.45){mapTx(0,0,1);setMapVB();MG.b={...mapVB}}else mapTx(tx,ty,sc);mapZoomUI()}
 function mgEnd(delay=0){clearTimeout(mgT);const fin=()=>{if(!MG)return;MG=null;mapTx(0,0,1);setMapVB();mapZoomUI();if(mode==='acg')renderMap(lastView)};if(delay)mgT=setTimeout(fin,delay);else fin()}
-const setMapVB=()=>{const m=$('map');m.setAttribute('viewBox',mapVBs());m.style.setProperty('--mts',(3*Math.min(1,mapVB.w/3600)).toFixed(3))};
+const setMapVB=()=>{const m=$('map');m.setAttribute('viewBox',mapVBs());0};
 $('map').addEventListener('pointerdown',e=>{mapPtrs.set(e.pointerId,{x:e.clientX,y:e.clientY});try{$('map').setPointerCapture(e.pointerId)}catch(err){}
  if(mapPtrs.size===1){clearTimeout(mgT);drag={x:e.clientX,y:e.clientY,vb:{...mapVB},moved:false}}
  else if(mapPtrs.size===2){mgBegin();const [a,b]=[...mapPtrs.values()],m={clientX:(a.x+b.x)/2,clientY:(a.y+b.y)/2},p=svgPt(m);mapPinch={d:Math.hypot(a.x-b.x,a.y-b.y)||1,w:mapVB.w,px:p.x,py:p.y,mx:m.clientX,my:m.clientY};if(drag)drag.moved=true}});
