@@ -2046,7 +2046,7 @@ let pickMode=false;
 function openLib(m){pickMode=m==='pick';$('drawer').hidden=false;$('scrim').hidden=false;renderList();$('q').focus()}
 function closeLib(){$('drawer').hidden=true;$('scrim').hidden=true;pickMode=false}
 $('tLoc').addEventListener('click',e=>{const b=e.target.closest('[data-tl]');if(!b)return;const A=byId(activeId);if(b.dataset.tl==='current'&&!A.cur){openForm(A);setTimeout(()=>{$('fCurQ')?.focus();toast('Add a current city, then save')},50);return}S.transitLoc=b.dataset.tl;saveSet();renderAll()});
-$('openLib').onclick=()=>openLib();
+$('openLib').onclick=()=>openLib();try{$('modesWrap').after($('acgSearch'),$('acgHint'))}catch(e){}
 {const mb=$('mapModeBtn'),mm=$('mapModes'),cur=()=>mode==='acg'?(prevMode||'natal'):mode,close=()=>{mm.hidden=true;mb.setAttribute('aria-expanded','false')};
  const sync=()=>{$('mapModeName').textContent=(MODES.find(m=>m[0]===cur())||MODES[0])[1]};window.mapModeSync=sync;
  mb.addEventListener('click',e=>{e.stopPropagation();if(!mm.hidden){close();return}mm.innerHTML=MODES.map(([k,l])=>`<button type="button" role="menuitemradio" data-mm="${k}" aria-checked="${cur()===k}"><span>${l}</span></button>`).join('');mm.hidden=false;mb.setAttribute('aria-expanded','true')});
