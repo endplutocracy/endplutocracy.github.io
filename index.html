@@ -1971,7 +1971,7 @@ $('pane').addEventListener('click',e=>{const zx=e.target.closest('[data-zx]');if
 const stepMin=()=>+$('step').value;$('step').value=S.step;$('step').addEventListener('change',()=>{S.step=$('step').value;saveSet()});
 const nudge=n=>{offsetMin+=n*stepMin();renderAll()};
 $('back').onclick=()=>nudge(-1);$('fwd').onclick=()=>nudge(1);$('reset').onclick=()=>{offsetMin=0;renderAll()};function sideSet(c){$('chartView').classList.toggle('sidecol',c);const b=$('sideTog');b.setAttribute('aria-expanded',String(!c));b.title=b.ariaLabel=c?'Show panel':'Hide panel';setTimeout(()=>dispatchEvent(new Event('resize')),0)}
-$('sideTog').onclick=()=>{S.sideCol=!$('chartView').classList.contains('sidecol');saveSet();sideSet(S.sideCol)};sideSet(!!S.sideCol);
+$('sideTog').onclick=()=>{S.sideCol=!$('chartView').classList.contains('sidecol');saveSet();sideSet(S.sideCol)};sideSet(S.sideCol!==false);
 function wlSync(){[['wlDeg',S.wDeg!==false],['wlMin',S.wMin!==false],['wlSign',!!S.wSign]].forEach(([id,on])=>$(id).setAttribute('aria-pressed',String(on)))}wlSync();
 [['wlDeg','wDeg',true],['wlMin','wMin',true],['wlSign','wSign',false]].forEach(([id,k,d])=>$(id).onclick=e=>{e.stopPropagation();const cur=S[k]===undefined?d:!!S[k];S[k]=!cur;saveSet();wlSync();renderAll()});
 {const hdrFit=()=>{const top=document.querySelector('.top'),views=$('views'),brand=top&&top.querySelector('.brand'),setB=$('openSettings');if(!top||!views)return;
