@@ -799,6 +799,11 @@ html{touch-action:manipulation}
 .stage.vedic .wlab,.stage.vedic #elemMini{display:none!important}
 .vargaseg .vtog svg.vstar{width:13px;height:13px;fill:currentColor;stroke:none;transition:transform .25s ease}
 .vargaseg .vtog:hover svg.vstar,.vargaseg .vtog[aria-expanded="true"] svg.vstar{transform:rotate(45deg)}
+.mapmodewrap{position:relative;flex:0 0 auto}
+.mapwrap.fs #mapModeBtn{height:44px;border:0;color:var(--fg);background:color-mix(in srgb,var(--panel) 86%,transparent);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);cursor:pointer;gap:6px;white-space:nowrap}
+.mapwrap.fs #mapModeBtn:hover{background:color-mix(in srgb,var(--accent) 16%,var(--panel))}
+.mapwrap.fs #mapModes{z-index:40}
+@media (max-width:600px){.mapwrap.fs .mapfstop{flex-wrap:wrap}.mapwrap.fs .mapfstop .mapsearch{flex:1 1 100%;max-width:none;order:3}}
 </style>
 <style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}img{max-width:100%}</style>
 </head>
@@ -898,7 +903,7 @@ html{touch-action:manipulation}
     <div class="mapwrap" id="acgWrap" hidden>
       <canvas id="mapBase" aria-hidden="true"></canvas><svg id="mapStyle" aria-hidden="true" style="display:none"><rect fill="#1b2230"/><path class="land"/><path class="border"/><path class="adm1"/><path class="grat"/></svg><svg id="map" viewBox="0 150 3600 1350" role="img" aria-label="Astrocartography world map" preserveAspectRatio="xMidYMid meet"></svg>
       <button class="maplayersbtn" id="mapLayersBtn" type="button" aria-expanded="false" aria-controls="mapLayers" aria-label="Map layers" title="Map layers"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5.5"/><circle cx="12" cy="12" r="5.5"/><circle cx="15.5" cy="15.5" r="5.5"/></svg></button><div class="maplayers" id="mapLayers" hidden role="dialog" aria-label="Map layers"></div>
-      <div class="mapfstop"><button class="chip" id="mapLib" type="button" aria-label="Open chart library"><svg class="hamb" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg><strong id="mapLibName">Sky now</strong></button><div class="place mapsearch"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5L20 20"/></svg><input class="f" id="mapQ" placeholder="Search for a city" autocomplete="off" aria-label="Search for a city"><ul class="sugg" id="mapSugg" role="listbox" hidden></ul><span class="mshint">Searching for a city directly is much faster</span></div></div>
+      <div class="mapfstop"><button class="chip" id="mapLib" type="button" aria-label="Open chart library"><svg class="hamb" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg><strong id="mapLibName">Sky now</strong></button><div class="mapmodewrap"><button class="chip" id="mapModeBtn" type="button" aria-haspopup="menu" aria-expanded="false" aria-controls="mapModes"><strong id="mapModeName">Natal</strong><span aria-hidden="true">▾</span></button><div class="menu" id="mapModes" role="menu" aria-label="Chart type" hidden></div></div><div class="place mapsearch"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5L20 20"/></svg><input class="f" id="mapQ" placeholder="Search for a city" autocomplete="off" aria-label="Search for a city"><ul class="sugg" id="mapSugg" role="listbox" hidden></ul><span class="mshint">Searching for a city directly is much faster</span></div></div>
       <div class="wzoom" role="group" aria-label="Zoom the map"><button type="button" id="mapIn" aria-label="Zoom in" title="Zoom in">+</button><button type="button" id="mapOut" aria-label="Zoom out" title="Zoom out">−</button><button type="button" id="mapReset" aria-label="Show the whole world" title="Show the whole world" hidden>⤢</button><button type="button" id="mapFs" aria-label="Fill the window" title="Fill the window" aria-pressed="false"></button></div>
     </div>
     <div class="dial">
@@ -1479,8 +1484,9 @@ const opt=()=>({house:S.house,zodiac:S.zodiac,node:S.node,asteroids:S.layers.ast
 function castChart(c,shiftMin=0){const utc=chartUtc(c)+shiftMin*60000;const rl=mode==='relocated'&&reloc&&reloc.id===c.id&&c.id===activeId?reloc:null;const ch=Calc.cast(utc,rl?rl.lat:c.lat,rl?rl.lon:c.lon,opt());ch.src=c;if(rl)ch.relocated=rl.label;
  if(c.timeUnknown){ch.noHouses=true}return ch}
 function midLon(a,b){const d=n360(b-a);return n360(d>180?a+d/2+180:a+d/2)}
-function compute(){
- const A=byId(activeId),out={mode,notes:[]};
+function compute(){const realMode=mode;if(mode==='acg')mode=prevMode||'natal';try{return computeIn(realMode)}finally{mode=realMode}}
+function computeIn(realMode){
+ const A=byId(activeId),out={mode:realMode,acgType:mode,notes:[]};
  if(mode==='relocated'&&(!reloc||reloc.id!==A.id)){reloc=A.cur?{id:A.id,lat:A.cur.lat,lon:A.cur.lon,label:A.cur.place}:null}
  const shiftNatal=mode==='natal'||mode==='relocated'||mode==='draconic'||mode==='acg'?offsetMin:0;
  out.inner=castChart(A,shiftNatal);
@@ -1496,7 +1502,7 @@ function compute(){
   const eps=p.eps,ay=out.inner.ayanamsa||0,pMc=n360(out.inner.pts.mc.lon+arc),mcT=(pMc+ay)*Math.PI/180;
   const pRamc=n360(Math.atan2(Math.sin(mcT)*Math.cos(eps*Math.PI/180),Math.cos(mcT))*180/Math.PI);
   p.pts.mc.lon=pMc;p.pts.asc.lon=n360(Calc.ascOf(pRamc,A.lat,eps)-ay);p.pts.dsc.lon=n360(p.pts.asc.lon+180);p.pts.ic.lon=n360(pMc+180);
-  out.outer=p;out.outer.label='Progressed';out.targetMs=target;out.notes.push(`Secondary progressions for ${fmtDate(target)}; age ${age.toFixed(2)}. Angles by solar arc in right ascension.`)}
+  out.outer=p;out.outer.pRamc=pRamc;out.outer.label='Progressed';out.targetMs=target;out.notes.push(`Secondary progressions for ${fmtDate(target)}; age ${age.toFixed(2)}. Angles by solar arc in right ascension.`)}
  if(mode==='solar'){const yr=new Date(target).getUTCFullYear(),bd=new Date(chartUtc(A));const guess=Date.UTC(yr,bd.getUTCMonth(),bd.getUTCDate());
   const natalTrop=Calc.rawLons(Calc.jdOf(new Date(chartUtc(A)))).sun;const jd=Calc.findLonReturn('sun',natalTrop,Calc.jdOf(new Date(guess))-4,8,0.5);
   if(jd){const ms=(jd-2440587.5)*86400000;out.outer=Calc.cast(ms,A.lat,A.lon,opt());out.outer.label='Solar return';out.returnMs=ms;out.notes.push(`Solar return ${yr}: ${fmtFor(ms,A)}, cast for the birthplace.`)}}
@@ -1966,8 +1972,8 @@ const esc=s=>s.replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&qu
 /* ---------- render all ---------- */
 let lastView=null;
 function fmtShift(m){const sg=m<0?'−':'+';let r=Math.abs(m);const U=[['yr',525960],['mo',43830],['d',1440],['h',60],['min',1]],out=[];for(const [u,v] of U){const n=Math.floor(r/v+1e-9);if(n){out.push(n+' '+u);r-=n*v}if(out.length===2)break}return sg+(out.join(' ')||'0 min')}
-function renderAll(){const A=byId(activeId);if(view==='eph'){try{saveEphState();renderEphForm()}catch(e){}}if(view==='zr'){zrSel=zrSel2=zrSel3=null;zrOpenSet.clear();try{renderZRPage()}catch(e){console.error(e)}}$('editActive').hidden=!!A.now||view==='acg';$('tLoc').hidden=!(mode==='transits'&&!A.now);document.querySelectorAll('#tLoc button').forEach(b=>{b.setAttribute('aria-pressed',String((S.transitLoc||'birth')===b.dataset.tl&&(b.dataset.tl==='birth'||!!A.cur)));b.title=b.dataset.tl==='current'?(A.cur?`Cast transits and show times for ${A.cur.place}`:'Add a current city to this chart first'):'Cast transits for the birthplace'});$('chartName').textContent=A.name+(otherId&&['synastry','composite'].includes(mode)?' + '+byId(otherId).name:'');
- $('modeLabel').textContent=(MODES.find(m=>m[0]===mode)||MODES[0])[1];$('modes').innerHTML=MODES.map(([k,l],i)=>`<button type="button" role="menuitemradio" data-mode="${k}" aria-checked="${mode===k}"><span>${l}</span><span class="kbd">${i+1}</span></button>`).join('');
+function renderAll(){const A=byId(activeId);if(view==='eph'){try{saveEphState();renderEphForm()}catch(e){}}if(view==='zr'){zrSel=zrSel2=zrSel3=null;zrOpenSet.clear();try{renderZRPage()}catch(e){console.error(e)}}$('editActive').hidden=!!A.now||view==='acg';$('tLoc').hidden=!(mode==='transits'&&!A.now);document.querySelectorAll('#tLoc button').forEach(b=>{b.setAttribute('aria-pressed',String((S.transitLoc||'birth')===b.dataset.tl&&(b.dataset.tl==='birth'||!!A.cur)));b.title=b.dataset.tl==='current'?(A.cur?`Cast transits and show times for ${A.cur.place}`:'Add a current city to this chart first'):'Cast transits for the birthplace'});$('chartName').textContent=A.name+(otherId&&['synastry','composite'].includes(mode==='acg'?prevMode:mode)?' + '+byId(otherId).name:'');
+ const curMode=mode==='acg'?(prevMode||'natal'):mode;try{window.mapModeSync&&mapModeSync()}catch(e){}$('modeLabel').textContent=(MODES.find(m=>m[0]===curMode)||MODES[0])[1];$('modes').innerHTML=MODES.map(([k,l],i)=>`<button type="button" role="menuitemradio" data-mode="${k}" aria-checked="${curMode===k}"><span>${l}</span><span class="kbd">${i+1}</span></button>`).join('');
  if(reloc&&reloc.id!==activeId)reloc=null;
  const v=compute();lastView=v;const isMap=mode==='acg';$('wheelWrap').hidden=isMap;$('acgWrap').hidden=!isMap;$('tabs').hidden=isMap;
  if(isMap)renderMap(v);else renderWheel(v);try{elemMini(isMap?null:v.inner)}catch(e){}
@@ -1975,13 +1981,13 @@ function renderAll(){const A=byId(activeId);if(view==='eph'){try{saveEphState();
   rb.innerHTML=`<span class="rltxt">${has?`Relocated to <strong>${esc(reloc.label)}</strong>: same birth moment, with houses and angles for this place.`:'Choose a place to relocate this chart to.'}</span><div class="place rlpick"><input class="f" id="rlQ" placeholder="Type a city" autocomplete="off" role="combobox" aria-controls="rlSugg" aria-expanded="false"><ul class="sugg" id="rlSugg" role="listbox" hidden></ul></div>${A.cur&&!(has&&reloc.label===A.cur.place)?`<button class="btn ghost" id="rlCur" type="button">Use ${esc(A.cur.place.split(',')[0])}</button>`:''}`;
   placePicker($('rlQ'),$('rlSugg'),it=>{reloc={id:A.id,lat:it.lat,lon:it.lon,label:it.label};renderAll()});if($('rlCur'))$('rlCur').onclick=()=>{reloc={id:A.id,lat:A.cur.lat,lon:A.cur.lon,label:A.cur.place};renderAll()}}
  // dial label
- let whenMs,whenLabel;
- if(mode==='natal'||mode==='relocated'||mode==='draconic'||mode==='composite'||mode==='acg'){whenMs=chartUtc(A)+(mode==='composite'?0:offsetMin*60000);whenLabel=A.now?'Live sky':(A.name+' · natal')}
+ let whenMs,whenLabel;const mode_=mode==='acg'?(prevMode||'natal'):mode;
+ if(mode_==='natal'||mode_==='relocated'||mode_==='draconic'||mode_==='composite'||false){whenMs=chartUtc(A)+(mode_==='composite'?0:offsetMin*60000);whenLabel=A.now?'Live sky':(A.name+' · natal')}
  else if(v.returnMs){whenMs=v.returnMs;whenLabel=v.outer.label}
- else if(mode==='synastry'){const B=otherId&&byId(otherId);whenMs=B?chartUtc(B)+offsetMin*60000:Date.now();whenLabel=B?B.name+' · dial moves this chart':'Synastry'}
- else if(mode==='transits'){whenMs=Date.now()+offsetMin*60000;whenLabel=`Transits for ${v.transitPlace}`}
+ else if(mode_==='synastry'){const B=otherId&&byId(otherId);whenMs=B?chartUtc(B)+offsetMin*60000:Date.now();whenLabel=B?B.name+' · dial moves this chart':'Synastry'}
+ else if(mode_==='transits'){whenMs=Date.now()+offsetMin*60000;whenLabel=`Transits for ${v.transitPlace}`}
  else{whenMs=Date.now()+offsetMin*60000;whenLabel='Target date'}
- $('when').innerHTML=`${esc(A.timeUnknown&&mode==='natal'?fmtDate(whenMs):fmtFor(whenMs,mode==='synastry'&&otherId?byId(otherId):mode==='transits'&&v.transitCur?A.cur:A))}${offsetMin?` <span class="badge shiftb" title="Moved from ${byId(activeId).now?'now':'the chart time'}">${fmtShift(offsetMin)}</span>`:''}<small>${esc(whenLabel)}</small>`;
+ $('when').innerHTML=`${esc(A.timeUnknown&&mode_==='natal'?fmtDate(whenMs):fmtFor(whenMs,mode_==='synastry'&&otherId?byId(otherId):mode_==='transits'&&v.transitCur?A.cur:A))}${offsetMin?` <span class="badge shiftb" title="Moved from ${byId(activeId).now?'now':'the chart time'}">${fmtShift(offsetMin)}</span>`:''}<small>${esc(whenLabel)}</small>`;
  $('shiftBadge').hidden=true;document.querySelector('.dial').classList.toggle('shifted',!!offsetMin);
  $('stageNote').textContent=v.notes.join(' ');{const lb=$('wLock');lb.hidden=!v.lockable;lb.setAttribute('aria-pressed',String(!!(S.wheelLock&&v.lockable)));lb.title=lb.ariaLabel=S.wheelLock?'Unlock the wheel':'Lock the wheel: keep it from turning while the time moves'}
  $('engineNote').textContent=Calc.engine()==='Approximate orbital elements'?'Approximate ephemeris':'';
@@ -1997,7 +2003,7 @@ const closeModeMenu=()=>{$('modes').hidden=true;$('modeBtn').setAttribute('aria-
 $('modeBtn').addEventListener('click',e=>{e.stopPropagation();const open=$('modes').hidden;$('modes').hidden=!open;$('modeBtn').setAttribute('aria-expanded',String(open));if(open)$('modes').querySelector('[aria-checked="true"]')?.focus()});
 $('modes').addEventListener('keydown',e=>{const items=[...$('modes').querySelectorAll('button')],i=items.indexOf(document.activeElement);if(e.key==='ArrowDown'){items[(i+1)%items.length].focus();e.preventDefault()}else if(e.key==='ArrowUp'){items[(i-1+items.length)%items.length].focus();e.preventDefault()}else if(e.key==='Escape'){closeModeMenu();$('modeBtn').focus();e.stopPropagation()}});
 document.addEventListener('click',e=>{if(!e.target.closest('#modesWrap'))closeModeMenu()});
-$('modes').addEventListener('click',e=>{const b=e.target.closest('[data-mode]');if(!b)return;closeModeMenu();mode=b.dataset.mode;offsetMin=0;if(mode==='progressed'&&+$('step').value<43830)$('step').value='525960';if(['synastry','composite'].includes(mode)&&!otherId){openLib('pick')}renderAll()});
+$('modes').addEventListener('click',e=>{const b=e.target.closest('[data-mode]');if(!b)return;closeModeMenu();const nm=b.dataset.mode;if(mode==='acg')prevMode=nm;else mode=nm;offsetMin=0;if(nm==='progressed'&&+$('step').value<43830)$('step').value='525960';if(['synastry','composite'].includes(nm)&&!otherId){openLib('pick')}renderAll()});
 document.querySelectorAll('#tabs button').forEach(b=>b.addEventListener('click',()=>{tab=b.dataset.tab;renderAll()}));
 $('pane').addEventListener('click',e=>{const zx=e.target.closest('[data-zx]');if(zx&&tab==='zr'){const k=zx.dataset.zx;zrOpenSet.has(k)?zrOpenSet.delete(k):zrOpenSet.add(k);const P=$('pane'),st=P.scrollTop;P.innerHTML=renderZR();P.scrollTop=st;return}const z=e.target.closest('[data-zr]');if(z){const i=+z.dataset.zr;zrOpen=z.getAttribute('aria-expanded')==='true'?-1:i;renderAll();return}
  const zl=e.target.closest('[data-zl]');if(zl){S.zrLot=zl.dataset.zl;zrOpen=null;zrOpenSet.clear();saveSet();renderAll();return}
@@ -2040,7 +2046,12 @@ let pickMode=false;
 function openLib(m){pickMode=m==='pick';$('drawer').hidden=false;$('scrim').hidden=false;renderList();$('q').focus()}
 function closeLib(){$('drawer').hidden=true;$('scrim').hidden=true;pickMode=false}
 $('tLoc').addEventListener('click',e=>{const b=e.target.closest('[data-tl]');if(!b)return;const A=byId(activeId);if(b.dataset.tl==='current'&&!A.cur){openForm(A);setTimeout(()=>{$('fCurQ')?.focus();toast('Add a current city, then save')},50);return}S.transitLoc=b.dataset.tl;saveSet();renderAll()});
-$('openLib').onclick=()=>openLib();$('mapLib').onclick=()=>openLib();new MutationObserver(()=>{$('mapLibName').textContent=$('chartName').textContent}).observe($('chartName'),{childList:true,characterData:true,subtree:true});$('mapLibName').textContent=$('chartName').textContent;$('editActive').onclick=()=>{const A=byId(activeId);if(!A.now)openForm(A)};$('closeLib').onclick=closeLib;$('scrim').onclick=()=>{closeLib();closeModals()};
+$('openLib').onclick=()=>openLib();
+{const mb=$('mapModeBtn'),mm=$('mapModes'),cur=()=>mode==='acg'?(prevMode||'natal'):mode,close=()=>{mm.hidden=true;mb.setAttribute('aria-expanded','false')};
+ const sync=()=>{$('mapModeName').textContent=(MODES.find(m=>m[0]===cur())||MODES[0])[1]};window.mapModeSync=sync;
+ mb.addEventListener('click',e=>{e.stopPropagation();if(!mm.hidden){close();return}mm.innerHTML=MODES.map(([k,l])=>`<button type="button" role="menuitemradio" data-mm="${k}" aria-checked="${cur()===k}"><span>${l}</span></button>`).join('');mm.hidden=false;mb.setAttribute('aria-expanded','true')});
+ mm.addEventListener('click',e=>{const b=e.target.closest('[data-mm]');if(!b)return;e.stopPropagation();close();const nm=b.dataset.mm;if(mode==='acg')prevMode=nm;else mode=nm;offsetMin=0;if(nm==='progressed'&&+$('step').value<43830)$('step').value='525960';if(['synastry','composite'].includes(nm)&&!otherId){openLib('pick')}renderAll()});
+ document.addEventListener('click',e=>{if(!mm.hidden&&!e.target.closest('.mapmodewrap'))close()});document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!mm.hidden){close();e.stopPropagation()}},true)}$('mapLib').onclick=()=>openLib();new MutationObserver(()=>{$('mapLibName').textContent=$('chartName').textContent}).observe($('chartName'),{childList:true,characterData:true,subtree:true});$('mapLibName').textContent=$('chartName').textContent;$('editActive').onclick=()=>{const A=byId(activeId);if(!A.now)openForm(A)};$('closeLib').onclick=closeLib;$('scrim').onclick=()=>{closeLib();closeModals()};
 $('q').addEventListener('input',renderList);$('folderFilter').addEventListener('change',renderList);
 function renderList(){const q=$('q').value.trim().toLowerCase(),ff=$('folderFilter').value;
  const folders=[...new Set(charts.map(c=>c.folder).filter(Boolean))].sort();
@@ -2292,7 +2303,17 @@ const LS_COL={sun:'#8ff5dc',moon:'#c8f7ee',mercury:'#5fe0c6',venus:'#3fd1b0',mar
 const EVN={R:'rising',S:'setting',C:'culminating',A:'anticulminating'},EVS={R:'rise',S:'set',C:'MC',A:'IC'};
 const shortG=k=>GLYPH_SVG[k]?({pluto:'Pl',destinn:'Ds'})[k]||PT[k][0]:PT[k][0]+VS;
 const acgT=()=>Object.assign({planet:true,paran:false,ls:false,asp:false},S.acgTypes||{});
-function acgParans(ch){const jd=ch.jd,eq={};acgKeys().forEach(k=>{const q=Calc.equatorial(k,jd,S.node);if(q)eq[k]=q});
+
+/* which chart the map draws: the chosen chart type */
+const acgEq=(ch,k)=>ch.acgEq?ch.acgEq(k):Calc.equatorial(k,ch.jd,S.node);
+const acgGst=ch=>ch.acgGst!=null?ch.acgGst:Calc.gmstDeg(ch.jd);
+function acgFromLons(ch,gst){const e=(ch.eps||23.4393)*DR,ay=ch.ayanamsa||0;return {...ch,acgGst:gst,acgEq:k=>{const p=ch.pts[k];if(!p)return null;const l=(p.lon+ay)*DR;return {ra:n360(Math.atan2(Math.sin(l)*Math.cos(e),Math.cos(l))/DR),dec:Math.asin(Math.sin(e)*Math.sin(l))/DR}}}}
+function mapChart(v){const t=v.acgType||'natal',A=byId(activeId);
+ if(['transits','synastry','solar','lunar'].includes(t)&&v.outer)return {ch:v.outer,t,label:v.outer.label};
+ if(t==='progressed'&&v.outer)return {ch:{...v.outer,acgGst:n360((v.outer.pRamc||0)-A.lon)},t,label:'Progressed'};
+ if(t==='composite'||t==='draconic')return {ch:acgFromLons(v.inner,Calc.gmstDeg(v.inner.jd)),t,label:t==='composite'?'Composite':'Draconic'};
+ return {ch:v.inner,t,label:t==='relocated'?'Natal':(MODES.find(m=>m[0]===t)||MODES[0])[1]}}
+function acgParans(ch){const jd=ch.jd,eq={};acgKeys().forEach(k=>{const q=acgEq(ch,k);if(q)eq[k]=q});
  const f=S.acgFocus||'sun',ks=Object.keys(eq),E=['R','S','C','A'],out=[];
  const lst=(k,e,b)=>{const q=eq[k];if(e==='C')return q.ra;if(e==='A')return q.ra+180;const x=-Math.tan(b*DR)*Math.tan(q.dec*DR);if(Math.abs(x)>1)return null;const h=Math.acos(x)/DR;return e==='R'?q.ra-h:q.ra+h};
  for(let i=0;i<ks.length;i++)for(let j=i+1;j<ks.length;j++){const p=ks[i],q=ks[j];if(f!=='all'&&p!==f&&q!==f)continue;
@@ -2300,20 +2321,20 @@ function acgParans(ch){const jd=ch.jd,eq={};acgKeys().forEach(k=>{const q=Calc.e
    let pb=null,pv=null;for(let b=-72;b<=72.01;b+=0.5){const d=g(b);if(d!=null&&pv!=null&&(pv>0)!==(d>0)&&Math.abs(d-pv)<40){let lo=pb,hi=b,flo=pv;for(let it=0;it<40;it++){const m=(lo+hi)/2,fm=g(m);if(fm==null)break;if((fm>0)===(flo>0)){lo=m;flo=fm}else hi=m}out.push({p,q,e1,e2,lat:(lo+hi)/2})}pv=d;pb=b}}}
  return out.sort((a,b)=>b.lat-a.lat)}
 function lsOrigin(A){const o=S.lsOrigin||'birth';if(o==='current'&&A.cur)return {lat:A.cur.lat,lon:A.cur.lon,label:A.cur.place};if(o==='pin'&&mapPin)return {lat:mapPin.b,lon:mapPin.l,label:mapPin.label};if(A.now)return {lat:A.lat,lon:A.lon,label:A.place};return {lat:A.lat,lon:A.lon,label:A.place||'Birthplace'}}
-function localSpace(ch,o){const jd=ch.jd,lst=Calc.gmstDeg(jd)+o.lon,ph=o.lat*DR,out=[];
- acgKeys().forEach(k=>{const q=Calc.equatorial(k,jd,S.node);if(!q)return;const H=(lst-q.ra)*DR,de=q.dec*DR;
+function localSpace(ch,o){const jd=ch.jd,lst=acgGst(ch)+o.lon,ph=o.lat*DR,out=[];
+ acgKeys().forEach(k=>{const q=acgEq(ch,k);if(!q)return;const H=(lst-q.ra)*DR,de=q.dec*DR;
   const az=n360(Math.atan2(Math.sin(H),Math.cos(H)*Math.sin(ph)-Math.tan(de)*Math.cos(ph))/DR+180),alt=Math.asin(Math.sin(ph)*Math.sin(de)+Math.cos(ph)*Math.cos(de)*Math.cos(H))/DR,pts=[];
   for(let d=-179;d<=179;d+=1){const br=(d<0?az+180:az)*DR,ds=Math.abs(d)*DR,b2=Math.asin(Math.sin(ph)*Math.cos(ds)+Math.cos(ph)*Math.sin(ds)*Math.cos(br)),l2=o.lon*DR+Math.atan2(Math.sin(br)*Math.sin(ds)*Math.cos(ph),Math.cos(ds)-Math.sin(ph)*Math.sin(b2));pts.push([w180b(l2/DR),b2/DR])}
   out.push({k,az,alt,pts,origin:o})});return out}
-function aspectLinesAcg(ch){const jd=ch.jd,gst=Calc.gmstDeg(jd),eps=Calc.obliquity(jd)*DR,f=S.acgFocus||'sun',asp=S.acgAsp||['squ','tri'],ANG={sext:60,squ:90,tri:120},out=[];
- acgKeys().filter(k=>f==='all'||k===f).forEach(k=>{const L0=Calc.bodyLon(k,jd,S.node);if(L0==null)return;
+function aspectLinesAcg(ch){const jd=ch.jd,gst=acgGst(ch),eps=Calc.obliquity(jd)*DR,f=S.acgFocus||'sun',asp=S.acgAsp||['squ','tri'],ANG={sext:60,squ:90,tri:120},out=[];
+ acgKeys().filter(k=>f==='all'||k===f).forEach(k=>{const L0=ch.acgEq?(ch.pts[k]?n360(ch.pts[k].lon+(ch.ayanamsa||0)):null):Calc.bodyLon(k,jd,S.node);if(L0==null)return;
   asp.forEach(a=>[1,-1].forEach(sg=>{const lam=n360(L0+sg*ANG[a]),lr=lam*DR,ra=n360(Math.atan2(Math.sin(lr)*Math.cos(eps),Math.cos(lr))/DR),dec=Math.asin(Math.sin(eps)*Math.sin(lr))/DR,mc=w180b(ra-gst);
    out.push({k,a,lam,ang:'MC',pts:[[mc,85],[mc,-85]],mer:mc});const pts=[],td=Math.tan(dec*DR);for(let b=-84;b<=84;b+=0.5){const x=-Math.tan(b*DR)*td;if(Math.abs(x)>1)continue;pts.push([w180b(ra-Math.acos(x)/DR-gst),b])}out.push({k,a,lam,ang:'ASC',pts})}))});return out}
 const compass=az=>['N','NNE','NE','ENE','E','ESE','SE','SSE','S','SSW','SW','WSW','W','WNW','NW','NNW'][Math.round(az/22.5)%16];
 const acgKeys=()=>{const base=[...Calc.BODY_KEYS,'node',...(S.layers.asteroids?Calc.AST_KEYS:[])];const on=S.acgShow||Calc.BODY_KEYS;return base.filter(k=>on.includes(k))};
 const lonX=l=>(l+180)*10,latY=b=>(90-b)*10,w180b=x=>((x+180)%360+360)%360-180;
-function acgLines(ch){const jd=ch.jd,gst=Calc.gmstDeg(jd),out=[];
- acgKeys().forEach(k=>{const q=Calc.equatorial(k,jd,S.node);if(!q)return;const mc=w180b(q.ra-gst);
+function acgLines(ch){const jd=ch.jd,gst=acgGst(ch),out=[];
+ acgKeys().forEach(k=>{const q=acgEq(ch,k);if(!q)return;const mc=w180b(q.ra-gst);
   out.push({k,a:'MC',pts:[[mc,85],[mc,-85]],mer:mc});out.push({k,a:'IC',pts:[[w180b(mc+180),85],[w180b(mc+180),-85]],mer:w180b(mc+180)});
   const asc=[],dsc=[];const td=Math.tan(q.dec*Math.PI/180);
   for(let b=-84;b<=84;b+=0.5){const x=-Math.tan(b*Math.PI/180)*td;if(Math.abs(x)>1)continue;const H=Math.acos(x)*180/Math.PI;asc.push([w180b(q.ra-H-gst),b]);dsc.push([w180b(q.ra+H-gst),b])}
@@ -2326,11 +2347,11 @@ function lineDist(L,b,l){if(L.mer!=null){const dl=Math.abs(w180b(l-L.mer));if(dl
 function monoMap(h){const t=document.documentElement.dataset.theme;if(t==='retro')return h.replace(/(stroke|fill)="#([0-9a-fA-F]{6})"/g,(m,a,c)=>{if(c.toLowerCase()==='1b2230')return `${a}="#020a04"`;const r=parseInt(c.slice(0,2),16),g=parseInt(c.slice(2,4),16),b=parseInt(c.slice(4,6),16),L=(.2126*r+.7152*g+.0722*b)/255,v=.45+L*.55;return `${a}="rgb(${Math.round(40*v)},${Math.round(255*v)},${Math.round(90*v)})"`});if(t!=='oled'&&t!=='paper')return h;
  return h.replace(/(stroke|fill)="#([0-9a-fA-F]{6})"/g,(m,a,c)=>{if(c.toLowerCase()==='1b2230')return `${a}="${t==='oled'?'#000000':'#ffffff'}"`;const r=parseInt(c.slice(0,2),16),g=parseInt(c.slice(2,4),16),b=parseInt(c.slice(4,6),16),L=(.2126*r+.7152*g+.0722*b)/255;
   const v=Math.round(t==='oled'?140+L*115:20+(1-L)*30+L*90);const x=v.toString(16).padStart(2,'0');return `${a}="#${x}${x}${x}"`})}
-function renderMap(v){const map=$('map'),ch=v.inner,A=byId(activeId),T=acgT();try{if(MG){MG=null;clearTimeout(mgT);mapTx(0,0,1)}}catch(e){}map.setAttribute('viewBox',mapVBs());mapZoomUI();
+function renderMap(v){const map=$('map'),MC_=mapChart(v),ch=MC_.ch,A=byId(activeId),T=acgT();v.acgLabel=MC_.label;try{if(MG){MG=null;clearTimeout(mgT);mapTx(0,0,1)}}catch(e){}map.setAttribute('viewBox',mapVBs());mapZoomUI();
  const det=S.acgDetail!==false;
  let h='';
  const fs=mapVB.w/58,fs2=mapVB.w/80;
- const lso=T.ls?lsOrigin(A):null,gkey=JSON.stringify([ch.jd,acgKeys(),T,S.acgFocus,S.acgAsp,S.node,lso&&[lso.lat,lso.lon]]);
+ const lso=T.ls?lsOrigin(A):null,gkey=JSON.stringify([MC_.t,ch.jd,acgGst(ch),ch.pts.sun&&ch.pts.sun.lon,acgKeys(),T,S.acgFocus,S.acgAsp,S.node,lso&&[lso.lat,lso.lon]]);
  if(!acgGeo||acgGeo.key!==gkey)acgGeo={key:gkey,acg:acgLines(ch),parans:T.paran?acgParans(ch):[],ls:T.ls?localSpace(ch,lso):[],asl:T.asp?aspectLinesAcg(ch):[]};
  v.acg=acgGeo.acg;v.parans=acgGeo.parans;v.ls=acgGeo.ls;v.asl=acgGeo.asl;
  const lkey=gkey+(document.documentElement.dataset.theme||'');
@@ -2364,11 +2385,11 @@ function acgControls(v){const A=byId(activeId),all=[...Calc.BODY_KEYS,'node',...
  ${T.asp?`<div class="hrow" style="margin-top:10px"><span class="note">Aspects</span><span class="allnone"><button type="button" class="linkbtn" data-acgall="asp" data-v="1">Select all</button><button type="button" class="linkbtn" data-acgall="asp" data-v="0">Clear all</button></span></div><div class="acgleg" style="margin-top:6px">${Object.keys(ASPL_COL).map(a=>`<label for="acga-${a}"><input type="checkbox" id="acga-${a}" data-acga="${a}" ${asel.includes(a)?'checked':''}><i style="background:${ASPL_COL[a]}"></i>${ASPL_N[a][1]} ${ASPL_N[a][0]}</label>`).join('')}</div>`:''}
  ${T.paran&&v.parans?`<p class="note" style="margin-top:8px">${v.parans.length} paran latitude${v.parans.length===1?'':'s'} shown. Solid: one planet on the meridian; dashed: both on the horizon.</p>`:''}
  <h3 class="sub hrow">Planets shown<span class="allnone"><button type="button" class="linkbtn" data-acgall="planets" data-v="1">Select all</button><button type="button" class="linkbtn" data-acgall="planets" data-v="0">Clear all</button></span></h3><div class="acgleg">${all.map(k=>`<label for="acg-${k}"><input type="checkbox" id="acg-${k}" data-acg="${k}" ${on.includes(k)?'checked':''}><i style="background:${ACG_COL[k]||'#ddd'}"></i>${glyphHtml(k)} ${PT[k][1].replace('North Node','Node')}</label>`).join('')}</div>`}
-function renderAcgPanel(v){const A=byId(activeId),lines=v.acg||acgLines(v.inner);const all=[...Calc.BODY_KEYS,'node',...(S.layers.asteroids?Calc.AST_KEYS:[])],on=S.acgShow||Calc.BODY_KEYS;
+function renderAcgPanel(v){const A=byId(activeId),lines=v.acg||acgLines(mapChart(v).ch);const all=[...Calc.BODY_KEYS,'node',...(S.layers.asteroids?Calc.AST_KEYS:[])],on=S.acgShow||Calc.BODY_KEYS;
  const near=(b,l)=>lines.map(L=>({L,d:lineDist(L,b,l)})).sort((x,y)=>x.d-y.d).slice(0,6);
  const nearList=(b,l)=>`<table><tbody>${near(b,l).map(o=>`<tr class="clk" data-obj="acgline:${o.L.k}:${o.L.a}"><td style="width:1.6em;color:${ACG_COL[o.L.k]}">${glyphHtml(o.L.k)}</td><td>${PT[o.L.k][1]} ${o.L.a}</td><td class="mono">${Math.round(o.d).toLocaleString()} km</td><td class="mono muted">${Math.round(o.d*0.621371).toLocaleString()} mi</td></tr>`).join('')}</tbody></table>`;
  const T=acgT(),f=S.acgFocus||'sun',asel=S.acgAsp||['squ','tri'],lso=S.lsOrigin||'birth';
- let h=acgControls(v)+`
+ let h=(v.acgType&&v.acgType!=='natal'?`<p class="note" style="margin:0 0 10px">Showing lines for the <strong>${esc(mapChart(v).label)}</strong> chart${v.acgType==='synastry'&&!v.outer?' (choose a second chart to see its lines)':''}. Change it with Chart type.</p>`:'')+acgControls(v)+`
  <h3 class="sub">Line styles</h3><div class="styles">${Object.entries(ACG_ANG).map(([a,[n,,da]])=>`<span><svg viewBox="0 0 34 8"><path d="M1 4H33" stroke="var(--fg)" stroke-width="2" stroke-dasharray="${da}" fill="none"/></svg>${a} · ${n}</span>`).join('')}</div>
  <h3 class="sub">Check a place</h3><div class="place"><input class="f" id="acgQ" placeholder="Type a city to see which lines run near it" autocomplete="off"><ul class="sugg" id="acgSugg" role="listbox" hidden></ul></div>
  ${mapPin?`<p class="note" style="margin-top:8px">${esc(mapPin.label||'Selected place')}</p>${nearList(mapPin.b,mapPin.l)}`:'<p class="note" style="margin-top:8px">Or click anywhere on the map.</p>'}
@@ -2494,7 +2515,7 @@ function infoAcgPt(b,l){const v=lastView;const lines=(v.acg||[]).map(L=>({L,d:li
  <dl><dt>Coordinates</dt><dd>${Math.abs(b).toFixed(3)}°${b>=0?'N':'S'}, ${Math.abs(l).toFixed(3)}°${l>=0?'E':'W'}</dd><dt>Relocated Asc</dt><dd>${lonHtml(n360(hs.asc-ay))}</dd><dt>Relocated MC</dt><dd>${lonHtml(n360(hs.mc-ay))}</dd></dl>
  ${lines.length?`<p class="il">Lines within 1,000 km</p><ul>${lines.map(o=>`<li class="clk" data-obj="acgline:${o.L.k}:${o.L.a}"><span style="color:${ACG_COL[o.L.k]}">${glyphHtml(o.L.k)}</span> ${PT[o.L.k][1]} ${o.L.a} <span class="muted mono">${Math.round(o.d).toLocaleString()} km</span></li>`).join('')}</ul>`:'<p class="il">No lines within 1,000 km</p>'}
  ${(v.parans||[]).some(P=>Math.abs(P.lat-b)<=1)?`<p class="il">Parans within 1° of latitude</p><ul>${(v.parans||[]).map((P,i)=>({P,i})).filter(o=>Math.abs(o.P.lat-b)<=1).map(o=>`<li class="clk" data-obj="paran:${o.i}">${glyphHtml(o.P.p)} ${EVS[o.P.e1]} · ${glyphHtml(o.P.q)} ${EVS[o.P.e2]} <span class="muted mono">${Math.abs(o.P.lat).toFixed(2)}°</span></li>`).join('')}</ul>`:''}
- ${A.now?'':`<ul><li class="clk" data-obj="reloc:${b.toFixed(4)}:${l.toFixed(4)}">Open the relocated natal chart here →</li></ul>`}`}
+ ${A.now?'':`<button type="button" class="ilink" data-obj="reloc:${b.toFixed(4)}:${l.toFixed(4)}"><span class="ilt"><span class="ilk">Open chart</span><span class="ilh">Natal chart relocated here</span></span><svg class="ilc" viewBox="6 8.4 7.2 7.2" aria-hidden="true"><path d="M9.6 8.4 L10.5 11.1 L13.2 12 L10.5 12.9 L9.6 15.6 L8.7 12.9 L6 12 L8.7 11.1 Z"/></svg></button>`}`}
 function infoParan(i){const P=(lastView.parans||[])[i];if(!P)return null;const A=byId(activeId);
  const dB=A.now?null:Math.abs(A.lat-P.lat),dC=A.cur?Math.abs(A.cur.lat-P.lat):null,pnm=k=>(['sun','moon','node'].includes(k)?'the ':'')+PT[k][1];
  return `<p class="kicker">Paran</p><h4><span class="big" style="color:${PARAN_COL}">${glyphHtml(P.p)}</span><span class="big" style="color:${PARAN_COL}">${glyphHtml(P.q)}</span>${Math.abs(P.lat).toFixed(2)}°${P.lat>=0?'N':'S'}</h4>
@@ -2783,7 +2804,7 @@ function infoAspect(which,a,b){const v=lastView,c1=which==='o'?v.outer:v.inner,c
  <dt>Separation</dt><dd>${sep.toFixed(3)}°</dd><dt>Orb</dt><dd>${asp.orb.toFixed(2)}° · ${asp.applying?'applying':'separating'}</dd><dt>Nature</dt><dd>${nature}</dd>
  <dt>${PT[a][1]}</dt><dd>${dms(p1.lon)}${hs(p1.lon)}</dd><dt>${PT[b][1]}</dt><dd>${dms(p2.lon)}${hs(p2.lon)}</dd></dl>
  <p class="il">Interpretation</p><p class="interp">${esc(aspectText(which,a,b,asp))}</p>
- <ul><li class="clk" data-obj="pt:${which}:${a}">Open ${PT[a][1]} →</li><li class="clk" data-obj="pt:i:${b}">Open ${PT[b][1]} →</li></ul>`}
+ ${[[which,a,p1,which==='o'?esc(v.outer.label):''],['i',b,p2,'']].map(([w,k,p,lab])=>`<button type="button" class="ilink" data-obj="pt:${w}:${k}"><span class="ilt"><span class="ilk">View ${['asc','mc','dsc','ic'].includes(k)?'point':'planet'}${lab?' · '+lab:''}</span><span class="ilh"><span class="ilg">${glyphHtml(k)}</span>${PT[k][1]} in ${SIGN_N[Math.floor(n360(p.lon)/30)]}</span></span><svg class="ilc" viewBox="6 8.4 7.2 7.2" aria-hidden="true"><path d="M9.6 8.4 L10.5 11.1 L13.2 12 L10.5 12.9 L9.6 15.6 L8.7 12.9 L6 12 L8.7 11.1 Z"/></svg></button>`).join('')}`}
 /* --- midpoints (nearer midpoint) and their hard-aspect contacts --- */
 const MID_ORB=1.5,MID_HARM=[[0,'conjunct'],[45,'semisquare'],[90,'square'],[135,'sesquiquadrate'],[180,'opposite']];
 const midKeys=ch=>[...Calc.BODY_KEYS,'node',...(ch.noHouses?[]:['asc','mc']),...(S.uranian?Calc.URA_KEYS:[])].filter(k=>ch.pts[k]);
@@ -2995,7 +3016,7 @@ function seoApply(v){const m=SEO_VIEWS[v]||SEO_VIEWS.chart;try{document.title=m[
   if(/^https?:$/.test(location.protocol)){const u=new URL(location.href);u.hash='';if(m[0])u.searchParams.set('view',m[0]);else u.searchParams.delete('view');if(u.href!==location.href)history.replaceState(history.state,'',u.href);
    let c=document.querySelector('link[rel="canonical"]');if(!c){c=document.createElement('link');c.rel='canonical';document.head.append(c)}c.href=(/(^|\.)destinned\.com$/.test(location.hostname)?'https://destinned.com/':u.origin+u.pathname)+(m[0]?'?view='+m[0]:'');
    ['og:title','og:description','og:url'].forEach((p,i)=>{const t=document.querySelector(`meta[property="${p}"]`);if(t)t.content=i===0?m[1]:i===1?m[2]:c.href})}}catch(e){}}
-function setView(v){const changed=v!==view;if(changed)requestAnimationFrame(()=>{try{window.scrollTo({top:0,left:0,behavior:'instant'})}catch(e){window.scrollTo(0,0)}document.querySelectorAll('#pane,.pane,.eph-out,.eph-side,.eph-main,.tarot-side,.tarot-main,.stage').forEach(el=>{el.scrollTop=0})});if(v!=='acg'&&$('acgWrap').classList.contains('fs'))mapFsSet(false);if(v!=='chart'&&$('stage').classList.contains('fs'))wheelFsSet(false);if(v==='acg'&&mode!=='acg'){prevMode=mode;mode='acg'}if(v!=='acg'&&mode==='acg')mode=prevMode||'natal';view=v;$('ephView').hidden=v!=='eph';$('zrView').hidden=v!=='zr';$('readView').hidden=v!=='reading';if(v==='reading')prepReading();$('tarotView').hidden=v!=='tarot';$('chartView').hidden=v==='eph'||v==='tarot'||v==='zr'||v==='reading';if(v==='zr')renderZRPage();$('modesWrap').hidden=v!=='chart';$('styleSeg').hidden=v!=='chart';$('acgSearch').hidden=$('acgHint').hidden=v!=='acg';$('openLayers').hidden=v==='acg';closeModeMenu();if(v==='chart'||v==='acg')renderAll();if(v==='tarot'){renderTarot();renderSaved()}
+function setView(v){const changed=v!==view;if(changed)requestAnimationFrame(()=>{try{window.scrollTo({top:0,left:0,behavior:'instant'})}catch(e){window.scrollTo(0,0)}document.querySelectorAll('#pane,.pane,.eph-out,.eph-side,.eph-main,.tarot-side,.tarot-main,.stage').forEach(el=>{el.scrollTop=0})});if(v!=='acg'&&$('acgWrap').classList.contains('fs'))mapFsSet(false);if(v!=='chart'&&$('stage').classList.contains('fs'))wheelFsSet(false);if(v==='acg'&&mode!=='acg'){prevMode=mode;mode='acg'}if(v!=='acg'&&mode==='acg')mode=prevMode||'natal';view=v;$('ephView').hidden=v!=='eph';$('zrView').hidden=v!=='zr';$('readView').hidden=v!=='reading';if(v==='reading')prepReading();$('tarotView').hidden=v!=='tarot';$('chartView').hidden=v==='eph'||v==='tarot'||v==='zr'||v==='reading';if(v==='zr')renderZRPage();$('modesWrap').hidden=v!=='chart'&&v!=='acg';$('styleSeg').hidden=v!=='chart';$('acgSearch').hidden=$('acgHint').hidden=v!=='acg';$('openLayers').hidden=v==='acg';closeModeMenu();if(v==='chart'||v==='acg')renderAll();if(v==='tarot'){renderTarot();renderSaved()}
  document.querySelectorAll('#views button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.view===v));
  if(v==='eph'){$('ephZone').innerHTML=zoneOpts().map(([k,l])=>`<option value="${k}">${esc(l)}</option>`).join('');renderEphForm();if(!ephRows){if(ephTab==='aspects')runEph();else $('ephOut').innerHTML='<p class="empty">Set up a search on the left and run it. Results can be opened as charts.</p>'}}
  try{localStorage.setItem('orrery.page',v)}catch(e){}seoApply(v)}
