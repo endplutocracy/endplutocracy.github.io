@@ -2285,9 +2285,9 @@ function renderMap(v){const map=$('map'),ch=v.inner,A=byId(activeId),T=acgT();tr
  if(!A.now)h+=pin(A.lat,A.lon,'Birthplace: '+(A.place||''),'#ffffff','star');
  if(A.cur)h+=pin(A.cur.lat,A.cur.lon,'Current city: '+A.cur.place,'#b88ccf','dot');
  if(mapPin)h+=pin(mapPin.b,mapPin.l,mapPin.label||'Selected place','#ffd36b','dot');
- let cl='';if(S.acgCaps!==false){const nat=mapVB.w<=2400,sta=mapVB.w<=1300;if(nat||sta){const f0=mapVB.w/88,f1=mapVB.w/104,rr=mapVB.w/520,boxes=[];MAP_CAPS.forEach(([n,b,l,t])=>{if(t===0&&!nat||t===1&&!sta)return;const x=lonX(l),y=latY(b),f=t?f1:f0;
+ let cl='';const cvx0=mapVB.x-mapVB.w/2-40,cvx1=mapVB.x+mapVB.w*1.5+40,cvy0=mapVB.y-mapVB.h/2-40,cvy1=mapVB.y+mapVB.h*1.5+40;if(S.acgCaps!==false){const nat=mapVB.w<=2400,sta=mapVB.w<=1300;if(nat||sta){const f0=mapVB.w/88,f1=mapVB.w/104,rr=mapVB.w/520,boxes=[];MAP_CAPS.forEach(([n,b,l,t])=>{if(t===0&&!nat||t===1&&!sta)return;const x=lonX(l),y=latY(b),f=t?f1:f0;
   const bx=[x-rr,y-f*.6,x+rr*1.8+n.length*f*.56,y+f*.6];if(boxes.some(q=>bx[0]<q[2]&&bx[2]>q[0]&&bx[1]<q[3]&&bx[3]>q[1]))return;boxes.push(bx);
-  cl+=`<g class="cap${t?' s':''}"><circle cx="${x}" cy="${y}" r="${(t?rr*.8:rr).toFixed(2)}"/><text x="${(x+rr*1.8).toFixed(1)}" y="${y.toFixed(1)}" font-size="${f.toFixed(1)}" dominant-baseline="central">${esc(n)}</text></g>`})}}
+  if(y<cvy0||y>cvy1)return;for(const off of [-3600,0,3600]){const X=x+off;if(X<cvx0||X>cvx1)continue;cl+=`<g class="cap${t?' s':''}"><circle cx="${X}" cy="${y}" r="${(t?rr*.8:rr).toFixed(2)}"/><text x="${(X+rr*1.8).toFixed(1)}" y="${y.toFixed(1)}" font-size="${f.toFixed(1)}" dominant-baseline="central">${esc(n)}</text></g>`}})}}
  const bkey=(det?'d':'n')+(document.documentElement.dataset.theme||'');
  if(map.dataset.bkey!==bkey||!$('mLines')){let st='';
   for(let l=-150;l<=180;l+=30)st+=`<path class="grat" d="M${lonX(l)} 0V1800"/>`;for(let b=-60;b<=60;b+=30)st+=`<path class="grat" d="M0 ${latY(b)}H3600"/>`;
@@ -2295,7 +2295,7 @@ function renderMap(v){const map=$('map'),ch=v.inner,A=byId(activeId),T=acgT();tr
   const fade=`<defs><linearGradient id="mfT" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1b2230"/><stop offset="1" stop-color="#1b2230" stop-opacity="0"/></linearGradient><linearGradient id="mfB" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#1b2230"/><stop offset="1" stop-color="#1b2230" stop-opacity="0"/></linearGradient></defs>`;
   try{mbStyle=null}catch(e){}map.innerHTML=`${fade}<g id="mCaps"></g><g id="mLines"></g><rect x="-8000" y="0" width="20000" height="120" fill="url(#mfT)" pointer-events="none"/><rect x="-8000" y="1680" width="20000" height="120" fill="url(#mfB)" pointer-events="none"/>`;map.dataset.bkey=bkey}
  map.classList.toggle('far',mapVB.w>2400);
- $('mCaps').innerHTML=cl?`<g class="mcaps">${cl}</g><g class="mcaps" transform="translate(-3600 0)">${cl}</g><g class="mcaps" transform="translate(3600 0)">${cl}</g>`:'';
+ $('mCaps').innerHTML=cl?`<g class="mcaps">${cl}</g>`:'';
  try{mbQueue()}catch(e){}
  h=monoMap(h);$('mLines').innerHTML=`<g>${h}</g><g transform="translate(-3600 0)">${h}</g><g transform="translate(3600 0)">${h}</g>`}
 function acgControls(v){const A=byId(activeId),all=[...Calc.BODY_KEYS,'node',...(S.layers.asteroids?Calc.AST_KEYS:[])],on=S.acgShow||Calc.BODY_KEYS,T=acgT(),f=S.acgFocus||'sun',asel=S.acgAsp||['squ','tri'],lso=S.lsOrigin||'birth';
