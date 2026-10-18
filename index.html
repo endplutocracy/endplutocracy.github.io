@@ -777,6 +777,10 @@ html[data-theme="paper"]{--wwhite:#111}html[data-theme="pastel"]{--wwhite:#6b254
 .acgsearch .f{padding-left:34px;height:38px}.acghint{font-size:.78rem;color:var(--muted);line-height:1.3}
 .mshint{display:none}.mapwrap.fs .mshint{display:block;position:absolute;left:calc(100% + 12px);top:50%;transform:translateY(-50%);white-space:nowrap;font-size:.8rem;color:var(--muted);background:color-mix(in srgb,var(--panel) 80%,transparent);padding:4px 10px;border-radius:999px;pointer-events:none}
 @media (max-width:760px){.acgsearch{flex:1 1 100%;order:5}.acghint{flex:1 1 100%;order:6;margin-top:-2px}.mapwrap.fs .mshint{left:0;top:calc(100% + 8px);transform:none;white-space:normal}}
+.mapwrap.fs .wzoom{top:calc(80px + env(safe-area-inset-top,0px))!important;bottom:auto!important;right:calc(14px + env(safe-area-inset-right,0px))!important;transform:none!important;align-items:center}
+.mapwrap.fs .wzoom button{width:48px!important;height:48px!important;font-size:1.45rem!important}.mapwrap.fs .wzoom svg{width:22px;height:22px}
+@media (min-width:981px){.mapwrap.fs .wzoom{top:calc(88px + env(safe-area-inset-top,0px))!important;right:calc(14px + env(safe-area-inset-right,0px))!important}.mapwrap.fs .wzoom button{width:56px!important;height:56px!important;font-size:1.7rem!important}.mapwrap.fs .wzoom svg{width:24px;height:24px}}
+.mapwrap.fs .maplayersbtn{width:48px!important;height:48px!important}@media (min-width:981px){.mapwrap.fs .maplayersbtn{width:56px!important;height:56px!important}.mapwrap.fs .maplayersbtn svg{width:26px;height:26px}}
 </style>
 <style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}img{max-width:100%}</style>
 </head>
@@ -2274,18 +2278,18 @@ function renderMap(v){const map=$('map'),ch=v.inner,A=byId(activeId),T=acgT();tr
  let h='';
  const fs=mapVB.w/58,fs2=mapVB.w/80;
  v.acg=acgLines(ch);v.parans=T.paran?acgParans(ch):[];v.ls=T.ls?localSpace(ch,lsOrigin(A)):[];v.asl=T.asp?aspectLinesAcg(ch):[];
- v.parans.forEach((P,i)=>{const y=latY(P.lat),d=`M-4000 ${y}H8000`,c=PARAN_COL;h+=`<path class="acg" d="${d}" stroke="${c}" stroke-opacity=".8" stroke-width=".85" style="stroke-width:.85px" stroke-dasharray="${'CA'.includes(P.e1)||'CA'.includes(P.e2)?'none':'5 5'}"/><path class="acghit" d="${d}" data-obj="paran:${i}"><title>${PT[P.p][1]} ${EVN[P.e1]} / ${PT[P.q][1]} ${EVN[P.e2]} · ${Math.abs(P.lat).toFixed(2)}°${P.lat>=0?'N':'S'}</title></path><text x="${mapVB.x+mapVB.w-fs*0.4}" y="${y-fs2*0.35}" text-anchor="end" font-size="${fs2.toFixed(1)}" fill="${c}">${shortG(P.p)} ${EVS[P.e1]} · ${shortG(P.q)} ${EVS[P.e2]}</text>`});
+ v.parans.forEach((P,i)=>{const y=latY(P.lat),d=`M-4000 ${y}H8000`,c=PARAN_COL;h+=`<path class="acg" d="${d}" stroke="${c}" stroke-opacity=".8" stroke-width=".85" style="stroke-width:.85px" stroke-dasharray="${'CA'.includes(P.e1)||'CA'.includes(P.e2)?'none':'5 5'}"/><path class="acghit" d="${d}" data-obj="paran:${i}"><title>${PT[P.p][1]} ${EVN[P.e1]} / ${PT[P.q][1]} ${EVN[P.e2]} · ${Math.abs(P.lat).toFixed(2)}°${P.lat>=0?'N':'S'}</title></path>`});
  v.ls.forEach(L=>{const d=segPath(L.pts),c=LS_COL[L.k]||'#7fd8c8';h+=`<path class="acg" d="${d}" stroke="${c}" stroke-dasharray="1 5" style="stroke-width:1.5px"/><path class="acghit" d="${d}" data-obj="ls:${L.k}"><title>${PT[L.k][1]} local space · ${L.az.toFixed(0)}° ${compass(L.az)}</title></path>`});
- if(v.ls.length){const o=v.ls[0].origin,x=lonX(o.lon),y=latY(o.lat);v.ls.forEach(L=>{const r=fs*2.6,a=(L.az-90)*DR;h+=`<text x="${x+Math.cos(a)*r}" y="${y+Math.sin(a)*r}" text-anchor="middle" dominant-baseline="central" font-size="${fs2.toFixed(1)}" fill="${LS_COL[L.k]||'#7fd8c8'}">${shortG(L.k)}</text>`})}
+ if(v.ls.length){const o=v.ls[0].origin,x=lonX(o.lon),y=latY(o.lat);v.ls.forEach(L=>{const r=fs*2.6,a=(L.az-90)*DR;h+=``})}
  v.asl.forEach((L,i)=>{const d=segPath(L.pts),c=ASPL_COL[L.a];h+=`<path class="acg" d="${d}" stroke="${c}" stroke-opacity=".85" stroke-dasharray="${L.ang==='MC'?'10 4 2 4':'3 4'}" style="stroke-width:1px"/><path class="acghit" d="${d}" data-obj="asl:${i}"><title>${PT[L.k][1]} ${ASPL_N[L.a][0]} to ${L.ang}</title></path>`;
-  if(L.ang==='MC')h+=`<text x="${lonX(L.mer)}" y="${latY(-38)}" text-anchor="middle" font-size="${fs2.toFixed(1)}" fill="${c}">${shortG(L.k)}${ASPL_N[L.a][1]}MC</text>`});
+  if(L.ang==='MC')h+=``});
  if(T.planet)v.acg.forEach(L=>{const d=segPath(L.pts),c=ACG_COL[L.k]||'#ddd';h+=`<path class="acg" d="${d}" stroke="${c}" stroke-dasharray="${ACG_ANG[L.a][2]}"/><path class="acghit" d="${d}" data-obj="acgline:${L.k}:${L.a}"><title>${PT[L.k][1]} ${L.a}</title></path>`;
-  if(L.a==='MC'||L.a==='IC'){const x=lonX(L.mer);h+=`<text x="${x}" y="${L.a==='MC'?latY(70):latY(-52)}" text-anchor="middle" font-size="${(fs*.92).toFixed(1)}" font-weight="400" fill="${c}">${GLYPH_SVG[L.k]||PT[L.k][0].length>1?PT[L.k][1]:PT[L.k][0]+VS} ${L.a}</text>`}});
+  if(L.a==='MC'||L.a==='IC'){const x=lonX(L.mer);h+=``}});
  const pin=(b,l,label,col,shape)=>{const x=lonX(l),y=latY(b),r=mapVB.w/170;return `<g data-obj="acgpt:${b.toFixed(3)}:${l.toFixed(3)}" style="cursor:pointer">${shape==='star'?`<path d="M${x} ${y-r*1.6}L${x+r*.45} ${y-r*.45}L${x+r*1.6} ${y}L${x+r*.45} ${y+r*.45}L${x} ${y+r*1.6}L${x-r*.45} ${y+r*.45}L${x-r*1.6} ${y}L${x-r*.45} ${y-r*.45}Z" fill="${col}" stroke="#1b2230" stroke-width="1.5" vector-effect="non-scaling-stroke"/>`:`<circle cx="${x}" cy="${y}" r="${r}" fill="${col}" stroke="#1b2230" stroke-width="2" vector-effect="non-scaling-stroke"/>`}<title>${esc(label)}</title></g>`};
  if(!A.now)h+=pin(A.lat,A.lon,'Birthplace: '+(A.place||''),'#ffffff','star');
  if(A.cur)h+=pin(A.cur.lat,A.cur.lon,'Current city: '+A.cur.place,'#b88ccf','dot');
  if(mapPin)h+=pin(mapPin.b,mapPin.l,mapPin.label||'Selected place','#ffd36b','dot');
- let cl='';mbCaps=[];const cvx0=mapVB.x-mapVB.w/2-40,cvx1=mapVB.x+mapVB.w*1.5+40,cvy0=mapVB.y-mapVB.h/2-40,cvy1=mapVB.y+mapVB.h*1.5+40;if(S.acgCaps!==false){const nat=mapVB.w<=2400,sta=mapVB.w<=1300;if(nat||sta){const f0=mapVB.w/88,f1=mapVB.w/104,rr=mapVB.w/520,boxes=[];MAP_CAPS.forEach(([n,b,l,t])=>{if(t===0&&!nat||t===1&&!sta)return;const x=lonX(l),y=latY(b),f=t?f1:f0;
+ let cl='';mbCaps=[];const cvx0=mapVB.x-mapVB.w/2-40,cvx1=mapVB.x+mapVB.w*1.5+40,cvy0=mapVB.y-mapVB.h/2-40,cvy1=mapVB.y+mapVB.h*1.5+40;if(S.acgCaps!==false){const nat=mapVB.w<=1500,sta=mapVB.w<=800;if(nat||sta){const f0=mapVB.w/88,f1=mapVB.w/104,rr=mapVB.w/520,boxes=[];MAP_CAPS.forEach(([n,b,l,t])=>{if(t===0&&!nat||t===1&&!sta)return;const x=lonX(l),y=latY(b),f=t?f1:f0;
   const bx=[x-rr,y-f*.6,x+rr*1.8+n.length*f*.56,y+f*.6];if(boxes.some(q=>bx[0]<q[2]&&bx[2]>q[0]&&bx[1]<q[3]&&bx[3]>q[1]))return;boxes.push(bx);
   if(y<cvy0||y>cvy1)return;for(const off of [-3600,0,3600]){const X=x+off;if(X<cvx0||X>cvx1)continue;mbCaps.push([X,y,t?rr*.8:rr,X+rr*1.8,f,t,n])}})}}
  const bkey=(det?'d':'n')+(document.documentElement.dataset.theme||'');
