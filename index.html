@@ -783,6 +783,13 @@ html[data-theme="paper"]{--wwhite:#111}html[data-theme="pastel"]{--wwhite:#6b254
 @media (min-width:981px){.mapwrap.fs .wzoom{top:calc(88px + env(safe-area-inset-top,0px))!important;right:calc(14px + env(safe-area-inset-right,0px))!important}.mapwrap.fs .wzoom button{width:56px!important;height:56px!important;font-size:1.7rem!important}.mapwrap.fs .wzoom svg{width:24px;height:24px}}
 .mapwrap.fs .maplayersbtn{width:48px!important;height:48px!important}@media (min-width:981px){.mapwrap.fs .maplayersbtn{width:56px!important;height:56px!important}.mapwrap.fs .maplayersbtn svg{width:26px;height:26px}}
 html{touch-action:manipulation}
+.mapfstop{display:none}
+.mapwrap.fs .mapfstop{display:flex;gap:8px;align-items:flex-start;position:absolute;z-index:4;top:calc(14px + env(safe-area-inset-top,0px));left:calc(14px + env(safe-area-inset-left,0px));right:calc(76px + env(safe-area-inset-right,0px))}
+.mapwrap.fs .mapfstop .mapsearch{position:relative;top:auto;left:auto;width:auto;flex:1 1 auto;min-width:0;max-width:340px}
+.mapwrap.fs #mapLib{flex:0 0 auto;min-width:0;max-width:46%;height:44px;border:0;color:var(--fg);background:color-mix(in srgb,var(--panel) 86%,transparent);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);cursor:pointer}
+.mapwrap.fs #mapLib:hover{background:color-mix(in srgb,var(--accent) 16%,var(--panel))}
+.mapwrap.fs #mapLib strong{max-width:100%;overflow:hidden;text-overflow:ellipsis}
+@media (min-width:981px){.mapwrap.fs .mapfstop{right:calc(84px + env(safe-area-inset-right,0px))}.mapwrap.fs #mapLib{max-width:260px}}
 </style>
 <style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}img{max-width:100%}</style>
 </head>
@@ -882,7 +889,7 @@ html{touch-action:manipulation}
     <div class="mapwrap" id="acgWrap" hidden>
       <canvas id="mapBase" aria-hidden="true"></canvas><svg id="mapStyle" aria-hidden="true" style="display:none"><rect fill="#1b2230"/><path class="land"/><path class="border"/><path class="adm1"/><path class="grat"/></svg><svg id="map" viewBox="0 150 3600 1350" role="img" aria-label="Astrocartography world map" preserveAspectRatio="xMidYMid meet"></svg>
       <button class="maplayersbtn" id="mapLayersBtn" type="button" aria-expanded="false" aria-controls="mapLayers" aria-label="Map layers" title="Map layers"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5.5"/><circle cx="12" cy="12" r="5.5"/><circle cx="15.5" cy="15.5" r="5.5"/></svg></button><div class="maplayers" id="mapLayers" hidden role="dialog" aria-label="Map layers"></div>
-      <div class="place mapsearch"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5L20 20"/></svg><input class="f" id="mapQ" placeholder="Search for a city" autocomplete="off" aria-label="Search for a city"><ul class="sugg" id="mapSugg" role="listbox" hidden></ul><span class="mshint">Searching for a city directly is much faster</span></div>
+      <div class="mapfstop"><button class="chip" id="mapLib" type="button" aria-label="Open chart library"><svg class="hamb" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg><strong id="mapLibName">Sky now</strong></button><div class="place mapsearch"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5L20 20"/></svg><input class="f" id="mapQ" placeholder="Search for a city" autocomplete="off" aria-label="Search for a city"><ul class="sugg" id="mapSugg" role="listbox" hidden></ul><span class="mshint">Searching for a city directly is much faster</span></div></div>
       <div class="wzoom" role="group" aria-label="Zoom the map"><button type="button" id="mapIn" aria-label="Zoom in" title="Zoom in">+</button><button type="button" id="mapOut" aria-label="Zoom out" title="Zoom out">−</button><button type="button" id="mapReset" aria-label="Show the whole world" title="Show the whole world" hidden>⤢</button><button type="button" id="mapFs" aria-label="Fill the window" title="Fill the window" aria-pressed="false"></button></div>
     </div>
     <div class="dial">
@@ -1989,7 +1996,7 @@ let pickMode=false;
 function openLib(m){pickMode=m==='pick';$('drawer').hidden=false;$('scrim').hidden=false;renderList();$('q').focus()}
 function closeLib(){$('drawer').hidden=true;$('scrim').hidden=true;pickMode=false}
 $('tLoc').addEventListener('click',e=>{const b=e.target.closest('[data-tl]');if(!b)return;const A=byId(activeId);if(b.dataset.tl==='current'&&!A.cur){openForm(A);setTimeout(()=>{$('fCurQ')?.focus();toast('Add a current city, then save')},50);return}S.transitLoc=b.dataset.tl;saveSet();renderAll()});
-$('openLib').onclick=()=>openLib();$('editActive').onclick=()=>{const A=byId(activeId);if(!A.now)openForm(A)};$('closeLib').onclick=closeLib;$('scrim').onclick=()=>{closeLib();closeModals()};
+$('openLib').onclick=()=>openLib();$('mapLib').onclick=()=>openLib();new MutationObserver(()=>{$('mapLibName').textContent=$('chartName').textContent}).observe($('chartName'),{childList:true,characterData:true,subtree:true});$('mapLibName').textContent=$('chartName').textContent;$('editActive').onclick=()=>{const A=byId(activeId);if(!A.now)openForm(A)};$('closeLib').onclick=closeLib;$('scrim').onclick=()=>{closeLib();closeModals()};
 $('q').addEventListener('input',renderList);$('folderFilter').addEventListener('change',renderList);
 function renderList(){const q=$('q').value.trim().toLowerCase(),ff=$('folderFilter').value;
  const folders=[...new Set(charts.map(c=>c.folder).filter(Boolean))].sort();
@@ -2293,7 +2300,7 @@ function renderMap(v){const map=$('map'),ch=v.inner,A=byId(activeId),T=acgT();tr
  if(!A.now)h+=pin(A.lat,A.lon,'Birthplace: '+(A.place||''),'#ffffff','star');
  if(A.cur)h+=pin(A.cur.lat,A.cur.lon,'Current city: '+A.cur.place,'#b88ccf','dot');
  if(mapPin)h+=pin(mapPin.b,mapPin.l,mapPin.label||'Selected place','#ffd36b','dot');
- let cl='';mbCaps=[];const cvx0=mapVB.x-mapVB.w/2-40,cvx1=mapVB.x+mapVB.w*1.5+40,cvy0=mapVB.y-mapVB.h/2-40,cvy1=mapVB.y+mapVB.h*1.5+40;if(S.acgCaps!==false){const nat=mapVB.w<=300,sta=mapVB.w<=300;if(nat||sta){const f0=mapVB.w/88,f1=mapVB.w/104,rr=mapVB.w/520,boxes=[];MAP_CAPS.forEach(([n,b,l,t])=>{if(t===0&&!nat||t===1&&!sta)return;const x=lonX(l),y=latY(b),f=t?f1:f0;
+ let cl='';mbCaps=[];const cvx0=mapVB.x-mapVB.w/2-40,cvx1=mapVB.x+mapVB.w*1.5+40,cvy0=mapVB.y-mapVB.h/2-40,cvy1=mapVB.y+mapVB.h*1.5+40;if(S.acgCaps!==false){const nat=mapVB.w<=300,sta=mapVB.w<=300;if(nat||sta){const mW=$('acgWrap').clientWidth||800,mz=mW<700?Math.max(1,13*88/mW):1,f0=mapVB.w/88*mz,f1=mapVB.w/104*mz,rr=mapVB.w/520*Math.sqrt(mz),boxes=[];MAP_CAPS.forEach(([n,b,l,t])=>{if(t===0&&!nat||t===1&&!sta)return;const x=lonX(l),y=latY(b),f=t?f1:f0;
   const bx=[x-rr,y-f*.6,x+rr*1.8+n.length*f*.56,y+f*.6];if(boxes.some(q=>bx[0]<q[2]&&bx[2]>q[0]&&bx[1]<q[3]&&bx[3]>q[1]))return;boxes.push(bx);
   if(y<cvy0||y>cvy1)return;for(const off of [-3600,0,3600]){const X=x+off;if(X<cvx0||X>cvx1)continue;mbCaps.push([X,y,t?rr*.8:rr,X+rr*1.8,f,t,n])}})}}
  const bkey=(det?'d':'n')+(document.documentElement.dataset.theme||'');
@@ -2340,7 +2347,7 @@ const svgPt=(e)=>{const m=$('map'),p=m.createSVGPoint();p.x=e.clientX;p.y=e.clie
 $('mapIn').onclick=()=>zoomMap(0.6);$('mapOut').onclick=()=>zoomMap(1/0.6);$('mapReset').onclick=()=>{mapWorld();renderAll()};
 function mapWorld(){const w=mapMaxW(),h=w*mapRatio;mapVB={x:(3600-w)/2+(w<3600?-200:0),y:150+(1350-h)/2,w,h};clampVB()}
 function mapFsSet(on){const W=$('acgWrap');W.classList.toggle('fs',on);document.body.classList.toggle('mapfs',on);$('mapFs').setAttribute('aria-pressed',String(on));$('mapFs').title=$('mapFs').ariaLabel=on?'Exit full window':'Fill the window';$('mapFs').innerHTML=on?FS_OUT:FS_IN;
- const c=mapVB.x+mapVB.w/2,wasWorld=mapVB.w>=mapMaxW()-1;requestAnimationFrame(()=>{const r=W.getBoundingClientRect();mapRatio=on?r.height/r.width:1350/3600;if(wasWorld)mapWorld();else{mapVB.h=mapVB.w*mapRatio;mapVB.x=c-mapVB.w/2;clampVB()}renderAll()})}
+ const c=mapVB.x+mapVB.w/2,cy=mapVB.y+mapVB.h/2,wasWorld=mapVB.w>=mapMaxW()-1;requestAnimationFrame(()=>{const r=W.getBoundingClientRect();mapRatio=on?r.height/r.width:1350/3600;if(wasWorld)mapWorld();else{mapVB.h=mapVB.w*mapRatio;mapVB.x=c-mapVB.w/2;mapVB.y=cy-mapVB.h/2;clampVB()}renderAll()})}
 const FS_IN='<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg>',FS_OUT='<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M9 4v5H4M15 4v5h5M9 20v-5H4M15 20v-5h5"/></svg>';
 $('mapFs').innerHTML=FS_IN;
 function fsFit(){const W=$('stage');if(!W.classList.contains('fs'))return;const H=W.clientHeight;let t=0;for(const el of [$('chartBar'),$('relocBar')]){if(el.hidden||!el.offsetHeight)continue;t=Math.max(t,el.offsetTop+el.offsetHeight)}const d=W.querySelector('.dial');let b=d?H-d.offsetTop:0;W.style.setProperty('--fsT0',t+'px');W.style.setProperty('--fsB0',b+'px');if(matchMedia('(max-width:860px) and (min-height:500px)').matches){const z=W.querySelector('.wzoom'),e=$('elemMini');t+=(z?z.offsetHeight:40)+12;b+=(e&&e.offsetHeight?e.offsetHeight:30)+12}W.style.setProperty('--fsT',t+'px');W.style.setProperty('--fsB',b+'px')}
@@ -2375,7 +2382,7 @@ function drawBase(){mbRaf=0;const cv=$('mapBase');if(!cv||mode!=='acg'||$('acgWr
 function mbReadCapStyle(){const m=$('map'),g=document.createElementNS('http://www.w3.org/2000/svg','g');g.setAttribute('visibility','hidden');g.innerHTML='<g class="cap"><circle r="1"/><text>x</text></g><g class="cap s"><circle r="1"/><text>x</text></g>';m.append(g);
  const rd=sel=>{const c=getComputedStyle(g.querySelector(sel+' circle')),t=getComputedStyle(g.querySelector(sel+' text'));return {dot:c.fill,dotStroke:c.stroke,fill:t.fill,halo:t.stroke,font:`${t.fontWeight} {S}px ${t.fontFamily}`}};
  const r={n:rd('.cap:not(.s)'),s:rd('.cap.s')};g.remove();return r}
-function mbDrawCaps(ctx,k,ox,oy,vx,vy,dpr){if(!mbCaps.length)return;if(!mbCapSt)mbCapSt=mbReadCapStyle();const halo=3*Math.min(1,mapVB.w/3600);
+function mbDrawCaps(ctx,k,ox,oy,vx,vy,dpr){if(!mbCaps.length)return;if(!mbCapSt)mbCapSt=mbReadCapStyle();const mW=$('acgWrap').clientWidth||800,halo=3*Math.min(1,mapVB.w/3600)*(mW<700?Math.max(1,13*88/mW):1);
  ctx.setTransform(k,0,0,k,ox-vx*k,oy-vy*k);ctx.lineJoin='round';ctx.textBaseline='middle';ctx.textAlign='left';
  for(const [X,y,r,tx,f,t,n] of mbCaps){const st=t?mbCapSt.s:mbCapSt.n;ctx.beginPath();ctx.arc(X,y,r,0,Math.PI*2);ctx.fillStyle=st.dot;ctx.fill();if(st.dotStroke&&st.dotStroke!=='none'){ctx.strokeStyle=st.dotStroke;ctx.lineWidth=dpr/k;ctx.stroke()}
   ctx.font=st.font.replace('{S}',f.toFixed(2));if(st.halo&&st.halo!=='none'){ctx.strokeStyle=st.halo;ctx.lineWidth=halo;ctx.strokeText(n,tx,y)}ctx.fillStyle=st.fill;ctx.fillText(n,tx,y)}}
