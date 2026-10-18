@@ -1795,7 +1795,9 @@ function renderVedicData(v){const ch=v.inner;if(!ch||!ch.pts.sun)return '<p clas
  h+=`<h3 class="sub">All divisions at a glance</h3><div class="tblwrap"><table class="vgrid"><thead><tr><th></th>${MAIN.map(d=>`<th class="mono">D${d}</th>`).join('')}</tr></thead><tbody>${keys.map(k=>{const lo=L(k),r=Math.floor(lo/30);return `<tr><td>${gl(k)}</td>${MAIN.map(d=>{const x=vargaSign(lo,d);return `<td title="${nm(k)} D${d}: ${SIGN_N[x]}"${d!==1&&x===r?' class="vgo"':''}>${sg(x)}</td>`}).join('')}</tr>`}).join('')}</tbody></table></div><p class="note">Highlighted cells fall in the same sign as the D1.</p>`;
  return h}
 document.addEventListener('click',e=>{const t=e.target.closest('[data-vtog]');if(t){vedVOpen=t.getAttribute('aria-expanded')!=='true';if(!vedVOpen&&VARGAS.findIndex(x=>x[0]===vedVarga)>=8)vedVarga='D9';renderAll();return}const b=e.target.closest('[data-varga]');if(!b)return;vedVarga=b.dataset.varga;renderAll()});
-function vedLon(ch,lon){return S.zodiac==='tropical'?n360(lon-Calc.ayanamsa(ch.jd,'lahiri')):lon}
+/* Vedic charts follow the zodiac setting (positions already come in the chosen zodiac) */
+function vedLon(ch,lon){return n360(lon)}
+const vedZod=()=>(ZODIACS.find(z=>z[0]===S.zodiac)||ZODIACS[0])[1].replace('Sidereal · ','').replace(/^(.*)$/,m=>S.zodiac==='tropical'?'Tropical':m+' sidereal');
 function vedItems(ch,which){const keys=[...VED_KEYS,...astKeys(ch),...Object.keys(S.show).filter(k=>S.show[k]&&!['node','snode'].includes(k))];const seen=new Set();
  return keys.filter(k=>{if(seen.has(k)||!ch.pts[k]||(ch.noHouses&&[...LOTS,'vertex'].includes(k)))return false;seen.add(k);return true}).map(k=>{const lon=vedLon(ch,ch.pts[k].lon);return {k,lon,raw:ch.pts[k].lon,sign:Math.floor(lon/30),deg:Math.floor(lon%30),rx:ch.pts[k].speed<0&&!['node','snode'].includes(k),which}})}
 function vedLabel(it,fs){const g=el('g',{});const ow=it.which==='o',col=ow?'var(--outer-fg)':it.k==='sun'||it.k==='moon'?'var(--accent)':it.k==='node'||it.k==='snode'?'var(--lilac)':'var(--fg)';
@@ -1803,7 +1805,7 @@ function vedLabel(it,fs){const g=el('g',{});const ow=it.which==='o',col=ow?'var(
  let t;if(GLYPH_SVG[it.k]){const gs=GLYPH_SVG[it.k],sz=fs*.82;t=el('svg',{x:-sz,y:-sz/2,width:sz,height:sz,viewBox:gs.vb,fill:gs.fill?col:'none',stroke:gs.fill?'none':col,'stroke-width':1.3,'stroke-linecap':'round',overflow:'visible'});t.innerHTML=gs.parts}
  else t=el('text',{x:0,y:0,'text-anchor':'end','dominant-baseline':'central','font-size':isText?fs*.62:it.k==='fortune'?fs*.72:fs,'font-weight':300,fill:col,'font-family':isText?'var(--mono)':'var(--sym)'},isText?txt:txt+VS);
  const d=el('text',{x:3,y:1,'text-anchor':'start','dominant-baseline':'central','font-size':fs*.5,'font-weight':500,fill:ow?'var(--outer-tick)':'var(--fg)',opacity:.85,'font-family':'var(--mono)'},it.deg+'°'+(it.rx?'℞':''));
- g.append(t,d);g.append(el('title',{},`${PT[it.k][1]} ${deg(it.lon).txt} ${SIGN_N[it.sign]} (sidereal)${it.rx?' retrograde':''}`));return g}
+ g.append(t,d);g.append(el('title',{},`${PT[it.k][1]} ${deg(it.lon).txt} ${SIGN_N[it.sign]} (${vedZod().toLowerCase()})${it.rx?' retrograde':''}`));return g}
 function vedPlace(items,cx,cy,maxW,maxH,fs){// lay items out in rows centred on cx,cy; shrink if crowded
  const n=items.length;if(!n)return {placed:[],fs};let f=fs;for(let tries=0;tries<8;tries++){const colW=f*2.35,lineH=f*1.15,cols=Math.max(1,Math.min(n,Math.floor(maxW/colW))),rows=Math.ceil(n/cols);if(rows*lineH<=maxH||f<13){const out=[];
   items.forEach((it,i)=>{const r=Math.floor(i/cols),c=i%cols,inRow=Math.min(cols,n-r*cols);out.push([it,cx+(c-(inRow-1)/2)*colW-f*.05,cy+(r-(rows-1)/2)*lineH])});return {placed:out,fs:f}}f*=.88}
@@ -1819,7 +1821,7 @@ function renderVedic(v){svg.replaceChildren();const inner=v.inner,outer=v.outer,
  const P=30,L=740,X=v=>P+v*L,F=(p)=>p.map(([a,b])=>`${X(a).toFixed(1)},${X(b).toFixed(1)}`).join(' ');
  const line='var(--w-line)',lw=1.6,fs=(outer?25:29)*1.5;
  svg.append(el('rect',{x:P,y:P,width:L,height:L,rx:14,fill:'var(--w-grey)',stroke:line,'stroke-width':lw}));
- const info=(cx,cy)=>{const A=byId(activeId),t=[[outer?`${(MODES.find(m=>m[0]===mode)||MODES[0])[1]}`:'Rasi (D1)',30,'var(--lilac)',700],[A.name,25,'var(--fg)',500],[`Lahiri sidereal · ${hName}`,19,'var(--muted)',400]];
+ const info=(cx,cy)=>{const A=byId(activeId),t=[[outer?`${(MODES.find(m=>m[0]===mode)||MODES[0])[1]}`:'Rasi (D1)',30,'var(--lilac)',700],[A.name,25,'var(--fg)',500],[bhava?`${vedZod()} · ${hName} (Bhava chalit)`:`${vedZod()} · whole signs`,19,'var(--muted)',400]];
   if(!inner.noHouses)t.push([`Lagna ${deg(ascLon).txt} ${SIGN_N[ascS]}`,19,'var(--muted)',400]);
   t.forEach(([s,f,c,w],i)=>svg.append(el('text',{x:cx,y:cy+(i-(t.length-1)/2)*38,'text-anchor':'middle','dominant-baseline':'central','font-size':f,'font-weight':w,fill:c,'font-family':i===0?'var(--display)':'var(--body,inherit)','letter-spacing':i===0?'.08em':'0'},i===0?s.toUpperCase():s)))};
  if(style==='south'){const cell=L/4,pos=[[1,0],[2,0],[3,0],[3,1],[3,2],[3,3],[2,3],[1,3],[0,3],[0,2],[0,1],[0,0]];// Aries..Pisces
@@ -1827,21 +1829,21 @@ function renderVedic(v){svg.replaceChildren();const inner=v.inner,outer=v.outer,
   pos.forEach(([c,r],s)=>{const x=P+c*cell,y=P+r*cell;svg.append(el('rect',{x,y,width:cell,height:cell,fill:s===ascS&&!inner.noHouses?'var(--w-p2)':'var(--w-p1)',stroke:line,'stroke-width':lw}));
    svg.append(hit({x,y,width:cell,height:cell,fill:'transparent'},`sign:${s}`));
    {const tg=el('text',{x:x+11,y:y+26,'font-size':22,fill:S.elemColors?`var(--${ELEM[s%4]})`:'var(--muted)'});const a=el('tspan',{'font-family':'var(--sym)','font-weight':300,'font-size':25},SIGN_G[s]+VS),b=el('tspan',{dx:6,'font-family':'var(--body,inherit)','font-weight':500},SIGN_N[s]);tg.append(a,b);svg.append(tg)}
-   const hn=bhava?[...Array(12).keys()].filter(h=>cuspSign(h)===s).map(h=>h+1).join('·'):((s-ascS+12)%12)+1;if(hn!=='')svg.append(el('text',{x:x+cell-11,y:y+cell-14,'text-anchor':'end','font-size':18,fill:'var(--muted)','font-family':'var(--mono)'},String(hn)));
+   const hn=((s-ascS+12)%12)+1;svg.append(el('text',{x:x+cell-11,y:y+cell-14,'text-anchor':'end','font-size':18,fill:'var(--muted)','font-family':'var(--mono)'},String(hn)));
    if(s===ascS&&!inner.noHouses){svg.append(el('line',{x1:x,y1:y+cell*.74,x2:x+cell*.26,y2:y+cell,stroke:'var(--accent)','stroke-width':2}));svg.append(el('text',{x:x+cell/2,y:y+cell-16,'text-anchor':'middle','font-size':19,'font-weight':700,fill:'var(--accent)','font-family':'var(--mono)','letter-spacing':'.06em'},'AC'))}
-   const its=items.filter(i=>i.sign===s);vedDraw(svg,vedPlace(its,x+cell/2,y+cell/2+6,cell-12,cell-70,fs))});
+   const its=bhava?items.filter(i=>i.house===hn):items.filter(i=>i.sign===s);vedDraw(svg,vedPlace(its,x+cell/2,y+cell/2+6,cell-12,cell-70,fs))});
   info(P+L/2,P+L/2)}
  else{// North Indian: houses fixed, signs rotate
   const T=[.5,0],R=[1,.5],B=[.5,1],Lm=[0,.5],TL=[0,0],TR=[1,0],BL=[0,1],BR=[1,1],C=[.5,.5],Q1=[.25,.25],Q2=[.75,.25],Q3=[.75,.75],Q4=[.25,.75];
   const H=[[T,Q1,C,Q2],[TL,T,Q1],[TL,Q1,Lm],[Lm,Q1,C,Q4],[Lm,Q4,BL],[BL,Q4,B],[B,Q4,C,Q3],[B,Q3,BR],[BR,Q3,R],[R,Q3,C,Q2],[R,Q2,TR],[TR,Q2,T]];
   // label anchor (centre of the region) and sign-number spot (toward the centre)
   const cen=p=>[p.reduce((a,q)=>a+q[0],0)/p.length,p.reduce((a,q)=>a+q[1],0)/p.length];
-  H.forEach((poly,h)=>{const s=bhava?cuspSign(h):(ascS+h)%12,diamond=poly.length===4;svg.append(el('polygon',{points:F(poly),fill:diamond?(h===0?'var(--w-p2)':'var(--w-p1)'):'var(--w-p1)',stroke:line,'stroke-width':lw,'stroke-linejoin':'round'}));
+  H.forEach((poly,h)=>{const s=(ascS+h)%12,diamond=poly.length===4;svg.append(el('polygon',{points:F(poly),fill:diamond?(h===0?'var(--w-p2)':'var(--w-p1)'):'var(--w-p1)',stroke:line,'stroke-width':lw,'stroke-linejoin':'round'}));
    const [cx,cy]=cen(poly);svg.append(hit({points:F(poly),fill:'transparent'},`sign:${s}`));
    // sign number near the inner vertex
    const inner_=diamond?C:poly.find(p=>p!==TL&&p!==TR&&p!==BL&&p!==BR&&(p===Q1||p===Q2||p===Q3||p===Q4));
    const nx=cx+(inner_[0]-cx)*(diamond?.8:.72),ny=cy+(inner_[1]-cy)*(diamond?.8:.72);
-   {const tg=el('text',{x:X(nx),y:X(ny),'text-anchor':'middle','dominant-baseline':'central','font-size':22,'font-weight':600,fill:S.elemColors?`var(--${ELEM[s%4]})`:'var(--muted)'});tg.append(el('tspan',{'font-family':'var(--mono)'},String(s+1)),el('tspan',{dx:4,'font-family':'var(--sym)','font-weight':300,'font-size':25},SIGN_G[s]+VS));tg.append(el('title',{},SIGN_N[s]));svg.append(tg)}
+   {const tg=el('text',{x:X(nx),y:X(ny),'text-anchor':'middle','dominant-baseline':'central','font-size':22,'font-weight':600,fill:S.elemColors?`var(--${ELEM[s%4]})`:'var(--muted)'});tg.append(el('tspan',{'font-family':'var(--mono)'},String(h+1)),el('tspan',{dx:4,'font-family':'var(--sym)','font-weight':300,'font-size':25},SIGN_G[s]+VS));tg.append(el('title',{},`House ${h+1} · ${SIGN_N[s]}`));svg.append(tg)}
    if(h===0&&!inner.noHouses)svg.append(el('text',{x:X(.5),y:X(.07),'text-anchor':'middle','dominant-baseline':'central','font-size':19,'font-weight':700,fill:'var(--accent)','font-family':'var(--mono)','letter-spacing':'.06em'},'AC'));
    const its=bhava?items.filter(i=>i.house===h+1):items.filter(i=>i.sign===s),wide=!diamond&&poly.filter(p=>p[1]===0||p[1]===1).length===2;
    let lx=cx,ly=cy,w,hh;if(diamond){w=L*.27;hh=L*.24;if(h===0)ly=cy-.03;if(h===6)ly=cy+.03;if(h===3)lx=cx-.03;if(h===9)lx=cx+.03}
@@ -1928,6 +1930,10 @@ function elemBalance(ch){const keys=[...Calc.BODY_KEYS,...(ch.noHouses?[]:['asc'
 function renderPositions(v){let h='';if(v.outer)h+=posTable(v.outer,v.outer.label||'Outer',v.inner);h+=posTable(v.inner,v.mode==='composite'?'Composite':v.mode==='draconic'?'Draconic':byId(activeId).name);
  const el2=n360(v.inner.pts.moon.lon-v.inner.pts.sun.lon),ph=['New','Waxing crescent','First quarter','Waxing gibbous','Full','Waning gibbous','Last quarter','Waning crescent'][Math.floor(((el2+22.5)%360)/45)];
  if(S.layers.stars){const hits=starHits(v.inner);h+=`<h3 class="sub">Fixed star conjunctions</h3>`+(hits.length?`<div class="tblwrap"><table><thead><tr><th>Star</th><th>Position</th><th>With</th><th>Orb</th><th>Mag.</th></tr></thead><tbody>${hits.map(x=>`<tr><td>${x.star[0]}</td><td>${lonHtml(x.lon)}</td><td>${PT[x.k][1]}</td><td class="mono">${x.d.toFixed(2)}°</td><td class="mono muted">${x.star[4].toFixed(1)}</td></tr>`).join('')}</tbody></table></div>`:'<p class="muted">No chart point is within 1° of a listed star (1.5° for the brightest).</p>')}
+ if(v.outer&&v.outer.pts){try{const ch=v.inner,o=v.outer,orbs=Object.fromEntries(Object.entries(S.orbs).map(([k,v2])=>[k,Math.max(1,v2*(mode==='transits'||mode==='progressed'?S.transitOrb:0.75))])),list=[];
+  aspKeys(o).forEach(r=>aspKeys(ch).forEach(c=>{const a=Calc.aspectBetween(o.pts[r],ch.pts[c],orbs,S.aspects);if(a)list.push({r,c,a})}));list.sort((x,y)=>x.a.orb-y.a.orb);
+  const nO=esc(o.label||'Outer'),nI=esc(v.mode==='composite'?'Composite':byId(activeId).name);
+  h+=`<h3 class="sub">Aspects between the charts</h3><p class="note" style="margin:0 0 6px">${nO} (left) to ${nI} (right). Click a row for its meaning.</p><div class="tblwrap"><table><thead><tr><th>Aspect</th><th>Orb</th><th></th></tr></thead><tbody>${list.map(x=>`<tr class="clk" data-obj="asp:o:${x.r}:${x.c}"><td>${glyphHtml(x.r)} ${PT[x.r][1]} <span class="${aspectCls(x.a)}">${x.a.g} ${x.a.n}</span> ${glyphHtml(x.c)} ${PT[x.c][1]}</td><td class="mono">${x.a.orb.toFixed(2)}°</td><td class="muted">${x.a.applying?'Applying':'Separating'}</td></tr>`).join('')||'<tr><td class="muted" colspan="3">No aspects within orb.</td></tr>'}</tbody></table></div>`}catch(e){console.warn(e)}}
  if(S.midpoints)h+=midTable(v.inner);
  h+=`<h3 class="sub">Sect &amp; Moon</h3><p>${v.inner.day?'Day chart (Sun above the horizon)':'Night chart (Sun below the horizon)'}. Moon phase: ${ph}, ${el2.toFixed(1)}° from the Sun.</p>`;return h}
 function renderAspects(v){const ch=v.inner,o=v.outer;const rows=aspKeys(ch);const cols=o?aspKeys(o):rows;
@@ -1982,7 +1988,8 @@ function renderAll(){const A=byId(activeId);if(view==='eph'){try{saveEphState();
  document.querySelectorAll('#tabs button').forEach(b=>b.setAttribute('aria-selected',b.dataset.tab===tab));
  if(infoObj&&!$('info').hidden){const h=infoFor(infoObj);if(h)$('infoBody').innerHTML=h;else hideInfo()}
  const P=$('pane');if(mode==='acg'){P.innerHTML=renderAcgPanel(v);acgPanelWire();mlRender(v);saveView();return}
- if(tab==='elem')tab='pos';P.innerHTML=tab==='pos'?(()=>{let e='';try{e=v.inner&&v.inner.pts.sun?`<div class="poselem">${elemBalance(v.inner)}</div>`:''}catch(_){}return e+renderPositions(v)})():tab==='asp'?renderAspects(v):tab==='zr'?renderZR():tab==='ved'?renderVedicData(v):renderInfo(v);
+ if(tab==='elem')tab='pos';P.innerHTML=tab==='pos'?(()=>{let e='';try{if(v.inner&&v.inner.pts.sun){if(v.outer&&v.outer.pts&&v.outer.pts.sun){const nI=v.mode==='composite'?'Composite':byId(activeId).name,nO=v.outer.label||'Outer',lab=(x,n)=>x.replace('<h3 class="sub">Elements</h3>',`<h3 class="sub">Elements · ${esc(n)}</h3>`).replace('<h3 class="sub">Modes</h3>',`<h3 class="sub">Modes · ${esc(n)}</h3>`);
+   e=`<div class="poselem">${lab(elemBalance(v.inner),nI)}</div><div class="poselem">${lab(elemBalance(v.outer),nO).replace(/data-obj="elem:/g,'data-obj="oelem:').replace(/data-obj="mode:/g,'data-obj="omode:')}</div>`}else e=`<div class="poselem">${elemBalance(v.inner)}</div>`}}catch(_){}return e+renderPositions(v)})():tab==='asp'?renderAspects(v):tab==='zr'?renderZR():tab==='ved'?renderVedicData(v):renderInfo(v);
  saveView();}
 
 /* ---------- interactions ---------- */
@@ -2804,7 +2811,7 @@ function infoNak(i){const inner=lastView.inner,w=360/27,ay=Calc.ayanamsa(inner.j
  return `<p class="kicker">Nakshatra</p><h4><span class="big" style="font:700 1.2rem var(--display)">${i+1}</span>${NAKS[i]}</h4><dl><dt>Lord</dt><dd>${NAK_LORD[i%9]}</dd><dt>Deity</dt><dd>${NAK_INFO[i][0]}</dd><dt>Symbol</dt><dd>${NAK_INFO[i][1]}</dd><dt>Sidereal span</dt><dd>${(i*w).toFixed(2)}°–${((i+1)*w).toFixed(2)}° (Lahiri)</dd><dt>On this wheel</dt><dd>${dms(a)} → ${dms(n360(a+w))}</dd><dt>Padas</dt><dd>four of 3°20′ each</dd></dl><p class="il">About</p><p class="interp">${NAK_INFO[i][2]}</p>${inn.length?`<p class="il">Points here</p><ul>${inn.map(k=>{const n=nakOf(inner.pts[k].lon,inner.jd,inner.ayanamsa||0);return `<li class="clk" data-obj="pt:i:${k}">${glyphHtml(k)} ${PT[k][1]} <span class="muted">pada ${n.pada}</span></li>`}).join('')}</ul>`:''}`}
 function infoFor(obj){const [t,...r]=obj.split(':');if(t==='tarot')return infoTarot(+r[0]);if(t==='zr')return infoZR(r[0]);if(!lastView)return null;if(t==='acgline')return infoAcgLine(r[0],r[1]);if(t==='paran')return infoParan(+r[0]);if(t==='ls')return infoLS(r[0]);if(t==='asl')return infoAsl(+r[0]);if(t==='acgpt')return infoAcgPt(+r[0],+r[1]);if(t==='reloc'){setReloc(+r[0],+r[1]);return null}
  if(t==='pt')return infoPoint(r[0],r[1]);if(t==='sign')return infoSign(+r[0]);if(t==='house')return infoHouse(+r[0]);if(t==='asp')return infoAspect(r[0],r[1],r[2]);
- if(t==='kar')return infoKar(+r[0]);if(t==='varga')return infoVarga(r[0]);if(t==='yoga')return infoYoga(r[0],+r[1]);if(t==='star')return infoStar(r.join(':'));if(t==='elem'||t==='mode')return infoElem(t,+r[0]);if(t==='velem'||t==='vmode'){const ch=lastView&&lastView.inner;if(!ch)return null;const D=+vedVarga.slice(1),vi=VARGAS.find(x=>x[0]===vedVarga);return infoElem(t.slice(1),+r[0],vargaChart(ch,D),vi[0]+' '+vi[1])}if(t==='mid')return infoMid(r[0],r[1]);if(t==='decan')return infoDecan(+r[0]);if(t==='term')return infoTerm(+r[0],+r[1]);if(t==='nak')return infoNak(+r[0]);return null}
+ if(t==='kar')return infoKar(+r[0]);if(t==='varga')return infoVarga(r[0]);if(t==='yoga')return infoYoga(r[0],+r[1]);if(t==='star')return infoStar(r.join(':'));if(t==='elem'||t==='mode')return infoElem(t,+r[0]);if((t==='oelem'||t==='omode')&&lastView&&lastView.outer)return infoElem(t.slice(1),+r[0],lastView.outer,lastView.outer.label||'Outer');if(t==='velem'||t==='vmode'){const ch=lastView&&lastView.inner;if(!ch)return null;const D=+vedVarga.slice(1),vi=VARGAS.find(x=>x[0]===vedVarga);return infoElem(t.slice(1),+r[0],vargaChart(ch,D),vi[0]+' '+vi[1])}if(t==='mid')return infoMid(r[0],r[1]);if(t==='decan')return infoDecan(+r[0]);if(t==='term')return infoTerm(+r[0],+r[1]);if(t==='nak')return infoNak(+r[0]);return null}
 let infoObj=null;
 
 // optically centre a glyph on the capital height of the title text beside it (font glyphs carry very different ink boxes)
