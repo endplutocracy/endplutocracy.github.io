@@ -461,11 +461,11 @@ html[data-theme="retro"] .emc{background:linear-gradient(to top,rgba(57,255,106,
 .reloc .rlpick .f{width:100%}
 @media (min-width:981px){.stage{--ww:max(420px,min(722px,calc(100vh - 240px)))}.wheelwrap{width:95%;max-width:var(--ww)}
  #stage>#acgWrap,#stage>#relocBar{max-width:min(1000px,max(560px,calc((100vh - 250px)*1.818)))}
- .tarot-main .spread{max-width:min(780px,max(420px,calc((100vh - 200px)*1.226)))}}
+ .tarot-main .spread{max-width:max(420px,min(100%,calc((100vh - 100px)*1.226)))}}
 @media (min-width:1400px){.main{grid-template-columns:minmax(0,1.4fr) minmax(520px,1fr)}
  .stage{--ww:max(420px,min(1180px,calc(100vh - 240px)))}
  .wheelwrap{max-width:var(--ww)}.stage>.chartbar,.stage>.dial,.stage>.reloc{max-width:max(760px,var(--ww))}
- .tarot-main .spread{max-width:max(420px,min(100%,calc((100vh - 200px)*1.226)))}
+ .tarot-main .spread{max-width:max(420px,min(100%,calc((100vh - 100px)*1.226)))}
  #stage>#acgWrap,#stage>#relocBar,#stage:has(>#acgWrap:not([hidden]))>.chartbar,#stage:has(>#acgWrap:not([hidden]))>.dial{max-width:max(560px,min(100%,calc((100vh - 250px)*1.818)))}}
 
 /* ---------- themes: Oled (black and white) and Paper (white and black) ---------- */
@@ -610,7 +610,7 @@ h1,h2,h3,h4,.readh{text-wrap:balance}
 .tarot-side textarea{resize:vertical;font:inherit}
 .tarot-main{padding:16px;min-width:0;display:grid;gap:16px;align-content:start}
 .spread{position:relative;width:100%;max-width:780px;margin-inline:auto;aspect-ratio:760/620;container-type:inline-size}
-.spread .empty{position:absolute;inset:0;display:grid;place-items:center;color:var(--muted);text-align:center;padding:20px}
+.spread .empty{position:absolute;inset:0;display:grid;place-items:center;align-content:center;gap:10px;color:var(--muted);text-align:center;padding:20px}
 .slot{position:absolute;width:11.58%;height:23.55%;border-radius:1.2cqw;outline:1px dashed rgba(255,255,255,.08)}
 .slot .sl.sltop{bottom:auto;top:-2.6cqw}
 .slot{z-index:0}.slot .sl{pointer-events:none}
@@ -790,6 +790,8 @@ html{touch-action:manipulation}
 .mapwrap.fs #mapLib:hover{background:color-mix(in srgb,var(--accent) 16%,var(--panel))}
 .mapwrap.fs #mapLib strong{max-width:100%;overflow:hidden;text-overflow:ellipsis}
 @media (min-width:981px){.mapwrap.fs .mapfstop{right:calc(84px + env(safe-area-inset-right,0px))}.mapwrap.fs #mapLib{max-width:260px}}
+.top .hlbl{display:none!important}
+.top>#themeWrap>.icobtn,.top>#openSettings,.top>#hdrDonate{width:34px;padding:0;justify-content:center}
 </style>
 <style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}img{max-width:100%}</style>
 </head>
@@ -1972,7 +1974,7 @@ function wlSync(){[['wlDeg',S.wDeg!==false],['wlMin',S.wMin!==false],['wlSign',!
   const vis=e=>e&&e.offsetParent&&e.getBoundingClientRect().width>0,bar=$('chartBar'),btns=[...document.querySelectorAll('#chartBar button,#chartBar .seg,#relocBar button')].filter(vis);
   if(!vis(bar)||!btns.length)return;const W=document.documentElement.clientWidth,R=Math.max(...btns.map(b=>b.getBoundingClientRect().right)),sky=bar.querySelector('button').getBoundingClientRect().left;
   const big=innerWidth>=1200,defPad=innerWidth<=600?12:16;
-  const apply=(pr,ml,lbl,ti)=>{top.style.paddingRight=pr+'px';top.classList.toggle('tight',!!ti);top.classList.toggle('novl',ti>=2);top.classList.toggle('xs',ti>=3);views.style.marginLeft=ml==null?'':ml+'px';top.classList.toggle('nolbl',!lbl)};
+  const apply=(pr,ml,lbl,ti)=>{top.style.paddingRight=pr+'px';top.classList.toggle('tight',!!ti);top.classList.toggle('novl',ti>=2);top.classList.toggle('xs',ti>=3);views.style.marginLeft=ml==null?'':ml+'px';top.classList.add('nolbl')};
   const thB=vis($('hdrDonate'))?$('hdrDonate'):$('themeWrap'),fits=()=>{const vr=views.getBoundingClientRect(),sr=setB.getBoundingClientRect(),tr=thB.getBoundingClientRect();const br2=brand?brand.getBoundingClientRect():vr;return Math.abs(br2.top+br2.height/2-(vr.top+vr.height/2))<14&&Math.abs(sr.top-vr.top)<12&&Math.abs(tr.top-vr.top)<12&&sr.left>=vr.right+8&&tr.right<=W+.5};
   const pr=Math.max(4,Math.round(W-R));let ml=null;if(big){views.style.marginLeft='0px';ml=Math.max(18,Math.round(sky-views.getBoundingClientRect().left))}
   const m2=big?18:null,m3=big?10:null;for(const [p,m,l,t] of [[pr,ml,true],[pr,ml,false],[pr,m2,true],[pr,m2,false],[pr,m3,false,1],[defPad,m2,true],[defPad,m2,false],[defPad,null,false],[defPad,null,false,1],[pr,null,false,2],[defPad,null,false,2],[pr,null,false,3],[defPad,null,false,3]]){apply(p,m,l&&big,t);if(fits())return}};
