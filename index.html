@@ -1908,7 +1908,7 @@ const esc=s=>s.replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&qu
 /* ---------- render all ---------- */
 let lastView=null;
 function fmtShift(m){const sg=m<0?'−':'+';let r=Math.abs(m);const U=[['yr',525960],['mo',43830],['d',1440],['h',60],['min',1]],out=[];for(const [u,v] of U){const n=Math.floor(r/v+1e-9);if(n){out.push(n+' '+u);r-=n*v}if(out.length===2)break}return sg+(out.join(' ')||'0 min')}
-function renderAll(){const A=byId(activeId);if(view==='eph'){try{saveEphState();renderEphForm()}catch(e){}}if(view==='zr'){zrSel=zrSel2=zrSel3=null;zrOpenSet.clear();try{renderZRPage()}catch(e){console.error(e)}}$('editActive').hidden=!!A.now;$('tLoc').hidden=!(mode==='transits'&&!A.now);document.querySelectorAll('#tLoc button').forEach(b=>{b.setAttribute('aria-pressed',String((S.transitLoc||'birth')===b.dataset.tl&&(b.dataset.tl==='birth'||!!A.cur)));b.title=b.dataset.tl==='current'?(A.cur?`Cast transits and show times for ${A.cur.place}`:'Add a current city to this chart first'):'Cast transits for the birthplace'});$('chartName').textContent=A.name+(otherId&&['synastry','composite'].includes(mode)?' + '+byId(otherId).name:'');
+function renderAll(){const A=byId(activeId);if(view==='eph'){try{saveEphState();renderEphForm()}catch(e){}}if(view==='zr'){zrSel=zrSel2=zrSel3=null;zrOpenSet.clear();try{renderZRPage()}catch(e){console.error(e)}}$('editActive').hidden=!!A.now||view==='acg';$('tLoc').hidden=!(mode==='transits'&&!A.now);document.querySelectorAll('#tLoc button').forEach(b=>{b.setAttribute('aria-pressed',String((S.transitLoc||'birth')===b.dataset.tl&&(b.dataset.tl==='birth'||!!A.cur)));b.title=b.dataset.tl==='current'?(A.cur?`Cast transits and show times for ${A.cur.place}`:'Add a current city to this chart first'):'Cast transits for the birthplace'});$('chartName').textContent=A.name+(otherId&&['synastry','composite'].includes(mode)?' + '+byId(otherId).name:'');
  $('modeLabel').textContent=(MODES.find(m=>m[0]===mode)||MODES[0])[1];$('modes').innerHTML=MODES.map(([k,l],i)=>`<button type="button" role="menuitemradio" data-mode="${k}" aria-checked="${mode===k}"><span>${l}</span><span class="kbd">${i+1}</span></button>`).join('');
  if(reloc&&reloc.id!==activeId)reloc=null;
  const v=compute();lastView=v;const isMap=mode==='acg';$('wheelWrap').hidden=isMap;$('acgWrap').hidden=!isMap;$('tabs').hidden=isMap;
@@ -2285,17 +2285,17 @@ function renderMap(v){const map=$('map'),ch=v.inner,A=byId(activeId),T=acgT();tr
  if(!A.now)h+=pin(A.lat,A.lon,'Birthplace: '+(A.place||''),'#ffffff','star');
  if(A.cur)h+=pin(A.cur.lat,A.cur.lon,'Current city: '+A.cur.place,'#b88ccf','dot');
  if(mapPin)h+=pin(mapPin.b,mapPin.l,mapPin.label||'Selected place','#ffd36b','dot');
- let cl='';const cvx0=mapVB.x-mapVB.w/2-40,cvx1=mapVB.x+mapVB.w*1.5+40,cvy0=mapVB.y-mapVB.h/2-40,cvy1=mapVB.y+mapVB.h*1.5+40;if(S.acgCaps!==false){const nat=mapVB.w<=2400,sta=mapVB.w<=1300;if(nat||sta){const f0=mapVB.w/88,f1=mapVB.w/104,rr=mapVB.w/520,boxes=[];MAP_CAPS.forEach(([n,b,l,t])=>{if(t===0&&!nat||t===1&&!sta)return;const x=lonX(l),y=latY(b),f=t?f1:f0;
+ let cl='';mbCaps=[];const cvx0=mapVB.x-mapVB.w/2-40,cvx1=mapVB.x+mapVB.w*1.5+40,cvy0=mapVB.y-mapVB.h/2-40,cvy1=mapVB.y+mapVB.h*1.5+40;if(S.acgCaps!==false){const nat=mapVB.w<=2400,sta=mapVB.w<=1300;if(nat||sta){const f0=mapVB.w/88,f1=mapVB.w/104,rr=mapVB.w/520,boxes=[];MAP_CAPS.forEach(([n,b,l,t])=>{if(t===0&&!nat||t===1&&!sta)return;const x=lonX(l),y=latY(b),f=t?f1:f0;
   const bx=[x-rr,y-f*.6,x+rr*1.8+n.length*f*.56,y+f*.6];if(boxes.some(q=>bx[0]<q[2]&&bx[2]>q[0]&&bx[1]<q[3]&&bx[3]>q[1]))return;boxes.push(bx);
-  if(y<cvy0||y>cvy1)return;for(const off of [-3600,0,3600]){const X=x+off;if(X<cvx0||X>cvx1)continue;cl+=`<g class="cap${t?' s':''}"><circle cx="${X}" cy="${y}" r="${(t?rr*.8:rr).toFixed(2)}"/><text x="${(X+rr*1.8).toFixed(1)}" y="${y.toFixed(1)}" font-size="${f.toFixed(1)}" dominant-baseline="central">${esc(n)}</text></g>`}})}}
+  if(y<cvy0||y>cvy1)return;for(const off of [-3600,0,3600]){const X=x+off;if(X<cvx0||X>cvx1)continue;mbCaps.push([X,y,t?rr*.8:rr,X+rr*1.8,f,t,n])}})}}
  const bkey=(det?'d':'n')+(document.documentElement.dataset.theme||'');
  if(map.dataset.bkey!==bkey||!$('mLines')){let st='';
   for(let l=-150;l<=180;l+=30)st+=`<path class="grat" d="M${lonX(l)} 0V1800"/>`;for(let b=-60;b<=60;b+=30)st+=`<path class="grat" d="M0 ${latY(b)}H3600"/>`;
   st+=`<path class="land" d="${MAP_LAND}"/>${det?`<path class="adm1" id="mAdm" d="${MAP_ADM1}"/>`:''}<path class="border" d="${MAP_BORDERS}"/>`;
   const fade=`<defs><linearGradient id="mfT" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1b2230"/><stop offset="1" stop-color="#1b2230" stop-opacity="0"/></linearGradient><linearGradient id="mfB" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#1b2230"/><stop offset="1" stop-color="#1b2230" stop-opacity="0"/></linearGradient></defs>`;
-  try{mbStyle=null}catch(e){}map.innerHTML=`${fade}<g id="mCaps"></g><g id="mLines"></g><rect x="-8000" y="0" width="20000" height="120" fill="url(#mfT)" pointer-events="none"/><rect x="-8000" y="1680" width="20000" height="120" fill="url(#mfB)" pointer-events="none"/>`;map.dataset.bkey=bkey}
+  try{mbStyle=null;mbCapSt=null}catch(e){}map.innerHTML=`${fade}<g id="mCaps"></g><g id="mLines"></g><rect x="-8000" y="0" width="20000" height="120" fill="url(#mfT)" pointer-events="none"/><rect x="-8000" y="1680" width="20000" height="120" fill="url(#mfB)" pointer-events="none"/>`;map.dataset.bkey=bkey}
  map.classList.toggle('far',mapVB.w>2400);
- $('mCaps').innerHTML=cl?`<g class="mcaps">${cl}</g>`:'';
+ $('mCaps').innerHTML='';mbQueue();
  try{mbQueue()}catch(e){}
  h=monoMap(h);$('mLines').innerHTML=`<g>${h}</g><g transform="translate(-3600 0)">${h}</g><g transform="translate(3600 0)">${h}</g>`}
 function acgControls(v){const A=byId(activeId),all=[...Calc.BODY_KEYS,'node',...(S.layers.asteroids?Calc.AST_KEYS:[])],on=S.acgShow||Calc.BODY_KEYS,T=acgT(),f=S.acgFocus||'sun',asel=S.acgAsp||['squ','tri'],lso=S.lsOrigin||'birth';
@@ -2346,7 +2346,7 @@ $('map').addEventListener('wheel',e=>{e.preventDefault();const p=svgPt(e),dy=e.d
 let drag=null;const mapPtrs=new Map();let mapPinch=null;
 ['acgWrap','wheelWrap'].forEach(id=>{const el=$(id);['gesturestart','gesturechange','gestureend'].forEach(t=>el.addEventListener(t,e=>e.preventDefault(),{passive:false}));el.addEventListener('touchmove',e=>{if(e.touches.length>1)e.preventDefault()},{passive:false})});
 /* base map drawn into a canvas (one bitmap per view) instead of live SVG paths */
-let mbPaths=null,mbStyle=null,mbRaf=0;
+let mbPaths=null,mbStyle=null,mbRaf=0,mbCaps=[],mbCapSt=null;
 function mbReadStyle(){const g=$('mapStyle'),cs=q=>getComputedStyle(g.querySelector(q)),px=v=>parseFloat(v)||0;
  const L=cs('.land'),B=cs('.border'),A=cs('.adm1'),G=cs('.grat'),R=cs('rect');
  return {bg:R.fill,land:[L.fill,L.stroke,px(L.strokeWidth)],border:[B.stroke,px(B.strokeWidth)],adm:[A.stroke,px(A.strokeWidth),(A.strokeDasharray||'').split(/[ ,]+/).map(parseFloat).filter(x=>x>0)],grat:[G.stroke,px(G.strokeWidth)]}}
@@ -2360,7 +2360,15 @@ function drawBase(){mbRaf=0;const cv=$('mapBase');if(!cv||mode!=='acg'||$('acgWr
   ctx.strokeStyle=st.grat[0];ctx.lineWidth=lw(st.grat[1]);ctx.beginPath();for(let l=-150;l<=180;l+=30){const x=lonX(l);ctx.moveTo(x,0);ctx.lineTo(x,1800)}for(let b=-60;b<=60;b+=30){const y=latY(b);ctx.moveTo(0,y);ctx.lineTo(3600,y)}ctx.stroke();
   ctx.fillStyle=st.land[0];ctx.fill(mbPaths.land);ctx.strokeStyle=st.land[1];ctx.lineWidth=lw(st.land[2]);ctx.lineJoin='round';ctx.stroke(mbPaths.land);
   if(det){ctx.save();ctx.strokeStyle=st.adm[0];ctx.lineWidth=lw(st.adm[1]);if(st.adm[2].length)ctx.setLineDash(st.adm[2].map(lw));ctx.stroke(mbPaths.adm);ctx.restore()}
-  ctx.strokeStyle=st.border[0];ctx.lineWidth=lw(st.border[1]);ctx.stroke(mbPaths.border)}}
+  ctx.strokeStyle=st.border[0];ctx.lineWidth=lw(st.border[1]);ctx.stroke(mbPaths.border)}
+ mbDrawCaps(ctx,k,ox,oy,vx,vy,dpr)}
+function mbReadCapStyle(){const m=$('map'),g=document.createElementNS('http://www.w3.org/2000/svg','g');g.setAttribute('visibility','hidden');g.innerHTML='<g class="cap"><circle r="1"/><text>x</text></g><g class="cap s"><circle r="1"/><text>x</text></g>';m.append(g);
+ const rd=sel=>{const c=getComputedStyle(g.querySelector(sel+' circle')),t=getComputedStyle(g.querySelector(sel+' text'));return {dot:c.fill,dotStroke:c.stroke,fill:t.fill,halo:t.stroke,font:`${t.fontWeight} {S}px ${t.fontFamily}`}};
+ const r={n:rd('.cap:not(.s)'),s:rd('.cap.s')};g.remove();return r}
+function mbDrawCaps(ctx,k,ox,oy,vx,vy,dpr){if(!mbCaps.length)return;if(!mbCapSt)mbCapSt=mbReadCapStyle();const halo=3*Math.min(1,mapVB.w/3600);
+ ctx.setTransform(k,0,0,k,ox-vx*k,oy-vy*k);ctx.lineJoin='round';ctx.textBaseline='middle';ctx.textAlign='left';
+ for(const [X,y,r,tx,f,t,n] of mbCaps){const st=t?mbCapSt.s:mbCapSt.n;ctx.beginPath();ctx.arc(X,y,r,0,Math.PI*2);ctx.fillStyle=st.dot;ctx.fill();if(st.dotStroke&&st.dotStroke!=='none'){ctx.strokeStyle=st.dotStroke;ctx.lineWidth=dpr/k;ctx.stroke()}
+  ctx.font=st.font.replace('{S}',f.toFixed(2));if(st.halo&&st.halo!=='none'){ctx.strokeStyle=st.halo;ctx.lineWidth=halo;ctx.strokeText(n,tx,y)}ctx.fillStyle=st.fill;ctx.fillText(n,tx,y)}}
 function mbQueue(){if(!mbRaf)mbRaf=requestAnimationFrame(drawBase)}
 new MutationObserver(mbQueue).observe($('map'),{attributes:true,attributeFilter:['viewBox']});
 new ResizeObserver(mbQueue).observe($('acgWrap'));
