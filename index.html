@@ -258,11 +258,11 @@ tr.clk:hover td,td.clk:hover{background:var(--raised)}
 .aspt tr.xev td:nth-child(3){color:var(--muted)}
 .zrbar{width:100%;height:auto;display:block}
 .zrnow{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
-.zrcard{background:var(--panel);border-radius:14px;padding:12px 14px;display:grid;gap:4px;box-shadow:0 0 0 1px rgba(255,255,255,.05)}
+.zrcard{background:var(--panel);border-radius:14px;padding:12px 14px;display:grid;gap:4px;box-shadow:none}
 .zrcard.peak{box-shadow:0 0 0 1.5px var(--accent)}
 .zrc-sign{font:600 1.05rem var(--display);display:flex;align-items:center;gap:6px}
 .zrc-sign .zs{font-size:1.5rem;font-weight:300}
-.zrsec{background:var(--panel);border-radius:14px;padding:12px 14px;box-shadow:0 0 0 1px rgba(255,255,255,.05)}
+.zrsec{background:var(--panel);border-radius:14px;padding:12px 14px;box-shadow:none}
 .zrsec .sub{margin-top:0}
 .zrrow.now>.zrow{background:color-mix(in srgb,var(--accent) 14%,transparent)}
 .zrrow .zrow{cursor:pointer;color:var(--fg)}.zrrow .zrow:disabled{cursor:default;opacity:1}
@@ -838,6 +838,8 @@ html[data-theme="orrery"] input[type=checkbox]:focus-visible{outline:2px solid v
 .efield>span.efh{display:flex;align-items:center;justify-content:space-between;gap:8px}
 #ephTabs button[aria-pressed="false"],#amSeg button[aria-pressed="false"]{background:var(--raised)}#ephTabs,#amSeg{gap:6px;background:none;border:0;padding:0}#ephTabs button,#amSeg button{border-radius:999px!important;border:0!important}
 html[data-theme="orrery"] .jog .ticks{background-image:repeating-linear-gradient(90deg,var(--bg) 0 1px,transparent 1px 12px),repeating-linear-gradient(90deg,var(--bg) 0 1px,transparent 1px 60px)}
+html[data-theme] .iconbtn.lockbtn[aria-pressed="true"]{background:var(--lilac)!important;color:var(--accent-ink)!important;border-color:transparent!important}
+html[data-theme] .iconbtn.lockbtn[aria-pressed="true"]:hover{filter:brightness(1.08)}
 </style>
 <style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}img{max-width:100%}</style>
 </head>
@@ -3206,7 +3208,7 @@ function zrTicks(t0,t1){const out=[],d=(t1-t0)/86400000;
 function zrBar(periods,t0,t1,now,birth,selIdx,attr,ticks,prefix){const W=zrW,H=58,x=ms=>(ms-t0)/(t1-t0)*W;let g='';
  periods.forEach((p,i)=>{const a=Math.max(0,x(p.start)),b=Math.min(W,x(p.end));if(b<=a)return;const w=b-a,col=`var(--${ELEM[p.sign%4]})`;
   g+=`<g data-${attr}="${i}" data-obj="zr:${prefix||'L'}.${i}" style="cursor:pointer"><rect x="${a.toFixed(2)}" y="8" width="${Math.max(.5,w-1).toFixed(2)}" height="34" rx="3" fill="${col}" fill-opacity="${i===selIdx?.55:.22}" stroke="${i===selIdx?col:'none'}" stroke-width="1.5"/>${p.peak==='major'?`<rect x="${a.toFixed(2)}" y="3" width="${Math.max(.5,w-1).toFixed(2)}" height="4" rx="2" fill="var(--accent)"/>`:p.peak==='minor'?`<rect x="${a.toFixed(2)}" y="4" width="${Math.max(.5,w-1).toFixed(2)}" height="2" rx="1" fill="var(--accent)" opacity=".6"/>`:''}${p.lb?`<line x1="${a.toFixed(2)}" x2="${a.toFixed(2)}" y1="2" y2="46" stroke="#ff8f9a" stroke-width="2" stroke-dasharray="3 2"/>`:''}${w>22?`<text x="${(a+w/2).toFixed(2)}" y="26" text-anchor="middle" dominant-baseline="central" font-size="${w>40?19:14}" font-weight="300" fill="var(--fg)" font-family="var(--sym)">${SIGN_G[p.sign]+VS}</text>`:''}<title>${SIGN_N[p.sign]}: ${fmtDate(p.start)} to ${fmtDate(p.end)}${p.peak==='major'?' (peak)':''}${p.lb?' (loosing of the bond)':''}</title></g>`});
- (ticks||[]).forEach(([ms,l])=>{const xx=x(ms);if(xx<0||xx>W)return;g+=`<line x1="${xx}" x2="${xx}" y1="42" y2="47" stroke="var(--muted)"/><text x="${xx}" y="54" text-anchor="${xx<12?'start':xx>W-12?'end':'middle'}" font-size="9.5" fill="var(--muted)" font-family="var(--mono)">${l}</text>`});
+ (ticks||[]).forEach(([ms,l])=>{const xx=x(ms);if(xx<0||xx>W)return;g+=`<text x="${xx}" y="54" text-anchor="${xx<12?'start':xx>W-12?'end':'middle'}" font-size="9.5" fill="var(--muted)" font-family="var(--mono)">${l}</text>`});
  if(now>=t0&&now<=t1){const xx=x(now);g+=`<line x1="${xx}" x2="${xx}" y1="0" y2="48" stroke="#fff" stroke-width="1.5"/><circle cx="${xx}" cy="2" r="3" fill="#fff"/>`}
  return `<svg class="zrbar" viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" role="img" aria-label="Timeline">${g}</svg>`}
 function zrRows(list,fSign,yd,birth,now,path){return list.map((p,i)=>{const key=path+'.'+i,cur=now>=p.start&&now<p.end,open=zrOpenSet.has(key),kids=p.level<4;
