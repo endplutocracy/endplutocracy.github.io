@@ -39,8 +39,8 @@
 /* Layout: app shell — top bar, wheel + time dial on the left, tabbed tables on the right; chart library slides in as a drawer */
 /* Palette and type from the earlier Destinned site: charcoal, lilac, plum top bar, starfield; dark only by design */
 :root{
-  --bg:#1d1e1e; --bg-deep:#141414; --panel:#181919; --raised:#1f2021; --line:#3c3e3f; --fg:#cdcecd; --muted:#a5a7a8; --accent:#bf91e4; --accent-dim:#6c3e8f; --accent-ink:#252527; --lilac:#d4b8e3;
-  --bar:#5e367f; --bar-dark:#4f2e6e; --bar-gradient:linear-gradient(160deg,#4f2e6e,#1d1e1e);
+  --bg:#202121; --bg-deep:#161616; --panel:#1a1b1b; --raised:#212324; --line:#151616; --fg:#cdcecd; --muted:#a5a7a8; --accent:#bf91e4; --accent-dim:#6c3e8f; --accent-ink:#28282a; --lilac:#d4b8e3;
+  --bar:#5e367f; --bar-dark:#4f2e6e; --bar-gradient:linear-gradient(160deg,#4f2e6e,#202121);
   --fire:#f796be; --earth:#9fd393; --air:#8cb3f6; --water:#b28df6; --hard:#ffb4b4; --soft:#9fd8c4; --minor:#d4b8e3; --asp-hard:#ff5c72; --asp-soft:#3fe0b0; --asp-tri:#5ea8ff; --asp-minor:#c99bff; --asp-conj:#ffd36b; --w-zodiac:#241e2e; --w-terms:#2f243e; --w-decans:#292235; --w-naks:#312642; --w-inner:#1b1921; --w-house:#211b29; --w-line:#3a3049; --w-grey:var(--panel); --w-p1:#2f243e; --w-p2:#241d2e; --asp-field:var(--w-grey); --outer-band:#201927; --outer-line:#584275; --outer-fg:#e5cff6; --outer-tick:#cb9deb;
   --display:"Poppins",system-ui,-apple-system,"Segoe UI",sans-serif; --ui:system-ui,-apple-system,"Segoe UI",sans-serif; --mono:"Manrope","Avenir Next","Segoe UI",system-ui,sans-serif;
   --sym:"OrreryGlyph","Segoe UI Symbol","Apple Symbols","Noto Sans Symbols","Noto Sans Symbols 2","DejaVu Sans",sans-serif;
@@ -83,7 +83,7 @@ select.inline{background:var(--raised);border:1px solid var(--line);border-radiu
 
 /* main */
 .main{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:0;min-height:calc(100% - 60px)}
-.stage{background:rgba(24,25,26,.35);padding:16px;display:grid;gap:12px;align-content:start;border-right:1px solid var(--line);min-width:0}
+.stage{background:rgba(26,27,28,.35);padding:16px;display:grid;gap:12px;align-content:start;border-right:1px solid var(--line);min-width:0}
 .wheelwrap{width:100%;max-width:760px;margin-inline:auto;aspect-ratio:1;position:relative}
 #wheel{width:100%;height:100%;display:block;touch-action:pan-y}
 #wheel.zoomed{touch-action:none;cursor:grab}#wheel.panning{cursor:grabbing}
@@ -195,7 +195,7 @@ label.l{display:grid;gap:5px;font-size:.8rem;color:var(--muted)}
 .row3t{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
 .linkbtn{background:none;border:0;padding:0;color:var(--accent);text-decoration:underline;text-underline-offset:3px;font-size:.82rem;justify-self:start}
 .eph{display:grid;grid-template-columns:minmax(280px,360px) minmax(0,1fr);min-height:calc(100% - 60px)}
-.eph-side{padding:16px;border-right:1px solid var(--line);display:grid;gap:14px;align-content:start;background:rgba(24,25,26,.35);min-width:0}
+.eph-side{padding:16px;border-right:1px solid var(--line);display:grid;gap:14px;align-content:start;background:rgba(26,27,28,.35);min-width:0}
 .eph-main{padding:16px;min-width:0;display:grid;gap:12px;align-content:start}
 .eph-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap}
 .eph-head h2{font:700 1.1rem var(--display);text-transform:uppercase;letter-spacing:.06em;margin:0}
@@ -472,12 +472,12 @@ html[data-theme="retro"] .emc{background:linear-gradient(to top,rgba(57,255,106,
 html[data-theme="oled"],
 
 /* ---------- themes: Oled (black and white) and Paper (white and black) ---------- */
-html[data-theme="retro"]{--bg:#000;--bg-deep:#000;--panel:#000;--raised:#141414;--line:#2b2b2b;--fg:#f0f0f0;--muted:#9b9b9b;--accent:#fff;--accent-dim:#5c5c5c;--accent-ink:#000;--lilac:#fff;
+html[data-theme="retro"]{--bg:#000;--bg-deep:#000;--panel:#000;--raised:#161616;--line:#2b2b2b;--fg:#f0f0f0;--muted:#9b9b9b;--accent:#fff;--accent-dim:#5c5c5c;--accent-ink:#000;--lilac:#fff;
  --bar:#000;--bar-dark:#000;--bar-gradient:linear-gradient(#000,#000);--fire:#f0f0f0;--earth:#f0f0f0;--air:#f0f0f0;--water:#f0f0f0;--hard:#fff;--soft:#bdbdbd;--minor:#9b9b9b;
  --asp-hard:#ffffff;--asp-soft:#a8a8a8;--asp-tri:#a8a8a8;--asp-minor:#6e6e6e;--asp-conj:#fff;--w-line:#4a4a4a;--w-grey:#000;--w-p1:#0f0f0f;--w-p2:#1b1b1b;--asp-field:#000;--outer-band:#111;--outer-line:#888;--outer-fg:#fff;--outer-tick:#d6d6d6;color-scheme:dark}
-html[data-theme="paper"]{--bg:#fff;--bg-deep:#fff;--panel:#fff;--raised:#f1f1f1;--line:#d9d9d9;--fg:#111;--muted:#5c5c5c;--accent:#000;--accent-dim:#a3a3a3;--accent-ink:#fff;--lilac:#000;
- --bar:#fff;--bar-dark:#fff;--bar-gradient:linear-gradient(#fff,#fff);--fire:#111;--earth:#111;--air:#111;--water:#111;--hard:#000;--soft:#555;--minor:#777;
- --asp-hard:#000;--asp-soft:#6b6b6b;--asp-tri:#6b6b6b;--asp-minor:#a0a0a0;--asp-conj:#000;--w-line:#a9a9a9;--w-grey:#fff;--w-p1:#f3f3f3;--w-p2:#e7e7e7;--asp-field:#fff;--outer-band:#efefef;--outer-line:#777;--outer-fg:#000;--outer-tick:#333;color-scheme:light}
+html[data-theme="paper"]{--bg:#fbf7ee;--bg-deep:#fbf7ee;--panel:#fbf7ee;--raised:#f1ece0;--line:#ddd5c4;--fg:#111;--muted:#5c5c5c;--accent:#000;--accent-dim:#a3a3a3;--accent-ink:#fbf7ee;--lilac:#000;
+ --bar:#fbf7ee;--bar-dark:#fbf7ee;--bar-gradient:linear-gradient(#fbf7ee,#fbf7ee);--fire:#111;--earth:#111;--air:#111;--water:#111;--hard:#000;--soft:#555;--minor:#777;
+ --asp-hard:#000;--asp-soft:#6b6b6b;--asp-tri:#6b6b6b;--asp-minor:#a0a0a0;--asp-conj:#000;--w-line:#a9a9a9;--w-grey:#fbf7ee;--w-p1:#f3eee2;--w-p2:#e8e1d2;--asp-field:#fbf7ee;--outer-band:#efe9dc;--outer-line:#777;--outer-fg:#000;--outer-tick:#333;color-scheme:light}
 html[data-theme="oled"] body,html[data-theme="paper"] body,
 html[data-theme="retro"] body,html[data-theme="pastel"] body{background-image:none}html[data-theme="retro"] .starfield,html[data-theme="pastel"] .starfield{display:none}
 html[data-theme="oled"] .top,
@@ -485,9 +485,9 @@ html[data-theme="retro"] .top{color:#f0f0f0;box-shadow:0 1px 0 #262626}
 html[data-theme="paper"] .top,
 html[data-theme="pastel"] .top{color:#111;box-shadow:0 1px 0 #dcdcdc}
 html[data-theme="oled"] .top .chip,html[data-theme="oled"] .top .iconbtn,html[data-theme="oled"] .top .seg,
-html[data-theme="retro"] .top .chip,html[data-theme="retro"] .top .iconbtn,html[data-theme="retro"] .top .seg{background:#141414}
+html[data-theme="retro"] .top .chip,html[data-theme="retro"] .top .iconbtn,html[data-theme="retro"] .top .seg{background:#161616}
 html[data-theme="paper"] .top .chip,html[data-theme="paper"] .top .iconbtn,html[data-theme="paper"] .top .seg,
-html[data-theme="pastel"] .top .chip,html[data-theme="pastel"] .top .iconbtn,html[data-theme="pastel"] .top .seg{background:#f1f1f1}
+html[data-theme="pastel"] .top .chip,html[data-theme="pastel"] .top .iconbtn,html[data-theme="pastel"] .top .seg{background:#f1ece0}
 html[data-theme="paper"] .top .seg button,html[data-theme="paper"] .top .note,html[data-theme="paper"] .icobtn,html[data-theme="paper"] .brand,
 html[data-theme="pastel"] .top .seg button,html[data-theme="pastel"] .top .note,html[data-theme="pastel"] .icobtn,html[data-theme="pastel"] .brand{color:#111}
 html[data-theme="oled"] .brand,
@@ -507,11 +507,11 @@ html[data-theme="oled"] :is(#map,#mapBase,#mapStyle) rect[fill="#1b2230"],html[d
 html[data-theme="oled"] #map stop{stop-color:#000}
 html[data-theme="oled"] :is(#map,#mapBase,#mapStyle) .land{fill:#1d1d1d;stroke:#6a6a6a}html[data-theme="oled"] :is(#map,#mapBase,#mapStyle) .border{stroke:#555}html[data-theme="oled"] :is(#map,#mapBase,#mapStyle) .adm1{stroke:#444}
 html[data-theme="oled"] #map text{stroke:#000}
-html[data-theme="paper"] :is(#map,#mapBase,#mapStyle) rect[fill="#1b2230"],html[data-theme="paper"] .mapwrap{fill:#fff;background:#fff}
-html[data-theme="paper"] #map stop{stop-color:#fff}
-html[data-theme="paper"] :is(#map,#mapBase,#mapStyle) .land{fill:#e9e9e9;stroke:#9a9a9a}html[data-theme="paper"] :is(#map,#mapBase,#mapStyle) .border{stroke:#9a9a9a}html[data-theme="paper"] :is(#map,#mapBase,#mapStyle) .adm1{stroke:#b5b5b5}
+html[data-theme="paper"] :is(#map,#mapBase,#mapStyle) rect[fill="#1b2230"],html[data-theme="paper"] .mapwrap{fill:#fbf7ee;background:#fbf7ee}
+html[data-theme="paper"] #map stop{stop-color:#fbf7ee}
+html[data-theme="paper"] :is(#map,#mapBase,#mapStyle) .land{fill:#eae3d4;stroke:#9a9a9a}html[data-theme="paper"] :is(#map,#mapBase,#mapStyle) .border{stroke:#9a9a9a}html[data-theme="paper"] :is(#map,#mapBase,#mapStyle) .adm1{stroke:#b5b5b5}
 html[data-theme="paper"] :is(#map,#mapBase,#mapStyle) .grat{stroke:rgba(0,0,0,.07)}
-html[data-theme="paper"] #map text{stroke:#fff}html[data-theme="paper"] #map .cap text,html[data-theme="paper"] #map .cap circle{fill:#222}
+html[data-theme="paper"] #map text{stroke:#fbf7ee}html[data-theme="paper"] #map .cap text,html[data-theme="paper"] #map .cap circle{fill:#222}
 html[data-theme="paper"] .mapwrap,html[data-theme="oled"] .mapwrap,html[data-theme="retro"] .mapwrap,
 html[data-theme="pastel"] .mapwrap{border-color:var(--line)}
 html[data-theme="paper"] .info,html[data-theme="paper"] .menu,html[data-theme="paper"] .layers,html[data-theme="paper"] .modal,
@@ -528,7 +528,7 @@ html[data-theme="retro"] *{scrollbar-color:#555 transparent}html[data-theme="pap
 .thememenu button{justify-content:flex-start;gap:12px}.thememenu .tml{flex:none}.tmi{display:inline-grid;place-items:center;width:20px;height:20px;color:var(--lilac)}.tmi svg{width:20px;height:20px;display:block}.thememenu button[aria-checked="true"] .tmi{color:inherit}.tchk{color:inherit;font-weight:700}
 .thememenu b{display:block;font:600 .85rem var(--display)}.thememenu small{display:block;color:var(--muted);font-size:.74rem;font-weight:400}
 .tsw{width:22px;height:22px;border-radius:50%;flex:none;box-shadow:0 0 0 1px rgba(128,128,128,.5)}
-.tsw-orrery{background:linear-gradient(135deg,#5e367f 50%,#1d1e1e 50%)}.tsw-oled{background:linear-gradient(135deg,#000 50%,#fff 50%)}.tsw-paper{background:linear-gradient(135deg,#fff 50%,#000 50%)}
+.tsw-orrery{background:linear-gradient(135deg,#5e367f 50%,#202121 50%)}.tsw-oled{background:linear-gradient(135deg,#000 50%,#fff 50%)}.tsw-paper{background:linear-gradient(135deg,#fff 50%,#000 50%)}
 .rico{display:none;width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
 #reset .rlbl{display:none}#reset .rico{display:block}#reset{display:inline-grid;place-items:center;min-width:40px}
 @media (max-width:600px){#openSettings{margin-left:auto}#themeWrap{margin-left:0}.top>#views{margin-left:auto!important}.top>#openSettings{margin-left:16px!important}.top.xs>#openSettings{margin-left:10px!important}}
@@ -605,7 +605,7 @@ h1,h2,h3,h4,.readh{text-wrap:balance}
 .setall{display:flex;gap:6px;margin:-2px 0 10px}
 .setall .pillbtn{font-size:.68rem;padding:3px 10px}
 .tarot{display:grid;grid-template-columns:minmax(260px,330px) minmax(0,1fr);min-height:calc(100% - 60px)}
-.tarot-side{padding:16px;border-right:1px solid var(--line);display:grid;gap:12px;align-content:start;background:rgba(24,25,26,.35);min-width:0}
+.tarot-side{padding:16px;border-right:1px solid var(--line);display:grid;gap:12px;align-content:start;background:rgba(26,27,28,.35);min-width:0}
 .tarot-side .tt{font:700 1.1rem var(--display);text-transform:uppercase;letter-spacing:.06em;margin:0}
 .tarot-side textarea{resize:vertical;font:inherit}
 .tarot-main{padding:16px;min-width:0;display:grid;gap:16px;align-content:start}
@@ -616,7 +616,7 @@ h1,h2,h3,h4,.readh{text-wrap:balance}
 .slot{z-index:0}.slot .sl{pointer-events:none}
 .tcard{z-index:1}
 .slot .sl.slleft{left:auto;right:112%;bottom:auto;top:44%;text-align:right}
-.tcard .tbadge{position:absolute;z-index:3;top:-1cqw;left:-1cqw;width:2.6cqw;height:2.6cqw;border-radius:50%;background:#bf91e4;color:#252527;font:700 1.3cqw/2.6cqw var(--display);text-align:center;box-shadow:0 .3cqw .8cqw rgba(0,0,0,.5)}
+.tcard .tbadge{position:absolute;z-index:3;top:-1cqw;left:-1cqw;width:2.6cqw;height:2.6cqw;border-radius:50%;background:#bf91e4;color:#28282a;font:700 1.3cqw/2.6cqw var(--display);text-align:center;box-shadow:0 .3cqw .8cqw rgba(0,0,0,.5)}
 .tcard.cross .tbadge{transform:rotate(-90deg)}
 .slot .sl{position:absolute;left:0;right:0;bottom:-2.4cqw;text-align:center;font:600 1.25cqw var(--display);letter-spacing:.06em;text-transform:uppercase;color:var(--muted);white-space:nowrap}
 .tcard{position:absolute;width:11.58%;height:23.55%;perspective:900px;cursor:pointer;background:none;border:0;padding:0}
@@ -624,7 +624,7 @@ h1,h2,h3,h4,.readh{text-wrap:balance}
 .tcard .tin{position:absolute;inset:0;transition:transform .6s cubic-bezier(.2,.7,.2,1);transform-style:preserve-3d}
 .tcard.up .tin{transform:rotateY(180deg)}
 .tback,.tfront{position:absolute;inset:0;border-radius:1.2cqw;backface-visibility:hidden;-webkit-backface-visibility:hidden;overflow:hidden;box-shadow:0 1cqw 2.4cqw -1cqw rgba(0,0,0,.7)}
-.tback{background:linear-gradient(160deg,#4f2e6e,#252527);border:.3cqw solid #bf91e4;display:grid;place-items:center}
+.tback{background:linear-gradient(160deg,#4f2e6e,#28282a);border:.3cqw solid #bf91e4;display:grid;place-items:center}
 .tcard.cross .tback{background:linear-gradient(160deg,#6c3e8f,#4a2f5c)}
 .tback svg{width:50%;color:#d4b8e3;opacity:.9}
 .tback::after{content:"";position:absolute;inset:.8cqw;border:.15cqw solid rgba(212,184,227,.35);border-radius:.7cqw}
@@ -758,8 +758,8 @@ html[data-theme="paper"]{--wwhite:#111}html[data-theme="pastel"]{--wwhite:#6b254
 .tag{display:inline-block;font-size:.68rem;padding:1px 6px;border-radius:999px;border:1px solid var(--lilac);color:var(--lilac);vertical-align:1px;margin-left:4px}
 .vkar td{white-space:normal;vertical-align:middle}.vkar td:last-child{min-width:12em}
 .poselem{margin-bottom:18px;padding-bottom:6px;border-bottom:1px solid var(--line)}.poselem>h3.sub:first-child{margin-top:0}
-:root:not([data-theme="oled"]):not([data-theme="paper"]):not([data-theme="retro"]):not([data-theme="pastel"]) .emc{background:linear-gradient(to top,color-mix(in srgb,var(--c) 40%,#181919) var(--p),var(--w-p1) var(--p))}
-:root:not([data-theme="oled"]):not([data-theme="paper"]):not([data-theme="retro"]):not([data-theme="pastel"]) .emc span{color:#fff;text-shadow:0 0 3px rgba(0,0,0,.75),0 0 1px rgba(0,0,0,.9)}
+:root:not([data-theme="oled"]):not([data-theme="paper"]):not([data-theme="retro"]):not([data-theme="pastel"]) .emc{background:linear-gradient(to top,color-mix(in srgb,var(--c) 40%,#1a1b1b) var(--p),var(--w-p1) var(--p))}
+:root:not([data-theme="oled"]):not([data-theme="paper"]):not([data-theme="retro"]):not([data-theme="pastel"]) .emc span{color:#fbf7ee;text-shadow:0 0 3px rgba(0,0,0,.75),0 0 1px rgba(0,0,0,.9)}
 .vkar td.vk-n{white-space:nowrap}.vkar td.vk-g{font-size:1.3rem;line-height:1;text-align:center;white-space:nowrap}.vkar td.vk-g .plg{width:1.15em;height:1.15em}.vkar td.vk-d{white-space:nowrap}
 .vkar td.vk-s{font-size:.82rem;white-space:normal;text-wrap:pretty;min-width:9em}.vkar td:last-child{min-width:9em!important}
 .vargaseg{display:grid!important;grid-template-columns:repeat(9,minmax(0,1fr));gap:4px}.vargaseg button{padding:4px 0!important;text-align:center;min-width:0}
@@ -806,7 +806,7 @@ html{touch-action:manipulation}
 @media (max-width:600px){.mapwrap.fs .mapfstop{flex-wrap:wrap}.mapwrap.fs .mapfstop .mapsearch{flex:1 1 100%;max-width:none;order:3}}
 .stage>.chartbar,.stage.fs>.chartbar{z-index:6}
 /* the strip behind the phone status bar uses the theme's header colour */
-:root{--top-strip:#4f2e6e}html[data-theme="oled"]{--top-strip:#000}html[data-theme="paper"]{--top-strip:#fff}html[data-theme="retro"]{--top-strip:#020a04}html[data-theme="pastel"]{--top-strip:#f9c9d4}
+:root{--top-strip:#4f2e6e}html[data-theme="oled"]{--top-strip:#000}html[data-theme="paper"]{--top-strip:#fbf7ee}html[data-theme="retro"]{--top-strip:#020a04}html[data-theme="pastel"]{--top-strip:#f9c9d4}
 body::before{content:'';position:fixed;top:0;left:0;right:0;height:env(safe-area-inset-top,0px);background:var(--top-strip);z-index:60;pointer-events:none}
 .bztab{width:100%;table-layout:fixed}.bztab th{text-align:center;cursor:pointer}.bzc{text-align:center;vertical-align:top;padding:8px 4px!important}
 .bzc>div{margin:2px 0}.bzgod{font:600 .7rem var(--display);letter-spacing:.06em;text-transform:uppercase;color:var(--lilac);cursor:pointer;min-height:1.2em}
@@ -820,6 +820,14 @@ body::before{content:'';position:fixed;top:0;left:0;right:0;height:env(safe-area
 .bzl.cur{box-shadow:inset 0 0 0 2px var(--lilac)}.bzl:hover{filter:brightness(1.15)}
 .bzc.empty{vertical-align:middle}
 .bzgod{overflow-wrap:anywhere;line-height:1.2}@media (max-width:520px){.bzgod{font-size:.56rem;letter-spacing:.02em}.bzch{font-size:1.6rem}.bzbig small,.bzmeta{font-size:.64rem}.bzc{padding:6px 1px!important}}
+.sidehead,.tabs{border-bottom:0!important}
+.starfield{display:none!important}
+html:not([data-theme="paper"]):not([data-theme="pastel"]):not([data-theme="retro"]) .tabs button{color:#fff}
+@media (max-width:860px){.tabs>button:first-child{margin-left:auto}.tabs>button:last-child{margin-right:auto}}
+@media (max-width:480px){.tabs{padding-left:8px;padding-right:8px;gap:0}.tabs button{padding:8px 6px;font-size:.68rem;letter-spacing:.03em}}
+@media (max-width:360px){.tabs button{padding:8px 4px;font-size:.62rem;letter-spacing:.02em}}
+html[data-theme="orrery"] :is(.chips,.acgleg) label:has(input:checked){background:color-mix(in srgb,var(--accent) 20%,#0e0e0f)}
+html[data-theme="orrery"]{--cusp:#48424f;--w-grey:#1d1e1f;--w-pin:#382b4b;--ved-kendra:#3d2f51;--ved-dus:#211b29;--ved-line:#2b2139}
 </style>
 <style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}img{max-width:100%}</style>
 </head>
@@ -913,7 +921,7 @@ body::before{content:'';position:fixed;top:0;left:0;right:0;height:env(safe-area
 </section>
 <div class="main" id="chartView">
   <div class="stage" id="stage">
-    <div class="chartbar" id="chartBar"><button class="chip" id="openLib" type="button" aria-label="Open chart library"><svg class="hamb" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg><strong id="chartName">Sky now</strong></button><div class="place acgsearch" id="acgSearch" hidden><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5L20 20"/></svg><input class="f" id="mapQ2" placeholder="Search for a city" autocomplete="off" aria-label="Search for a city"><ul class="sugg" id="mapSugg2" role="listbox" hidden></ul></div><span class="acghint" id="acgHint" hidden>Searching for a city directly is much faster</span><button class="iconbtn icobtn" id="editActive" type="button" title="Edit this chart" aria-label="Edit this chart" hidden><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20h4L19 9l-4-4L4 16v4z"/><path d="M14 6l4 4"/></svg></button><div class="menuwrap" id="modesWrap"><button class="chip" id="modeBtn" type="button" aria-haspopup="menu" aria-expanded="false" aria-controls="modes"><span class="note" style="color:inherit;opacity:.75">Chart type</span><strong id="modeLabel">Natal</strong><span aria-hidden="true">▾</span></button><div class="menu" id="modes" role="menu" aria-label="Chart type" hidden></div></div><div class="seg cstyle" id="styleSeg" role="group" aria-label="Chart style"><button type="button" data-cs="western" title="Western wheel" aria-label="Western wheel"><svg class="vico" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4.5"/><path d="M3 12h4.5M16.5 12H21"/></svg><span class="cslbl">Western</span></button><button type="button" data-cs="north" title="North Indian chart" aria-label="North Indian chart"><svg class="vico" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="1.5"/><path d="M3 3l18 18M21 3L3 21M12 3l9 9-9 9-9-9z"/></svg><span class="cslbl">North Indian</span></button><button type="button" data-cs="south" title="South Indian chart" aria-label="South Indian chart"><svg class="vico" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="1.5"/><path d="M3 7.5h18M3 16.5h18M7.5 3v18M16.5 3v18"/><rect x="7.5" y="7.5" width="9" height="9" fill="currentColor" fill-opacity=".18" stroke="none"/></svg><span class="cslbl">South Indian</span></button></div><span class="grow"></span><button class="iconbtn icobtn" id="openLayers" type="button" aria-expanded="false" aria-controls="layersMenu" aria-label="Layers" title="Layers"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5.5"/><circle cx="12" cy="12" r="5.5"/><circle cx="15.5" cy="15.5" r="5.5"/></svg></button></div>
+    <div class="chartbar" id="chartBar"><button class="chip" id="openLib" type="button" aria-label="Open chart library"><svg class="hamb" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg><strong id="chartName">Sky now</strong></button><div class="place acgsearch" id="acgSearch" hidden><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5L20 20"/></svg><input class="f" id="mapQ2" placeholder="Search for a city" autocomplete="off" aria-label="Search for a city"><ul class="sugg" id="mapSugg2" role="listbox" hidden></ul></div><span class="acghint" id="acgHint" hidden>Use the full screen map for the best experience</span><button class="iconbtn icobtn" id="editActive" type="button" title="Edit this chart" aria-label="Edit this chart" hidden><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20h4L19 9l-4-4L4 16v4z"/><path d="M14 6l4 4"/></svg></button><div class="menuwrap" id="modesWrap"><button class="chip" id="modeBtn" type="button" aria-haspopup="menu" aria-expanded="false" aria-controls="modes"><span class="note" style="color:inherit;opacity:.75">Chart type</span><strong id="modeLabel">Natal</strong><span aria-hidden="true">▾</span></button><div class="menu" id="modes" role="menu" aria-label="Chart type" hidden></div></div><div class="seg cstyle" id="styleSeg" role="group" aria-label="Chart style"><button type="button" data-cs="western" title="Western wheel" aria-label="Western wheel"><svg class="vico" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4.5"/><path d="M3 12h4.5M16.5 12H21"/></svg><span class="cslbl">Western</span></button><button type="button" data-cs="north" title="North Indian chart" aria-label="North Indian chart"><svg class="vico" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="1.5"/><path d="M3 3l18 18M21 3L3 21M12 3l9 9-9 9-9-9z"/></svg><span class="cslbl">North Indian</span></button><button type="button" data-cs="south" title="South Indian chart" aria-label="South Indian chart"><svg class="vico" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="1.5"/><path d="M3 7.5h18M3 16.5h18M7.5 3v18M16.5 3v18"/><rect x="7.5" y="7.5" width="9" height="9" fill="currentColor" fill-opacity=".18" stroke="none"/></svg><span class="cslbl">South Indian</span></button></div><span class="grow"></span><button class="iconbtn icobtn" id="openLayers" type="button" aria-expanded="false" aria-controls="layersMenu" aria-label="Layers" title="Layers"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5.5"/><circle cx="12" cy="12" r="5.5"/><circle cx="15.5" cy="15.5" r="5.5"/></svg></button></div>
     <div class="reloc" id="relocBar" hidden></div>
     <div class="wheelwrap" id="wheelWrap"><svg id="wheel" viewBox="0 0 800 800" role="img" aria-label="Chart wheel"></svg><div class="elemmini" id="elemMini" role="group" aria-label="Elemental balance"></div><div class="wlab" role="group" aria-label="Wheel labels"><button type="button" id="wlDeg" aria-pressed="true" title="Show degrees" aria-label="Show degrees">°</button><button type="button" id="wlMin" aria-pressed="true" title="Show minutes" aria-label="Show minutes">′</button><button type="button" id="wlSign" aria-pressed="false" title="Show sign symbols" aria-label="Show sign symbols"><span class="sym">♈︎</span></button></div><div class="wzoom" role="group" aria-label="Zoom the chart"><button type="button" id="wzIn" aria-label="Zoom in" title="Zoom in">+</button><button type="button" id="wzOut" aria-label="Zoom out" title="Zoom out">−</button><button type="button" id="wzReset" aria-label="Reset zoom" title="Reset zoom" hidden>⤢</button><button type="button" id="wFs" aria-label="Fill the window" title="Fill the window" aria-pressed="false"></button></div></div>
     <div class="mapwrap" id="acgWrap" hidden>
@@ -1456,7 +1464,7 @@ const HOUSES=[['placidus','Placidus'],['koch','Koch'],['whole','Whole sign'],['e
 const ZODIACS=[['tropical','Tropical'],['lahiri','Sidereal · Lahiri'],['fagan','Sidereal · Fagan/Bradley'],['krishnamurti','Sidereal · Krishnamurti'],['raman','Sidereal · Raman']];
 /* ---------- settings (per browser) ---------- */
 const DEFAULT_SET={house:'placidus',zodiac:'tropical',node:'true',theme:'system',elemColors:true,show:{node:true,snode:false,lilith:false,vertex:false,fortune:true,spirit:false,eros:false,necessity:false,courage:false,victory:false,nemesis:false,exaltation:false,father:false,mother:false,marriage:false,children:false,siblings:false},
- layers:{asteroids:false,stars:false,decans:false,terms:false,naks:false},aspects:{conj:true,sext:true,squ:true,tri:true,opp:true,ssx:false,ssq:false,qui:false,sqq:false,bq:false,qcx:true},
+ layers:{asteroids:true,stars:true,decans:true,terms:true,naks:true},aspects:{conj:true,sext:true,squ:true,tri:true,opp:true,ssx:false,ssq:false,qui:false,sqq:false,bq:false,qcx:true},
  orbs:{conj:8,sext:5,squ:7,tri:7,opp:8,ssx:2,ssq:2,qui:2,sqq:2,bq:2,qcx:3},transitOrb:0.4,zrLot:'spirit',zrYear:360,step:'1440'};
 let S;try{S=Object.assign(structuredClone(DEFAULT_SET),JSON.parse(localStorage.getItem('orrery.settings')||'{}'))}catch(e){S=structuredClone(DEFAULT_SET)}
 S.show=Object.assign({},DEFAULT_SET.show,S.show);S.layers=Object.assign({},DEFAULT_SET.layers,S.layers);
@@ -1469,7 +1477,7 @@ document.addEventListener('click',e=>{const b=e.target.closest('#openTheme');con
  if(!m.hidden&&!e.target.closest('#themeMenu')){m.hidden=true;$('openTheme').setAttribute('aria-expanded','false')}});
 const DONATE_URL='https://buymeacoffee.com/destinned';
 if(DONATE_URL){const d=$('donateBtn');d.href=DONATE_URL;d.hidden=false}
-const applyTheme=()=>{const t=['oled','paper','retro','pastel'].includes(S.theme)?S.theme:'orrery';document.documentElement.dataset.theme=t;const m=document.querySelector('meta[name="theme-color"]');if(m)m.content=t==='oled'?'#000000':t==='paper'?'#ffffff':t==='retro'?'#020a04':t==='pastel'?'#f9c9d4':'#4f2e6e'};applyTheme();
+const applyTheme=()=>{const t=['oled','paper','retro','pastel'].includes(S.theme)?S.theme:'orrery';document.documentElement.dataset.theme=t;const m=document.querySelector('meta[name="theme-color"]');if(m)m.content=t==='oled'?'#000000':t==='paper'?'#fbf7ee':t==='retro'?'#020a04':t==='pastel'?'#f9c9d4':'#4f2e6e'};applyTheme();
 /* ---------- chart store ---------- */
 const NOW_CHART={id:'__now',name:'Sky now',folder:'',fav:false,now:true,place:'Durham, NC, USA',lat:35.994,lon:-78.899,tz:'America/New_York'};
 let lockSnap=null,charts=[],db=null,activeId='__now',otherId=null,mode='natal',offsetMin=0,tab='pos',zrOpen=null;
@@ -1945,6 +1953,7 @@ function vedPlace(items,cx,cy,maxW,maxH,fs){// lay items out in rows centred on 
   items.forEach((it,i)=>{const r=Math.floor(i/cols),c=i%cols,inRow=Math.min(cols,n-r*cols);out.push([it,cx+(c-(inRow-1)/2)*colW-f*.05,cy+(r-(rows-1)/2)*lineH])});return {placed:out,fs:f}}f*=.88}
  return {placed:[],fs}}
 function vedDraw(g,P_){const {placed,fs}=P_;placed.forEach(([it,x,y])=>{const lab=vedLabel(it,fs);lab.setAttribute('transform',`translate(${x.toFixed(1)} ${y.toFixed(1)})`);g.append(lab);let cx=x-fs*.4,cy=y,r=fs*.6;try{const b=lab.firstChild.getBBox();if(b.width){cx=x+b.x+b.width/2;cy=y+b.y+b.height/2;r=Math.max(b.width,b.height*.8)/2+4}}catch(e){}g.append(hit({cx,cy,r,fill:'transparent'},`pt:${it.which}:${it.k}`))})}
+const vedHFill=h=>[1,4,7,10].includes(h)?'var(--ved-kendra,var(--w-p2))':[3,6,8,12].includes(h)?'var(--ved-dus,var(--w-grey))':'var(--w-p1)';
 function renderVedic(v){svg.replaceChildren();const inner=v.inner,outer=v.outer,style=S.chartStyle;
  const items=[...vedItems(inner,'i'),...(outer?vedItems(outer,'o'):[])];
  const ascS=inner.noHouses?Math.floor(vedLon(inner,inner.pts.sun.lon)/30):Math.floor(vedLon(inner,inner.pts.asc.lon)/30);
@@ -1960,7 +1969,7 @@ function renderVedic(v){svg.replaceChildren();const inner=v.inner,outer=v.outer,
   t.forEach(([s,f,c,w],i)=>svg.append(el('text',{x:cx,y:cy+(i-(t.length-1)/2)*38,'text-anchor':'middle','dominant-baseline':'central','font-size':f,'font-weight':w,fill:c,'font-family':i===0?'var(--display)':'var(--body,inherit)','letter-spacing':i===0?'.08em':'0'},i===0?s.toUpperCase():s)))};
  if(style==='south'){const cell=L/4,pos=[[1,0],[2,0],[3,0],[3,1],[3,2],[3,3],[2,3],[1,3],[0,3],[0,2],[0,1],[0,0]];// Aries..Pisces
   svg.append(el('rect',{x:P+cell,y:P+cell,width:cell*2,height:cell*2,fill:'var(--asp-field,#2b2b2e)',stroke:line,'stroke-width':lw}));
-  pos.forEach(([c,r],s)=>{const x=P+c*cell,y=P+r*cell;svg.append(el('rect',{x,y,width:cell,height:cell,fill:s===ascS&&!inner.noHouses?'var(--w-p2)':'var(--w-p1)',stroke:line,'stroke-width':lw}));
+  pos.forEach(([c,r],s)=>{const x=P+c*cell,y=P+r*cell;{const hh=((s-ascS+12)%12)+1;svg.append(el('rect',{x,y,width:cell,height:cell,fill:inner.noHouses?'var(--w-p1)':vedHFill(hh),stroke:line,'stroke-width':lw}))}
    svg.append(hit({x,y,width:cell,height:cell,fill:'transparent'},`sign:${s}`));
    {const tg=el('text',{x:x+11,y:y+26,'font-size':22,fill:S.elemColors?`var(--${ELEM[s%4]})`:'var(--muted)'});const a=el('tspan',{'font-family':'var(--sym)','font-weight':300,'font-size':25},SIGN_G[s]+VS),b=el('tspan',{dx:6,'font-family':'var(--body,inherit)','font-weight':500},SIGN_N[s]);tg.append(a,b);svg.append(tg)}
    const hn=((s-ascS+12)%12)+1;svg.append(el('text',{x:x+cell-11,y:y+cell-14,'text-anchor':'end','font-size':18,fill:'var(--muted)','font-family':'var(--mono)'},String(hn)));
@@ -1972,7 +1981,7 @@ function renderVedic(v){svg.replaceChildren();const inner=v.inner,outer=v.outer,
   const H=[[T,Q1,C,Q2],[TL,T,Q1],[TL,Q1,Lm],[Lm,Q1,C,Q4],[Lm,Q4,BL],[BL,Q4,B],[B,Q4,C,Q3],[B,Q3,BR],[BR,Q3,R],[R,Q3,C,Q2],[R,Q2,TR],[TR,Q2,T]];
   // label anchor (centre of the region) and sign-number spot (toward the centre)
   const cen=p=>[p.reduce((a,q)=>a+q[0],0)/p.length,p.reduce((a,q)=>a+q[1],0)/p.length];
-  H.forEach((poly,h)=>{const s=(ascS+h)%12,diamond=poly.length===4;svg.append(el('polygon',{points:F(poly),fill:diamond?(h===0?'var(--w-p2)':'var(--w-p1)'):'var(--w-p1)',stroke:line,'stroke-width':lw,'stroke-linejoin':'round'}));
+  H.forEach((poly,h)=>{const s=(ascS+h)%12,diamond=poly.length===4;svg.append(el('polygon',{points:F(poly),fill:vedHFill(h+1),stroke:'var(--ved-line,var(--w-line))','stroke-width':lw,'stroke-linejoin':'round'}));
    const [cx,cy]=cen(poly);svg.append(hit({points:F(poly),fill:'transparent'},`sign:${s}`));
    // sign number near the inner vertex
    const inner_=diamond?C:poly.find(p=>p!==TL&&p!==TR&&p!==BL&&p!==BR&&(p===Q1||p===Q2||p===Q3||p===Q4));
@@ -1995,7 +2004,7 @@ function renderWheel(v){
  const Z1=Ly.stars?382:394,Z2=Z1-50,base=Z2-22*nr,wn=(S.wDeg!==false?1:0)+(S.wMin!==false?1:0)+(S.wSign?1:0),OB=Math.round(50+wn*42/3),IN=Math.round(bi?base-OB-54-wn*50/3:base-84-wn*62/3);v.ob=OB;
  const bandKeys=[...['terms','decans','naks'].filter(k=>Ly[k]),...(bi?['outer']:[]),'inner'],BC={};
  {let prev='G';bandKeys.forEach(k=>{BC[k]=prev==='G'?'P':'G';prev=BC[k]});if(BC.inner==='G')BC.inner='P';
-  let pi=0,last=null;bandKeys.forEach(k=>{if(BC[k]==='P'){pi=last==='P'?pi+1:0;BC[k]=`var(--w-p${pi%2?2:1})`}else BC[k]='var(--w-grey)';last=BC[k].includes('-p')?'P':'G'})}
+  let pi=0,last=null;bandKeys.forEach(k=>{if(BC[k]==='P'){pi=last==='P'?pi+1:0;BC[k]=`var(--w-p${pi%2?2:1})`}else BC[k]='var(--w-grey)';last=BC[k].includes('-p')?'P':'G'})}if(BC.inner==='var(--w-p1)')BC.inner='var(--w-pin,var(--w-p1))';
  svg.append(el('circle',{cx:C,cy:C,r:Z1,fill:'var(--w-grey)',stroke:'var(--w-line)'}));
  svg.append(el('circle',{cx:C,cy:C,r:Z2,fill:'none',stroke:'var(--w-line)'}));
  for(let s=0;s<12;s++){const [a,b]=pt(s*30,Z1),[c,d]=pt(s*30,Z2);svg.append(el('line',{x1:a,y1:b,x2:c,y2:d,stroke:'var(--w-line)'}));
@@ -2009,9 +2018,9 @@ function renderWheel(v){
  if(Ly.stars){const hits=new Set(starHits(inner).map(h=>h.star[0]));STARS.forEach(st=>{const L=starLon(st,inner.jd,inner.ayanamsa||0),[x,y]=pt(L,Z1+9),isHit=hits.has(st[0]);
    const t=el('text',{x,y,'text-anchor':'middle','dominant-baseline':'central','font-size':isHit?13:Math.max(6,10-st[4]*1.5),fill:isHit?'var(--accent)':'var(--muted)','font-family':'var(--sym)'},'✦'+VS);t.append(el('title',{},`${st[0]} ${deg(L).txt} ${SIGN_N[deg(L).s]}${isHit?' (conjunct a chart point)':''}`));svg.append(t);svg.append(el('circle',{cx:x,cy:y,r:9,fill:'transparent','data-obj':`star:${st[0]}`,class:'hit'}))})}
  if(bi){svg.append(el('circle',{cx:C,cy:C,r:base-OB,fill:'none',stroke:'var(--outer-line)','stroke-width':1.2}))}
- svg.append(el('circle',{cx:C,cy:C,r:IN,fill:'var(--w-grey)',stroke:'var(--w-line)'}));
+ svg.append(el('circle',{cx:C,cy:C,r:IN,fill:'var(--w-ring,var(--w-grey))',stroke:'var(--w-line)'}));
  if(!inner.noHouses){inner.cusps.forEach((c,i)=>{const ang=i%3===0;const [a,b]=pt(c,bi&&ang&&mode==='progressed'?base-OB:base),[x,y]=pt(c,IN);
-   svg.append(el('line',{x1:a,y1:b,x2:x,y2:y,stroke:'var(--line)','stroke-width':1,opacity:1}));
+   svg.append(el('line',{x1:a,y1:b,x2:x,y2:y,stroke:'var(--cusp,var(--line))','stroke-width':1,opacity:1}));
    const mid=c+n360(inner.cusps[(i+1)%12]-c)/2,[hx,hy]=pt(mid,IN-14);svg.append(hit({d:sector(IN,IN-26,c,inner.cusps[(i+1)%12]),fill:'transparent'},`house:${i+1}`));svg.append(el('text',{x:hx,y:hy,'text-anchor':'middle','dominant-baseline':'central','font-size':12,fill:'var(--muted)','font-family':'var(--mono)'},i+1))});
   [['asc','AC'],['mc','MC'],['dsc','DC'],['ic','IC']].forEach(([k,l])=>{const lon=inner.pts[k].lon;const pin=bi&&mode==='progressed',rE=pin?base-OB:base;{if(!pin){const [t1,t2]=pt(lon,Z2+14),[t3,t4]=pt(lon,Z2);svg.append(el('line',{x1:t1,y1:t2,x2:t3,y2:t4,stroke:'var(--lilac)','stroke-width':2.6,'stroke-linecap':'round',class:'angtick'}))}const [t5,t6]=pt(lon,rE),[t7,t8]=pt(lon,rE-12);svg.append(el('line',{x1:t5,y1:t6,x2:t7,y2:t8,stroke:'var(--lilac)','stroke-width':2.6,class:'angtick'}))}const [lx,ly]=pin?pt(lon+(k==='asc'||k==='dsc'?-4.2:4.2),rE-20):pt(angLabA(lon),Z2+28);
    svg.append(el('text',{x:lx,y:ly,'text-anchor':'middle','dominant-baseline':'central','font-size':pin?12:13,'font-weight':700,fill:'var(--lilac)','font-family':'var(--mono)',opacity:pin?1:angLabOp(lon).toFixed(2)},l));svg.append(hit({cx:lx,cy:ly,r:14,fill:'transparent'},`pt:i:${k}`))});}
@@ -2104,7 +2113,7 @@ function renderAll(){const A=byId(activeId);if(view==='eph'){try{saveEphState();
  const curMode=mode==='acg'?(prevMode||'natal'):mode;try{window.mapModeSync&&mapModeSync()}catch(e){}$('modeLabel').textContent=(MODES.find(m=>m[0]===curMode)||MODES[0])[1];$('modes').innerHTML=MODES.map(([k,l],i)=>`<button type="button" role="menuitemradio" data-mode="${k}" aria-checked="${curMode===k}"><span>${l}</span><span class="kbd">${i+1}</span></button>`).join('');
  if(reloc&&reloc.id!==activeId)reloc=null;
  const v=compute();lastView=v;const isMap=mode==='acg';$('wheelWrap').hidden=isMap;$('acgWrap').hidden=!isMap;$('tabs').hidden=isMap;
- if(isMap)renderMap(v);else renderWheel(v);try{elemMini(isMap?null:v.inner)}catch(e){}
+ if(isMap){try{renderMap(v)}catch(e){console.warn('map',e);try{v.outer=null;v.acgType='natal';renderMap(v)}catch(_){}}}else renderWheel(v);try{elemMini(isMap?null:v.inner)}catch(e){}
  $('relocBar').hidden=mode!=='relocated'||isMap;if(mode==='relocated'&&!isMap){const rb=$('relocBar'),has=reloc&&reloc.id===A.id;
   rb.innerHTML=`<span class="rltxt">${has?`Relocated to <strong>${esc(reloc.label)}</strong>: same birth moment, with houses and angles for this place.`:'Choose a place to relocate this chart to.'}</span><div class="place rlpick"><input class="f" id="rlQ" placeholder="Type a city" autocomplete="off" role="combobox" aria-controls="rlSugg" aria-expanded="false"><ul class="sugg" id="rlSugg" role="listbox" hidden></ul></div>${A.cur&&!(has&&reloc.label===A.cur.place)?`<button class="btn ghost" id="rlCur" type="button">Use ${esc(A.cur.place.split(',')[0])}</button>`:''}`;
   placePicker($('rlQ'),$('rlSugg'),it=>{reloc={id:A.id,lat:it.lat,lon:it.lon,label:it.label};renderAll()});if($('rlCur'))$('rlCur').onclick=()=>{reloc={id:A.id,lat:A.cur.lat,lon:A.cur.lon,label:A.cur.place};renderAll()}}
@@ -2426,7 +2435,7 @@ const ACG_COL={sun:'#ffcf5a',moon:'#d9dde6',mercury:'#e8e27a',venus:'#7fe0a6',ma
 const ACG_ANG={MC:['Midheaven','career, reputation and public visibility','none'],IC:['Imum Coeli','home, family, roots and inner life','7 5'],ASC:['Ascendant','identity, vitality and how you come across','none'],DSC:['Descendant','relationships, partnerships and the people you meet','2 5']};
 const ACG_TONE={sun:'brings visibility, confidence and vitality',moon:'brings emotional sensitivity, comfort and connection with the public',mercury:'brings ideas, communication, study and movement',venus:'brings ease, affection, beauty and enjoyment',mars:'brings energy, drive and courage, along with conflict and accidents to watch for',jupiter:'brings growth, opportunity, generosity and optimism',saturn:'brings responsibility, hard work and lasting structure, sometimes with weight or isolation',uranus:'brings change, independence, innovation and surprises',neptune:'brings inspiration, spirituality and idealism, but also confusion and escapism',pluto:'brings intensity, power and deep transformation',node:'brings fated connections and a sense of direction',chiron:'brings healing through old wounds',ceres:'brings nurture and care',pallas:'brings strategy and creative intelligence',juno:'brings commitment and partnership',vesta:'brings focus and devotion',destinn:'brings a sense of calling and destiny'};
 let mapVB={x:0,y:150,w:3600,h:1350},reloc=null,mapPin=null;
-const DR=Math.PI/180,PARAN_COL='#d4b8e3',ASPL_COL={sext:'#3fe0b0',squ:'#ff5c72',tri:'#5ea8ff',opp:'#ff8a3d',qcx:'#ffd36b',ssx:'#a3e86b',ssq:'#ff9fb0',sqq:'#ff7aa8',qui:'#c99bff',bq:'#9f8cff'},ASPL_N={sext:['Sextile','⚹'],squ:['Square','□'],tri:['Trine','△'],opp:['Opposition','☍'],qcx:['Quincunx','⚻'],ssx:['Semi-sextile','⚺'],ssq:['Semi-square','∠'],sqq:['Sesquiquadrate','⚼'],qui:['Quintile','Q'],bq:['Biquintile','bQ']},ASPL_ANG={sext:60,squ:90,tri:120,opp:180,qcx:150,ssx:30,ssq:45,sqq:135,qui:72,bq:144};
+const DR=Math.PI/180,PARAN_COL='#d4b8e3',ASPL_COL={sext:'#3fe0b0',squ:'#ff5c72',tri:'#5ea8ff',opp:'#ff8a3d',qcx:'#ffd36b',ssx:'#a3e86b',ssq:'#ff9fb0',sqq:'#ff7aa8',qui:'#c99bff',bq:'#9f8cff'},ASPL_N={sext:['Sextile','⚹'],squ:['Square','□'],tri:['Trine','△'],opp:['Opposition','☍'],qcx:['Quincunx','⚻'],ssx:['Semi-sextile','⚺'],ssq:['Semi-square','∠'],sqq:['Sesquiquadrate','⚼'],qui:['Quintile',''],bq:['Biquintile','']},ASPL_ANG={sext:60,squ:90,tri:120,opp:180,qcx:150,ssx:30,ssq:45,sqq:135,qui:72,bq:144};
 const LS_COL={sun:'#8ff5dc',moon:'#c8f7ee',mercury:'#5fe0c6',venus:'#3fd1b0',mars:'#25b394',jupiter:'#72e4ff',saturn:'#4cc0de',uranus:'#3aa6c8',neptune:'#2c8db0',pluto:'#5fb8a2',node:'#9be8d2'};
 const EVN={R:'rising',S:'setting',C:'culminating',A:'anticulminating'},EVS={R:'rise',S:'set',C:'MC',A:'IC'};
 const shortG=k=>GLYPH_SVG[k]?({pluto:'Pl',destinn:'Ds'})[k]||PT[k][0]:PT[k][0]+VS;
@@ -2479,14 +2488,14 @@ function gcDist(b1,l1,b2,l2){const r=Math.PI/180,a=Math.sin((b2-b1)*r/2)**2+Math
 function lineDist(L,b,l){if(L.mer!=null){const dl=Math.abs(w180b(l-L.mer));if(dl<=90)return 6371*Math.asin(Math.min(1,Math.sin(dl*Math.PI/180)*Math.cos(b*Math.PI/180)));return Math.min(gcDist(b,l,85,L.mer),gcDist(b,l,-85,L.mer))}
  let m=1e9;for(const [pl,pb] of L.pts){const d=gcDist(b,l,pb,pl);if(d<m)m=d}return m}
 function monoMap(h){const t=document.documentElement.dataset.theme;if(t==='retro')return h.replace(/(stroke|fill)="#([0-9a-fA-F]{6})"/g,(m,a,c)=>{if(c.toLowerCase()==='1b2230')return `${a}="#020a04"`;const r=parseInt(c.slice(0,2),16),g=parseInt(c.slice(2,4),16),b=parseInt(c.slice(4,6),16),L=(.2126*r+.7152*g+.0722*b)/255,v=.45+L*.55;return `${a}="rgb(${Math.round(40*v)},${Math.round(255*v)},${Math.round(90*v)})"`});if(t!=='oled'&&t!=='paper')return h;
- return h.replace(/(stroke|fill)="#([0-9a-fA-F]{6})"/g,(m,a,c)=>{if(c.toLowerCase()==='1b2230')return `${a}="${t==='oled'?'#000000':'#ffffff'}"`;const r=parseInt(c.slice(0,2),16),g=parseInt(c.slice(2,4),16),b=parseInt(c.slice(4,6),16),L=(.2126*r+.7152*g+.0722*b)/255;
+ return h.replace(/(stroke|fill)="#([0-9a-fA-F]{6})"/g,(m,a,c)=>{if(c.toLowerCase()==='1b2230')return `${a}="${t==='oled'?'#000000':'#fbf7ee'}"`;const r=parseInt(c.slice(0,2),16),g=parseInt(c.slice(2,4),16),b=parseInt(c.slice(4,6),16),L=(.2126*r+.7152*g+.0722*b)/255;
   const v=Math.round(t==='oled'?140+L*115:20+(1-L)*30+L*90);const x=v.toString(16).padStart(2,'0');return `${a}="#${x}${x}${x}"`})}
 function renderMap(v){const map=$('map'),MC_=mapChart(v),ch=MC_.ch,A=byId(activeId),T=acgT();v.acgLabel=MC_.label;try{if(MG){MG=null;clearTimeout(mgT);mapTx(0,0,1)}}catch(e){}map.setAttribute('viewBox',mapVBs());mapZoomUI();
  const det=S.acgDetail!==false;
  let h='';
  const fs=mapVB.w/58,fs2=mapVB.w/80;
  const lso=T.ls?lsOrigin(A):null,gkey=JSON.stringify([MC_.t,ch.jd,acgGst(ch),ch.pts.sun&&ch.pts.sun.lon,acgKeys(),T,S.acgFocus,S.acgAsp,S.node,lso&&[lso.lat,lso.lon]]);
- if(!acgGeo||acgGeo.key!==gkey)acgGeo={key:gkey,acg:acgLines(ch),parans:T.paran?acgParans(ch):[],ls:T.ls?localSpace(ch,lso):[],asl:T.asp?(MC_.t==='synastry'&&v.outer?synAspLines(v.outer,v.inner,v.outer.label||'Partner'):aspectLinesAcg(ch)):[]};
+ if(!acgGeo||acgGeo.key!==gkey)acgGeo={key:gkey,acg:acgLines(ch),parans:T.paran?acgParans(ch):[],ls:T.ls?localSpace(ch,lso):[],asl:T.asp?(()=>{try{return MC_.t==='synastry'&&v.outer?synAspLines(v.outer,v.inner,v.outer.label||'Partner'):aspectLinesAcg(ch)}catch(e){console.warn(e);return []}})():[]};
  v.acg=acgGeo.acg;v.parans=acgGeo.parans;v.ls=acgGeo.ls;v.asl=acgGeo.asl;
  const lkey=gkey+(document.documentElement.dataset.theme||'');
  if(!mbLines||mbLines.key!==lkey||!$('mLines')||!$('mLines').childElementCount){const L2=[],add=(d,c,w,da,a)=>L2.push({p:new Path2D(d),c:acgCol(c),w,dash:da&&da!=='none'?da.split(' ').map(Number):[],a:a||1});
@@ -2516,7 +2525,7 @@ function renderMap(v){const map=$('map'),MC_=mapChart(v),ch=MC_.ch,A=byId(active
 function acgControls(v){const A=byId(activeId),all=[...Calc.BODY_KEYS,'node',...(S.layers.asteroids?Calc.AST_KEYS:[])],on=S.acgShow||Calc.BODY_KEYS,T=acgT(),f=S.acgFocus||'sun',asel=S.acgAsp||['squ','tri'],lso=S.lsOrigin||'birth';
  return `<div class="acgopts"><label class="chk" for="acgDet"><input type="checkbox" id="acgDet" ${S.acgDetail!==false?'checked':''}> States and provinces</label><label class="chk" for="acgCap"><input type="checkbox" id="acgCap" ${S.acgCaps!==false?'checked':''}> Capital cities</label></div><p class="note" style="margin:2px 0 6px">Borders and labels appear as you zoom in.</p><h3 class="sub hrow">Line types<span class="allnone"><button type="button" class="linkbtn" data-acgall="types" data-v="1">Select all</button><button type="button" class="linkbtn" data-acgall="types" data-v="0">Clear all</button></span></h3><div class="acgleg">${[['planet','Planet lines','linear-gradient(90deg,#ffcf5a,#ff6b6b,#7fe0a6,#6f9dff)'],['paran','Parans',PARAN_COL],['ls','Local space','linear-gradient(90deg,#8ff5dc,#3fd1b0,#2c8db0)'],['asp','Aspect lines','linear-gradient(90deg,#3fe0b0,#5ea8ff,#ff5c72)']].map(([k,l,c])=>`<label for="acgt-${k}"><input type="checkbox" id="acgt-${k}" data-acgt="${k}" ${T[k]?'checked':''}><i style="background:${c}"></i>${l}</label>`).join('')}</div>
  ${T.paran||T.asp?`<div class="two" style="margin-top:10px"><label class="l" for="acgFocus">${T.paran&&T.asp?'Parans and aspect lines for':T.paran?'Parans for':'Aspect lines for'}<select class="f" id="acgFocus"><option value="all" ${f==='all'?'selected':''}>All shown planets</option>${all.filter(k=>on.includes(k)).map(k=>`<option value="${k}" ${f===k?'selected':''}>${PT[k][1]}</option>`).join('')}</select></label>${T.ls?`<label class="l" for="lsOrigin">Local space from<select class="f" id="lsOrigin"><option value="birth" ${lso==='birth'?'selected':''}>Birthplace</option>${A.cur?`<option value="current" ${lso==='current'?'selected':''}>Current city</option>`:''}${mapPin?`<option value="pin" ${lso==='pin'?'selected':''}>Selected place</option>`:''}</select></label>`:''}</div>`:T.ls?`<div class="two" style="margin-top:10px"><label class="l" for="lsOrigin">Local space from<select class="f" id="lsOrigin"><option value="birth" ${lso==='birth'?'selected':''}>Birthplace</option>${A.cur?`<option value="current" ${lso==='current'?'selected':''}>Current city</option>`:''}${mapPin?`<option value="pin" ${lso==='pin'?'selected':''}>Selected place</option>`:''}</select></label></div>`:''}
- ${T.asp?`<div class="hrow" style="margin-top:10px"><span class="note">Aspects</span><span class="allnone"><button type="button" class="linkbtn" data-acgall="asp" data-v="1">Select all</button><button type="button" class="linkbtn" data-acgall="asp" data-v="0">Clear all</button></span></div><div class="acgleg" style="margin-top:6px">${Object.keys(ASPL_COL).map(a=>`<label for="acga-${a}"><input type="checkbox" id="acga-${a}" data-acga="${a}" ${asel.includes(a)?'checked':''}><i style="background:${ASPL_COL[a]}"></i>${ASPL_N[a][1]} ${ASPL_N[a][0]}</label>`).join('')}</div>`:''}
+ ${T.asp?`<div class="hrow" style="margin-top:10px"><span class="note">Aspects</span><span class="allnone"><button type="button" class="linkbtn" data-acgall="asp" data-v="1">Select all</button><button type="button" class="linkbtn" data-acgall="asp" data-v="0">Clear all</button></span></div><div class="acgleg" style="margin-top:6px">${Object.keys(ASPL_COL).map(a=>`<label for="acga-${a}"><input type="checkbox" id="acga-${a}" data-acga="${a}" ${asel.includes(a)?'checked':''}><i style="background:${ASPL_COL[a]}"></i>${ASPL_N[a][1]?ASPL_N[a][1]+' ':''}${ASPL_N[a][0]}</label>`).join('')}</div>`:''}
  ${T.paran&&v.parans?`<p class="note" style="margin-top:8px">${v.parans.length} paran latitude${v.parans.length===1?'':'s'} shown. Solid: one planet on the meridian; dashed: both on the horizon.</p>`:''}
  <h3 class="sub hrow">Planets shown<span class="allnone"><button type="button" class="linkbtn" data-acgall="planets" data-v="1">Select all</button><button type="button" class="linkbtn" data-acgall="planets" data-v="0">Clear all</button></span></h3><div class="acgleg">${all.map(k=>`<label for="acg-${k}"><input type="checkbox" id="acg-${k}" data-acg="${k}" ${on.includes(k)?'checked':''}><i style="background:${ACG_COL[k]||'#ddd'}"></i>${glyphHtml(k)} ${PT[k][1].replace('North Node','Node')}</label>`).join('')}</div>`}
 function renderAcgPanel(v){const A=byId(activeId),lines=v.acg||acgLines(mapChart(v).ch);const all=[...Calc.BODY_KEYS,'node',...(S.layers.asteroids?Calc.AST_KEYS:[])],on=S.acgShow||Calc.BODY_KEYS;
@@ -3000,7 +3009,7 @@ svg.addEventListener('pointermove',e=>{if(!wzP.has(e.pointerId)||!wzG)return;wzP
 const wzEnd=e=>{wzP.delete(e.pointerId);svg.classList.remove('panning');if(wzP.size===1&&wzG&&wzG.t==='pinch'){const [a]=[...wzP.values()];wzG={t:'pan',x:a.x,y:a.y,cx:WZ.cx,cy:WZ.cy}}else if(!wzP.size)wzG=null};
 ['pointerup','pointercancel','pointerleave'].forEach(t=>svg.addEventListener(t,wzEnd));
 svg.addEventListener('click',e=>{if(wzMoved){e.stopPropagation();e.preventDefault();wzMoved=false}},true);
-svg.addEventListener('wheel',e=>{const fs=$('stage').classList.contains('fs');if(!e.ctrlKey&&!fs)return;e.preventDefault();const [fx,fy]=wzFrac(e.clientX,e.clientY),dy=(e.deltaMode===1?e.deltaY*16:e.deltaY);wzAt(WZ.s*Math.exp(-dy*(e.ctrlKey?0.01:0.0022)),fx,fy)},{passive:false});
+svg.addEventListener('wheel',e=>{const fs=$('stage').classList.contains('fs');if(!e.ctrlKey&&!fs&&innerWidth<=860)return;e.preventDefault();const [fx,fy]=wzFrac(e.clientX,e.clientY),dy=(e.deltaMode===1?e.deltaY*16:e.deltaY);wzAt(WZ.s*Math.exp(-dy*(e.ctrlKey?0.01:0.0022)),fx,fy)},{passive:false});
 svg.addEventListener('dblclick',e=>{if(e.target.closest('[data-obj]'))return;const [fx,fy]=wzFrac(e.clientX,e.clientY);if(WZ.s>1.001){WZ.s=1;WZ.cx=WZ.cy=400;wzApply()}else wzAt(2.5,fx,fy)});
 wzApply();
 
