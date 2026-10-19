@@ -540,8 +540,8 @@ html[data-theme="retro"] *{scrollbar-color:#555 transparent}html[data-theme="pap
 .readh{font:700 clamp(1.5rem,3.5vw,2.2rem)/1.15 var(--display);margin:0;color:var(--fg)}
 .readlead{font-size:1.02rem;line-height:1.65;color:var(--fg);margin:0;max-width:62ch}
 .readgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
-.readcard{background:var(--panel);border-radius:16px;padding:16px 18px;box-shadow:0 0 0 1px rgba(255,255,255,.05);display:grid;gap:6px;align-content:start}
-.readcard.primary{box-shadow:0 0 0 1px rgba(255,255,255,.05)}
+.readcard{background:var(--raised);border-radius:16px;padding:16px 18px;box-shadow:none;display:grid;gap:6px;align-content:start}
+.readcard.primary{box-shadow:none}
 .readcard h3{margin:0;font:600 1.02rem var(--display);color:var(--fg)}.readcard p{margin:0;color:var(--muted);line-height:1.55;font-size:.9rem}
 .readprice{position:absolute;top:14px;right:16px;font:700 1.05rem var(--display);color:var(--lilac)}
 .readcard{position:relative}
@@ -549,7 +549,7 @@ html[data-theme="retro"] *{scrollbar-color:#555 transparent}html[data-theme="pap
 .readtag{justify-self:start;font:700 .66rem var(--display);letter-spacing:.08em;text-transform:uppercase;color:var(--accent-ink);background:var(--lilac);padding:2px 8px;border-radius:999px}
 .readsub{font:600 .8rem var(--display);letter-spacing:.1em;text-transform:uppercase;color:var(--accent);margin:8px 0 0}
 .readsteps{margin:0;padding-left:1.2em;display:grid;gap:6px;line-height:1.55}
-.readform{background:var(--panel);border-radius:16px;padding:18px;display:grid;gap:14px;position:relative;box-shadow:0 0 0 1px rgba(255,255,255,.05)}
+.readform{background:none;border-radius:0;padding:0;display:grid;gap:14px;position:relative;box-shadow:none}
 .readform textarea{resize:vertical;min-height:110px;font:inherit}
 .readadd{border:0;padding:0;margin:0;display:flex;gap:18px;flex-wrap:wrap}.readadd legend{font-size:.85rem;color:var(--muted);margin-bottom:6px}
 .readactions{display:flex;gap:10px;flex-wrap:wrap}
@@ -610,8 +610,8 @@ h1,h2,h3,h4,.readh{text-wrap:balance}
 .tarot-side textarea{resize:vertical;font:inherit}
 .tarot-main{padding:16px;min-width:0;display:grid;gap:16px;align-content:start}
 .spread{position:relative;width:100%;max-width:780px;margin-inline:auto;aspect-ratio:760/620;container-type:inline-size}
-.spread .empty{position:absolute;inset:0;display:grid;place-items:center;align-content:center;gap:10px;color:var(--muted);text-align:center;padding:20px}
-.slot{position:absolute;width:11.58%;height:23.55%;border-radius:1.2cqw;outline:1px dashed rgba(255,255,255,.08)}
+.spread .empty{position:absolute;inset:0;z-index:3;pointer-events:none;display:grid;place-items:center;align-content:center;gap:10px;color:var(--muted);text-align:center;padding:20px}
+.slot{position:absolute;width:11.58%;height:23.55%;border-radius:1.2cqw;outline:0;background:var(--raised)}
 .slot .sl.sltop{bottom:auto;top:-2.6cqw}
 .slot{z-index:0}.slot .sl{pointer-events:none}
 .tcard{z-index:1}
@@ -827,16 +827,17 @@ html:not([data-theme="paper"]):not([data-theme="pastel"]):not([data-theme="retro
 @media (max-width:480px){.tabs{padding-left:8px;padding-right:8px;gap:0}.tabs button{padding:8px 6px;font-size:.68rem;letter-spacing:.03em}}
 @media (max-width:360px){.tabs button{padding:8px 4px;font-size:.62rem;letter-spacing:.02em}}
 html[data-theme="orrery"] :is(.chips,.acgleg) label:has(input:checked){background:var(--raised)}
-html[data-theme="orrery"]{--cusp:#48424f;--w-grey:#1d1e1f;--w-pin:#382b4b;--ved-kendra:#3d2f51;--ved-dus:#211b29;--ved-line:#2b2139;--line:transparent;--raised:#1a1b1b}
+html[data-theme="orrery"]{--cusp:#48424f;--w-grey:#1d1e1f;--w-pin:#382b4b;--ved-kendra:#3d2f51;--ved-dus:#211b29;--ved-line:#2b2139;--line:transparent;--raised:#161717}
 html[data-theme="orrery"] .f,html[data-theme="orrery"] select{background-color:var(--raised)}
 html[data-theme="orrery"] :is(.dial,.stage,.side,.eph-side,.tarot-side,.drawer,.modal) .iconbtn,html[data-theme="orrery"] .btn.ghost{background:var(--raised)}
 /* option pills: no background; the checkbox carries the state */
 :is(.chips,.acgleg) label,:is(.chips,.acgleg) label:has(input:checked){background:none!important;border-color:transparent!important;box-shadow:none!important}
-html[data-theme="orrery"] input[type=checkbox]{-webkit-appearance:none;appearance:none;width:16px;height:16px;margin:0;border:0;border-radius:4px;background:var(--raised);box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--muted) 30%,transparent);display:inline-grid;place-items:center;cursor:pointer;flex:none;vertical-align:middle}
+html[data-theme="orrery"] input[type=checkbox]{-webkit-appearance:none;appearance:none;width:16px;height:16px;margin:0;border:0;border-radius:4px;background:var(--raised);box-shadow:none;display:inline-grid;place-items:center;cursor:pointer;flex:none;vertical-align:middle}
 html[data-theme="orrery"] input[type=checkbox]:checked{box-shadow:none;background:var(--lilac) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M3.5 8.3l3 3 6-6.3' fill='none' stroke='%23231f27' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center/100% no-repeat}
 html[data-theme="orrery"] input[type=checkbox]:focus-visible{outline:2px solid var(--lilac);outline-offset:2px}
 .efield>span.efh{display:flex;align-items:center;justify-content:space-between;gap:8px}
-#ephTabs button[aria-pressed="false"]{background:var(--raised)}#ephTabs{gap:6px}
+#ephTabs button[aria-pressed="false"],#amSeg button[aria-pressed="false"]{background:var(--raised)}#ephTabs,#amSeg{gap:6px;background:none;border:0;padding:0}#ephTabs button,#amSeg button{border-radius:999px!important;border:0!important}
+html[data-theme="orrery"] .jog .ticks{background-image:repeating-linear-gradient(90deg,var(--bg) 0 1px,transparent 1px 12px),repeating-linear-gradient(90deg,var(--bg) 0 1px,transparent 1px 60px)}
 </style>
 <style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}img{max-width:100%}</style>
 </head>
@@ -879,10 +880,10 @@ html[data-theme="orrery"] input[type=checkbox]:focus-visible{outline:2px solid v
   <h2 class="readh">Let me read your stars</h2>
   <p class="readlead">Thanks for visiting my site! I’m Dvstin, and I’m excited to get into your chart and help you with anything you need. All readings are personally written and interpreted by me, not AI. I use AI to help me create tools that further my effectiveness, but I will not use AI for interpretations in personal readings.</p>
   <div class="readgrid">
-   <div class="readcard primary"><span class="readprice">$108</span><h3>Natal chart reading</h3><p>A written reading of your birth chart: your core temperament and motivations, strengths and growing edges, relationships, work and direction, and the main timing themes coming up for you. Tell me anything you’d especially like me to look at, and I’ll make sure it’s covered.</p></div>
+   <div class="readcard"><span class="readprice">$19</span><h3>Ask a question</h3><p>One focused question answered from your chart, such as timing for a move, a relationship or a career decision. A short, direct written answer.</p></div>
    <div class="readcard"><span class="readprice">$49</span><h3>Astrocartography</h3><p>See where in the world your planetary lines fall and what that means for the places you’ve lived, the places you’re considering and the places you’d like to visit, whether you’re looking for love, career, rest or a fresh start. Order it on its own or alongside a natal reading.</p></div>
    <div class="readcard"><span class="readprice">$49</span><h3>Palmistry</h3><p>A reading of your hands, on its own or alongside your chart. After you reach out, I’ll send simple instructions for taking clear photos of both palms.</p></div>
-   <div class="readcard"><span class="readprice">$19</span><h3>Ask a question</h3><p>One focused question answered from your chart, such as timing for a move, a relationship or a career decision. A short, direct written answer.</p></div>
+   <div class="readcard primary"><span class="readprice">$108</span><h3>Natal chart reading</h3><p>A written reading of your birth chart: your core temperament and motivations, strengths and growing edges, relationships, work and direction, and the main timing themes coming up for you. Tell me anything you’d especially like me to look at, and I’ll make sure it’s covered.</p></div>
   </div>
   <h2 class="readsub">How it works</h2>
   <ol class="readsteps"><li><b>Send a request</b> with your birth details and the readings you’d like using the form below.</li><li><b>I’ll reply by email</b> to confirm your details, answer questions and arrange payment.</li><li><b>Your written reading</b> arrives by email once it’s ready.</li></ol>
@@ -897,10 +898,10 @@ html[data-theme="orrery"] input[type=checkbox]:focus-visible{outline:2px solid v
     <label class="l full" for="rPlace">Birth place (city, region, country)<input class="f" id="rPlace" name="birth_place" required></label>
    </div>
    <fieldset class="readadd"><legend>Choose your readings</legend>
-    <label class="chk" for="rNatal"><input type="checkbox" id="rNatal" value="Natal chart reading" data-price="108" checked> Natal chart reading <span class="muted">$108</span></label>
+    <label class="chk" for="rAsk"><input type="checkbox" id="rAsk" value="Ask a question" data-price="19"> Ask a question <span class="muted">$19</span></label>
     <label class="chk" for="rAcg"><input type="checkbox" id="rAcg" value="Astrocartography" data-price="49"> Astrocartography <span class="muted">$49</span></label>
     <label class="chk" for="rPalm"><input type="checkbox" id="rPalm" value="Palmistry" data-price="49"> Palmistry <span class="muted">$49</span></label>
-    <label class="chk" for="rAsk"><input type="checkbox" id="rAsk" value="Ask a question" data-price="19"> Ask a question <span class="muted">$19</span></label>
+    <label class="chk" for="rNatal"><input type="checkbox" id="rNatal" value="Natal chart reading" data-price="108" checked> Natal chart reading <span class="muted">$108</span></label>
    </fieldset>
    <p class="readtotal" id="rTotal">Total: <b>$108</b> <span class="muted">(natal chart reading)</span></p>
    <label class="l full" for="rMsg"><span id="rMsgLbl">Anything you’d like me to focus on? (optional)</span><textarea class="f" id="rMsg" name="message" rows="5" placeholder="Questions, areas of life, places you’re considering…"></textarea></label>
@@ -2118,7 +2119,7 @@ const esc=s=>s.replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&qu
 /* ---------- render all ---------- */
 let lastView=null;
 function fmtShift(m){const sg=m<0?'−':'+';let r=Math.abs(m);const U=[['yr',525960],['mo',43830],['d',1440],['h',60],['min',1]],out=[];for(const [u,v] of U){const n=Math.floor(r/v+1e-9);if(n){out.push(n+' '+u);r-=n*v}if(out.length===2)break}return sg+(out.join(' ')||'0 min')}
-function renderAll(){const A=byId(activeId);if(view==='eph'){try{saveEphState();renderEphForm()}catch(e){}}if(view==='zr'){zrSel=zrSel2=zrSel3=null;zrOpenSet.clear();try{renderZRPage()}catch(e){console.error(e)}}$('editActive').hidden=!!A.now||view==='acg';$('tLoc').hidden=!(mode==='transits'&&!A.now);document.querySelectorAll('#tLoc button').forEach(b=>{b.setAttribute('aria-pressed',String((S.transitLoc||'birth')===b.dataset.tl&&(b.dataset.tl==='birth'||!!A.cur)));b.title=b.dataset.tl==='current'?(A.cur?`Cast transits and show times for ${A.cur.place}`:'Add a current city to this chart first'):'Cast transits for the birthplace'});$('chartName').textContent=A.name+(otherId&&['synastry','composite'].includes(mode==='acg'?prevMode:mode)?' + '+byId(otherId).name:'');
+function renderAll(){const A=byId(activeId);try{if(!offsetMin&&!jog){tickPos=0;$('ticks').style.transform=''}}catch(e){}if(view==='eph'){try{saveEphState();renderEphForm()}catch(e){}}if(view==='zr'){zrSel=zrSel2=zrSel3=null;zrOpenSet.clear();try{renderZRPage()}catch(e){console.error(e)}}$('editActive').hidden=!!A.now||view==='acg';$('tLoc').hidden=!(mode==='transits'&&!A.now);document.querySelectorAll('#tLoc button').forEach(b=>{b.setAttribute('aria-pressed',String((S.transitLoc||'birth')===b.dataset.tl&&(b.dataset.tl==='birth'||!!A.cur)));b.title=b.dataset.tl==='current'?(A.cur?`Cast transits and show times for ${A.cur.place}`:'Add a current city to this chart first'):'Cast transits for the birthplace'});$('chartName').textContent=A.name+(otherId&&['synastry','composite'].includes(mode==='acg'?prevMode:mode)?' + '+byId(otherId).name:'');
  const curMode=mode==='acg'?(prevMode||'natal'):mode;try{window.mapModeSync&&mapModeSync()}catch(e){}$('modeLabel').textContent=(MODES.find(m=>m[0]===curMode)||MODES[0])[1];$('modes').innerHTML=MODES.map(([k,l],i)=>`<button type="button" role="menuitemradio" data-mode="${k}" aria-checked="${curMode===k}"><span>${l}</span><span class="kbd">${i+1}</span></button>`).join('');
  if(reloc&&reloc.id!==activeId)reloc=null;
  const v=compute();lastView=v;const isMap=mode==='acg';$('wheelWrap').hidden=isMap;$('acgWrap').hidden=!isMap;$('tabs').hidden=isMap;
@@ -2175,9 +2176,9 @@ function wlSync(){[['wlDeg',S.wDeg!==false],['wlMin',S.wMin!==false],['wlSign',!
  window.hdrFit=hdrFit;{const br=document.querySelector('.top .brand'),go=()=>{const b=document.querySelector('#views [data-view=chart]');if(b)b.click()};br.addEventListener('click',go);br.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();go()}})}addEventListener('resize',hdrFit);new ResizeObserver(hdrFit).observe($('chartBar'));setTimeout(hdrFit,0);setTimeout(hdrFit,600);try{document.fonts.ready.then(hdrFit)}catch(e){}document.addEventListener('click',e=>{if(e.target.closest('.vbtn,.sidetog,[data-theme-opt],.thememenu button'))setTimeout(hdrFit,60)})}
 {const sideFit=()=>{const st=$('stage'),w=$('wheelWrap');if(!st||!w||w.hidden)return;const cs=getComputedStyle(st),inner=st.clientWidth-parseFloat(cs.paddingLeft)-parseFloat(cs.paddingRight),gap=(inner-w.offsetWidth)/2;w.style.setProperty('--side',Math.max(0,Math.min(90,gap-6))+'px')};new ResizeObserver(sideFit).observe($('stage'));new ResizeObserver(sideFit).observe($('wheelWrap'));addEventListener('resize',sideFit)}
 $('wLock').onclick=()=>{S.wheelLock=!S.wheelLock;lockSnap=null;saveSet();renderAll()};
-let jog=null,raf=0,pending=0;const ticks=$('ticks');
+let jog=null,raf=0,pending=0,tickPos=0;const ticks=$('ticks');
 $('jog').addEventListener('pointerdown',e=>{jog={x:e.clientX,acc:0};$('jog').setPointerCapture(e.pointerId)});
-$('jog').addEventListener('pointermove',e=>{if(!jog)return;const dx=e.clientX-jog.x;jog.x=e.clientX;jog.acc+=dx;ticks.style.transform=`translateX(${(jog.acc%60)}px)`;
+$('jog').addEventListener('pointermove',e=>{if(!jog)return;const dx=e.clientX-jog.x;jog.x=e.clientX;jog.acc+=dx;tickPos=((tickPos+dx)%60+60)%60;ticks.style.transform=`translateX(${tickPos-60}px)`;
  const steps=Math.trunc(jog.acc/10);if(steps){jog.acc-=steps*10;pending+=steps;if(!raf)raf=requestAnimationFrame(()=>{raf=0;offsetMin+=pending*stepMin();pending=0;renderAll()})}});
 const endJog=()=>{jog=null};$('jog').addEventListener('pointerup',endJog);$('jog').addEventListener('pointercancel',endJog);
 $('jog').addEventListener('keydown',e=>{if(e.key==='ArrowLeft'){nudge(-1);e.preventDefault()}if(e.key==='ArrowRight'){nudge(1);e.preventDefault()}});
