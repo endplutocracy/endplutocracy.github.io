@@ -96,7 +96,7 @@ select.inline{background:var(--raised);border:1px solid var(--line);border-radiu
 .when{font:500 1rem var(--mono);margin-right:auto}
 .when small{display:block;font:.72rem var(--mono);color:var(--muted)}
 .jog{position:relative;height:48px;border:1px solid var(--line);border-radius:8px;background:var(--raised);overflow:hidden;cursor:ew-resize;touch-action:none;user-select:none}
-.jog .ticks{position:absolute;inset:0 -200px;background:repeating-linear-gradient(90deg,color-mix(in srgb,var(--muted) 45%,transparent) 0 1px,transparent 1px 12px),repeating-linear-gradient(90deg,var(--muted) 0 1px,transparent 1px 60px);background-size:auto 26%,auto 46%;background-repeat:repeat-x;background-position:0 100%,0 100%}
+.jog .ticks{position:absolute;inset:0 -200px;background:repeating-linear-gradient(90deg,color-mix(in srgb,var(--muted-line,var(--muted)) 45%,transparent) 0 1px,transparent 1px 12px),repeating-linear-gradient(90deg,var(--muted) 0 1px,transparent 1px 60px);background-size:auto 26%,auto 46%;background-repeat:repeat-x;background-position:0 100%,0 100%}
 .jog::after{content:"";position:absolute;left:50%;top:0;bottom:0;width:2px;background:var(--accent);transform:translateX(-1px)}
 .jog .hint{position:absolute;left:8px;top:5px;line-height:1.3;padding:0 4px;border-radius:4px;background:var(--raised);font:.7rem var(--mono);color:var(--muted);pointer-events:none}
 .badge{font:500 .7rem var(--mono);letter-spacing:.06em;text-transform:uppercase;border:1px solid var(--accent);color:var(--accent);padding:2px 8px;border-radius:999px}
@@ -845,6 +845,27 @@ html[data-theme] .iconbtn.lockbtn[aria-pressed="true"]:hover{filter:brightness(1
 html[data-theme="orrery"] .main>.side{background:rgba(26,27,28,.35)}
 .thirdbtn{display:inline-grid;place-items:center;min-width:38px}#thirdBtn.thirdbtn svg{width:22px!important;height:22px!important;flex:none}.thirdbtn circle{fill:none;stroke:currentColor;stroke-width:1.3}.thirdbtn text{fill:currentColor}
 html[data-theme] .iconbtn.thirdbtn[aria-pressed="true"]{background:var(--lilac)!important;color:var(--accent-ink)!important;border-color:transparent!important}
+/* footer, tarot spread and aspectarian share the chart-area background */
+html[data-theme="orrery"] .sitefoot{background:rgba(26,27,28,.35);box-shadow:0 0 0 100vmax rgba(26,27,28,.35);clip-path:inset(0 -100vmax -100vmax);border-top:0;margin-top:0;padding-top:50px}
+html[data-theme="orrery"] .tarot-main{background:rgba(26,27,28,.35)}
+html[data-theme="orrery"] #ephView .eph-out{background:#1e1f1f}
+html[data-theme="orrery"] #ephView .eph-out th{background:#1e1f1f}
+.sectmoon{display:flex;gap:6px 18px;flex-wrap:wrap;align-items:center;margin:2px 0 16px;font-size:.84rem;color:var(--muted)}.smr{display:inline-flex;align-items:center;gap:7px}.smi{width:22px;height:22px;flex:none}
+/* side tabs styled like the chart chips */
+.tabs{gap:6px!important;padding-bottom:4px}
+.tabs button{font-family:var(--ui)!important;text-transform:none!important;letter-spacing:0!important;font-size:.84rem!important;font-weight:600;background:var(--raised)!important;border:0!important;border-radius:8px;padding:7px 12px!important;color:var(--fg)}
+.tabs button:hover{filter:brightness(1.15)}
+.tabs button[aria-selected="true"]{background:var(--lilac)!important;color:var(--accent-ink)!important}
+@media (max-width:480px){.tabs{gap:4px!important}.tabs button{font-size:.72rem!important;padding:6px 7px!important}}
+@media (max-width:360px){.tabs{gap:3px!important}.tabs button{font-size:.66rem!important;padding:6px 5px!important}}
+/* chart style is always a dropdown showing the chosen style's icon */
+#styleSeg{position:relative;overflow:visible}#styleSeg>[data-cs][aria-pressed="false"]{display:none}
+#styleSeg>[data-cs][aria-pressed="true"]{display:inline-flex;align-items:center;gap:3px;background:var(--raised)!important;color:var(--fg)!important}
+#styleSeg>[data-cs][aria-pressed="true"]::after{content:"▾";font-size:.7rem;line-height:1}
+#styleSeg .cslbl{display:none}
+.csmenu{left:auto;right:0;min-width:190px}.csmenu .csmi{display:flex;align-items:center;gap:10px}.csmenu .vico{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.6}
+.jog{height:30px!important}.jog .hint{top:3px!important;font-size:.64rem}.jog .ticks{background-size:auto 32%,auto 55%!important}
+.when small.whensm{display:inline!important;margin:0!important;color:inherit;font-size:.62em;font-weight:500;opacity:.8;letter-spacing:.02em}
 </style>
 <style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}img{max-width:100%}</style>
 </head>
@@ -1602,7 +1623,7 @@ function normGlyphs(list){list.forEach(g=>{try{
  const r=glyphInk(g.txt);if(!r)return;const fs=g.T*100/gMet(r.L+r.R,r.A+r.D),k=fs/100;g.el.setAttribute('font-size',fs.toFixed(2));g.el.setAttribute('text-anchor','start');g.el.setAttribute('dominant-baseline','alphabetic');g.el.setAttribute('x',(g.cx-(r.R-r.L)/2*k).toFixed(2));g.el.setAttribute('y',(g.cy-(r.D-r.A)/2*k).toFixed(2))}catch(e){}})}
 try{document.fonts.ready.then(()=>{GLYPH_INK.clear();try{renderAll()}catch(e){}})}catch(e){}
 const P_EL={sun:'fire',mars:'fire',jupiter:'fire',moon:'water',neptune:'water',pluto:'water',mercury:'air',uranus:'air',venus:'earth',saturn:'earth'},pElCol=k=>P_EL[k]?`var(--${P_EL[k]})`:'var(--wwhite)';
-function drawPlanets(g,chart,rGlyph,rDeg,rTickOut,rTickIn,big,small,rEdge){const which=lastView&&chart===lastView.third?'t':lastView&&chart===lastView.outer?'o':'i',oc=which==='t'?'var(--third-tick)':'var(--outer-tick)';
+function drawPlanets(g,chart,rGlyph,rDeg,rTickOut,rTickIn,big,small,rEdge,lscale=1){const which=lastView&&chart===lastView.third?'t':lastView&&chart===lastView.outer?'o':'i',oc=which==='t'?'var(--third-tick)':'var(--outer-tick)';
  const items=shownKeys().filter(k=>chart.pts[k]&&!(chart.noHouses&&[...LOTS,'vertex'].includes(k))).map(k=>({k,lon:chart.pts[k].lon,sp:chart.pts[k].speed}));
  const SEP=big?9:8.2;items.forEach(o=>{o.f=1;o.w=SEP/2});
  for(let it=0;it<3;it++){spread(items,SEP);items.forEach(o=>{o.f=o.cn>1?Math.max(.72,1-.09*(o.cn-1)):1;o.w=SEP/2*o.f})}
@@ -1612,7 +1633,7 @@ function drawPlanets(g,chart,rGlyph,rDeg,rTickOut,rTickIn,big,small,rEdge){const
  // every planet's degree/sign/minute/R sits on the same ring: each slot is as deep as the widest label of that kind
  const SL={},SC={};LI.forEach(L=>L.parts.forEach(p=>{SL[p[0]]=Math.max(SL[p[0]]||0,L.ext(p,1))}));
  {const L0=LI.values().next().value;if(L0){const kinds=['d','s','t','r'].filter(t=>SL[t]),tot=kinds.reduce((a,t)=>a+SL[t]+2,0),room=L0.top-L0.lim;K=tot>room?Math.max(.72,room/tot):1;let rr=L0.top;kinds.forEach(t=>{SC[t]=rr-SL[t]*K/2;rr-=SL[t]*K+2*K})}}
- function labInfo(o){const f=deg(o.lon),rx=o.sp<0&&!['node','snode'].includes(o.k),col=which!=='i'?oc:'var(--wwhite)',op=which!=='i'?.95:1,gh=(big?31:small?25:26)/2*o.f,fsz=big?13:small?10.5:12;
+ function labInfo(o){const f=deg(o.lon),rx=o.sp<0&&!['node','snode'].includes(o.k),col=which!=='i'?oc:'var(--wwhite)',op=which!=='i'?.95:1,gh=(big?31:small?25:26)/2*o.f,fsz=(big?13:small?10.5:12)*lscale;
    const parts=[];if(S.wDeg!==false)parts.push(['d',f.dd+'°']);if(S.wSign)parts.push(['s',f.s]);if(S.wMin!==false)parts.push(['t',String(f.mm).padStart(2,'0')+'′']);if(rx)parts.push(['r','R']);
    const [ux0,uy0]=pt(o.show,100),ux=Math.abs(ux0-C)/100,uy=Math.abs(uy0-C)/100,lim=which!=='i'?rTickOut-(which==='t'?(lastView&&lastView.ot||60):(lastView&&lastView.ob||84))+1:rTickIn+1,top=rGlyph-(big?31:small?25:26)/2+1.5;
    const ext=([t,v],k)=>{const z=t==='d'?fsz*1.15:t==='r'?fsz*.85:fsz;return t==='s'?(fsz+1)*(ux*1+uy*1)*k:(ux*String(v).length*z*.6+uy*z*1.05)*k};
@@ -2057,12 +2078,14 @@ function renderWheel(v){
  svg.replaceChildren();const inner=v.inner,outer=v.outer,bi=!!outer,third=bi&&v.third||null,tri=!!third,Ly=S.layers;
  const ascLon=inner.noHouses?0:inner.pts.asc.lon;rot=180-(inner.locked&&lockSnap?lockSnap.asc:ascLon);
  const nr=['terms','decans','naks'].filter(k=>Ly[k]).length;
- const Z1=Ly.stars?382:394,Z2=Z1-(tri?24:50),base=Z2-22*nr,wn=(S.wDeg!==false?1:0)+(S.wMin!==false?1:0)+(S.wSign?1:0),OB=Math.round(tri?(base-74)*.32:50+wn*42/3),OT=tri?OB:0,oTop=base-OT,iTop=oTop-OB,IN=Math.round(tri?74:bi?base-OB-54-wn*50/3:base-84-wn*62/3);v.ob=OB;v.ot=OT;
+ const Z1=Ly.stars?382:394,Z2=Z1-(tri?24:50),base=Z2-22*nr,wn=(S.wDeg!==false?1:0)+(S.wMin!==false?1:0)+(S.wSign?1:0),OB=Math.round(tri?(base-62)*.31:50+wn*42/3),OT=tri?OB:0,oTop=base-OT,iTop=oTop-OB,IN=Math.round(tri?62:bi?base-OB-54-wn*50/3:base-84-wn*62/3);v.ob=OB;v.ot=OT;
  const bandCols=keys=>{const B={};let prev='G';keys.forEach(k=>{B[k]=prev==='G'?'P':'G';prev=B[k]});if(B.inner==='G')B.inner='P';
   let pi=0,last=null;keys.forEach(k=>{if(B[k]==='P'){pi=last==='P'?pi+1:0;B[k]=`var(--w-p${pi%2?2:1})`}else B[k]='var(--w-grey)';last=B[k].includes('-p')?'P':'G'});if(B.inner==='var(--w-p1)')B.inner='var(--w-pin,var(--w-p1))';return B};
  const ringKeys=['terms','decans','naks'].filter(k=>Ly[k]),bandKeys=[...ringKeys,...(tri?['third']:[]),...(bi?['outer']:[]),'inner'],BC=bandCols(bandKeys);
  // the first chart's planet band matches the single-chart wheel's planet band
- if(bi)BC.inner=bandCols([...ringKeys,'inner']).inner;
+ if(bi)BC.inner='var(--w-p2)';
+ // on a triwheel all three planet bands share the natal planet-band purple
+ if(tri)BC.third=BC.outer=BC.inner;
  svg.append(el('circle',{cx:C,cy:C,r:Z1,fill:'var(--w-grey)',stroke:'var(--w-line)'}));
  svg.append(el('circle',{cx:C,cy:C,r:Z2,fill:'none',stroke:'var(--w-line)'}));
  for(let s=0;s<12;s++){const [a,b]=pt(s*30,Z1),[c,d]=pt(s*30,Z2);svg.append(el('line',{x1:a,y1:b,x2:c,y2:d,stroke:'var(--w-line)'}));
@@ -2072,7 +2095,7 @@ function renderWheel(v){
  if(Ly.decans){const segs=[];for(let d=0;d<36;d++){const pl=CHALDEAN[d%7];segs.push({obj:`decan:${d}`,start:d*10,end:d*10+10,label:glyph(pl),title:`Decan ${d%3+1} of ${SIGN_N[Math.floor(d/3)]}: ${PT[pl][1]}`,size:11,major:d%3===0})}ring(r,r-22,segs,BC.decans);r-=22}
  if(Ly.naks){const off=Calc.ayanamsa(inner.jd,'lahiri')-(inner.ayanamsa||0),w=360/27,segs=[];for(let i=0;i<27;i++)segs.push({obj:`nak:${i}`,start:i*w+off,end:(i+1)*w+off,label:NAK_AB[i],tang:true,title:`${i+1}. ${NAKS[i]} (lord ${NAK_LORD[i%9]})`,size:9.5,font:'var(--mono)',color:'var(--nak-lab,var(--lilac,var(--muted)))',major:true});ring(r,r-22,segs,BC.naks);r-=22}
  svg.append(el('circle',{cx:C,cy:C,r:base,fill:tri?BC.third:bi?BC.outer:BC.inner,stroke:'none'}));if(tri)svg.append(el('circle',{cx:C,cy:C,r:oTop,fill:BC.outer,stroke:'none'}));if(bi)svg.append(el('circle',{cx:C,cy:C,r:iTop,fill:BC.inner,stroke:'none'}));
- for(let i=0;i<360;i+=1){if(i%30===0)continue;const len=i%10===0?11:i%5===0?7:4;const [a,b]=pt(i,base),[c,d]=pt(i,base-len);svg.append(el('line',{x1:a,y1:b,x2:c,y2:d,stroke:'var(--muted)','stroke-width':.7,opacity:.55}))}
+ for(let i=0;i<360;i+=1){if(i%30===0)continue;const len=i%10===0?11:i%5===0?7:4;const [a,b]=pt(i,base),[c,d]=pt(i,base-len);svg.append(el('line',{x1:a,y1:b,x2:c,y2:d,stroke:'var(--muted-line,var(--muted))','stroke-width':.7,opacity:.55}))}
  if(Ly.stars){const hits=new Set(starHits(inner).map(h=>h.star[0]));STARS.forEach(st=>{const L=starLon(st,inner.jd,inner.ayanamsa||0),[x,y]=pt(L,Z1+9),isHit=hits.has(st[0]);
    const t=el('text',{x,y,'text-anchor':'middle','dominant-baseline':'central','font-size':isHit?13:Math.max(6,10-st[4]*1.5),fill:isHit?'var(--accent)':'var(--muted)','font-family':'var(--sym)'},'✦'+VS);t.append(el('title',{},`${st[0]} ${deg(L).txt} ${SIGN_N[deg(L).s]}${isHit?' (conjunct a chart point)':''}`));svg.append(t);svg.append(el('circle',{cx:x,cy:y,r:9,fill:'transparent','data-obj':`star:${st[0]}`,class:'hit'}))})}
  if(bi){svg.append(el('circle',{cx:C,cy:C,r:iTop,fill:'none',stroke:'var(--outer-line)','stroke-width':1.2}))}if(tri){svg.append(el('circle',{cx:C,cy:C,r:oTop,fill:'none',stroke:'var(--outer-line)','stroke-width':1.2}))}
@@ -2091,7 +2114,7 @@ function renderWheel(v){
    const [t1,t2]=pt(lon,tri?Z1:Z2+14),[t3,t4]=pt(lon,Z2),[t5,t6]=pt(lon,oTop),[t7,t8]=pt(lon,oTop-12);svg.append(el('line',{x1:t1,y1:t2,x2:t3,y2:t4,stroke:'var(--lilac)','stroke-width':2.6,'stroke-linecap':'round',class:'pang'}));svg.append(el('line',{x1:t5,y1:t6,x2:t7,y2:t8,stroke:'var(--lilac)','stroke-width':2.6,class:'pang'}));
    const [lx,ly]=pt(angLabA(lon),tri?Z1+12:Z2+28);const t=el('text',{x:lx,y:ly,'text-anchor':'middle','dominant-baseline':'central','font-size':12,'font-weight':700,fill:'var(--lilac)','font-family':'var(--mono)'},l);t.append(el('title',{},`Progressed ${PT[k][1]} ${deg(lon).txt} ${SIGN_N[deg(lon).s]}`));svg.append(t);svg.append(hit({cx:lx,cy:ly,r:14,fill:'transparent'},`pt:o:${k}`))})}
  if(S.midpoints){const rM=(bi?iTop:base)-16,g=el('g',{class:'mids'});midpoints(inner).forEach(m=>{const [x,y]=pt(m.lon,rM);g.append(el('circle',{cx:x,cy:y,r:2,fill:'var(--lilac)',opacity:.8}));const hc=hit({cx:x,cy:y,r:5,fill:'transparent'},`mid:${m.a}:${m.b}`);hc.append(el('title',{},`${midName(m.a,m.b)} midpoint ${deg(m.lon).txt} ${SIGN_N[deg(m.lon).s]}`));g.append(hc)});svg.append(g)}
- if(tri){drawPlanets(svg,third,base-22,0,base,base-10,false,true,base);drawPlanets(svg,outer,oTop-22,0,oTop,oTop-10,false,true,oTop);drawPlanets(svg,inner,iTop-24,0,IN,IN+10,false,true,iTop)}
+ if(tri){drawPlanets(svg,third,base-22,0,base,base-10,false,true,base);drawPlanets(svg,outer,oTop-22,0,oTop,oTop-10,false,true,oTop);drawPlanets(svg,inner,iTop-22,0,IN,IN+10,false,true,iTop,.74)}
  else if(bi){drawPlanets(svg,outer,base-30,base-62,base,base-10,false,false,base);drawPlanets(svg,inner,base-OB-26,base-OB-56,IN,IN+10,false,true,base-OB)}
  else drawPlanets(svg,inner,base-46,base-90,IN,IN+10,true,false,base);
  [...svg.querySelectorAll('.hit')].sort((a,b)=>(a.dataset.obj.startsWith('pt:')?1:0)-(b.dataset.obj.startsWith('pt:')?1:0)).forEach(e=>svg.append(e));
@@ -2137,7 +2160,13 @@ function renderPositions(v){let h='';if(v.outer)h+=posTable(v.outer,v.outer.labe
   const nO=esc(o.label||'Outer'),nI=esc(v.mode==='composite'?'Composite':byId(activeId).name);
   h+=`<h3 class="sub">Aspects between the charts</h3><p class="note" style="margin:0 0 6px">${nO} (left) to ${nI} (right). Click a row for its meaning.</p><div class="tblwrap"><table><thead><tr><th>Aspect</th><th>Orb</th><th></th></tr></thead><tbody>${list.map(x=>`<tr class="clk" data-obj="asp:o:${x.r}:${x.c}"><td>${glyphHtml(x.r)} ${PT[x.r][1]} <span class="${aspectCls(x.a)}">${x.a.g} ${x.a.n}</span> ${glyphHtml(x.c)} ${PT[x.c][1]}</td><td class="mono">${x.a.orb.toFixed(2)}°</td><td class="muted">${x.a.applying?'Applying':'Separating'}</td></tr>`).join('')||'<tr><td class="muted" colspan="3">No aspects within orb.</td></tr>'}</tbody></table></div>`}catch(e){console.warn(e)}}
  if(S.midpoints)h+=midTable(v.inner);
- h+=`<h3 class="sub">Sect &amp; Moon</h3><p>${v.inner.day?'Day chart (Sun above the horizon)':'Night chart (Sun below the horizon)'}. Moon phase: ${ph}, ${el2.toFixed(1)}° from the Sun.</p>`;return h}
+ return h}
+function sectMoonHtml(ch){if(!ch||!ch.pts.sun||!ch.pts.moon)return '';const E=n360(ch.pts.moon.lon-ch.pts.sun.lon),ph=['New','Waxing crescent','First quarter','Waxing gibbous','Full','Waning gibbous','Last quarter','Waning crescent'][Math.floor(((E+22.5)%360)/45)];
+ const ill=Math.round((1-Math.cos(E*Math.PI/180))/2*100),hasH=!ch.noHouses&&ch.pts.asc,sun=ch.pts.sun.lon;let sky='';
+ if(hasH){const t=(180-ch.pts.asc.lon+sun)*Math.PI/180,sx=(12+9*Math.cos(t)).toFixed(2),sy=(12-9*Math.sin(t)).toFixed(2);
+  sky=`<svg class="smi" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9" fill="none" stroke="var(--muted)" stroke-opacity=".45"/><line x1="1.5" y1="12" x2="22.5" y2="12" stroke="var(--muted)" stroke-width="1.2"/><circle cx="${sx}" cy="${sy}" r="2.6" fill="#ffd36b"/></svg>`}
+ const moon=`<svg class="smi" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="var(--lilac)" stroke-width="1">${moonPhaseParts(E,'var(--lilac)')}</svg>`;
+ return `<h3 class="sub">Sect &amp; Moon</h3><div class="sectmoon"><span class="smr clk" data-obj="sect" title="About sect">${sky}${ch.day?'Day chart':'Night chart'}${hasH?` · Sun in the ${ord(Calc.houseOf(sun,ch.cusps))}`:''}</span><span class="smr clk" data-obj="pt:i:moon">${moon}${ph} · ${ill}% lit</span></div>`}
 function renderAspects(v){const ch=v.inner,o=v.outer;const rows=aspKeys(ch);const cols=o?aspKeys(o):rows;
  const gl=k=>{const g=PT[k][0];if(GLYPH_SVG[k])return svgGlyph(k);return g.length>1?`<span style="font:600 .62rem var(--mono)">${g}</span>`:g+VS};
  const orbs=o?Object.fromEntries(Object.entries(S.orbs).map(([k,v2])=>[k,Math.max(1,v2*(mode==='transits'||mode==='progressed'?S.transitOrb:0.75))])):S.orbs;
@@ -2170,6 +2199,7 @@ let lastView=null;
 function fmtShift(m){const sg=m<0?'−':'+';let r=Math.abs(m);const U=[['yr',525960],['mo',43830],['d',1440],['h',60],['min',1]],out=[];for(const [u,v] of U){const n=Math.floor(r/v+1e-9);if(n){out.push(n+' '+u);r-=n*v}if(out.length===2)break}return sg+(out.join(' ')||'0 min')}
 function syncThird(){const v=lastView,w=$('thirdWrap');if(!w)return;const ok=view==='chart'&&mode!=='acg'&&v&&v.outer&&S.chartStyle!=='north'&&S.chartStyle!=='south';w.hidden=!ok;
  const B=thirdId&&thirdId!=='__now'?byId(thirdId):null,nm=thirdId==='__now'?'Transits':B?B.name:'',bt=$('thirdBtn');bt.setAttribute('aria-pressed',String(!!thirdId));bt.title=bt.ariaLabel=thirdId?`Third chart: ${nm}. Click to remove it`:'Add a third chart (triwheel)'}
+const smallAmTz=t=>/ (AM|PM)( \S+)?$/.test(t)?t.replace(/ (AM|PM)( \S+)?$/,' <small class="whensm">$1$2</small>'):t.replace(/ ((?:GMT|UTC)[+\-−]?[\d:]*|[A-Z]{2,5})$/,' <small class="whensm">$1</small>');
 function renderAll(){const A=byId(activeId);try{if(!offsetMin&&!jog){tickPos=0;$('ticks').style.transform=''}}catch(e){}if(view==='eph'){try{saveEphState();renderEphForm()}catch(e){}}if(view==='zr'){zrSel=zrSel2=zrSel3=null;zrOpenSet.clear();try{renderZRPage()}catch(e){console.error(e)}}$('editActive').hidden=!!A.now||view==='acg';$('tLoc').hidden=!(mode==='transits'&&!A.now);document.querySelectorAll('#tLoc button').forEach(b=>{b.setAttribute('aria-pressed',String((S.transitLoc||'birth')===b.dataset.tl&&(b.dataset.tl==='birth'||!!A.cur)));b.title=b.dataset.tl==='current'?(A.cur?`Cast transits and show times for ${A.cur.place}`:'Add a current city to this chart first'):'Cast transits for the birthplace'});$('chartName').textContent=A.name+(otherId&&['synastry','composite'].includes(mode==='acg'?prevMode:mode)?' + '+byId(otherId).name:'');
  const curMode=mode==='acg'?(prevMode||'natal'):mode;try{window.mapModeSync&&mapModeSync()}catch(e){}$('modeLabel').textContent=(MODES.find(m=>m[0]===curMode)||MODES[0])[1];$('modes').innerHTML=MODES.map(([k,l],i)=>`<button type="button" role="menuitemradio" data-mode="${k}" aria-checked="${curMode===k}"><span>${l}</span><span class="kbd">${i+1}</span></button>`).join('');
  if(reloc&&reloc.id!==activeId)reloc=null;
@@ -2185,7 +2215,7 @@ function renderAll(){const A=byId(activeId);try{if(!offsetMin&&!jog){tickPos=0;$
  else if(mode_==='synastry'){const B=otherId&&byId(otherId);whenMs=B?chartUtc(B)+offsetMin*60000:Date.now();whenLabel=B?B.name+' · dial moves this chart':'Synastry'}
  else if(mode_==='transits'){whenMs=Date.now()+offsetMin*60000;whenLabel=`Transits for ${v.transitPlace}`}
  else{whenMs=Date.now()+offsetMin*60000;whenLabel='Target date'}
- $('when').innerHTML=`${esc(A.timeUnknown&&mode_==='natal'?fmtDate(whenMs):fmtFor(whenMs,mode_==='synastry'&&otherId?byId(otherId):mode_==='transits'&&v.transitCur?A.cur:A))}${offsetMin?` <span class="badge shiftb" title="Moved from ${byId(activeId).now?'now':'the chart time'}">${fmtShift(offsetMin)}</span>`:''}<small>${esc(whenLabel)}</small>`;
+ $('when').innerHTML=`${smallAmTz(esc(A.timeUnknown&&mode_==='natal'?fmtDate(whenMs):fmtFor(whenMs,mode_==='synastry'&&otherId?byId(otherId):mode_==='transits'&&v.transitCur?A.cur:A)))}${offsetMin?` <span class="badge shiftb" title="Moved from ${byId(activeId).now?'now':'the chart time'}">${fmtShift(offsetMin)}</span>`:''}<small>${esc(whenLabel)}</small>`;
  $('shiftBadge').hidden=true;document.querySelector('.dial').classList.toggle('shifted',!!offsetMin);
  $('stageNote').textContent=v.notes.join(' ');{const lb=$('wLock');lb.hidden=!v.lockable;lb.setAttribute('aria-pressed',String(!!(S.wheelLock&&v.lockable)));lb.title=lb.ariaLabel=S.wheelLock?'Unlock the wheel':'Lock the wheel: keep it from turning while the time moves'}
  $('engineNote').textContent=Calc.engine()==='Approximate orbital elements'?'Approximate ephemeris':'';
@@ -2193,7 +2223,7 @@ function renderAll(){const A=byId(activeId);try{if(!offsetMin&&!jog){tickPos=0;$
  if(infoObj&&!$('info').hidden){const h=infoFor(infoObj);if(h)$('infoBody').innerHTML=h;else hideInfo()}
  const P=$('pane');if(mode==='acg'){P.innerHTML=renderAcgPanel(v);acgPanelWire();mlRender(v);saveView();return}
  if(tab==='elem')tab='pos';P.innerHTML=tab==='pos'?(()=>{let e='';try{if(v.inner&&v.inner.pts.sun){if(v.outer&&v.outer.pts&&v.outer.pts.sun){const nI=v.mode==='composite'?'Composite':byId(activeId).name,nO=v.outer.label||'Outer',lab=(x,n)=>x.replace('<h3 class="sub">Elements</h3>',`<h3 class="sub">Elements · ${esc(n)}</h3>`).replace('<h3 class="sub">Modes</h3>',`<h3 class="sub">Modes · ${esc(n)}</h3>`);
-   e=`<div class="poselem">${lab(elemBalance(v.inner),nI)}</div><div class="poselem">${lab(elemBalance(v.outer),nO).replace(/data-obj="elem:/g,'data-obj="oelem:').replace(/data-obj="mode:/g,'data-obj="omode:')}</div>`}else e=`<div class="poselem">${elemBalance(v.inner)}</div>`}}catch(_){}return e+renderPositions(v)})():tab==='asp'?renderAspects(v):tab==='zr'?renderZR():tab==='ved'?renderVedicData(v):tab==='bazi'?renderBazi(v):renderInfo(v);
+   e=`<div class="poselem">${lab(elemBalance(v.inner),nI)}</div><div class="poselem">${lab(elemBalance(v.outer),nO).replace(/data-obj="elem:/g,'data-obj="oelem:').replace(/data-obj="mode:/g,'data-obj="omode:')}</div>`}else e=`<div class="poselem">${elemBalance(v.inner)}</div>`}}catch(_){}let sm='';try{sm=sectMoonHtml(v.inner)}catch(_){}return sm+e+renderPositions(v)})():tab==='asp'?renderAspects(v):tab==='zr'?renderZR():tab==='ved'?renderVedicData(v):tab==='bazi'?renderBazi(v):renderInfo(v);
  saveView();}
 
 /* ---------- interactions ---------- */
@@ -2413,7 +2443,7 @@ $('openSettings').onclick=()=>{const m=$('settingsModal');
 if(S.nowPlace){Object.assign(NOW_CHART,S.nowPlace)}else if(S.nowCity){const c=CITIES.find(x=>x[0]===S.nowCity);if(c){NOW_CHART.place=c[0];NOW_CHART.lat=c[1];NOW_CHART.lon=c[2];NOW_CHART.tz=c[3]}}
 document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeModals();closeLib();$('layersMenu').hidden=true;$('openLayers').setAttribute('aria-expanded','false')}});
 function renderLayers(){$('layersMenu').innerHTML=LAYERS.map(([k,l,d])=>`<label class="layer" for="ly-${k}"><input type="checkbox" id="ly-${k}" data-layer="${k}" ${S.layers[k]?'checked':''}><b>${l}</b><small>${d}</small></label>`).join('')}
-{const CSQ=matchMedia('(max-width:420px)'),seg=$('styleSeg'),closeCs=()=>{const m=$('csMenu');if(m)m.remove();seg.classList.remove('open')};
+{const CSQ={matches:true,addEventListener(){}},seg=$('styleSeg'),closeCs=()=>{const m=$('csMenu');if(m)m.remove();seg.classList.remove('open')};
  seg.addEventListener('click',e=>{const mi=e.target.closest('#csMenu [data-csm]');if(mi){e.stopPropagation();S.chartStyle=mi.dataset.csm;saveSet();closeCs();syncStyleSeg();renderAll();return}
   const b=e.target.closest('[data-cs]');if(!b)return;
   if(CSQ.matches){e.stopPropagation();if($('csMenu')){closeCs();return}seg.classList.add('open');const m=document.createElement('div');m.className='menu csmenu';m.id='csMenu';m.setAttribute('role','menu');
@@ -2835,6 +2865,26 @@ const POINT_NOTES={cupido:URA_NOTE,hades:URA_NOTE,zeus:URA_NOTE,kronos:URA_NOTE,
 const dms=lon=>{const s=Math.floor(lon/30),d=lon-s*30,dd=Math.floor(d),mf=(d-dd)*60,mm=Math.floor(mf),ss=Math.round((mf-mm)*60);return `${dd}°${String(mm).padStart(2,'0')}′${String(ss===60?59:ss).padStart(2,'0')}″ ${signSpan(s)} ${SIGN_N[s]}`};
 const ord=n=>n+(['th','st','nd','rd'][(n%100-20)%10]||['th','st','nd','rd'][n%100]||'th');
 const keyByName=n=>Object.keys(PT).find(k=>PT[k][1]===n);
+
+function infoSect(){const ch=lastView&&lastView.inner;if(!ch||!ch.pts.sun)return null;const day=!!ch.day,hasH=!ch.noHouses&&ch.cusps,nm=k=>PT[k][1];
+ const where=k=>{const p=ch.pts[k];if(!p)return '';return `${SIGN_N[Math.floor(p.lon/30)]}${hasH?`, ${ord(Calc.houseOf(p.lon,ch.cusps))} house`:''}`};
+ const light=day?'sun':'moon',ben=day?'jupiter':'venus',mal=day?'saturn':'mars',cBen=day?'venus':'jupiter',cMal=day?'mars':'saturn';
+ const above=k=>{if(!hasH||!ch.pts[k])return null;const h=Calc.houseOf(ch.pts[k].lon,ch.cusps);return h>=7};
+ const diurnal=['sun','jupiter','saturn'],noct=['moon','venus','mars'];
+ const inSect=k=>{const a=above(k);if(a==null)return null;return diurnal.includes(k)?a===day:a!==day};
+ const row=(k,role,txt)=>`<li class="clk" data-obj="pt:i:${k}">${glyphHtml(k)} <strong>${nm(k)}</strong> · ${role} <span class="muted">(${where(k)})</span><br><span class="muted">${txt}</span></li>`;
+ const sectNote=k=>{const v=inSect(k);return v==null?'':v?' It is also on the “right” side of the horizon for its sect, which strengthens it further.':' It sits on the opposite side of the horizon from its preference, so its strength is a little muted.'};
+ return `<p class="kicker">Sect</p><h4><span class="big">${day?'☉︎':'☽︎'}</span>${day?'Day chart':'Night chart'}</h4>
+ <dl><dt>Sun</dt><dd>${day?'Above':'Below'} the horizon${hasH?`, ${ord(Calc.houseOf(ch.pts.sun.lon,ch.cusps))} house`:''}</dd><dt>Sect light</dt><dd>${glyphHtml(light)} ${nm(light)}</dd><dt>Benefic of sect</dt><dd>${glyphHtml(ben)} ${nm(ben)}</dd><dt>Malefic of sect</dt><dd>${glyphHtml(mal)} ${nm(mal)}</dd><dt>Out-of-sect malefic</dt><dd>${glyphHtml(cMal)} ${nm(cMal)}</dd></dl>
+ <p class="il">What sect is</p><p class="interp">Sect is one of the oldest ideas in astrology. A chart is a <strong>day chart</strong> when the Sun is above the horizon at birth and a <strong>night chart</strong> when it is below. The planets are divided into two teams: the Sun, Jupiter and Saturn belong to the day, while the Moon, Venus and Mars belong to the night. Planets of the chart’s own sect work more smoothly and constructively; those of the opposite sect tend to be louder, harder to manage or less reliable.</p>
+ <p class="il">What it means for this chart</p><p class="interp">${day?`This is a day chart, so the Sun leads. Identity, visibility and purpose are the guiding light, and life tends to be approached in a more public, outward and goal-directed way. Jupiter is the most helpful planet, and Saturn, though still demanding, gives structure you can use: discipline pays off. Mars is the planet to watch, since out of sect it can act as the chart’s main source of friction, haste or conflict.`:`This is a night chart, so the Moon leads. Feelings, instinct, home and relationships are the guiding light, and life tends to be approached in a more private, responsive and intuitive way. Venus is the most helpful planet, and Mars, though still fiery, is a usable source of courage and drive. Saturn is the planet to watch, since out of sect it can bring the heaviest delays, fears or restrictions.`}</p>
+ <p class="il">The key planets</p><ul>
+ ${row(light,'sect light',`The leader of the chart’s team: its condition says a lot about vitality, direction and overall fortune.${sectNote(light)}`)}
+ ${row(ben,'benefic of sect',`The most reliably helpful planet here. Where it falls shows where support, ease and good fortune tend to come from.${sectNote(ben)}`)}
+ ${row(mal,'malefic of sect',`Its challenges are real but constructive: effort here tends to build strength and lasting results.${sectNote(mal)}`)}
+ ${row(cMal,'out-of-sect malefic',`Often the most difficult planet in the chart. The area of life it occupies may need the most patience and conscious handling.${sectNote(cMal)}`)}
+ ${row(cBen,'out-of-sect benefic',`Still kind, but less dependable: its gifts can come with excess or arrive unevenly.${sectNote(cBen)}`)}
+ </ul>${hasH?'':'<p class="note">Birth time unknown, so whether the Sun was above the horizon is uncertain.</p>'}`}
 function chartOf(which){return which==='t'?lastView.third:which==='o'?lastView.outer:lastView.inner}
 function viaThird(fn){const v=lastView;if(!v||!v.third)return null;const sv=lastView,sm=mode,so=otherId;
  try{lastView={...v,outer:v.third,mode:v.thirdMode};mode=v.thirdMode;if(v.thirdMode==='synastry')otherId=thirdId;
@@ -3057,6 +3107,7 @@ function infoTerm(s,start){const t=TERMS[s].find(x=>x[1]>start),r=t[0],end=t[1],
 function infoNak(i){const inner=lastView.inner,w=360/27,ay=Calc.ayanamsa(inner.jd,'lahiri')-(inner.ayanamsa||0),a=n360(i*w+ay),inn=shownKeys().filter(k=>inner.pts[k]&&nakOf(inner.pts[k].lon,inner.jd,inner.ayanamsa||0).i===i);
  return `<p class="kicker">Nakshatra</p><h4><span class="big" style="font:700 1.2rem var(--display)">${i+1}</span>${NAKS[i]}</h4><dl><dt>Lord</dt><dd>${NAK_LORD[i%9]}</dd><dt>Deity</dt><dd>${NAK_INFO[i][0]}</dd><dt>Symbol</dt><dd>${NAK_INFO[i][1]}</dd><dt>Sidereal span</dt><dd>${(i*w).toFixed(2)}°–${((i+1)*w).toFixed(2)}° (Lahiri)</dd><dt>On this wheel</dt><dd>${dms(a)} → ${dms(n360(a+w))}</dd><dt>Padas</dt><dd>four of 3°20′ each</dd></dl><p class="il">About</p><p class="interp">${NAK_INFO[i][2]}</p>${inn.length?`<p class="il">Points here</p><ul>${inn.map(k=>{const n=nakOf(inner.pts[k].lon,inner.jd,inner.ayanamsa||0);return `<li class="clk" data-obj="pt:i:${k}">${glyphHtml(k)} ${PT[k][1]} <span class="muted">pada ${n.pada}</span></li>`}).join('')}</ul>`:''}`}
 function infoFor(obj){const [t,...r]=obj.split(':');if(t==='tarot')return infoTarot(+r[0]);if(t==='zr')return infoZR(r[0]);if(!lastView)return null;if(t==='acgline')return infoAcgLine(r[0],r[1]);if(t==='paran')return infoParan(+r[0]);if(t==='ls')return infoLS(r[0]);if(t==='asl')return infoAsl(+r[0]);if(t==='acgpt')return infoAcgPt(+r[0],+r[1]);if(t==='reloc'){setReloc(+r[0],+r[1]);return null}if(t==='reloclines'){relocLines(+r[0],+r[1]);return null}
+ if(t==='sect')return infoSect();
  if((t==='pt'||t==='asp')&&r[0]==='t')return viaThird(()=>t==='pt'?infoPoint('o',r[1]):infoAspect('o',r[1],r[2]));if(t==='pt')return infoPoint(r[0],r[1]);if(t==='sign')return infoSign(+r[0]);if(t==='house')return infoHouse(+r[0]);if(t==='asp')return infoAspect(r[0],r[1],r[2]);
  if(t==='kar')return infoKar(+r[0]);if(t==='bz')return infoBazi(r);if(t==='varga')return infoVarga(r[0]);if(t==='yoga')return infoYoga(r[0],+r[1]);if(t==='star')return infoStar(r.join(':'));if(t==='elem'||t==='mode')return infoElem(t,+r[0]);if((t==='oelem'||t==='omode')&&lastView&&lastView.outer)return infoElem(t.slice(1),+r[0],lastView.outer,lastView.outer.label||'Outer');if(t==='velem'||t==='vmode'){const ch=lastView&&lastView.inner;if(!ch)return null;const D=+vedVarga.slice(1),vi=VARGAS.find(x=>x[0]===vedVarga);return infoElem(t.slice(1),+r[0],vargaChart(ch,D),vi[0]+' '+vi[1])}if(t==='mid')return infoMid(r[0],r[1]);if(t==='decan')return infoDecan(+r[0]);if(t==='term')return infoTerm(+r[0],+r[1]);if(t==='nak')return infoNak(+r[0]);return null}
 let infoObj=null;
