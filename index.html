@@ -96,7 +96,7 @@ select.inline{background:var(--raised);border:1px solid var(--line);border-radiu
 .when{font:500 1rem var(--mono);margin-right:auto}
 .when small{display:block;font:.72rem var(--mono);color:var(--muted)}
 .jog{position:relative;height:48px;border:1px solid var(--line);border-radius:8px;background:var(--raised);overflow:hidden;cursor:ew-resize;touch-action:none;user-select:none}
-.jog .ticks{position:absolute;inset:0 -200px;background:repeating-linear-gradient(90deg,var(--line) 0 1px,transparent 1px 12px),repeating-linear-gradient(90deg,var(--muted) 0 1px,transparent 1px 60px);background-size:auto 26%,auto 46%;background-repeat:repeat-x;background-position:0 100%,0 100%}
+.jog .ticks{position:absolute;inset:0 -200px;background:repeating-linear-gradient(90deg,color-mix(in srgb,var(--muted) 45%,transparent) 0 1px,transparent 1px 12px),repeating-linear-gradient(90deg,var(--muted) 0 1px,transparent 1px 60px);background-size:auto 26%,auto 46%;background-repeat:repeat-x;background-position:0 100%,0 100%}
 .jog::after{content:"";position:absolute;left:50%;top:0;bottom:0;width:2px;background:var(--accent);transform:translateX(-1px)}
 .jog .hint{position:absolute;left:8px;top:5px;line-height:1.3;padding:0 4px;border-radius:4px;background:var(--raised);font:.7rem var(--mono);color:var(--muted);pointer-events:none}
 .badge{font:500 .7rem var(--mono);letter-spacing:.06em;text-transform:uppercase;border:1px solid var(--accent);color:var(--accent);padding:2px 8px;border-radius:999px}
@@ -826,8 +826,17 @@ html:not([data-theme="paper"]):not([data-theme="pastel"]):not([data-theme="retro
 @media (max-width:860px){.tabs>button:first-child{margin-left:auto}.tabs>button:last-child{margin-right:auto}}
 @media (max-width:480px){.tabs{padding-left:8px;padding-right:8px;gap:0}.tabs button{padding:8px 6px;font-size:.68rem;letter-spacing:.03em}}
 @media (max-width:360px){.tabs button{padding:8px 4px;font-size:.62rem;letter-spacing:.02em}}
-html[data-theme="orrery"] :is(.chips,.acgleg) label:has(input:checked){background:color-mix(in srgb,var(--accent) 20%,#0e0e0f)}
-html[data-theme="orrery"]{--cusp:#48424f;--w-grey:#1d1e1f;--w-pin:#382b4b;--ved-kendra:#3d2f51;--ved-dus:#211b29;--ved-line:#2b2139}
+html[data-theme="orrery"] :is(.chips,.acgleg) label:has(input:checked){background:var(--raised)}
+html[data-theme="orrery"]{--cusp:#48424f;--w-grey:#1d1e1f;--w-pin:#382b4b;--ved-kendra:#3d2f51;--ved-dus:#211b29;--ved-line:#2b2139;--line:transparent;--raised:#1a1b1b}
+html[data-theme="orrery"] .f,html[data-theme="orrery"] select{background-color:var(--raised)}
+html[data-theme="orrery"] :is(.dial,.stage,.side,.eph-side,.tarot-side,.drawer,.modal) .iconbtn,html[data-theme="orrery"] .btn.ghost{background:var(--raised)}
+/* option pills: no background; the checkbox carries the state */
+:is(.chips,.acgleg) label,:is(.chips,.acgleg) label:has(input:checked){background:none!important;border-color:transparent!important;box-shadow:none!important}
+html[data-theme="orrery"] input[type=checkbox]{-webkit-appearance:none;appearance:none;width:16px;height:16px;margin:0;border:0;border-radius:4px;background:var(--raised);box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--muted) 30%,transparent);display:inline-grid;place-items:center;cursor:pointer;flex:none;vertical-align:middle}
+html[data-theme="orrery"] input[type=checkbox]:checked{box-shadow:none;background:var(--lilac) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M3.5 8.3l3 3 6-6.3' fill='none' stroke='%23231f27' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center/100% no-repeat}
+html[data-theme="orrery"] input[type=checkbox]:focus-visible{outline:2px solid var(--lilac);outline-offset:2px}
+.efield>span.efh{display:flex;align-items:center;justify-content:space-between;gap:8px}
+#ephTabs button[aria-pressed="false"]{background:var(--raised)}#ephTabs{gap:6px}
 </style>
 <style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}img{max-width:100%}</style>
 </head>
@@ -853,7 +862,7 @@ html[data-theme="orrery"]{--cusp:#48424f;--w-grey:#1d1e1f;--w-pin:#382b4b;--ved-
   <div class="tarot-side">
     <h2 class="tt">Celtic Cross</h2>
     <label class="l" for="tQ">Your question<textarea class="f" id="tQ" rows="3" placeholder="What do I need to understand about…"></textarea></label>
-    <label class="chk" for="tRev"><input type="checkbox" id="tRev" checked> Include reversed cards</label>
+    <label class="chk" for="tRev"><input type="checkbox" id="tRev"> Include reversed cards</label>
     <label class="l" for="tStyle">Card faces<select class="f" id="tStyle"><option value="rws">Rider–Waite–Smith (1909, Pamela Colman Smith)</option><option value="orrery">Destinned designs with astrology</option></select></label>
     <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn" id="tDeal" type="button">Shuffle and deal</button><button class="btn ghost" id="tReveal" type="button" disabled>Reveal all</button></div>
     <button class="btn ghost" id="tSave" type="button" disabled>Save reading</button>
@@ -2749,7 +2758,7 @@ function infoTarot(i){if(!tarot.cards)return null;const t=tarot.cards[i],c=cardB
  ${decList}
  <p class="il">Interpretation</p><p class="interp">${esc(body)}</p>`}
 $('tDeal').onclick=deal;
-$('tStyle').value=S.tarotStyle||'rws';$('tStyle').onchange=()=>{S.tarotStyle=$('tStyle').value;saveSet();renderTarot()};
+$('tRev').checked=!!S.tarotRev;$('tRev').onchange=()=>{S.tarotRev=$('tRev').checked;saveSet()};$('tStyle').value=S.tarotStyle||'rws';$('tStyle').onchange=()=>{S.tarotStyle=$('tStyle').value;saveSet();renderTarot()};
 $('tReveal').onclick=()=>{tarot.up=tarot.up.map(()=>true);renderTarot()};
 $('spread').addEventListener('click',e=>{const b=e.target.closest('[data-tarot]');if(!b)return;const i=+b.dataset.tarot;if(!tarot.up[i]){tarot.up[i]=true;b.classList.add('up');b.setAttribute('aria-label',`${POS[i][0]}: ${cardById(tarot.cards[i].id).name}`);$('tReveal').disabled=tarot.up.every(Boolean);$('tSave').disabled=false;renderTarotSummary();return}
  e.stopPropagation();showInfo('tarot:'+i,e.clientX,e.clientY)});
@@ -3071,9 +3080,12 @@ const EVENT_TYPES=[['ingress','Sign ingresses'],['station','Retrograde & direct 
 function chipsHtml(name,keys,checked){return `<div class="chips">${keys.map(k=>`<label for="${name}-${k}"><input type="checkbox" id="${name}-${k}" name="${name}" value="${k}" ${checked.includes(k)?'checked':''}>${gl(k)} ${PT[k][1].replace('North Node','Node').replace('Black Moon Lilith','Lilith')}</label>`).join('')}</div>`}
 function selHtml(id,keys,sel){return `<select class="f" id="${id}">${keys.map(k=>`<option value="${k}" ${k===sel?'selected':''}>${PT[k][1]}</option>`).join('')}</select>`}
 let ephState={type:'ingress',from:null,to:null};
+function ephAllNone(F){F.querySelectorAll('.efield').forEach(f=>{const cb=[...f.querySelectorAll('.chips input[type=checkbox]')],sp=f.querySelector(':scope>span');if(cb.length<2||!sp||sp.querySelector('.allnone'))return;sp.classList.add('efh');
+ sp.insertAdjacentHTML('beforeend','<span class="allnone"><button type="button" class="linkbtn" data-v="1">Select all</button><button type="button" class="linkbtn" data-v="0">Clear all</button></span>');
+ sp.querySelectorAll('.allnone button').forEach(b=>b.onclick=e=>{e.preventDefault();e.stopPropagation();cb.forEach(i=>{i.checked=b.dataset.v==='1'});try{saveEphState()}catch(_){}})})}
 function renderEphForm(){const F=$('ephForm');document.querySelectorAll('#ephTabs button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.et===ephTab));
  const today=isoDate(Date.now()),yr=new Date().getUTCFullYear();
- if(ephTab==='aspects'){F.innerHTML=aspectsForm();if($('ephPick'))$('ephPick').onclick=()=>openLib();$('amSeg').onclick=e=>{const b=e.target.closest('[data-am]');if(!b)return;saveEphState();ephState.am=b.dataset.am;renderEphForm()};F.querySelectorAll('[data-rng]').forEach(b=>b.onclick=()=>{const r=aspRange()[b.dataset.rng];$('aFrom').value=r[0];$('aTo').value=r[1];saveEphState();runEph()});$('ephRun').onclick=runEph;return}
+ if(ephTab==='aspects'){F.innerHTML=aspectsForm();if($('ephPick'))$('ephPick').onclick=()=>openLib();$('amSeg').onclick=e=>{const b=e.target.closest('[data-am]');if(!b)return;saveEphState();ephState.am=b.dataset.am;renderEphForm()};F.querySelectorAll('[data-rng]').forEach(b=>b.onclick=()=>{const r=aspRange()[b.dataset.rng];$('aFrom').value=r[0];$('aTo').value=r[1];saveEphState();runEph()});$('ephRun').onclick=runEph;ephAllNone(F);return}
  if(ephTab==='table'){F.innerHTML=`<div class="efield"><span>Start date</span><input class="f" id="tStart" type="date" value="${ephState.tStart||today}"></div>
   <div class="two"><div class="efield"><span>Every</span><select class="f" id="tStep"><option value="1">1 day</option><option value="7">7 days</option><option value="m">1 month</option><option value="y">1 year</option></select></div><div class="efield"><span>Rows</span><input class="f" id="tRows" inputmode="numeric" value="${ephState.tRows||60}"></div></div>
   <div class="efield"><span>Time of day (UTC)</span><select class="f" id="tTime"><option value="0">00:00 UT</option><option value="12">12:00 UT (noon)</option></select></div>
@@ -3093,7 +3105,7 @@ function renderEphForm(){const F=$('ephForm');document.querySelectorAll('#ephTab
   <div class="two"><div class="efield"><span>From</span><input class="f" id="eFrom" type="date" value="${ephState.from||yr+'-01-01'}"></div><div class="efield"><span>To</span><input class="f" id="eTo" type="date" value="${ephState.to||(yr+1)+'-12-31'}"></div></div>
   <button class="btn" id="ephRun" type="button">Search</button><p class="err" id="ephErr" hidden></p>`;
   $('eType').onchange=()=>{saveEphState();ephState.type=$('eType').value;renderEphForm()}}
- $('ephRun').onclick=runEph;}
+ $('ephRun').onclick=runEph;ephAllNone(F);}
 const checked=n=>[...document.querySelectorAll(`input[name="${n}"]:checked`)].map(i=>i.value);
 function saveEphState(){if(ephTab==='aspects'){if(!$('aFrom'))return;ephState.af=$('aFrom').value;ephState.at=$('aTo').value;ephState.ab=checked('ab');if($('an-sun')||document.querySelector('input[name="an"]'))ephState.an=checked('an');ephState.aa=checked('aa');ephState.ax=$('aExtra').checked;return}
  if(ephTab==='table'){ephState.tStart=$('tStart')?.value;ephState.tStep=$('tStep')?.value;ephState.tRows=$('tRows')?.value;ephState.tTime=$('tTime')?.value;return}
