@@ -827,7 +827,7 @@ html:not([data-theme="paper"]):not([data-theme="pastel"]):not([data-theme="retro
 @media (max-width:480px){.tabs{padding-left:8px;padding-right:8px;gap:0}.tabs button{padding:8px 6px;font-size:.68rem;letter-spacing:.03em}}
 @media (max-width:360px){.tabs button{padding:8px 4px;font-size:.62rem;letter-spacing:.02em}}
 html[data-theme="orrery"] :is(.chips,.acgleg) label:has(input:checked){background:var(--raised)}
-html[data-theme="orrery"]{--cusp:#48424f;--w-grey:#1d1e1f;--w-pin:#382b4b;--ved-kendra:#3d2f51;--ved-dus:#211b29;--ved-line:#2b2139;--line:transparent;--raised:#161717}
+html[data-theme="orrery"]{--cusp:#48424f;--w-grey:var(--raised);--asp-field:var(--bg);--wlab-dm:var(--muted);--nak-lab:var(--muted);--w-pin:#382b4b;--ved-kendra:#3d2f51;--ved-dus:#211b29;--ved-line:#2b2139;--line:transparent;--raised:#191a1a}
 html[data-theme="orrery"] .f,html[data-theme="orrery"] select{background-color:var(--raised)}
 html[data-theme="orrery"] :is(.dial,.stage,.side,.eph-side,.tarot-side,.drawer,.modal) .iconbtn,html[data-theme="orrery"] .btn.ghost{background:var(--raised)}
 /* option pills: no background; the checkbox carries the state */
@@ -1620,7 +1620,7 @@ function drawPlanets(g,chart,rGlyph,rDeg,rTickOut,rTickIn,big,small,rEdge){const
    const pos=parts.map(p=>SC[p[0]]);
    parts.forEach(([t,v],i)=>{const [dx,dy]=pt(o.show,pos[i]);
     if(t==='s')g.append(el('text',{x:dx,y:dy,'text-anchor':'middle','dominant-baseline':'central','font-size':(fsz+1)*k,'font-weight':300,fill:S.elemColors?`var(--${ELEM[v%4]})`:col,'font-family':'var(--sym)',class:'wlab-s'},SIGN_G[v]+VS));
-    else g.append(el('text',{x:dx,y:dy,'text-anchor':'middle','dominant-baseline':'central','font-size':(t==='d'?fsz*1.15:t==='r'?fsz*.85:fsz-1)*k,'font-weight':t==='d'||t==='r'?600:500,fill:t==='r'?'var(--fire)':col,opacity:op,'font-family':'var(--mono)'},v))})}
+    else g.append(el('text',{x:dx,y:dy,'text-anchor':'middle','dominant-baseline':'central','font-size':(t==='d'?fsz*1.15:t==='r'?fsz*.85:fsz-1)*k,'font-weight':t==='d'||t==='r'?600:500,fill:t==='r'?'var(--fire)':which==='o'?col:'var(--wlab-dm,'+col+')',opacity:op,'font-family':'var(--mono)'},v))})}
   g.append(hit({cx:x,cy:y,r:(big?21:small?15:18)*o.f,fill:'transparent'},`pt:${which}:${o.k}`));
  });normGlyphs(GN);}
 function aspectCls(a){return a.k==='conj'?'conj':a.cls==='minor'?'minr':(a.k==='squ'||a.k==='opp')?'hard':a.k==='tri'?'tri':'soft'}
@@ -2022,7 +2022,7 @@ function renderWheel(v){
  let r=Z2;const glyph=k=>PT[k][0]+VS;
  if(Ly.terms){const segs=[];TERMS.forEach((t,s)=>{let a=s*30;t.forEach(([pl,end])=>{segs.push({obj:`term:${s}:${a-s*30}`,start:a,end:s*30+end,label:glyph(pl),title:`Term of ${PT[pl][1]}, ${SIGN_N[s]} ${a-s*30}°–${end}°`,size:10,major:a===s*30});a=s*30+end})});ring(r,r-22,segs,BC.terms);r-=22}
  if(Ly.decans){const segs=[];for(let d=0;d<36;d++){const pl=CHALDEAN[d%7];segs.push({obj:`decan:${d}`,start:d*10,end:d*10+10,label:glyph(pl),title:`Decan ${d%3+1} of ${SIGN_N[Math.floor(d/3)]}: ${PT[pl][1]}`,size:11,major:d%3===0})}ring(r,r-22,segs,BC.decans);r-=22}
- if(Ly.naks){const off=Calc.ayanamsa(inner.jd,'lahiri')-(inner.ayanamsa||0),w=360/27,segs=[];for(let i=0;i<27;i++)segs.push({obj:`nak:${i}`,start:i*w+off,end:(i+1)*w+off,label:NAK_AB[i],tang:true,title:`${i+1}. ${NAKS[i]} (lord ${NAK_LORD[i%9]})`,size:9.5,font:'var(--mono)',color:'var(--lilac,var(--muted))',major:true});ring(r,r-22,segs,BC.naks);r-=22}
+ if(Ly.naks){const off=Calc.ayanamsa(inner.jd,'lahiri')-(inner.ayanamsa||0),w=360/27,segs=[];for(let i=0;i<27;i++)segs.push({obj:`nak:${i}`,start:i*w+off,end:(i+1)*w+off,label:NAK_AB[i],tang:true,title:`${i+1}. ${NAKS[i]} (lord ${NAK_LORD[i%9]})`,size:9.5,font:'var(--mono)',color:'var(--nak-lab,var(--lilac,var(--muted)))',major:true});ring(r,r-22,segs,BC.naks);r-=22}
  svg.append(el('circle',{cx:C,cy:C,r:base,fill:bi?BC.outer:BC.inner,stroke:'none'}));if(bi)svg.append(el('circle',{cx:C,cy:C,r:base-OB,fill:BC.inner,stroke:'none'}));
  for(let i=0;i<360;i+=1){if(i%30===0)continue;const len=i%10===0?11:i%5===0?7:4;const [a,b]=pt(i,base),[c,d]=pt(i,base-len);svg.append(el('line',{x1:a,y1:b,x2:c,y2:d,stroke:'var(--muted)','stroke-width':.7,opacity:.55}))}
  if(Ly.stars){const hits=new Set(starHits(inner).map(h=>h.star[0]));STARS.forEach(st=>{const L=starLon(st,inner.jd,inner.ayanamsa||0),[x,y]=pt(L,Z1+9),isHit=hits.has(st[0]);
