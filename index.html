@@ -3046,6 +3046,17 @@ const STAR_INFO={'Algol':['Saturn–Jupiter','The head of Medusa, long the most 
 'Rigil Kentaurus':['Venus–Jupiter','The centaur’s foot. Friendship, refinement and a helpful nature.'],
 'Praesepe Cluster':['Mars–Moon','The beehive in the Crab. Industry and enterprise; traditionally linked to eye trouble.']};
 const andList=t=>t.replace(/, ([^,]*)$/,' and $1');const pn=k=>(['sun','moon'].includes(k)?'the ':'')+PT[k][1];
+
+/* sect: day and night charts change how planets behave */
+function sectNote(ch,k){if(!ch||ch.noHouses||!ch.pts||!ch.pts.sun)return '';const day=!!ch.day;
+ const T={sun:day?'In a day chart the Sun is the sect light, the leader of the chart: identity and purpose are front and centre, and its condition shapes your overall direction.':'In a night chart the Sun is not the sect light; it works more quietly behind the Moon, so purpose is found through private, inner and relational life rather than public display.',
+ moon:day?'In a day chart the Moon is not the sect light; feelings take a supporting role behind the Sun’s sense of purpose, and emotional needs may be less visible to others.':'In a night chart the Moon is the sect light, the leader of the chart: instincts, feelings, the body and close bonds guide the whole life, and its condition matters greatly.',
+ jupiter:day?'In a day chart Jupiter is the benefic of sect, the most reliably helpful planet here: its gifts of growth, faith and opportunity tend to arrive generously and dependably.':'In a night chart Jupiter is out of sect: still kind, but its gifts can be uneven, excessive or arrive with strings attached.',
+ venus:day?'In a day chart Venus is out of sect: still pleasant and attractive, but its benefits can be fickle, indulgent or harder to hold on to.':'In a night chart Venus is the benefic of sect, the most reliably helpful planet here: love, pleasure, beauty and harmony flow more easily and dependably.',
+ saturn:day?'In a day chart Saturn is the malefic of sect: its demands are real but constructive, so patience, discipline and hard work build lasting results.':'In a night chart Saturn is out of sect, often the hardest planet in the chart: its restrictions, delays and fears can bite more deeply and need conscious, patient handling.',
+ mars:day?'In a day chart Mars is out of sect, often the hardest planet in the chart: its heat can turn into haste, conflict or accidents, so it needs a clear, deliberate outlet.':'In a night chart Mars is the malefic of sect: its courage and drive are more usable and constructive, its edge tempered by the night.',
+ mercury:(()=>{const ori=n360(ch.pts.sun.lon-ch.pts.mercury.lon)<180;return `Mercury takes the sect of its position: ${ori?'rising before the Sun (a morning star)':'setting after the Sun (an evening star)'}, it acts as a ${ori?'day':'night'} planet${ori===day?', in harmony with this '+(day?'day':'night')+' chart':', out of step with this '+(day?'day':'night')+' chart'}.`})()};
+ return T[k]||''}
 function pointText(which,k,p,inner,house){const v=lastView,s=Math.floor(p.lon/30),nm=PT[k][1],the=(['sun','moon','node','snode','asc','mc','dsc','ic',...LOTS,'vertex','lilith'].includes(k)?'The ':'')+nm;
  const mean=MEANING[k];let t='';
  if(k==='asc')t=`The Ascendant in ${SIGN_N[s]} describes how you meet the world and the temperament you bring to new situations: you tend to approach life ${SIGN_STYLE[s]}. Its ruler, ${pn(RULER[s])}, becomes the chart ruler and a key to the whole chart.`;
@@ -3058,6 +3069,7 @@ function pointText(which,k,p,inner,house){const v=lastView,s=Math.floor(p.lon/30
  if(k==='sun')t+=' '+SUN_SIGN_TXT[s];else if(k==='moon')t+=' '+MOON_SIGN_TXT[s];
  if(PLANET_DOMAIN[k]&&!['node','snode'].includes(k))t+=` At its best, your ${PLANET_DOMAIN[k]} shows ${SIGN_GIFT[s]}; under stress it can slip into ${SIGN_SHADOW[s]}.`;
  if(['uranus','neptune','pluto'].includes(k))t+=` As a slow outer planet its sign is shared by a whole generation; its house and aspects make it personal.`;
+ if(which==='i'){const sn=sectNote(inner,k);if(sn)t+=' '+sn}
  const dg=dignity(k,p.lon);if(dg)t+={dom:' It is in its own sign here, at home and able to act freely.',exalt:' It is exalted here, honoured and at its most elevated.',det:' In its detriment here, it works against the grain of the sign and must find unusual routes.',fall:' In its fall here, it is less comfortable and needs conscious effort to express well.'}[dg[0]];
  if(house&&!['asc','mc','dsc','ic'].includes(k)){const topic=andList(HOUSE_TOPICS[house-1].toLowerCase());
   if(which==='o'&&v.mode==='transits')t+=` Transiting your natal ${ord(house)} house, it brings its themes to ${topic} while it remains there.`;
@@ -3145,7 +3157,12 @@ function aspectText(which,a,b,asp){const v=lastView,o=v.outer,inner=v.inner,nm=k
   else if(v.mode==='solar'||v.mode==='lunar'){A=`The return chart's ${nm(a)}`;B='natal '+nm(b);ctx=` In a ${v.mode==='solar'?'solar return this colours the year':'lunar return this colours the month'} ahead.`}
   else if(v.mode==='synastry'){A=`${otherName?otherName+'\'s':'Their'} ${nm(a)}`;B=`${me}'s ${nm(b)}`;ctx=` Between two charts, this shows how ${otherName||'the other person'} stirs ${me}'s ${nm(b).toLowerCase()==='asc'?'Ascendant':nm(b)}, and how ${me} responds.`}}
  else{ctx=asp.applying?' It is applying, which traditional astrologers treat as stronger and still forming.':' It is separating, which traditional astrologers treat as already formed and somewhat weaker.'}
- const x=MEANING[a],y=MEANING[b],fn=ASP_TEXT[asp.k]||ASP_TEXT.qui;return cap(fn(x?`${A} (${x})`:A,y?`${B} (${y})`:B))+tight+ctx+(ASP_ADVICE[asp.k]?' '+ASP_ADVICE[asp.k]:'')}
+ let sx='';try{const ch=v.inner;if(ch&&!ch.noHouses&&ch.pts.sun){const day=!!ch.day,hard=['squ','opp','conj','qcx','ssq','sqq'].includes(asp.k),pr=[a,b];
+  const oom=day?'mars':'saturn',im=day?'saturn':'mars',ib=day?'jupiter':'venus';
+  if(pr.includes(oom)&&hard)sx=` In this ${day?'day':'night'} chart ${PT[oom][1]} is out of sect, so this contact tends to be sharper and needs more conscious handling.`;
+  else if(pr.includes(im)&&hard)sx=` In this ${day?'day':'night'} chart ${PT[im][1]} is of the chart’s sect, so its pressure is more constructive: effort here pays off.`;
+  else if(pr.includes(ib))sx=` In this ${day?'day':'night'} chart ${PT[ib][1]} is the benefic of sect, so its support here is especially reliable.`}}catch(e){}
+ const x=MEANING[a],y=MEANING[b],fn=ASP_TEXT[asp.k]||ASP_TEXT.qui;return cap(fn(x?`${A} (${x})`:A,y?`${B} (${y})`:B))+tight+ctx+sx+(ASP_ADVICE[asp.k]?' '+ASP_ADVICE[asp.k]:'')}
 function infoAspect(which,a,b){const v=lastView,c1=which==='o'?v.outer:v.inner,c2=v.inner;const p1=c1.pts[a],p2=c2.pts[b];if(!p1||!p2)return null;
  const orbs=which==='o'?Object.fromEntries(Object.entries(S.orbs).map(([k,x])=>[k,Math.max(1,x*(mode==='transits'||mode==='progressed'?S.transitOrb:0.75))])):S.orbs;
  const asp=Calc.aspectBetween(p1,p2,orbs,S.aspects);if(!asp)return null;const hs=lon=>(!c2.noHouses&&c2.cusps)?` · ${ord(Calc.houseOf(lon,c2.cusps))} house`:'';const sep=Math.abs(n360(p1.lon-p2.lon+180)-180);
