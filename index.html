@@ -1566,7 +1566,7 @@ const MODES=[['natal','Natal'],['relocated','Relocated'],['transits','Transits']
 const HOUSES=[['placidus','Placidus'],['koch','Koch'],['whole','Whole sign'],['equal','Equal (Asc)'],['equalmc','Equal (MC)'],['porphyry','Porphyry'],['regiomontanus','Regiomontanus'],['campanus','Campanus']];
 const ZODIACS=[['tropical','Tropical'],['lahiri','Sidereal · Lahiri'],['fagan','Sidereal · Fagan/Bradley'],['krishnamurti','Sidereal · Krishnamurti'],['raman','Sidereal · Raman']];
 /* ---------- settings (per browser) ---------- */
-const DEFAULT_SET={house:'placidus',zodiac:'tropical',node:'true',theme:'system',elemColors:true,show:{node:true,snode:false,lilith:false,vertex:false,fortune:true,spirit:false,eros:false,necessity:false,courage:false,victory:false,nemesis:false,exaltation:false,father:false,mother:false,marriage:false,children:false,siblings:false},
+const DEFAULT_SET={house:'placidus',zodiac:'tropical',node:'true',theme:'system',elemColors:true,houseWheel:true,show:{node:true,snode:false,lilith:false,vertex:false,fortune:true,spirit:false,eros:false,necessity:false,courage:false,victory:false,nemesis:false,exaltation:false,father:false,mother:false,marriage:false,children:false,siblings:false},
  layers:{asteroids:true,stars:true,decans:true,terms:true,naks:true},aspects:{conj:true,sext:true,squ:true,tri:true,opp:true,ssx:false,ssq:false,qui:false,sqq:false,bq:false,qcx:true},
  orbs:{conj:8,sext:5,squ:7,tri:7,opp:8,ssx:2,ssq:2,qui:2,sqq:2,bq:2,qcx:3},transitOrb:0.4,zrLot:'spirit',zrYear:360,step:'1440'};
 let S;try{S=Object.assign(structuredClone(DEFAULT_SET),JSON.parse(localStorage.getItem('orrery.settings')||'{}'))}catch(e){S=structuredClone(DEFAULT_SET)}
@@ -1650,7 +1650,11 @@ function computeIn(realMode){
 /* ---------- wheel ---------- */
 const svg=$('wheel'),NS='http://www.w3.org/2000/svg',C=400;
 const el=(t,a,txt)=>{const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);if(txt!=null)e.textContent=txt;return e};
-let rot=180;const pt=(lon,r)=>{const t=(rot+lon)*Math.PI/180;return [C+r*Math.cos(t),C-r*Math.sin(t)]};
+let rot=180,WARP=null;
+/* equal-size houses: map longitude so each house spans 30° of the wheel, stretching the zodiac to fit */
+const wl=lon=>{if(!WARP)return lon;const c=WARP.c,l=n360(lon);for(let i=0;i<12;i++){const a=c[i],span=n360(c[(i+1)%12]-a)||30,d=n360(l-a);if(d<span||i===11&&d<360)return WARP.a+i*30+d/span*30}return lon};
+const wlInv=w=>{if(!WARP)return w;const c=WARP.c,x=n360(w-WARP.a),i=Math.min(11,Math.floor(x/30)),f=(x-i*30)/30,span=n360(c[(i+1)%12]-c[i])||30;return n360(c[i]+f*span)};
+const pt=(lon,r)=>{const t=(rot+wl(lon))*Math.PI/180;return [C+r*Math.cos(t),C-r*Math.sin(t)]};
 const astOn=()=>Array.isArray(S.astOn)?S.astOn:[...Calc.AST_KEYS,...(S.layers.asteroids2?Calc.AST2_KEYS:[])];
 const astKeys=ch=>S.layers.asteroids?Calc.ALL_AST.filter(k=>astOn().includes(k)&&(!ch||ch.pts[k])):[];
 const shownKeys=()=>[...Calc.BODY_KEYS,...astKeys(),...Object.keys(S.show).filter(k=>S.show[k]),...(S.uranian?Calc.URA_KEYS:[])];
@@ -1665,7 +1669,7 @@ function spread(items,minSep){const s=items.slice().sort((a,b)=>a.lon-b.lon),n=s
    const idx=[...a.idx,...b.idx],off=offs(idx),pos=idx.reduce((t,j,k)=>t+lin[j]-off[k],0)/idx.length;cl.splice(-2,2,{idx,pos,off})}});
  cl.forEach(c=>c.idx.forEach((j,k)=>{seq[j].show=c.pos+c.off[k];seq[j].cn=c.idx.length}));
  return seq;}
-function sector(r1,r2,a0,a1){const [x1,y1]=pt(a0,r1),[x2,y2]=pt(a1,r1),[x3,y3]=pt(a1,r2),[x4,y4]=pt(a0,r2),large=n360(a1-a0)>180?1:0;return `M${x1},${y1} A${r1},${r1} 0 ${large} 0 ${x2},${y2} L${x3},${y3} A${r2},${r2} 0 ${large} 1 ${x4},${y4} Z`}
+function sector(r1,r2,a0,a1){const [x1,y1]=pt(a0,r1),[x2,y2]=pt(a1,r1),[x3,y3]=pt(a1,r2),[x4,y4]=pt(a0,r2),large=n360(wl(a1)-wl(a0))>180?1:0;return `M${x1},${y1} A${r1},${r1} 0 ${large} 0 ${x2},${y2} L${x3},${y3} A${r2},${r2} 0 ${large} 1 ${x4},${y4} Z`}
 const hit=(attrs,obj)=>{const e=el(attrs.d?'path':attrs.r?'circle':attrs.points?'polygon':attrs.width!=null?'rect':'line',{...attrs,'data-obj':obj,class:'hit'});return e};
 const WHEEL_SVG=Object.assign({},GLYPH_SVG,{sun:{parts:'<circle cx="12" cy="12" r="8.6"/><circle cx="12" cy="12" r="1.1"/>',vb:'0 0 24 24',fill:false},fortune:{parts:'<circle cx="12" cy="12" r="8.6"/><path d="M5.9 5.9L18.1 18.1M18.1 5.9L5.9 18.1"/>',vb:'0 0 24 24',fill:false},moon:{parts:'',vb:'0 0 24 24',fill:false}});
 function moonPhaseParts(E,col){E=((E%360)+360)%360;const R=8.6,c=12,rx=(R*Math.abs(1-(E%180)/90)).toFixed(2),wax=E<180,gib=wax?E>90:E<270,T=`${c} ${c-R}`,B=`${c} ${c+R}`;
@@ -1692,9 +1696,9 @@ try{document.fonts.ready.then(()=>{GLYPH_INK.clear();try{renderAll()}catch(e){}}
 const P_EL={sun:'fire',mars:'fire',jupiter:'fire',moon:'water',neptune:'water',pluto:'water',mercury:'air',uranus:'air',venus:'earth',saturn:'earth'},pElCol=k=>P_EL[k]?`var(--${P_EL[k]})`:'var(--wwhite)';
 function drawPlanets(g,chart,rGlyph,rDeg,rTickOut,rTickIn,big,small,rEdge,lscale=1,pad=0){const which=lastView&&chart===lastView.third?'t':lastView&&chart===lastView.outer?'o':'i',oc=which==='t'?'var(--third-tick)':'var(--outer-tick)';
  const items=shownKeys().filter(k=>chart.pts[k]&&!(chart.noHouses&&[...LOTS,'vertex'].includes(k))).map(k=>({k,lon:chart.pts[k].lon,sp:chart.pts[k].speed}));
- const SEP=big?9:8.2;items.forEach(o=>{o.f=1;o.w=SEP/2});
+ const SEP=big?9:8.2;items.forEach(o=>{o.f=1;o.w=SEP/2});if(WARP)items.forEach(o=>{o.real=o.lon;o.lon=wl(o.lon)});
  for(let it=0;it<3;it++){spread(items,SEP);items.forEach(o=>{o.f=o.cn>1?Math.max(.72,1-.09*(o.cn-1)):1;o.w=SEP/2*o.f})}
- const placed=spread(items,SEP),GN=[],gT=o=>(big?31:small?25:26)*.72*(which!=='i'?1:.95)*o.f*(['sun','moon','fortune'].includes(o.k)?.86:1);
+ const placed=spread(items,SEP);if(WARP)placed.forEach(o=>{o.show=wlInv(o.show);o.lon=o.real});const _p0=0,GN=[],gT=o=>(big?31:small?25:26)*.72*(which!=='i'?1:.95)*o.f*(['sun','moon','fortune'].includes(o.k)?.86:1);
  // one label scale for the whole chart, set by the planet that needs the most room
  let K=1;const LI=new Map();placed.forEach(o=>{const L=labInfo(o);LI.set(o,L)});const KN=[...LI.values()].map(L=>L.kn).sort((a,b)=>a-b),KMED=KN.length?KN[Math.floor(KN.length*.4)]:1;
  // every planet's degree/sign/minute/R sits on the same ring: each slot is as deep as the widest label of that kind
@@ -2150,6 +2154,7 @@ const angLabA=lon=>lon,angLabOp=lon=>{const d=Math.abs(((lon%30)+30)%30-15);retu
 function renderWheel(v){
  {const ved=S.chartStyle==='north'||S.chartStyle==='south';$('stage').classList.toggle('vedic',ved);if(ved){renderVedic(v);return}}
  svg.replaceChildren();const inner=v.inner,outer=v.outer,bi=!!outer,third=bi&&v.third||null,tri=!!third,Ly=S.layers;
+ WARP=S.houseWheel&&!inner.noHouses&&inner.cusps&&!['whole','equal'].includes(inner.houseUsed)&&!inner.locked?{c:inner.cusps.slice(0,12).map(n360),a:n360(inner.cusps[0])}:null;
  const ascLon=inner.noHouses?0:inner.pts.asc.lon;rot=180-(inner.locked&&lockSnap?lockSnap.asc:ascLon);
  const nr=['terms','decans','naks'].filter(k=>Ly[k]).length;
  const Z1=Ly.stars?382:394,Z2=Z1-(tri?24:50),base=Z2-22*nr,wn=(S.wDeg!==false?1:0)+(S.wMin!==false?1:0)+(S.wSign?1:0),OB=Math.round(tri?(base-52)*.325:bi?58+wn*15:50+wn*42/3),OT=tri?OB:0,oTop=base-OT,iTop=oTop-OB,IN=Math.round(tri?52:bi?base-OB-56-wn*15:base-84-wn*62/3);v.ob=OB;v.ot=OT;
@@ -2660,6 +2665,7 @@ $('openSettings').onclick=()=>{const m=$('settingsModal');
  m.innerHTML=`<h2 id="setTitle">Settings</h2>
  <div class="fgrid">
   <label class="l" for="sHouse">House system<select class="f" id="sHouse">${HOUSES.map(([k,l])=>`<option value="${k}" ${S.house===k?'selected':''}>${l}</option>`).join('')}</select></label>
+  <label class="chk" for="sHw"><input type="checkbox" id="sHw" ${S.houseWheel?'checked':''}> Draw houses equal size (the sign ring stretches to fit the cusps)</label>
   <label class="l" for="sZod">Zodiac<select class="f" id="sZod">${ZODIACS.map(([k,l])=>`<option value="${k}" ${S.zodiac===k?'selected':''}>${l}</option>`).join('')}</select></label>
   <label class="l" for="sNode">Lunar nodes<select class="f" id="sNode"><option value="true" ${S.node==='true'?'selected':''}>True node</option><option value="mean" ${S.node==='mean'?'selected':''}>Mean node</option></select></label>
   <label class="l" for="sZry">Releasing year length<select class="f" id="sZry"><option value="360" ${S.zrYear==360?'selected':''}>360 days (Valens)</option><option value="365.25" ${S.zrYear==365.25?'selected':''}>365.25 days</option></select></label>
@@ -2684,7 +2690,7 @@ $('openSettings').onclick=()=>{const m=$('settingsModal');
  <div class="l place"><label for="sCity">Place</label><input class="f" id="sCity" value="${esc(NOW_CHART.place)}" autocomplete="off"><ul class="sugg" id="sSugg" role="listbox" hidden></ul></div>
  <div style="display:flex;justify-content:flex-end"><button class="btn" id="sDone" type="button">Done</button></div>`;
  m.hidden=false;$('scrim').hidden=false;
- const upd=()=>{S.house=$('sHouse').value;S.zodiac=$('sZod').value;S.node=$('sNode').value;S.zrYear=+$('sZry').value;S.transitOrb=Math.min(1,Math.max(.1,+$('sTo').value||.4));S.elemColors=$('sEl').checked;
+ const upd=()=>{S.house=$('sHouse').value;if($('sHw'))S.houseWheel=$('sHw').checked;S.zodiac=$('sZod').value;S.node=$('sNode').value;S.zrYear=+$('sZry').value;S.transitOrb=Math.min(1,Math.max(.1,+$('sTo').value||.4));S.elemColors=$('sEl').checked;
   m.querySelectorAll('[data-show]').forEach(i=>S.show[i.dataset.show]=i.checked);if($('sUra'))S.uranian=$('sUra').checked;if($('sMid'))S.midpoints=$('sMid').checked;m.querySelectorAll('[data-asp]').forEach(i=>S.aspects[i.dataset.asp]=i.checked);m.querySelectorAll('[data-orb]').forEach(i=>S.orbs[i.dataset.orb]=Math.max(0,+i.value||0));
   applyTheme();saveSet();renderAll()};
  m.onclick=e=>{const b=e.target.closest('[data-setall]');if(!b)return;const on=b.dataset.v==='1';m.querySelectorAll(`[data-group="${b.dataset.setall}"] input[type=checkbox]`).forEach(i=>i.checked=on);m.dispatchEvent(new Event('change'))};
