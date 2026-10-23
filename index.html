@@ -2051,7 +2051,7 @@ const BZ_STAR_TXT={nob:['Nobleman (Tian Yi Gui Ren)','The most auspicious helper
 function bzGod(dm,st){const e0=dm>>1,p0=dm%2,e=st>>1,same=(st%2)===p0;if(e===e0)return same?'bj':'jc';if((e0+1)%5===e)return same?'ss':'sg';if((e0+2)%5===e)return same?'pc':'zc';if((e+2)%5===e0)return same?'qs':'zg';return same?'py':'zy'}
 const bzIdx=(s,b)=>{for(let i=0;i<60;i++)if(i%10===s&&i%12===b)return i;return 0};
 function bzLocal(ms,A){const off=A.tz==='manual'?(A.offset||0):Calc.tzOffsetMin(ms,A.tz||'UTC'),d=new Date(ms+off*60000);return {y:d.getUTCFullYear(),mo:d.getUTCMonth()+1,d:d.getUTCDate(),h:d.getUTCHours(),mi:d.getUTCMinutes()}}
-function bziCalc(v){const A=byId(activeId),ms=v&&v.inner&&v.inner.jd?(v.inner.jd-2440587.5)*86400000:chartUtc(A),jd=ms/86400000+2440587.5,L=n360(Calc.rawLons(jd).sun),t=bzLocal(ms,A);
+function bziCalc(v){const A=byId(activeId),ms=v&&v.inner&&v.inner.jd?Math.round((v.inner.jd-2440587.5)*86400)*1000:chartUtc(A),jd=ms/86400000+2440587.5,L=n360(Calc.rawLons(jd).sun),t=bzLocal(ms,A);
  let Y=t.y;if(t.mo<=2&&L>=270&&L<315)Y--;const ys=((Y-4)%10+10)%10,yb=((Y-4)%12+12)%12;
  const m=Math.floor(n360(L-315)/30),mb=(m+2)%12,ms_=(((ys%5)*2+2)+m)%10;
  let dayMs=Date.UTC(t.y,t.mo-1,t.d);if(!A.timeUnknown&&t.h>=23)dayMs+=86400000;const di=((Math.floor(dayMs/86400000+2440587.5+0.5)+49)%60+60)%60,ds=di%10,db=di%12;
