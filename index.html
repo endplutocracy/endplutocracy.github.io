@@ -2447,7 +2447,7 @@ function renderZR(){const A=byId(activeId);if(A.now)return '<p class="muted">Zod
  return `<div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:12px"><div class="seg" role="group" aria-label="Lot"><button data-zl="spirit" aria-pressed="${S.zrLot==='spirit'}">From Spirit</button><button data-zl="fortune" aria-pressed="${S.zrLot==='fortune'}">From Fortune</button></div><span class="note">Lot in ${SIGN_N[Math.floor(d.lot/30)]} · ${yd}-day years · levels 1 to 4 · peaks counted from Fortune</span></div><div class="zr">${zrRows(L1.filter(p=>p.start<birth+100*31557600000),fSign,yd,birth,now,'L')}</div>`}
 function renderInfo(v){const A=byId(activeId),utc=chartUtc(A);
  const rows=[['Name',A.name],['Local time',A.now?'Live':A.timeUnknown?fmtDate(utc)+' (time unknown)':fmtFor(utc,A)],['UTC',new Date(utc).toISOString().replace('T',' ').slice(0,16)],['Place',A.place||'—'],['Current city',A.cur?`${A.cur.place} (${A.cur.tz})`:'—'],['Coordinates',`${Math.abs(A.lat).toFixed(3)}°${A.lat>=0?'N':'S'}, ${Math.abs(A.lon).toFixed(3)}°${A.lon>=0?'E':'W'}`],['Time zone',A.tz==='manual'?`Manual offset ${(A.offset||0)/60} h`:A.tz],['Folder',A.folder||'—'],['Houses',HOUSES.find(h=>h[0]===v.inner.houseUsed)?.[1]],['Zodiac',ZODIACS.find(z=>z[0]===S.zodiac)[1]+(v.inner.ayanamsa?` (ayanamsa ${v.inner.ayanamsa.toFixed(4)}°)`:'')],['Nodes',S.node==='true'?'True node':'Mean node'],['Ephemeris',Calc.engine()],['Julian day (UT)',v.inner.jd.toFixed(5)]];
- let h=`<h3 class="sub">Chart data</h3><table><tbody>${rows.map(r=>`<tr><td class="muted">${r[0]}</td><td style="white-space:normal">${esc(String(r[1]??''))}</td></tr>`).join('')}</tbody></table>`;
+ let h=(A.now?`<div class="rpcta"><p class="note" style="margin:0">Open a saved chart from the library to get a full printable reading.</p></div>`:`<div class="rpcta"><button class="btn" type="button" data-fullreport>Full reading</button><span class="note">A printable reading across every system, with timing.</span></div>`)+`<h3 class="sub">Chart data</h3><table><tbody>${rows.map(r=>`<tr><td class="muted">${r[0]}</td><td style="white-space:normal">${esc(String(r[1]??''))}</td></tr>`).join('')}</tbody></table>`;
  if(A.shared)h+=sharedInfoBtns();else if(!A.now)h+=`<div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:16px"><button class="btn ghost" data-act="edit">Edit</button><button class="btn ghost" data-act="dup">Duplicate</button><button class="btn ghost" type="button" data-sh="link">Share link</button><button class="btn ghost" type="button" data-sh="png">Save image</button><button class="btn ghost" type="button" data-sh="pdf">Print / PDF</button><button class="btn danger" data-act="del">Delete</button></div><div id="delConfirm"></div>`;
  else h+=`<p class="note" style="margin-top:12px">The live sky is cast for ${esc(A.place)}. Change it in Settings.</p>`;
  try{h+=xChartExtra(A)}catch(e){console.warn(e)}
@@ -4720,7 +4720,7 @@ function numHtml(A){if(A.now)return '';const N=numerology(A),r=(l,n,d,key)=>n==n
  return `<h3 class="sub">Numerology</h3><div class="tblwrap"><table><tbody>${r('Life path',N.lp,'the main life lesson','lp')}${r('Birthday',N.bd,'a natural talent','bd')}${r('Expression',N.ex,'from the full name','ex')}${r('Soul urge',N.su,'from the vowels','su')}${r('Personality',N.pe,'from the consonants','pe')}${r('Personal year '+N.yr,N.py,'the theme of the year','py')}</tbody></table></div>`+RSN('Pythagorean numerology: digits are added and reduced to a single number, keeping the master numbers 11, 22 and 33. Name numbers use the chart’s name as entered (the full birth name is traditional), with A=1 through I=9 repeating; Y counts as a consonant.')}
 
 /* ---------- Chart tab extras ---------- */
-function xChartExtra(A){let h='';if(lastView&&lastView.inner&&lastView.inner.pts.sun)h+=`<div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:16px">${A.now?'':'<button class="btn" type="button" data-fullreport>Full reading</button>'}<button class="btn ghost" type="button" data-report>Short natal report</button><button class="btn ghost" type="button" data-guide>Guide &amp; glossary</button></div>`;try{h+=numHtml(A)}catch(e){console.warn(e)}try{h+=notesHtml(A)}catch(e){console.warn(e)}return h}
+function xChartExtra(A){let h='';if(lastView&&lastView.inner&&lastView.inner.pts.sun)h+=`<div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:16px"><button class="btn ghost" type="button" data-report>Short natal report</button><button class="btn ghost" type="button" data-guide>Guide &amp; glossary</button></div>`;try{h+=numHtml(A)}catch(e){console.warn(e)}try{h+=notesHtml(A)}catch(e){console.warn(e)}return h}
 document.addEventListener('click',e=>{if(e.target.closest('[data-report]')){natalReport();return}if(e.target.closest('[data-guide]')){openGuide()}});
 
 /* ---------- library search by placement ---------- */
@@ -5414,7 +5414,7 @@ function rpHtml(R,img){const A=R.A,ch=R.wW,chP=R.wP,hasT=!A.timeUnknown&&!ch.noH
   if(R.bz)h+=`<h3>Four Pillars</h3><table><tr><th>Pillar</th><th>Stem</th><th>Branch</th><th>Ten God</th><th>Na Yin</th></tr>${R.bz.c.P.map((p,i)=>p.s==null?'':`<tr><td>${p.n}</td><td>${BZ_S[p.s][0]} ${BZ_S[p.s][1]} · ${p.s%2?'Yin':'Yang'} ${BZ_E[p.s>>1]}</td><td>${BZ_B[p.b][0]} ${BZ_B[p.b][1]} · ${BZ_B[p.b][2]}</td><td>${i===1?'Day Master':BZ_GODS[bzGod(R.bz.c.dm,p.s)][1]}</td><td>${BZ_NAYIN[Math.floor(bzIdx(p.s,p.b)/2)]||''}</td></tr>`).join('')}</table>`;
   h+=`<p class="rp-sig">Prepared with the Destinned chart site, ${rpDay(R.T)}.</p><p class="rp-small">Astrology describes tendencies and seasons, not fixed events. Nothing here is medical, legal or financial advice.</p>`;
   sec('Appendix','Chart data',h,'rp-appx')}
- return H.join('\n')}
+ return H.join('\n').replace(/<table/g,'<div class="rp-tw"><table').replace(/<\/table>/g,'</table></div>')}
 
 /* ===== UI ===== */
 const RP_CSS=`
@@ -5443,13 +5443,13 @@ const RP_CSS=`
 .rp-box.rp-flow{break-inside:auto}
 .rp-box h4{margin-top:0}.rp-box p:last-child{margin-bottom:0}
 .rp-doc ul{margin:0 0 9pt;padding-left:16pt}.rp-doc li{margin:0 0 4pt}
-.rp-doc table{width:100%;border-collapse:collapse;font-size:8.6pt;margin:6pt 0 12pt}
+.rp-tw{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:6pt 0 12pt;max-width:100%}.rp-doc table{width:100%;border-collapse:collapse;font-size:8.6pt;margin:0}.rp-doc td{overflow-wrap:break-word;hyphens:auto}
 .rp-doc th{text-align:left;font-weight:600;color:#6b6257;text-transform:uppercase;font-size:7.2pt;letter-spacing:.08em;border-bottom:1px solid #1f1b16;padding:4pt 5pt}
 .rp-doc td{border-bottom:.5pt solid #d9cfbf;padding:3.5pt 5pt;vertical-align:top}
 .rp-doc tr{break-inside:avoid}.rp-doc td,.rp-doc th{white-space:normal;font-family:var(--display),system-ui,sans-serif;font-variant-numeric:normal}.rp-doc td.n{white-space:nowrap}.rp-doc table{table-layout:auto}
 .rp-doc tr.rp-cur td{background:#ebe3f1}
 .rp-fig{text-align:center;margin:6pt 0 10pt;break-inside:avoid}
-.rp-doc{overflow:hidden}.rp-fig svg,.rp-wheel svg{overflow:hidden;width:100%;height:auto;max-height:5.4in;display:block;margin:0 auto}
+.rp-fig svg,.rp-wheel svg{overflow:hidden;width:100%;height:auto;max-height:5.4in;display:block;margin:0 auto}
 .rp-two .rp-fig svg{max-height:3.2in}
 .rp-cap{font-size:8pt;color:#6b6257;margin-top:4pt}
 .rp-two{display:grid;grid-template-columns:1.15fr .85fr;gap:16pt;align-items:start}
@@ -5464,7 +5464,7 @@ const RP_CSS=`
 .rp-pillars .c{font-size:22pt;line-height:1.2;margin:2pt 0}.rp-pillars .t{font-size:8pt}.rp-pillars .g{font-size:7.5pt;color:#4f2e6e;font-weight:600}
 .rp-appx td{padding:2.2pt 5pt}
 .rp-wait{max-width:8.5in;margin:80px auto;text-align:center;font:500 1rem var(--display);color:#4f2e6e}
-@media (max-width:700px){.rp-doc{margin:10px 8px 40px}.rp-doc section{padding:24px 18px}.rp-two{grid-template-columns:1fr}.rp-data{grid-template-columns:1fr}.rp-cover{min-height:auto}.rp-cover h1{font-size:32pt;margin-top:24px}.rp-doc table{font-size:8pt}.rp-pillars .c{font-size:16pt}#xRep .rp-bar button{padding:6px 10px}}
+@media (max-width:700px){.rp-doc td.n{white-space:normal}.rp-doc td,.rp-doc th{padding:3px 4px}.rp-doc table{font-size:7.6pt}.rp-doc{margin:10px 8px 40px}.rp-doc section{padding:24px 18px}.rp-two{grid-template-columns:1fr}.rp-data{grid-template-columns:1fr}.rp-cover{min-height:auto}.rp-cover h1{font-size:32pt;margin-top:24px}.rp-doc table{font-size:8pt}.rp-pillars .c{font-size:16pt}#xRep .rp-bar button{padding:6px 10px}}
 @page frep{size:letter;margin:.7in .75in .75in .75in;background:#fbf7ee;@bottom-right{content:counter(page);font:8pt sans-serif;color:#8a8076}}
 @media print{
  body.rpprint>*:not(#xRep){display:none!important}
@@ -5477,7 +5477,9 @@ const RP_CSS=`
  .rp-doc section.rp-cont{break-before:auto;padding-top:26pt}
  .rp-doc .rp-yr h3,.rp-doc h3,.rp-doc h4{break-after:avoid}
  .rp-cover{min-height:9.3in}
-}`;
+ .rp-tw{overflow:visible}
+}
+.rpcta{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:0 0 14px;padding:10px 12px;border-radius:14px;background:color-mix(in srgb,var(--accent) 12%,transparent)}.rpcta .note{margin:0}`;
 (()=>{try{const st=document.createElement('style');st.id='rpCss';st.textContent=RP_CSS;document.head.append(st)}catch(e){}})();
 let rpOldTheme=null;
 function rpClose(){const o=$('xRep');if(o)o.remove();document.body.classList.remove('xoopen','rpprint');if(rpOldTheme!=null){if(rpOldTheme)document.documentElement.dataset.theme=rpOldTheme;else delete document.documentElement.dataset.theme;rpOldTheme=null}}
