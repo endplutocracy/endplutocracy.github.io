@@ -5297,7 +5297,7 @@ function rpHtml(R,img){const A=R.A,ch=R.wW,chP=R.wP,hasT=!A.timeUnknown&&!ch.noH
  const PL10=['sun','moon','mercury','venus','mars','jupiter','saturn','uranus','neptune','pluto'];
  // cover
  const place=A.place||'',tzStr=rpTry(()=>fmtFor(R.birth,A),'');
- H.push(`<section class="rp-cover"><div class="rp-brand">Destinned · Natal Reading</div><h1>${rpE(first)}</h1><div class="rp-sub">A reading across Western, Vedic, Chinese and Gate Chart astrology, with timing for ${R.y0} to ${R.y0+6}</div>${img.wheel?`<div class="rp-wheel">${img.wheel}</div>`:''}
+ H.push(`<section class="rp-cover"><div class="rp-brand"><svg class="rp-moon" viewBox="0 0 26 24" aria-hidden="true"><defs><mask id="rpMoonMask"><rect width="26" height="24" fill="#fff"/><circle cx="9" cy="10" r="8.6" fill="#000"/></mask></defs><circle cx="14" cy="12" r="10" fill="currentColor" mask="url(#rpMoonMask)"/><path d="M9.6 8.4 L10.5 11.1 L13.2 12 L10.5 12.9 L9.6 15.6 L8.7 12.9 L6 12 L8.7 11.1 Z" fill="currentColor"/></svg><span class="rp-logo">Destinned</span><span class="rp-kind">Natal Reading</span></div><h1>${rpE(first)}</h1><div class="rp-sub">A reading across Western, Vedic, Chinese and Gate Chart astrology, with timing for ${R.y0} to ${R.y0+6}</div>${img.wheel?`<div class="rp-wheel">${img.wheel}</div>`:''}
  <div class="rp-data"><div><b>Born</b> ${rpE(tzStr)}${A.timeUnknown?' (time unknown)':''}</div><div><b>Place</b> ${rpE(place)}</div>${A.cur&&A.cur.place?`<div><b>Lives in</b> ${rpE(A.cur.place)}</div>`:''}<div><b>Prepared</b> ${rpDay(R.T)}</div></div></section>`);
  // about
  const about=`<p>Every chart in this reading was calculated by the Destinned chart site from the birth data on the cover. It brings together the Western natal chart and its traditional techniques, the Vedic chart and its periods, the Four Pillars (BaZi), Zi Wei Dou Shu, the Gate Chart, numerology and the main timing methods. Where several systems agree, the reading says so: those agreements are the most reliable parts of any reading.</p>`+
@@ -5471,7 +5471,7 @@ const RP_CSS=`
 .rp-doc section{background:#fbf7ee;padding:.8in .85in;margin:0 0 18px;box-shadow:0 10px 30px -18px rgba(0,0,0,.35)}
 .rp-doc h1,.rp-doc h2,.rp-doc h3,.rp-doc h4,.rp-doc table,.rp-kick,.rp-brand,.rp-toc,.rp-cap,.rp-pill,.rp-data,.rp-pillars{font-family:var(--display),system-ui,sans-serif}
 .rp-cover{min-height:10in;display:flex;flex-direction:column}
-.rp-brand{font-size:9.5pt;font-weight:600;letter-spacing:.32em;text-transform:uppercase;color:#4f2e6e}
+.rp-brand{display:flex;align-items:center;gap:4pt;color:#4f2e6e;font-family:var(--display),system-ui,sans-serif}.rp-brand .rp-moon{width:23pt;height:21pt;flex:none;color:#4f2e6e}.rp-brand .rp-logo{font-size:16pt;font-weight:800;letter-spacing:.06em;text-transform:uppercase;line-height:1}.rp-brand .rp-kind{margin-left:11pt;padding-left:12pt;border-left:1pt solid #d9cfbf;font-size:8.5pt;font-weight:600;letter-spacing:.28em;text-transform:uppercase;color:#6b6257;line-height:1.6}
 .rp-cover h1{font-weight:300;font-size:44pt;letter-spacing:-.02em;margin:.5in 0 .08in;line-height:1.02;color:#1f1b16}
 .rp-sub{font-style:italic;font-size:14pt;color:#6b6257;margin:0 0 .3in}
 .rp-wheel{width:5.2in;max-width:100%;margin:0 auto}
