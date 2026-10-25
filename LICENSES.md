@@ -19,6 +19,10 @@ Destinned bundles the following data, code, fonts and images.
 - **World map:** Natural Earth 1:50m land, public domain. https://www.naturalearthdata.com
 - **Time zones and daylight saving history** come from your browser's built-in IANA time zone database.
 
+## Code libraries
+
+- **html-to-image** 1.11.13 by W.Y. (bubkoo), MIT License, bundled in `index.html` to render reading pages for the Download PDF button. https://github.com/bubkoo/html-to-image
+
 ## Images
 
 - **Rider–Waite–Smith tarot**: Pamela Colman Smith's illustrations, first published by William Rider & Son in 1909, are in the public domain. The scans came from the metabismuth/tarot-json collection, resized for the web.
