@@ -1050,7 +1050,7 @@ html[data-theme="oled"] #wlRing,html[data-theme="paper"] #wlRing,html[data-theme
 html[data-theme] .dial #back:active,html[data-theme] .dial #fwd:active,html[data-theme] .dial #back.used,html[data-theme] .dial #fwd.used{background:var(--lilac)!important;color:var(--accent-ink)!important;border-color:transparent!important;box-shadow:none!important}html[data-theme] .dial #back.used:hover,html[data-theme] .dial #fwd.used:hover{filter:brightness(.9)!important}.dial button,.dial select{outline:none!important}.dial .iconbtn:hover,.dial .iconbtn:focus,.dial select:hover,.dial select:focus{border-color:var(--line)!important}.dial button:focus,.dial button:focus-visible,.dial select:focus{outline:none!important;box-shadow:none!important}
 /* chart overlay buttons without the purple backing */
 .wlab button,.wzoom button{background:var(--raised)!important;box-shadow:none!important;backdrop-filter:none!important;border:0!important}
-.emc,.elemmini .emc,.wheelwrap>.elemmini .emc{background:linear-gradient(to top,color-mix(in srgb,var(--c) 55%,var(--raised)) var(--p),var(--raised) var(--p))!important;box-shadow:none!important;outline:none!important}
+.emc,.elemmini .emc,.wheelwrap>.elemmini .emc{background:linear-gradient(to top,color-mix(in srgb,var(--c) 30%,var(--raised)) var(--p),var(--raised) var(--p))!important;box-shadow:none!important;outline:none!important}
 #acgWrap .wzoom button,html[data-theme] #acgWrap .wzoom button{background:var(--raised)!important;box-shadow:0 2px 8px rgba(0,0,0,.35)!important;backdrop-filter:blur(4px)!important;border:0!important}
 html[data-theme="orrery"]{--bar-gradient:linear-gradient(90deg,#331a47,#20132b)}
 html[data-theme="orrery"] .tback{background:linear-gradient(160deg,#331a47,#20132b)}html[data-theme="orrery"] .tback,html[data-theme="orrery"] .tfront,html[data-theme="orrery"] .tfront.img{border:0!important}html[data-theme="orrery"] .tback svg{color:#bf91e4;opacity:1}html[data-theme="orrery"] .tback::after{border-color:rgba(191,145,228,.4)}html[data-theme="orrery"] .tcard.cross .tback{background:linear-gradient(160deg,#432460,#2a1839)}
@@ -1058,6 +1058,8 @@ html[data-theme="orrery"] .tback{background:linear-gradient(160deg,#331a47,#2013
 html[data-theme="orrery"]{--w-p1:#321c45;--w-p2:#281835;--w-pin:#3d2352}
 html[data-theme="orrery"]{--lilac:#bf91e4;--minor:#bf91e4;--water:#bf91e4;--asp-minor:#bf91e4}
 html[data-theme="orrery"] .tback,html[data-theme="orrery"] .tfront{border-color:#bf91e4}
+html{--w-planet:color-mix(in srgb,var(--w-pin,var(--w-p1)) 55%,var(--w-grey))}
+html[data-theme="orrery"]{--w-planet:#20132b;--asp-field:var(--w-ring,var(--w-grey))}
 /* slimmer chart toolbar */
 .chartbar button{min-height:0!important}.chartbar #openLib,.chartbar #modeBtn{padding-top:3px;padding-bottom:3px}.chartbar .icobtn{height:28px!important;min-height:0!important}.chartbar button:not(#openLib):not(#modeBtn):not(.icobtn){padding-top:3px;padding-bottom:3px}
 /* compact desktop header and a larger wheel */
@@ -2316,9 +2318,9 @@ function renderWheel(v){
   let pi=0,last=null;keys.forEach(k=>{if(B[k]==='P'){pi=last==='P'?pi+1:0;B[k]=`var(--w-p${pi%2?2:1})`}else B[k]='var(--w-grey)';last=B[k].includes('-p')?'P':'G'});if(B.inner==='var(--w-p1)')B.inner='var(--w-pin,var(--w-p1))';return B};
  const ringKeys=['terms','decans','naks'].filter(k=>Ly[k]),bandKeys=[...ringKeys,...(tri?['third']:[]),...(bi?['outer']:[]),'inner'],BC=bandCols(bandKeys);
  // the first chart's planet band matches the single-chart wheel's planet band
- if(bi)BC.inner='var(--w-p2)';
+ BC.inner='var(--w-planet)';if(bi)BC.outer='var(--w-planet)';if(document.documentElement.dataset.theme==='orrery'){if(BC.naks)BC.naks='#20132b';if(BC.terms)BC.terms='#20132b'}
  // on a triwheel all three planet bands share the natal planet-band purple
- if(tri)BC.third=BC.outer=BC.inner='var(--w-grey)';
+ if(tri)BC.third=BC.outer=BC.inner='var(--w-planet)';
  svg.append(el('circle',{cx:C,cy:C,r:Z1,fill:'var(--w-grey)',stroke:'var(--w-line)'}));
  svg.append(el('circle',{cx:C,cy:C,r:Z2,fill:'none',stroke:'var(--w-line)'}));
  for(let s=0;s<12;s++){const [a,b]=pt(s*30,Z1),[c,d]=pt(s*30,Z2);const INV=['orrery','pastel'].includes(document.documentElement.dataset.theme)&&S.signFill===true;if(INV)svg.append(el('path',{d:sector(Z1,Z2,s*30,s*30+30),fill:S.elemColors?`color-mix(in srgb,var(--${ELEM[s%4]}) 55%,var(--w-p1))`:'color-mix(in srgb,var(--fg) 55%,var(--w-p1))',stroke:'var(--w-grey)','stroke-width':1.5}));else svg.append(el('line',{x1:a,y1:b,x2:c,y2:d,stroke:'var(--w-line)'}));
@@ -2327,6 +2329,7 @@ function renderWheel(v){
  if(Ly.terms){const segs=[];TERMS.forEach((t,s)=>{let a=s*30;t.forEach(([pl,end])=>{segs.push({obj:`term:${s}:${a-s*30}`,start:a,end:s*30+end,label:glyph(pl),title:`Term of ${PT[pl][1]}, ${SIGN_N[s]} ${a-s*30}°–${end}°`,size:10,major:a===s*30});a=s*30+end})});ring(r,r-22,segs,BC.terms);r-=22}
  if(Ly.decans){const segs=[];for(let d=0;d<36;d++){const pl=CHALDEAN[d%7];segs.push({obj:`decan:${d}`,start:d*10,end:d*10+10,label:glyph(pl),title:`Decan ${d%3+1} of ${SIGN_N[Math.floor(d/3)]}: ${PT[pl][1]}`,size:11,major:d%3===0})}ring(r,r-22,segs,BC.decans);r-=22}
  if(Ly.naks){const off=Calc.ayanamsa(inner.jd,'lahiri')-(inner.ayanamsa||0),w=360/27,segs=[];for(let i=0;i<27;i++)segs.push({obj:`nak:${i}`,start:i*w+off,end:(i+1)*w+off,label:NAK_AB[i],tang:true,title:`${i+1}. ${NAKS[i]} (lord ${NAK_LORD[i%9]})`,size:9.5,font:'var(--mono)',color:'var(--nak-lab,var(--lilac,var(--muted)))',major:true});ring(r,r-22,segs,BC.naks);r-=22}
+ if(document.documentElement.dataset.theme==='orrery'){const gid='wPlanetG',d=el('defs',{}),g=el('radialGradient',{id:gid,gradientUnits:'userSpaceOnUse',cx:C,cy:C,r:base});g.append(el('stop',{offset:Math.max(0,Math.min(1,IN/base)),'stop-color':'#20132b'}),el('stop',{offset:1,'stop-color':'#331a47'}));d.append(g);svg.append(d);['inner','outer','third'].forEach(k=>{if(BC[k]==='var(--w-planet)')BC[k]=`url(#${gid})`})}
  svg.append(el('circle',{cx:C,cy:C,r:base,fill:tri?BC.third:bi?BC.outer:BC.inner,stroke:'none'}));if(tri)svg.append(el('circle',{cx:C,cy:C,r:oTop,fill:BC.outer,stroke:'none'}));if(bi)svg.append(el('circle',{cx:C,cy:C,r:iTop,fill:BC.inner,stroke:'none'}));
  for(let i=0;i<360;i+=1){if(i%30===0)continue;const len=i%10===0?11:i%5===0?7:4;const [a,b]=pt(i,base),[c,d]=pt(i,base-len);svg.append(el('line',{x1:a,y1:b,x2:c,y2:d,stroke:'var(--muted-line,var(--muted))','stroke-width':.7,opacity:.55}))}
  if(Ly.stars){const hits=new Set(starHits(inner).map(h=>h.star[0]));STARS.forEach(st=>{const L=starLon(st,inner.jd,inner.ayanamsa||0),[x,y]=pt(L,Z1+9),isHit=hits.has(st[0]);
