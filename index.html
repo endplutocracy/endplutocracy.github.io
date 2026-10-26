@@ -1073,6 +1073,8 @@ html[data-theme="paper"] #wheel .rglow,html[data-theme="pastel"] #wheel .rglow{m
 .top .seg .vbtn[aria-pressed="true"] .vico,.top .seg .vbtn[aria-pressed="true"] .vzr{filter:drop-shadow(0 0 1.4px rgba(0,0,0,.55)) drop-shadow(0 0 1.4px rgba(0,0,0,.55)) drop-shadow(0 0 7px color-mix(in srgb,var(--glow) 75%,transparent)) drop-shadow(0 0 13px color-mix(in srgb,var(--glow) 35%,transparent))}
 html[data-theme="orrery"] .top .seg .vbtn[aria-pressed="true"] .vico,html[data-theme="orrery"] .top .seg .vbtn[aria-pressed="true"] .vzr{filter:drop-shadow(0 0 1.4px #20132b) drop-shadow(0 0 1.4px #20132b) drop-shadow(0 0 7px color-mix(in srgb,#bf91e4 80%,transparent)) drop-shadow(0 0 13px color-mix(in srgb,#bf91e4 40%,transparent))}
 html[data-theme="paper"] .top .seg .vbtn[aria-pressed="true"] .vico,html[data-theme="pastel"] .top .seg .vbtn[aria-pressed="true"] .vico,html[data-theme="paper"] .top .seg .vbtn[aria-pressed="true"] .vzr,html[data-theme="pastel"] .top .seg .vbtn[aria-pressed="true"] .vzr{filter:drop-shadow(0 0 1.2px rgba(255,255,255,.8)) drop-shadow(0 0 6px color-mix(in srgb,var(--glow) 70%,transparent))}
+#wheel{-webkit-user-select:none;user-select:none;-webkit-user-drag:none}#wheel.zoomed{cursor:grab}#wheel.zoomed.panning{cursor:grabbing}
+.dial-top #back,.dial-top #fwd{min-width:40px!important;padding:6px 8px!important}
 /* slimmer chart toolbar */
 .chartbar button{min-height:0!important}.chartbar #openLib,.chartbar #modeBtn{padding-top:3px;padding-bottom:3px}.chartbar .icobtn{height:28px!important;min-height:0!important}.chartbar button:not(#openLib):not(#modeBtn):not(.icobtn){padding-top:3px;padding-bottom:3px}
 /* compact desktop header and a larger wheel */
@@ -3615,14 +3617,14 @@ function wzAt(ns,fx,fy){const w0=800/WZ.s,px=WZ.cx-w0/2+fx*w0,py=WZ.cy-w0/2+fy*w
 const wzFrac=(x,y)=>{const r=svg.getBoundingClientRect();return [(x-r.left)/r.width,(y-r.top)/r.height]};
 $('wzIn').onclick=()=>wzAt(WZ.s*1.5,.5,.5);$('wzOut').onclick=()=>wzAt(WZ.s/1.5,.5,.5);$('wzReset').onclick=()=>{WZ.s=1;WZ.cx=WZ.cy=400;wzApply()};
 const wzP=new Map();let wzG=null,wzMoved=false;
-svg.addEventListener('pointerdown',e=>{if(e.pointerType==='mouse'&&e.button!==0)return;wzP.set(e.pointerId,{x:e.clientX,y:e.clientY});
+svg.addEventListener('pointerdown',e=>{if(e.pointerType==='mouse'&&e.button!==0)return;if(e.pointerType==='mouse'&&WZ.s>1.001){e.preventDefault();try{getSelection().removeAllRanges()}catch(_){}}wzP.set(e.pointerId,{x:e.clientX,y:e.clientY});
  if(wzP.size===1){wzMoved=false;wzG={t:'pan',x:e.clientX,y:e.clientY,cx:WZ.cx,cy:WZ.cy}}
  if(wzP.size===2){const [a,b]=[...wzP.values()],[fx,fy]=wzFrac((a.x+b.x)/2,(a.y+b.y)/2),w=800/WZ.s;wzG={t:'pinch',d:Math.hypot(a.x-b.x,a.y-b.y)||1,s:WZ.s,px:WZ.cx-w/2+fx*w,py:WZ.cy-w/2+fy*w};wzMoved=true}});
 svg.addEventListener('pointermove',e=>{if(!wzP.has(e.pointerId)||!wzG)return;wzP.set(e.pointerId,{x:e.clientX,y:e.clientY});const r=svg.getBoundingClientRect();
  if(wzG.t==='pinch'&&wzP.size>=2){const [a,b]=[...wzP.values()],[fx,fy]=wzFrac((a.x+b.x)/2,(a.y+b.y)/2);WZ.s=Math.min(6,Math.max(1,wzG.s*Math.hypot(a.x-b.x,a.y-b.y)/wzG.d));const w=800/WZ.s;WZ.cx=wzG.px-fx*w+w/2;WZ.cy=wzG.py-fy*w+w/2;wzApply();e.preventDefault()}
  else if(wzG.t==='pan'&&WZ.s>1.001){const dx=e.clientX-wzG.x,dy=e.clientY-wzG.y;if(!wzMoved&&Math.hypot(dx,dy)<6)return;if(!wzMoved){wzMoved=true;try{svg.setPointerCapture(e.pointerId)}catch(err){}}svg.classList.add('panning');const k=800/WZ.s/r.width;WZ.cx=wzG.cx-dx*k;WZ.cy=wzG.cy-dy*k;wzApply()}});
 const wzEnd=e=>{wzP.delete(e.pointerId);svg.classList.remove('panning');if(wzP.size===1&&wzG&&wzG.t==='pinch'){const [a]=[...wzP.values()];wzG={t:'pan',x:a.x,y:a.y,cx:WZ.cx,cy:WZ.cy}}else if(!wzP.size)wzG=null};
-['pointerup','pointercancel','pointerleave'].forEach(t=>svg.addEventListener(t,wzEnd));
+['pointerup','pointercancel'].forEach(t=>svg.addEventListener(t,wzEnd));svg.addEventListener('pointerleave',e=>{if(!(svg.hasPointerCapture&&svg.hasPointerCapture(e.pointerId)))wzEnd(e)});svg.addEventListener('dragstart',e=>e.preventDefault());svg.addEventListener('selectstart',e=>{if(WZ.s>1.001)e.preventDefault()});
 svg.addEventListener('click',e=>{if(wzMoved){e.stopPropagation();e.preventDefault();wzMoved=false}},true);
 svg.addEventListener('wheel',e=>{const fs=$('stage').classList.contains('fs');if(!e.ctrlKey&&!fs&&innerWidth<=860)return;e.preventDefault();const [fx,fy]=wzFrac(e.clientX,e.clientY),dy=(e.deltaMode===1?e.deltaY*16:e.deltaY);wzAt(WZ.s*Math.exp(-dy*(e.ctrlKey?0.01:0.0022)),fx,fy)},{passive:false});
 svg.addEventListener('dblclick',e=>{if(e.target.closest('[data-obj]'))return;const [fx,fy]=wzFrac(e.clientX,e.clientY);if(WZ.s>1.001){WZ.s=1;WZ.cx=WZ.cy=400;wzApply()}else wzAt(2.5,fx,fy)});
