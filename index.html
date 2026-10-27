@@ -3545,6 +3545,12 @@ function aspectText(which,a,b,asp){const v=lastView,o=v.outer,inner=v.inner,nm=k
   if(pr.includes(oom)&&hard)sx=` In this ${day?'day':'night'} chart ${PT[oom][1]} is out of sect, so this contact tends to be sharper and needs more conscious handling.`;
   else if(pr.includes(im)&&hard)sx=` In this ${day?'day':'night'} chart ${PT[im][1]} is of the chart’s sect, so its pressure is more constructive: effort here pays off.`;
   else if(pr.includes(ib))sx=` In this ${day?'day':'night'} chart ${PT[ib][1]} is the benefic of sect, so its support here is especially reliable.`}}catch(e){}
+ try{if(which==='o'&&o&&v.mode==='transits'){const r=typeof ytSite==='function'&&ytSite(inner,a,asp.k,b);if(r)return r.txt+tight+ctx+(r.adv?' Working with it: '+r.adv:'');const ft=typeof ftSite==='function'&&ftSite(a,asp.k,b,asp.applying);if(ft)return ft+tight}
+  else if(which==='o'&&o&&v.mode==='synastry'&&typeof synText==='function'){const fn=x=>String(x||'').split(/\s+/)[0];const r=synText(a,b,asp,fn(otherId&&byId(otherId)?byId(otherId).name:'They')||'They',fn(byId(activeId).name)||'You');if(r)return r+tight+(ASP_ADVICE[asp.k]?' '+ASP_ADVICE[asp.k]:'');const r2=typeof synFallback==='function'&&synFallback(a,b,asp,fn(otherId&&byId(otherId)?byId(otherId).name:'They')||'They',fn(byId(activeId).name)||'You');if(r2)return r2+tight}
+  else if(which!=='o'){if(v.mode==='composite'&&typeof compText==='function'){const ct=compText(a,b,asp)||(typeof compText2==='function'&&compText2(a,b,asp));if(ct)return ct+tight}
+   const nt=typeof naText==='function'&&naText(inner,a,b,asp);if(nt)return nt+tight+ctx+sx+(ASP_ADVICE[asp.k]?' '+ASP_ADVICE[asp.k]:'');
+   const at=v.mode!=='composite'&&typeof astText==='function'&&astText(a,b,asp);if(at)return at+tight+(ASP_ADVICE[asp.k]?' '+ASP_ADVICE[asp.k]:'');
+   const mt=v.mode!=='composite'&&typeof minText==='function'&&minText(a,b,asp);if(mt)return mt+tight+sx}}catch(e){}
  const x=MEANING[a],y=MEANING[b],fn=ASP_TEXT[asp.k]||ASP_TEXT.qui;return cap(fn(x?`${A} (${x})`:A,y?`${B} (${y})`:B))+tight+ctx+sx+(ASP_ADVICE[asp.k]?' '+ASP_ADVICE[asp.k]:'')}
 function infoAspect(which,a,b){const v=lastView,c1=which==='o'?v.outer:v.inner,c2=v.inner;const p1=c1.pts[a],p2=c2.pts[b];if(!p1||!p2)return null;
  const orbs=which==='o'?Object.fromEntries(Object.entries(S.orbs).map(([k,x])=>[k,Math.max(1,x*(mode==='transits'||mode==='progressed'?S.transitOrb:0.75))])):S.orbs;
@@ -4022,10 +4028,10 @@ function tcHtml(A,ch,T){const d=tcData(A,ch,T),now=T;
  let h=sel+(evs.length?`<div class="tblwrap"><table><thead><tr><th>Transit to natal</th><th>Exact</th><th>Within 1°</th></tr></thead><tbody>${list.map(row).join('')}</tbody></table></div>${evs.length>40?`<button type="button" class="linkbtn" data-tcmore>${tcOpen?'Show fewer':`Show all ${evs.length}`}</button>`:''}`:'<p class="muted">No transits in this window.</p>');
  const st=d.stations;if(st.length)h+=`<h3 class="sub">Stations</h3><div class="tblwrap"><table><tbody>${st.map(s=>`<tr${XJR('stn',{b:s.b,retro:s.retro,lon:s.lon,ms:jdMs(s.jd)})}><td>${glyphHtml(s.b)} ${PNM(s.b)} stations ${s.retro?'retrograde':'direct'}</td><td class="mono">${lonTxt(s.lon)}</td><td class="mono">${fmtDay(jdMs(s.jd),A)}</td></tr>`).join('')}</tbody></table></div>`;
  return h+RSN('Transiting planets to natal planets, the North Node, Ascendant and MC, using conjunctions, sextiles, squares, trines and oppositions. Each row is one approach into a 1° orb; a planet that turns retrograde can make the aspect exact up to three times in one row (℞ marks a retrograde pass). Rows shaded are in orb on the target date. Positions follow your zodiac setting.')}
-function infoTc(i){const A=byId(activeId),ch=natalOf(A);if(!ch)return null;const d=tcData(A,ch,timingTarget()),e=d.events[+i];if(!e)return null;const asp=Calc.ASPECTS.find(x=>x.k===e.ak);
+function infoTc(i){const A=byId(activeId),ch=natalOf(A);if(!ch)return null;const d=tcData(A,ch,timingTarget()),e=d.events[+i];if(!e)return null;const asp=Calc.ASPECTS.find(x=>x.k===e.ak);const ys=(()=>{try{return typeof ytSite==='function'?ytSite(ch,e.b,e.ak,e.t):null}catch(err){return null}})();
  const txt=ASP_TEXT[e.ak]?ASP_TEXT[e.ak](`transiting ${PNM(e.b)}`,`your natal ${PNM(e.t)}`):'';
  return `<p class="kicker">Transit</p><h4><span class="big">${glyphHtml(e.b)} ${asp.g} ${glyphHtml(e.t)}</span>${PNM(e.b)} ${asp.n.toLowerCase()} natal ${PNM(e.t)}</h4><dl><dt>Exact</dt><dd>${e.hits.map(x=>fmtFor(x.ms,A)+(x.retro?' (retrograde)':'')).join('<br>')}</dd><dt>Within 1°</dt><dd>${e.openStart?'before ':''}${fmtDay(e.start,A)} to ${fmtDay(e.end,A)}${e.openEnd?' or later':''}</dd><dt>Natal ${PNM(e.t)}</dt><dd>${lonTxt(ch.pts[e.t].lon)}${ch.noHouses?'':`, ${ord(Calc.houseOf(ch.pts[e.t].lon,ch.cusps))} house`}</dd></dl>
- <p class="il">Interpretation</p><p class="interp">${txt} Transiting ${PNM(e.b)} brings its ${MEANING[e.b]||''} to your ${PLANET_DOMAIN[e.t]||PNM(e.t)}. ${TC_SLOW.includes(e.b)?'Slow transits like this one describe a chapter rather than a day: the build-up and the weeks around each exact date matter most.':'Faster transits like this one are brief triggers, most noticeable within a day or two of exact.'}</p>`}
+ <p class="il">Interpretation</p><p class="interp">${ys?ys.txt:`${txt} Transiting ${PNM(e.b)} brings its ${MEANING[e.b]||''} to your ${PLANET_DOMAIN[e.t]||PNM(e.t)}.`} ${TC_SLOW.includes(e.b)?'Slow transits like this one describe a chapter rather than a day: the build-up and the weeks around each exact date matter most.':'Faster transits like this one are brief triggers, most noticeable within a day or two of exact.'}</p>`+(ys&&ys.adv?`<p class="il">Working with it</p><p>${ys.adv}</p>`:'')}
 
 /* ---------- planetary returns ---------- */
 const RET_KEYS=['mercury','venus','mars','jupiter','saturn','chiron'],RET_STEP={mercury:1,venus:2,mars:2,jupiter:4,saturn:6,chiron:6};
@@ -5503,38 +5509,39 @@ function rpHtml(R,img){const A=R.A,ch=R.wW,chP=R.wP,hasT=!A.timeUnknown&&!ch.noH
   if(!SK.includes('tl'))h+=rpTry(()=>rpTimeline(R,YR?1:6),'');
   if(R.sr){const s=R.sr.ch,sa=s.pts.asc.lon,ang=[],byH={};[...PL10,'node'].forEach(k=>{const hh=Calc.houseOf(s.pts[k].lon,s.cusps);(byH[hh]=byH[hh]||[]).push(k);[['asc','Ascendant'],['mc','Midheaven'],['dsc','Descendant'],['ic','IC']].forEach(([a,l])=>{if(s.pts[a]&&Math.abs(n180(s.pts[k].lon-s.pts[a].lon))<=4)ang.push(`<b>${rpThe2(k)} is on the ${l}</b> (${Math.abs(n180(s.pts[k].lon-s.pts[a].lon)).toFixed(1)}°): ${RP_MEAN[k]} take${rpVb(RP_MEAN[k])} centre stage this year.`)})});
    h+=`<h3>Your ${rpYr(R.sr.ms)}–${String((rpYr(R.sr.ms)+1)%100).padStart(2,'0')} solar return</h3><p>Your solar return falls on ${rpDay(R.sr.ms)} (cast for ${rpE((R.sr.place||'').split(',')[0])}), with ${rpDeg(sa)} rising${hasT&&Math.floor(sa/30)===Math.floor(asc/30)?', the same rising sign as your birth chart, a year when you feel especially like yourself':''}.</p>`+li(ang.concat(Object.entries(byH).sort((a,b)=>b[1].length-a[1].length).slice(0,4).map(([hh,ks])=>`<b>${rpL(ks)} in the ${rpOrd(+hh)}:</b> ${RP_HT[hh]}.`)))}
-  const TR=rpTransits(R),win=T+365*864e5,marks=[];TR.filter(e=>e.end>=T&&e.start<=win&&e.w>=4).forEach(e=>marks.push([Math.max(e.start,T),rpRange(Math.max(e.start,T),e.end),`${PNM(e.b)} ${RP_ASPN[e.ak]} ${rpNm(e.t)}`,cap(RP_TR[e.b][e.cls])+'.']));
+  const TR=rpTransits(R),win=T+365*864e5,marks=[];TR.filter(e=>e.end>=T&&e.start<=win&&e.w>=4).forEach(e=>marks.push([Math.max(e.start,T),rpRange(Math.max(e.start,T),e.end),`${PNM(e.b)} ${RP_ASPN[e.ak]} ${rpNm(e.t)}`,ytShort(e)]));
   P.filter(p=>p.yStart>T&&p.yStart<win).forEach(p=>marks.push([p.yStart,rpDay(p.yStart),`Profection reaches the ${rpOrd(p.house)} house (${SIGN_N[p.ys]}), lord ${PNM(p.lord)}`,cap(RP_HT[p.house])+'.']));
   const chg=(list,lbl,f)=>(list||[]).forEach(p=>{if(p.start>T&&p.start<win)marks.push([p.start,rpDay(p.start),`${lbl}: ${f(p)}`,''])});
-  if(md)chg(md.ads,'Vimshottari sub-period',p=>`${rpVN(md.k)}/${rpVN(p.k)} begins`);if(fd)chg(fd.subs,'Firdaria sub-period',p=>`${PNM(fd.k)}/${PNM(p.k)} begins`);chg(R.yogini,'Yogini dasha',p=>`${p.nm} begins`);
-  (R.pd||[]).forEach(p=>{const t=R.birth+p.yrs*YRMS;if(t>T&&t<win&&['sun','moon','asc','mc'].includes(p.s)&&RP_MEAN[p.p])marks.push([t,rpMon(t),`Primary direction: ${rpNm(p.p)} ${RP_ASPN[p.ak]||p.ak} ${rpNm(p.s)}`,'']) });
-  if(R.prog)R.prog.ev.filter(e=>e.ms>T&&e.ms<win&&e.k==='moon').forEach(e=>marks.push([e.ms,rpMon(e.ms),`Progressed Moon enters ${e.t==='sign'?SIGN_N[e.s]:'the '+rpOrd(e.h)+' house'}`,e.t==='house'?cap(RP_HT[e.h])+'.':'']));
+  const chm=(list,lbl,f,m)=>(list||[]).forEach(p=>{if(p.start>T&&p.start<win)marks.push([p.start,rpDay(p.start),`${lbl}: ${f(p)}`,m(p)])});const dtx=k=>DASHA_TXT[k]?cap(DASHA_TXT[k].split(';')[0])+'.':'';
+  if(md)chm(md.ads,'Vimshottari sub-period',p=>`${rpVN(md.k)}/${rpVN(p.k)} begins`,p=>dtx(p.k));if(fd)chm(fd.subs,'Firdaria sub-period',p=>`${PNM(fd.k)}/${PNM(p.k)} begins`,p=>cap(RP_MEAN[p.k]||'')+'.');chm(R.yogini,'Yogini dasha',p=>`${p.nm} begins`,p=>dtx(p.k));
+  (R.pd||[]).forEach(p=>{const t=R.birth+p.yrs*YRMS;if(t>T&&t<win&&['sun','moon','asc','mc'].includes(p.s)&&RP_MEAN[p.p])marks.push([t,rpMon(t),`Primary direction: ${rpNm(p.p)} ${RP_ASPN[p.ak]||p.ak} ${rpNm(p.s)}`,`${cap(RP_MEAN[p.p])} reach${rpVb(RP_MEAN[p.p])==='s'?'es':''} ${p.s==='asc'?'you personally':p.s==='mc'?'your career':'your '+(RP_TT[p.s]||RP_MEAN[p.s])}.`]) });
+  if(R.prog)R.prog.ev.filter(e=>e.ms>T&&e.ms<win&&e.k==='moon').forEach(e=>marks.push([e.ms,rpMon(e.ms),`Progressed Moon enters ${e.t==='sign'?SIGN_N[e.s]:'the '+rpOrd(e.h)+' house'}`,e.t==='house'?`Inner focus turns to ${RP_HT[e.h]}.`:cap(YT_PMOON[e.s].replace(/:.*/,''))+'.']));
   marks.sort((a,b)=>a[0]-b[0]);if(marks.length)h+=`<div class="rp-box rp-flow"><h4>Dates to mark · ${rpMon(T)} – ${rpMon(win)}</h4><table>${marks.map(m=>`<tr><td class="n">${m[1]}</td><td>${m[2]}</td><td>${m[3]}</td></tr>`).join('')}</table></div>`;
   if(R.bz){const yy=rpBzYear(R,rpYr(T));h+=`<p><b>The Chinese year ${yy.y}, ${BZ_S[yy.s][0]}${BZ_B[yy.b][0]} ${BZ_S[yy.s][1]} ${BZ_B[yy.b][1]},</b> brings ${BZ_GODS[yy.g][1]} energy: ${BZ_GOD_TXT[yy.g].split('.')[0].toLowerCase()}. ${yy.fav==='fav'?'Its element is favourable for you.':yy.fav==='unfav'?'Its element is not one of your useful ones, so pace yourself.':''} ${yy.notes.join(' ')}</p>`}
   sec('Part VII','Timing: where you are now',h);
 
   let yh='';const arc=[];
-  for(let y=R.y0;y<=R.y0+(YR?1:6);y++){const ys=Date.UTC(y,0,1),ye=Date.UTC(y+1,0,1),inY=t=>t>=ys&&t<ye,ev=TR.filter(e=>inY(e.first)&&e.w>=3.5).sort((a,b)=>b.w-a.w),tp=ev.filter(e=>e.tp);
+  for(let y=R.y0;y<=R.y0+(YR?1:6);y++){const ys=YR?Math.max(Date.UTC(y,0,1),R.T-15*864e5):Date.UTC(y,0,1),ye=YR?Math.min(Date.UTC(y+1,0,1),R.T+365*864e5):Date.UTC(y+1,0,1),inY=t=>t>=ys&&t<ye,ev=TR.filter(e=>(YR?(y===R.y0?e.end>=ys&&e.start<ye:inY(e.first)):inY(e.first))&&e.w>=3.5).sort((a,b)=>b.w-a.w),tp=ev.filter(e=>e.tp);
    const bzy=R.bz?rpBzYear(R,y):null,tone=ev.reduce((a,e)=>a+e.tone*Math.min(1,e.w/8),0)+(bzy?bzy.tone*1.2:0);
-   const ret=ev.find(e=>e.ret&&e.b==='jupiter'),prof=P.find(p=>inY(p.yStart));
+   const ret=ev.find(e=>e.ret&&e.b==='jupiter'),prof=P.find(p=>inY(p.yStart))||(YR&&y===R.y0?P.find(p=>ys>=p.yStart&&ys<p.yEnd):null);
    let title=tp.length?RP_TPT[tp[0].b]:ret?'Renewal':prof?RP_PROFT[prof.house]:'Continuity';if(arc.length&&arc[arc.length-1].startsWith(title.toLowerCase()+' in')&&prof)title=RP_PROFT[prof.house];
    const pill=tp.length?'Turning point':tone>=1?'Supportive':tone<=-1?'Demanding':'Mixed';arc.push(`${title.toLowerCase()} in ${y}`);
-   const tim=[];if(prof)tim.push(`<b>Profection:</b> from ${rpDay(prof.yStart)} you are in ${rpAn(prof.house)}-house year (${SIGN_N[prof.ys]}, ruled by ${rpThe(prof.lord)}): ${RP_HT[prof.house]}.`);
-   if(R.vim)R.vim.list.forEach(m=>{if(inY(m.start))tim.push(`<b>Vimshottari:</b> the ${rpVN(m.k)} period begins (${rpMon(m.start)}), a long chapter of ${DASHA_TXT[m.k].split(';')[0]}.`);else m.ads.forEach(a=>{if(inY(a.start))tim.push(`<b>Vimshottari:</b> the ${rpVN(m.k)}/${rpVN(a.k)} sub-period begins (${rpMon(a.start)}).`)})});
-   (R.yogini||[]).forEach(p=>{if(inY(p.start))tim.push(`<b>Yogini:</b> ${p.nm} begins (${rpMon(p.start)}).`)});
-   (R.fird||[]).forEach(f=>{if(inY(f.start))tim.push(`<b>Firdaria:</b> the ${PNM(f.k)} period begins (${rpMon(f.start)}): ${FIRD_TXT[f.k]||''}.`);else f.subs.forEach(s=>{if(inY(s.start))tim.push(`<b>Firdaria:</b> the ${PNM(f.k)}/${PNM(s.k)} sub-period begins (${rpMon(s.start)}).`)})});
+   const tim=[];if(prof)tim.push(`<b>Profection:</b> from ${rpDay(prof.yStart)} you are in ${rpAn(prof.house)}-house year (${SIGN_N[prof.ys]}, ruled by ${rpThe(prof.lord)}). ${YT_PROF[prof.house]}${ytProfLord(R,prof)}`);
+   if(R.vim)R.vim.list.forEach(m=>{if(inY(m.start))tim.push(`<b>Vimshottari:</b> the ${rpVN(m.k)} period begins (${rpMon(m.start)}), a long chapter of ${DASHA_TXT[m.k].split(';')[0]}.`);else m.ads.forEach(a=>{if(inY(a.start))tim.push(`<b>Vimshottari:</b> the ${rpVN(m.k)}/${rpVN(a.k)} sub-period begins (${rpMon(a.start)}), running to ${rpMon(a.end)}. ${rpVN(a.k)} brings its own themes into the larger ${rpVN(m.k)} chapter: ${DASHA_TXT[a.k]?DASHA_TXT[a.k].split(';')[0]:''}.`)})});
+   (R.yogini||[]).forEach(p=>{if(inY(p.start))tim.push(`<b>Yogini:</b> ${p.nm} begins (${rpMon(p.start)}, ${p.y} year${p.y>1?'s':''}), a ${p.k==='node'?'Rahu':PNM(p.k)} period: ${DASHA_TXT[p.k]?DASHA_TXT[p.k].split(';')[0]:''}.`)});
+   (R.fird||[]).forEach(f=>{if(inY(f.start))tim.push(`<b>Firdaria:</b> the ${PNM(f.k)} period begins (${rpMon(f.start)}): ${FIRD_TXT[f.k]||''}.`);else f.subs.forEach(s=>{if(inY(s.start))tim.push(`<b>Firdaria:</b> the ${PNM(f.k)}/${PNM(s.k)} sub-period begins (${rpMon(s.start)}), adding ${RP_MEAN[s.k]} to the ${PNM(f.k)} chapter.`)})});
    if(R.zr){R.zr.L1.forEach(l=>{if(inY(l.start))tim.push(`<b>Zodiacal releasing:</b> a new chapter in ${SIGN_N[l.sign]} begins (${rpMon(l.start)}).`)});R.zr.L1.filter(l=>ys<l.end&&ye>l.start).forEach(l1=>zrKids(l1,R.zr.fSign,R.zr.yd).forEach(l=>{if(inY(l.start)&&l.peak)tim.push(`<b>Zodiacal releasing:</b> the ${SIGN_N[l.sign]} sub-period begins (${rpMon(l.start)})${l.peak==='major'?', a peak period for career and visibility':', an active, angular period'}.`)}))}
-   if(R.prog)R.prog.ev.filter(e=>inY(e.ms)&&(e.k==='moon'||e.t==='sign')).forEach(e=>tim.push(`<b>Progressions:</b> your progressed ${PNM(e.k)} enters ${e.t==='sign'?SIGN_N[e.s]:'the '+rpOrd(e.h)+' house ('+RP_HT[e.h]+')'} (${rpMon(e.ms)}).`));
+   if(R.prog)R.prog.ev.filter(e=>inY(e.ms)&&(e.k==='moon'||e.t==='sign')).forEach(e=>tim.push(`<b>Progressions:</b> your progressed ${PNM(e.k)} enters ${e.t==='sign'?SIGN_N[e.s]:'the '+rpOrd(e.h)+' house'} (${rpMon(e.ms)})${e.k==='moon'?(e.t==='sign'?`, setting ${YT_PMOON[e.s]} for about two and a half years`:`, turning your inner focus to ${RP_HT[e.h]} for the next couple of years`):e.t==='sign'?`, a slow shift that colours your ${RP_TT[e.k]||RP_MEAN[e.k]} for decades`:''}.`));
    (R.pd||[]).forEach(p=>{const t=R.birth+p.yrs*YRMS;if(inY(t)&&['sun','moon','asc','mc'].includes(p.s)&&RP_MEAN[p.p])tim.push(`<b>Primary direction:</b> ${rpNm(p.p)} ${RP_ASPN[p.ak]||p.ak} ${rpNm(p.s)} (${rpMon(t)}), bringing ${RP_MEAN[p.p]} to ${p.s==='asc'?'you personally':p.s==='mc'?'your career':RP_MEAN[p.s]}.`)});
    (R.sade||[]).forEach(s=>{if(s.k==='ss'&&inY(s.start))tim.push(`<b>Sade Sati</b> begins (${rpMon(s.start)}, until ${rpYr(s.end)}): seven and a half years of Saturn testing the Moon. It asks for patience and maturity.`);if(s.k==='ss'&&inY(s.end))tim.push(`<b>Sade Sati</b> ends (${rpMon(s.end)}).`)});
    if(R.bz)R.bz.luck.list.forEach(l=>{if(Math.floor(l.year)===y)tim.push(`<b>BaZi:</b> a new luck pillar begins, ${BZ_S[l.s][1]} ${BZ_B[l.b][1]} (${BZ_GODS[bzGod(R.bz.c.dm,l.s)][1]}).`)});
    if(R.chara&&L_ok(R))R.chara.list.forEach(p=>{if(inY(p.start))tim.push(`<b>Chara dasha:</b> ${SIGN_N[p.s]} begins (${rpMon(p.start)}), focusing on ${RP_VHT[((p.s-Math.floor(R.v.pts.asc.lon/30)+12)%12)+1]}.`)});
-   const top=ev.slice(0,3);if(ret&&!top.includes(ret))top.unshift(ret);let body=top.map(e=>`<p>${rpTrTxt(e)}</p>`).join('');const more=ev.filter(e=>!top.includes(e)).slice(0,5);if(more.length)body+=`<p class="rp-small">Also: ${more.map(e=>`${PNM(e.b)} ${RP_ASPN[e.ak]} ${rpNm(e.t)} (${rpRange(e.start,e.end)})`).join('; ')}.</p>`;
-   if(tim.length)body+=li(tim);
+   const top=ev.slice(0,YR?4:3);if(ret&&!top.includes(ret))top.unshift(ret);let body=ytSummary(R,y,ev,prof||(YR?P.find(p=>ys>=p.yStart&&ys<p.yEnd):null),bzy,ys)+top.map(e=>ytTxt(R,e,ys,ye)).join('');const more=ev.filter(e=>!top.includes(e)).slice(0,5);if(more.length)body+=`<p class="rp-small">Also: ${more.map(e=>`${PNM(e.b)} ${RP_ASPN[e.ak]} ${rpNm(e.t)} (${rpRange(e.start,e.end)})`).join('; ')}.</p>`;
+   if(tim.length)body+=`<h4>Timing systems that change ${YR?'in this stretch':'in '+y}</h4>`+li(tim);
    if(bzy)body+=`<p><b>BaZi ${y} is ${BZ_S[bzy.s][0]}${BZ_B[bzy.b][0]} ${BZ_S[bzy.s][1]} ${BZ_B[bzy.b][1]}, ${BZ_GODS[bzy.g][1]}:</b> ${BZ_GOD_TXT[bzy.g].split('.')[0].toLowerCase()}. ${bzy.fav==='fav'?'Its element is favourable for you.':bzy.fav==='unfav'?'Its element is not one of your useful ones.':''} ${bzy.notes.join(' ')}</p>`;
    if(R.zw){const zy=rpTry(()=>zwYear(R.zw,Date.UTC(y,6,1),A),null);if(zy){const yp=R.zw.pal.find(q=>q.b===zy.pal[0].b),hl=Object.entries(zy.hua).map(([s,i])=>{const p=R.zw.pal.find(q=>q.stars.includes(s));return p?[i,ZW_PAL[p.i][1]]:null}).filter(Boolean),lu=hl.find(x=>x[0]===0),ji=hl.find(x=>x[0]===3);if(yp)body+=`<p><b>Zi Wei:</b> the year centres on your natal ${ZW_PAL[yp.i][1]} palace (${ZW_PAL_TXT[yp.i].split('.')[0].toLowerCase()})${lu?`; prosperity (Hua Lu) falls in your ${lu[1]} palace`:''}${ji?` and obstruction (Hua Ji) in your ${ji[1]} palace`:''}.</p>`}}
    if(R.num){const n=numRed(numRed(A.mo)+numRed(A.d)+numRed(String(y).split('').reduce((a,b)=>a+ +b,0)));body+=`<p><b>Numerology:</b> personal year ${n}: ${NUM_TXT[n]}.</p>`}
-   yh+=`<div class="rp-yr"><h3>${y} · ${title} <span class="rp-pill">${pill}</span></h3>${body}</div>`}
+   const yLbl=YR?`${y} (${new Date(ys).toLocaleDateString('en-US',{month:'short',timeZone:'UTC'})}–${new Date(ye-864e5).toLocaleDateString('en-US',{month:'short',timeZone:'UTC'})})`:y;yh+=`<div class="rp-yr"><h3>${yLbl} · ${title} <span class="rp-pill">${pill}</span></h3>${body}</div>`}
   sec('Part VII, continued',YR?`${R.y0} and ${R.y0+1}`:`The years to ${R.y0+6}`,`<p class="rp-lede">The arc: ${XL(arc)}. Each year lists its strongest transits first, then every timing system that changes during it.</p>`+yh)}
 
  // appendix
@@ -5596,7 +5603,8 @@ const RP_CSS=`
 @media (max-width:600px){.rp-doc:not(.rp-pdoc) .rp-gloss dl{grid-template-columns:1fr;gap:2pt}.rp-doc:not(.rp-pdoc) .rp-gloss dd{margin-bottom:6pt}}
 .rp-pill{display:inline-block;font-size:7.5pt;font-weight:600;letter-spacing:.08em;text-transform:uppercase;padding:1pt 6pt;border-radius:8pt;background:#ebe3f1;color:#4f2e6e;margin-left:4pt;vertical-align:2px}
 .rp-yr{break-inside:auto;border-top:1px solid #d9cfbf;padding-top:8pt;margin-top:10pt}.rp-yr h3{margin-top:0}
-.rp-small{font-size:8.8pt;color:#6b6257}.rp-muted{color:#8a8076;font-weight:400}
+.rp-small{font-size:8.8pt;color:#6b6257}
+.rp-brief{background:#f3ede2;border-radius:6pt;padding:9pt 12pt;margin:8pt 0 10pt}.rp-tr{margin:10pt 0 12pt;break-inside:avoid}.rp-tr p{margin:3pt 0}.rp-dim{color:#6b6257;font-weight:400}.rp-adv{font-size:9.6pt;color:#4a4238;padding-left:9pt;border-left:2px solid #c9b3dc}.rp-yr h4{font-size:9pt;letter-spacing:.08em;text-transform:uppercase;color:#4f2e6e;margin:14pt 0 2pt}.rp-muted{color:#8a8076;font-weight:400}
 .rp-sig{font-style:italic;font-size:11pt;color:#6b6257;margin-top:18pt}
 .rp-pillars{display:grid;grid-template-columns:repeat(4,1fr);gap:6pt;margin:8pt 0 12pt;text-align:center}
 .rp-pillars>div{background:#f3ede2;padding:7pt 4pt;border-radius:4pt}
@@ -5656,6 +5664,550 @@ if(/[?&]dtest\b/.test(location.search))window.__rep={gather:A=>rpGather(A),html:
  [back,fwd].forEach(b=>b.addEventListener('click',()=>b.classList.add('used')));
  const rs=$('reset');if(rs)rs.addEventListener('click',clear);
  new MutationObserver(()=>{if(!dial.classList.contains('shifted'))clear()}).observe(dial,{attributes:true,attributeFilter:['class']})})();
+
+/* ===== Year ahead: descriptive transit and timing interpretations ===== */
+// What each slow-planet transit tends to look like, by natal point and aspect family (conj / soft / hard).
+const YT={
+ jupiter:{
+  sun:{conj:'One of the best windows of the decade for you personally. Confidence rises, people notice you, and opportunities to grow (a promotion, a launch, a move, a bigger role) tend to arrive or are easier to create. It is a time to aim higher than usual.',
+   soft:'Things go your way with less effort. Recognition, support from people in authority and a general sense of wellbeing make this a good time to put yourself forward, ask for what you want or start something under your own name.',
+   hard:'Growth comes with a temptation to overdo it: overcommitting, overspending or promising more than you can deliver. The opportunities are real; the skill is choosing the ones that fit and leaving the rest.'},
+  moon:{conj:'Emotional and domestic life opens up. A bigger or better home, a growing family, a move or simply feeling more at ease and generous are typical. Your instincts are good and people respond warmly.',
+   soft:'A comfortable, nourishing stretch. Home and family life tend to run smoothly, you feel emotionally supported, and it is a good time for property matters, hosting or improving where you live.',
+   hard:'Feelings run large. You may want more comfort, more space or more reassurance than usual, and it is easy to overindulge (food, spending, saying yes to everyone). Home matters can expand faster than planned.'},
+  mercury:{conj:'Your mind is busy and optimistic. Good for study, writing, teaching, sales, contracts and travel. Ideas you share now can travel far, and new contacts bring useful information.',
+   soft:'Communication flows. Negotiations, paperwork, courses, publishing and short trips go well, and the right information tends to find you when you need it.',
+   hard:'Plenty of ideas, plenty of talk, but details can slip. Read contracts twice, avoid overpromising and do not take on more projects than you can actually finish.'},
+  venus:{conj:'A warm, sociable and often lucky time for love, pleasure and money. Relationships can deepen or begin, creative work is well received, and income or gifts may increase.',
+   soft:'Life feels pleasant. Good for dating, celebrations, beautifying your space, creative projects and making money through people you like. Small luxuries and kindness come easily.',
+   hard:'You want more of the good things, and overspending or indulgence is the trap. Relationships are friendly but may lack follow-through. Enjoy it, and keep an eye on the budget.'},
+  mars:{conj:'Energy and ambition get a boost. You are willing to take on bigger challenges, compete and start ambitious projects, and effort tends to pay off. Good for sport, entrepreneurship and bold moves.',
+   soft:'Effort is rewarded. You have the drive to get things done, and action you take now tends to go further than expected. Good for physical goals, launching projects and standing up for yourself.',
+   hard:'Big energy that can tip into impatience, overconfidence or taking on too much at once. Channel it into one clear goal and watch for strain from overexertion.'},
+  jupiter:{conj:'A new twelve-year cycle of growth begins.',soft:'A mid-cycle moment where your beliefs and plans for growth get support; good for study, travel, publishing and mentoring.',hard:'A mid-cycle check-in on how you are growing: are your plans too big, or not big enough? Adjust course rather than abandon it.'},
+  saturn:{conj:'A rare chance to turn hard work into concrete results. Long-term structures, such as a business, a qualification, a property or a commitment, can grow on a solid footing.',
+   soft:'Effort and patience are rewarded. A good time to expand something you have built carefully, or to get backing from people in authority for a long-term plan.',
+   hard:'Tension between wanting to grow and needing to be careful. You may feel pulled between a new opportunity and existing responsibilities; the answer is usually measured, staged growth.'},
+  node:{conj:'Opportunities line up with the direction you are meant to grow in. People and chances that appear now can be significant for years to come.',
+   soft:'Doors open in the direction of your long-term growth; say yes to things that stretch you.',
+   hard:'Growth is available, but it may pull you back toward comfortable old patterns. Choose the option that moves you forward.'},
+  chiron:{conj:'A healing, hopeful time around old wounds. Teachers, therapists or simply a change of perspective help you make peace with something that has long hurt.',
+   soft:'Healing comes more easily. Good for therapy, recovery and helping others with what you have learned the hard way.',
+   hard:'Old hurts may be stirred by too much optimism or by others\' expectations. Be gentle with yourself and accept help.'},
+  asc:{conj:'You make a strong, positive impression. Good for starting something new, a fresh look, travel or stepping into a bigger role. Weight gain is a classic side effect of the extra appetite for life.',
+   soft:'People respond well to you, and new beginnings have good momentum. A good time for personal goals, health improvements and putting yourself forward.',
+   hard:'You are keen to expand, but others may be the ones setting the agenda. Partnerships or career demands can stretch you; keep personal goals realistic.'},
+  mc:{conj:'One of the strongest windows for career and reputation: promotion, recognition, a new position or a public success. Act on career ambitions now.',
+   soft:'Career matters get a tailwind. Supportive bosses, good reviews and openings at work make this a good time to push for progress.',
+   hard:'Growth in one area can come at the expense of another, typically career versus home. An opposition here can also bring growth at home: a move, a bigger house or family news.'}},
+ saturn:{
+  sun:{conj:'A defining test of who you are and what you are building. Responsibilities increase, energy can dip, and what is not working in your life becomes obvious. The reward is lasting authority and a clearer sense of purpose.',
+   soft:'Steady, earned progress. Discipline comes naturally, people in authority respect you, and hard work now lays foundations that last for years.',
+   hard:'A period of pressure and reality checks. Obstacles, criticism or heavy workloads test your confidence. It is a time to consolidate, strengthen your position and drop commitments that drain you.'},
+  moon:{conj:'An emotionally serious time. Family responsibilities, caring for a parent or child, or a home that needs work can weigh on you, and you may feel more alone. You come out of it more emotionally mature and self-reliant.',
+   soft:'Emotional stability and practical progress at home. A good time to put family, property or personal routines on a solid footing.',
+   hard:'Feelings of heaviness, loneliness or emotional strain are common. Family duties or housing matters may demand attention. Rest, routine and honest support help a great deal.'},
+  mercury:{conj:'A time for serious thinking, study or writing. Your mind is focused and realistic, though communication can feel slow or heavy. Contracts and plans made now are built to last.',
+   soft:'Clear, disciplined thinking. Excellent for long projects, exams, contracts, planning and anything that needs precision and patience.',
+   hard:'Plans meet obstacles, paperwork is slow and communication can be frustrating. Worry or self-doubt about your ideas is common. Simplify, check details and push through steadily.'},
+  venus:{conj:'Relationships and finances get a reality check. Serious commitments are possible, but so are endings for connections that no longer work. Money calls for budgeting and patience.',
+   soft:'Stable, grounded relationships and sensible money management. A good time to commit, to invest for the long term or to bring structure to creative work.',
+   hard:'Love or money feels restricted. You may feel unappreciated, face a relationship test or need to tighten the budget. What survives this is genuinely solid.'},
+  mars:{conj:'Effort meets resistance. Progress takes more work than you would like, and frustration builds if you push too hard. Disciplined, steady action gets results.',
+   soft:'Controlled, effective effort. Excellent for training, construction, long tasks and anything that needs stamina and precision.',
+   hard:'Frustration, blocked plans and conflict with authority are common. Avoid forcing things or taking physical risks; slow, deliberate action works better than brute force.'},
+  jupiter:{conj:'Your plans for growth get tested against reality. What is sound gets a solid foundation; what is overextended has to be trimmed.',
+   soft:'Steady, sensible growth. Good for structured expansion, long-term investment and building on your beliefs.',
+   hard:'Growth slows or meets limits. Over-optimistic plans need revising; a time to be prudent with money and commitments.'},
+  saturn:{conj:'A once-in-29-years reckoning with your structures and commitments.',soft:'A good moment to build on the structures you set up in recent years.',
+   hard:'A checkpoint in your Saturn cycle. Commitments, careers and responsibilities you took on about seven years ago are tested; adjust what is not holding up.'},
+  uranus:{conj:'Change gets channelled into something lasting. A good time to give your independent streak a real structure.',soft:'Old and new can work together; practical innovation is favoured.',hard:'Tension between stability and the urge for freedom. Avoid rash breaks; change one thing at a time.'},
+  neptune:{conj:'Dreams meet reality. Some ideals are given form; others turn out to be illusions.',soft:'You can turn inspiration into something real; good for disciplined creative or spiritual practice.',hard:'Disillusionment is possible. Check facts, avoid wishful thinking and keep your boundaries clear.'},
+  pluto:{conj:'Long-term power and control issues come to a head. Serious, lasting change is possible with patience.',soft:'Determined, strategic effort is rewarded; good for long-term reforms.',hard:'Pressure from powerful forces or people. Hold your ground calmly and do not take on battles you do not need.'},
+  node:{conj:'Your life direction gets serious. Commitments made now shape the years ahead.',soft:'Practical steps toward your long-term direction are supported.',hard:'Duties may seem to pull against the direction you want to grow in. Keep taking small steps forward.'},
+  chiron:{conj:'Old wounds ask for mature, practical attention. Therapy, health routines or facing an old fear can make a real difference.',soft:'Healing through discipline and routine.',hard:'Old insecurities resurface under pressure. Get support rather than pushing through alone.'},
+  asc:{conj:'A demanding, character-building time. You take on more responsibility, may feel tired or under scrutiny, and start to reshape your life and image. Look after your body: rest, bones, teeth and skin.',
+   soft:'You come across as capable and grounded. A good time to take on responsibility, improve your health routines and present yourself with authority.',
+   hard:'Pressure on your personal direction and energy. Other people\'s demands, relationship tests (on the opposition) or career pressure (on the square) push you to restructure how you live.'},
+  mc:{conj:'A career peak of the earned kind. You reach a position of responsibility or reckon with where your career really stands. Hard work done in recent years can now be recognised.',
+   soft:'Career progress through steady effort. Authority figures support you, and responsibility at work increases in a good way.',
+   hard:'Career pressure, or a tug-of-war between work and home. Restructuring at work, a demanding boss or a family need can force choices. Build patiently.'}},
+ uranus:{
+  sun:{conj:'A major turning point in identity. You may change direction suddenly, break free from what has been confining you and feel a strong need to be yourself. Expect the unexpected.',
+   soft:'Exciting, welcome change. New interests, people and opportunities appear that help you express who you really are. Good for innovation and trying new things.',
+   hard:'Restlessness and sudden disruptions push you to change. Jobs, relationships or roles that feel confining may break open. Change is coming either way; choose it consciously.'},
+  moon:{conj:'Big changes in home and emotional life: moves, family changes or a new way of living. Feelings are restless and you need more freedom and space.',
+   soft:'Refreshing changes at home and in your emotional life. A good time to move, redecorate or try a different routine.',
+   hard:'Emotional unsettledness and unexpected changes at home or in the family. Build flexibility into your plans and give yourself space.'},
+  mercury:{conj:'New ideas and sudden insights. You may change how you think, take up a new subject, adopt new technology or change how you communicate.',
+   soft:'Original, quick thinking. Excellent for learning new skills, technology, writing and breakthroughs in problem-solving.',
+   hard:'Nervous energy, scattered focus and surprise news. Plans can change at short notice; double-check travel and technology.'},
+  venus:{conj:'Sudden attractions, new relationships or a shake-up in existing ones. Your tastes and values change, and you want more freedom in love and money.',
+   soft:'Exciting, unconventional relationships and creative ideas. Money can come from unusual sources.',
+   hard:'Relationship or financial instability. A need for freedom can disrupt commitments, and impulsive spending is a risk.'},
+  mars:{conj:'A surge of energy and the urge to act independently. You may start something new suddenly or break away from restrictions. Take care with speed and machinery.',
+   soft:'Energy for new ventures and bold, inventive action. Good for taking initiative and trying new physical activities.',
+   hard:'Impatience, sudden conflicts and an urge to rebel. Accidents are more likely when rushing; slow down physically.'},
+  jupiter:{conj:'Unexpected opportunities and lucky breaks. A sudden chance to travel, study, publish or grow can appear out of nowhere, and your beliefs may shift in exciting ways.',soft:'Lucky surprises and new horizons. Good for travel, study and trying a new philosophy or approach; openings come from unusual places.',hard:'Restless growth and the urge to take a leap. Avoid impulsive risks with money, investments or beliefs, and test a new idea before betting on it.'},
+  saturn:{conj:'Old structures break open to make room for new ones. A job, routine or commitment that has become rigid may end suddenly, freeing you to build something that suits who you are now.',soft:'Practical innovation. A good time to update how you work, modernise systems and reform your commitments without losing what is solid.',hard:'Tension between security and freedom. Something established, such as a job, a role or a long-held arrangement, needs updating; change it on your terms before it changes on its own.'},
+  node:{conj:'A sudden shift in life direction. Unexpected people or events point you toward a new path, often one that feels more like you.',soft:'Surprising opportunities open up in the direction you are meant to grow. Say yes to the unusual.',hard:'Unexpected detours that ultimately redirect you. What feels like a disruption may be a correction.'},
+  chiron:{conj:'A breakthrough in healing an old wound. A new insight, therapy or experience frees you from a pattern you have carried for years.',soft:'New approaches to healing work well; try something different for body or mind.',hard:'Old wounds are stirred unexpectedly, which is uncomfortable but opens the way to real healing.'},
+  asc:{conj:'You change how you look, live and present yourself. New beginnings, a move or a desire for independence. Others may find you unpredictable.',
+   soft:'Fresh starts and positive reinvention. You feel freer and more yourself.',
+   hard:'Sudden changes in relationships (opposition) or career and home (square) disrupt your personal life and push you toward independence.'},
+  mc:{conj:'A sudden career change, a new direction or a break from an organisation. You need work that gives you freedom.',
+   soft:'Exciting career developments, often through technology, innovation or unusual openings.',
+   hard:'Career instability or a sudden change at home. Expect reorganisations; keep options open.'}},
+ neptune:{
+  sun:{conj:'Your sense of identity softens and opens. Spiritual, creative or caring interests may grow while ambition fades. Energy can be lower; clarity comes slowly.',
+   soft:'Inspiration, sensitivity and compassion grow. Good for art, music, spirituality and helping others.',
+   hard:'A confusing phase where your direction or confidence feels unclear. Avoid big decisions made in a fog, watch out for deception, and look after your energy.'},
+  moon:{conj:'Heightened sensitivity and empathy. Home life may feel dreamy, and boundaries with family can blur. A strong pull toward retreat, water, art or spirituality.',
+   soft:'Intuition and emotional sensitivity flow. A good time for creative and spiritual pursuits and for caring for others.',
+   hard:'Emotional confusion, family uncertainties or feeling drained by others. Strengthen boundaries and be wary of escapism.'},
+  mercury:{conj:'Imagination and intuition are strong, but logic is foggy. Good for creative writing and music; less good for contracts and precise work.',
+   soft:'Imaginative, intuitive thinking. Good for poetry, design, film and spiritual study.',
+   hard:'Confusion, misunderstandings and unclear information. Get things in writing and check facts.'},
+  venus:{conj:'Romantic idealism and a longing for a soulmate. Inspiring for art and love, but rose-tinted glasses can mislead.',
+   soft:'Romance, beauty and creativity are heightened. Good for art, music and compassionate relationships.',
+   hard:'Idealism or deception in love or money. Watch for disappointment, and avoid risky financial schemes.'},
+  mars:{conj:'Drive becomes subtle and inspired, but motivation can be inconsistent. Good for art, dance, sailing and spiritual practice.',
+   soft:'Inspired action and effort in service of ideals; good for creative and charitable work.',
+   hard:'Low energy, confusion about goals or hidden opposition. Avoid fights you cannot see clearly.'},
+  jupiter:{conj:'Idealism and faith expand. You may be drawn to spirituality, charity, art or a cause, and your sense of what is possible grows. Keep one foot on the ground.',soft:'Spiritual growth, generosity and inspiration. Good for creative, charitable and spiritual work, and for travel to places that move you.',hard:'Over-optimism and unrealistic hopes. Check the details of investments, offers and promises, because things may look better than they are.'},
+  saturn:{conj:'Structures you relied on begin to dissolve, which can feel disorienting. It makes room for a more meaningful way of working and living.',soft:'Dreams take practical form. A good time to give an ideal or creative project a real structure and schedule.',hard:'Uncertainty about commitments and responsibilities. Something that seemed solid may feel shaky; keep your footing, and do not abandon structures out of fatigue.'},
+  node:{conj:'Spiritual growth and a sense of calling, mixed with some uncertainty about your path. You may be drawn toward meaningful, creative or caring work while the details stay unclear.',soft:'Intuition guides your direction. Pay attention to dreams, synchronicities and what genuinely inspires you.',hard:'Confusion about your direction. Give it time; clarity comes once the fog lifts.'},
+  chiron:{conj:'Spiritual or creative healing. Art, music, meditation or compassion help you make peace with an old hurt.',soft:'Compassion, for yourself and others, helps you heal.',hard:'Vulnerability around old wounds. Be gentle with yourself and avoid numbing the feeling.'},
+  asc:{conj:'Your presence becomes softer and more sensitive. People may project onto you. Look after your health and avoid substances that drain you.',
+   soft:'An artistic, compassionate presence; others find you inspiring.',
+   hard:'Confusion in relationships or uncertainty about your personal direction. Be clear about what you want.'},
+  mc:{conj:'Career becomes more creative or idealistic, or the direction becomes uncertain. Good for creative, spiritual or caring work.',
+   soft:'Career inspiration, particularly in creative or caring fields.',
+   hard:'Uncertainty or confusion around career and reputation. Avoid scandals and unclear agreements.'}},
+ pluto:{
+  sun:{conj:'A deep, lasting transformation of identity and purpose. Power struggles, endings and rebirths are possible. You emerge more powerful and more yourself.',
+   soft:'Quiet empowerment. You gain influence and the ability to change your life in depth.',
+   hard:'Intense pressure, power struggles and situations that force you to change. What is not authentic will not survive.'},
+  moon:{conj:'Deep emotional transformation. Family matters, the past or the home undergo a profound change.',
+   soft:'Emotional depth and healing; you gain strength from understanding your feelings.',
+   hard:'Emotional intensity, family power struggles or an upheaval at home. Old patterns come up to be released.'},
+  mercury:{conj:'Thinking becomes deep and penetrating. Good for research, psychology and investigative work. Words carry weight.',
+   soft:'Persuasive, strategic thinking. Excellent for research and negotiations.',
+   hard:'Obsessive thinking or tense negotiations. Avoid manipulation and power games in communication.'},
+  venus:{conj:'Intense, transformative relationships. Deep attraction, jealousy or the end of something that no longer serves you.',
+   soft:'Relationships deepen, and finances can be regenerated.',
+   hard:'Power struggles in love or money. Possessiveness and control are the issues to watch.'},
+  mars:{conj:'Enormous drive and determination. Ambitions can be achieved, but conflicts can be intense.',
+   soft:'Powerful, focused effort; you can achieve a lot.',
+   hard:'Intense conflicts or power struggles. Avoid escalating; channel the drive into a goal.'},
+  jupiter:{conj:'Growth on a large scale. Ambitions expand, and you may gain influence, wealth or a powerful platform. Use it wisely.',soft:'Growth through determination. Strategic, long-term efforts to improve your position, finances or knowledge succeed.',hard:'Ambition can outrun realism. Watch for power struggles over money, beliefs or influence, and for the temptation to win at any cost.'},
+  saturn:{conj:'Structures are rebuilt from the ground up. A career, commitment or institution in your life may end or be completely reformed.',soft:'Strategic, lasting reform. Patient effort makes deep and permanent improvements to your work and responsibilities.',hard:'Intense pressure on your structures. What is weak must be rebuilt, and authority figures or institutions may push hard.'},
+  node:{conj:'A transformation of your direction. Powerful people or circumstances push you toward the path you are meant to take.',soft:'Deep shifts support your path; you gain the power to move in a new direction.',hard:'Intense pressures redirect your path. Let go of what holds you back.'},
+  chiron:{conj:'Deep healing of old wounds. Long-buried pain surfaces so that it can finally be released.',soft:'Healing through depth: therapy, honest conversations or research into the roots of a problem.',hard:'Old wounds come up to be healed, sometimes painfully. Support makes all the difference.'},
+  asc:{conj:'You transform how you appear and live. Your presence becomes stronger and more intense.',
+   soft:'Personal empowerment and regeneration of health and vitality.',
+   hard:'Intense relationship dynamics (opposition) or pressures from career and home (square) force deep personal change.'},
+  mc:{conj:'A career transformation: a rise to power, an ending or a complete change of direction.',
+   soft:'Career influence and power grow steadily.',
+   hard:'Power struggles at work or deep changes in career or family.'}}};
+// opposition / square versions for the angles, where they mean quite different things
+const YT_ANG={jupiter:{asc:{opp:'Growth comes through other people: a new partner, a promising collaboration, a good client or a helpful adviser. Relationships expand, sometimes faster than you can keep up with.',squ:'Career or home matters demand that you grow, and your personal plans have to make room. Good opportunities, but more on your plate.'},
+  mc:{opp:'Growth comes at home rather than in public: a move, a bigger house, a family addition or simply more time for private life.',squ:'Career and home both want more of you. Expansion is possible on either front, but probably not both at once.'}},
+ saturn:{asc:{opp:'Relationships are put to the test. Partners, clients or close collaborators ask more of you, and commitments are either strengthened or ended. Honest negotiation works better than avoidance.',squ:'Pressure from career or home pushes you to restructure how you live. Workloads, responsibilities or family needs test your energy, and you may need to drop commitments that drain you.'},
+  mc:{opp:'A low point in Saturn\'s career cycle and a time to work on foundations: home, family, inner security. Career may feel slow; what you build privately now supports the next rise.',squ:'A career checkpoint. Pressure, restructuring or a demanding boss forces you to decide what you really want from work. Steady effort now sets up the next peak.'}},
+ uranus:{asc:{opp:'Sudden changes in relationships: someone new arrives, someone leaves, or a partnership changes shape. You need more space within your close ties.',squ:'Disruption in career or home life pushes you toward more independence. Expect the unexpected and keep your plans flexible.'},
+  mc:{opp:'Change at home or in the family: a move, a new household arrangement or a surprise that reshapes private life.',squ:'Restlessness at work and sudden shifts in direction. A job change or a new kind of work is possible.'}},
+ neptune:{asc:{opp:'Relationships feel idealised or unclear. Someone may not be what they seem, or you may give too much. Keep your eyes open and your boundaries clear.',squ:'Uncertainty about your direction at work or home makes it hard to choose. Wait for clarity before committing.'},
+  mc:{opp:'Home and family life feel uncertain or dreamy; avoid unclear property or family agreements.',squ:'Career direction feels foggy. Avoid vague deals and make sure your reputation is protected.'}},
+ pluto:{asc:{opp:'Intense relationships: a powerful partner, a power struggle or a bond that changes you deeply.',squ:'Deep pressure from career or home forces personal change; what is no longer working has to go.'},
+  mc:{opp:'Deep change at home or in the family, often involving the past or a parent.',squ:'Power struggles at work or a forced change of direction; stay strategic.'}}};
+// practical tips by what is touched
+const YT_TIP={sun:['Put yourself forward: apply, pitch, lead.','Protect your energy, and do not try to prove yourself to everyone.'],moon:['Invest in home and family: nesting, hosting, property.','Keep routines, sleep and support close; do not carry it all alone.'],
+ mercury:['Write, study, sign, sell and network.','Double-check contracts, back up files and leave extra time for travel.'],venus:['Make time for love, beauty and enjoyment, and ask for fair pay.','Watch spending, and talk honestly with your partner about what is not working.'],
+ mars:['Start the ambitious project or physical goal.','Pace yourself physically and avoid unnecessary confrontations.'],jupiter:['Study, travel, publish or teach.','Check that plans are realistic before you commit money.'],saturn:['Formalise what you have built: qualifications, contracts, structures.','Review long-term commitments and lighten the load where you can.'],
+ node:['Follow the opportunities that feel like growth, even if they are unfamiliar.','Notice where you are retreating into habit, and choose the path forward.'],chiron:['Seek out healing: therapy, rest, a mentor.','Be gentle with yourself; old hurts are surfacing to be healed.'],
+ asc:['Refresh your look, health routines and personal goals.','Look after your body: rest, regular exercise and check-ups.'],mc:['Push for career progress and visibility.','Keep work and home in balance and keep your reputation clean.'],
+ uranus:['Experiment.','Avoid sudden breaks.'],neptune:['Make space for imagination.','Keep your feet on the ground.'],pluto:['Go deep.','Avoid power struggles.']};
+// how the aspect family usually plays out
+const YT_ASP={conj:'A conjunction starts a new cycle: the theme is personal and hard to miss.',
+ opp:'As an opposition, it usually arrives through other people: a partner, client, boss or rival brings it to your door, and balance is the lesson.',
+ squ:'As a square, it creates friction that pushes you to act: pressure builds until you make a change.',
+ tri:'As a trine, it opens doors easily, but it will not push you through them; it rewards you for acting.',
+ sext:'As a sextile, it offers an opening you have to take up: the opportunity is real, but you have to make the first move.'};
+// how to work with it
+const YT_ADV={jupiter:{conj:'Say yes to growth that fits your long-term goals, and do not spread yourself too thin.',soft:'Ask, apply, pitch, travel, study: luck favours action now.',hard:'Pick the one or two best opportunities and keep your budget and calendar realistic.'},
+ saturn:{conj:'Commit to what matters, drop what does not, and expect results to come slowly but last.',soft:'Lay foundations: training, savings, structure and long-term plans.',hard:'Simplify, prioritise, rest and keep going; avoid shortcuts.'},
+ uranus:{conj:'Make room for change and experiment, but avoid burning bridges you may need.',soft:'Try something new: a skill, a technology, a way of living.',hard:'Stay flexible, keep a safety net and make changes deliberately rather than in a rush.'},
+ neptune:{conj:'Make space for creativity and rest, and get second opinions on big decisions.',soft:'Create, meditate, help others, and trust your intuition.',hard:'Check facts, get things in writing and look after your energy.'},
+ pluto:{conj:'Let go of what you have outgrown; real power comes from honesty.',soft:'Work on something deep and long-term: research, therapy, investment or reform.',hard:'Avoid power struggles; focus on what you can actually control.'}};
+const YT_HS={1:'your body and personal direction',2:'money and possessions',3:'communication and siblings',4:'home and family',5:'romance and creativity',6:'work routines and health',7:'partners and close collaborators',8:'shared money and intimacy',9:'travel and study',10:'career and reputation',11:'friends and goals',12:'rest and your private life'};
+const ytList=a=>a.length<2?(a[0]||''):a.slice(0,-1).join(', ')+(a.length>2?',':'')+' as well as '+a[a.length-1];
+const YT_PROF={1:'A personal year. The focus is on you: your body, image and the direction of your life. Fresh starts, new looks and personal goals are favoured, and you are more visible than usual.',
+ 2:'A year about money, possessions and self-worth. Income, budgets, purchases and what you value get attention, and it is a good year to build savings and earning power.',
+ 3:'A year of communication, learning and the local world. Writing, courses, short trips, paperwork, siblings and neighbours are in focus, and the right conversations open doors.',
+ 4:'A year centred on home, family and roots. Moves, renovations, property, parents and private life take priority. It is a year to strengthen your foundations rather than chase the spotlight.',
+ 5:'A year for creativity, romance and joy. Love affairs, children, hobbies, play and creative projects come forward, and you are encouraged to do more of what you enjoy.',
+ 6:'A year for work, health and routines. Daily habits, workload, colleagues and wellbeing need attention. Improving how you work and look after yourself pays off.',
+ 7:'A year about other people. Partnerships, marriage, contracts, clients and open rivals are the focus, and one-to-one relationships define the year.',
+ 8:'A year of depth and shared resources. Joint finances, debts, inheritance, intimacy and deep personal change are in focus. It is a good year for investing in yourself and letting go of what has ended.',
+ 9:'A year of wider horizons. Travel, higher education, publishing, law, beliefs and teachers are in focus. A good year to learn, explore and broaden your perspective.',
+ 10:'A career year. Work, reputation and public standing take the lead. Ambitions can be realised, responsibility increases and you are more visible to people in authority.',
+ 11:'A year of friends, community and goals. Networks, groups, allies and long-term hopes are in focus, and other people help you reach what you are aiming for.',
+ 12:'A quieter year of rest and completion. Retreat, reflection, spiritual practice and behind-the-scenes work are favoured. Tie up loose ends before the next cycle starts.'};
+const YT_PMOON=['a restless, pioneering emotional tone: you want to start things and act on your feelings quickly','a calmer, steadier emotional tone: comfort, security and the senses matter more','a curious, sociable emotional tone: more conversation, learning and variety','an inward, family-centred emotional tone: home, nurture and belonging matter more','a warm, expressive emotional tone: you want to be seen, to create and to enjoy life','a practical, improving emotional tone: routines, health and useful work take priority','a relationship-centred emotional tone: partnership, harmony and fairness matter more','an intense, private emotional tone: depth, honesty and transformation','an adventurous, optimistic emotional tone: travel, study and meaning call','a serious, ambitious emotional tone: responsibility, goals and long-term plans','an independent, forward-looking emotional tone: friends, causes and freedom','a sensitive, reflective emotional tone: rest, imagination and letting go'];
+const ytCap=s=>s?s.charAt(0).toUpperCase()+s.slice(1):s;
+function ytCtx(R,k){const ch=R.wW,A=R.A,hasT=!A.timeUnknown&&!ch.noHouses;if(!ch||!ch.pts)return '';
+ if(k==='asc'||k==='mc'){if(!hasT||!ch.pts[k])return '';return `Your ${k==='asc'?'Ascendant':'Midheaven'} is in ${SIGN_N[Math.floor(ch.pts[k].lon/30)]}.`}
+ const p=ch.pts[k];if(!p)return '';const sg=SIGN_N[Math.floor(p.lon/30)];if(!hasT)return `Your natal ${rpNm(k)} is in ${sg}.`;
+ const asc=ch.pts.asc.lon,h=wsHouse(p.lon,asc),rules=[];for(let s=0;s<12;s++)if(RULER[s]===k)rules.push(wsHouse(s*30,asc));
+ const hs=[h,...rules.filter(x=>x!==h)];
+ return `Your natal ${rpNm(k)} is in ${sg} in your ${rpOrd(h)} house${rules.length?` and rules your ${rules.map(rpOrd).join(' and ')}`:''}, so this also plays out through ${ytList(hs.map(x=>YT_HS[x]))}.`}
+function ytHits(e,a,b){const all=(e.hits||[]).filter(x=>x.ms<=b+40*864e5),fut=all.filter(x=>x.ms>=a-10*864e5),past=all.filter(x=>x.ms<a-10*864e5&&x.ms>a-400*864e5);
+ const f=x=>rpDay(x.ms)+(x.retro?' (retrograde)':'');
+ if(!fut.length)return past.length?`It was exact on ${XL(past.map(f))} and is now separating, so its effects are easing.`:'';
+ return `Exact ${XL(fut.map(f))}${fut.length>1?`: it is felt most around ${fut.length===2?'both':'each of these'} dates`:', when it is felt most'}.${past.length?` It was also exact on ${XL(past.map(f))}.`:''}`}
+function ytTxt(R,e,a,b){if(e.ret)return '<p>'+rpTrTxt(e)+(e.b==='jupiter'?' Plant seeds now: what you start in the next few months tends to grow over the next twelve years.':e.b==='saturn'?' Expect to take stock of your career, relationships and commitments, keep what is solid and rebuild what is not. It often feels heavy at the time and empowering afterwards.':'')+'</p>';
+ const L=YT[e.b]&&YT[e.b][e.t],ang=YT_ANG[e.b]&&YT_ANG[e.b][e.t],txt=(ang&&ang[e.ak])||(L?L[e.cls]:'');if(!txt)return `<p>${rpTrTxt(e)}</p>`;
+ const hit=ytHits(e,a||e.start,b||e.end),ctx=ytCtx(R,e.t);
+ return `<div class="rp-tr"><p><b>${PNM(e.b)} ${RP_ASPV[e.ak]} ${rpYour(e.t)}</b> <span class="rp-dim">(${rpRange(e.start,e.end)})</span></p><p>${txt} ${YT_ASP[e.ak]||''}${ctx?' '+ctx:''}${hit?' '+hit:''}</p><p class="rp-adv"><b>Working with it:</b> ${YT_ADV[e.b][e.cls]}${YT_TIP[e.t]?' '+YT_TIP[e.t][(e.cls==='soft'||(e.cls==='conj'&&e.b==='jupiter'))?0:1]:''}</p></div>`}
+function ytShort(e){const L=YT[e.b]&&YT[e.b][e.t],ang=YT_ANG[e.b]&&YT_ANG[e.b][e.t];if(ang&&ang[e.ak])return ang[e.ak].split(/(?<=\.)\s/)[0];if(!L||!L[e.cls])return cap(RP_TR[e.b][e.cls])+'.';return L[e.cls].split(/(?<=\.)\s/)[0]}
+// the year in brief
+function ytSummary(R,y,ev,prof,bzy,ys){const out=[],P=R.prof||[],ch=R.wW;ys=ys||Date.UTC(y,0,1);
+ const pIn=P.find(p=>ys>=p.yStart&&ys<p.yEnd);
+ const sup=ev.filter(e=>e.tone>0).sort((a,b)=>b.w-a.w)[0],hard=ev.filter(e=>e.tone<0).sort((a,b)=>b.w-a.w)[0];
+ if(prof&&prof.yStart<ys)out.push(`You are in a ${rpOrd(prof.house)}-house profection year until your birthday on ${rpDay(prof.yEnd)}: ${YT_PROF[prof.house].split('.')[0].toLowerCase()}.`);
+ else if(pIn&&prof)out.push(`${ys>Date.UTC(y,0,1)?'This stretch':'The year'} starts in your ${rpOrd(pIn.house)}-house profection year (${RP_HT[pIn.house]}) and turns on your birthday, ${rpDay(prof.yStart)}, to a ${rpOrd(prof.house)}-house year: ${YT_PROF[prof.house].split('.')[0].toLowerCase()}.`);
+ else if(prof)out.push(`From your birthday, ${rpDay(prof.yStart)}, the focus is ${RP_HT[prof.house]}.`);
+ if(hard)out.push(`The heaviest weather is ${PNM(hard.b)} ${RP_ASPN[hard.ak]} your ${rpNm(hard.t)} (${rpRange(hard.start,hard.end)}), touching your ${RP_TT[hard.t]||rpNm(hard.t)}.`);
+ if(sup)out.push(`${hard?'The main support':'The main theme'} is ${PNM(sup.b)} ${RP_ASPN[sup.ak]} your ${rpNm(sup.t)} (${rpRange(sup.start,sup.end)}), which helps your ${RP_TT[sup.t]||rpNm(sup.t)}.`);
+ if(bzy)out.push(`In BaZi the year's element is ${bzy.fav==='fav'?'favourable for you, which adds momentum':bzy.fav==='unfav'?'not one of your useful ones, so pace yourself':'neutral for you'}.`);
+ const tone=(hard?-hard.w:0)+(sup?sup.w:0)+(bzy?(bzy.fav==='fav'?3:bzy.fav==='unfav'?-3:0):0);
+ const yw=ys>Date.UTC(y,0,1)?'stretch':'year';out.push(tone>3?`Overall, a ${yw} to take opportunities and build momentum.`:tone<-3?`Overall, a ${yw} that rewards patience, steady effort and good self-care; what you build now is built to last.`:`Overall, a mixed ${yw}: lean into what is supported and go carefully where there is pressure.`);
+ return `<p class="rp-brief"><b>In brief:</b> ${out.join(' ')}</p>`}
+function ytProfLord(R,prof){const ch=R.wW,A=R.A;if(!ch||!ch.pts||A.timeUnknown||ch.noHouses)return '';const k=prof.lord,p=ch.pts[k];if(!p)return '';const h=wsHouse(p.lon,ch.pts.asc.lon);
+ const tr=rpTransits(R).filter(e=>e.t===k&&e.end>=prof.yStart&&e.start<prof.yEnd).slice(0,2);
+ return ` ${rpThe2(k)} is the lord of the year. It sits in ${SIGN_N[Math.floor(p.lon/30)]} in your ${rpOrd(h)} house, so the year's themes run through ${YT_HS[h]}.${tr.length?` Transits to your natal ${rpNm(k)} matter extra this year: ${XL(tr.map(e=>`${PNM(e.b)} ${RP_ASPN[e.ak]} it (${rpRange(e.start,e.end)})`))}.`:''}`}
+
+/* ===== Natal aspects: what each planet pair tends to mean (c = conjunction, s = trine/sextile, h = square/opposition) ===== */
+const NA_ORD=['sun','moon','mercury','venus','mars','jupiter','saturn','uranus','neptune','pluto','asc','mc'];
+const NA={
+ 'sun|moon':{c:'You were born near a New Moon: what you want and what you need point the same way. This gives single-minded focus and self-sufficiency, though it can make it harder to see yourself from the outside.',
+  s:'What you want and what you need get along. There is an inner ease here that makes you steadier under pressure, and it usually shows in good relationships with family and partners.',
+  h:'A pull between what you want (the Sun) and what you need emotionally (the Moon). You may swing between ambition and comfort, and the tension is often mirrored in your parents\' relationship or your own partnerships. Learning to honour both sides is the life lesson.'},
+ 'sun|mercury':{c:'Your mind and your sense of self are fused. You think about who you are, identify strongly with your ideas and opinions, and usually communicate with conviction. The risk is taking disagreement personally.',
+  s:'Clear, confident thinking that serves your goals.',h:'Ideas and identity pull in different directions; take time to listen.'},
+ 'sun|venus':{c:'Warmth, charm and good taste are part of who you are. People tend to like you, you value harmony, and art, beauty or relationships can become central to your path.',
+  s:'Charm and confidence work together.',h:'Wanting to be liked can pull against being yourself.'},
+ 'sun|mars':{c:'Strong drive, courage and a competitive streak. You act fast, lead from the front and need a physical outlet. Patience is the skill to build.',
+  s:'Confidence and drive work together. You are decisive, energetic and good at turning intentions into action, often with athletic or entrepreneurial flair.',
+  h:'A strong will with built-in friction. You may be impatient, quick to anger or drawn into conflict, especially with authority figures. Channelled into sport, competition or a demanding goal, it becomes formidable energy.'},
+ 'sun|jupiter':{c:'Optimism, generosity and a big vision. Luck tends to follow your confidence, and teaching, travel or leadership suit you. The risk is overextending.',
+  s:'A natural confidence and faith in life that attracts mentors, opportunities and goodwill. Things tend to work out, especially when you act on your principles.',
+  h:'A big appetite for life with a tendency to overdo it: promising too much, spending too much or aiming beyond what is realistic. When it is grounded, it gives real vision and generosity.'},
+ 'sun|saturn':{c:'Seriousness, responsibility and a strong sense of duty, often from an early age. You may have been self-critical or carried heavy expectations, but you are a late bloomer whose authority grows with time.',
+  s:'Discipline, patience and reliability. You build steadily, earn respect and are good at long-term achievement. Structure suits you.',
+  h:'Self-doubt, obstacles or heavy expectations, often linked to a father or authority figure. Success tends to come slowly, but the resilience you build makes it last. Be as patient with yourself as you are with your work.'},
+ 'sun|uranus':{c:'Originality and a strong need for independence. You do not fit the mould and are not meant to. Freedom, innovation and doing things your own way are central to who you are.',
+  s:'An inventive, progressive streak that makes change work for you. You adapt quickly and bring fresh ideas.',
+  h:'Restlessness and a rebellious streak. Sudden changes, resistance to authority and difficulty with routine are common. Building freedom into your life reduces the need to break things to get it.'},
+ 'sun|neptune':{c:'Imagination, sensitivity and a strong pull toward art, music, spirituality or helping others. Your sense of self can feel fluid, and clarity comes from creative or compassionate work.',
+  s:'Compassion, intuition and creative inspiration support your sense of purpose.',
+  h:'Uncertainty about who you are or where you are going, and a tendency to idealise people or situations. Watch for escapism and deception, and look for the creative or spiritual channel this energy needs.'},
+ 'sun|pluto':{c:'An intense, powerful will and a life marked by transformation. You are private, perceptive and resilient, and you tend to go all in.',
+  s:'Inner strength, depth and the ability to regenerate. You can influence people and situations without force.',
+  h:'Power struggles, control issues and crises that transform you. You may meet intense or controlling people, especially authority figures, until you own your own power.'},
+ 'sun|asc':{c:'You are what you seem. Your personality is bright and visible, your vitality shows, and people respond to your presence.',
+  s:'Confidence comes across easily and your sense of purpose shows in how you present yourself.',h:'Your sense of purpose and your personal style pull in different directions.'},
+ 'sun|mc':{c:'Career and public life are central to your identity. You are built for visibility, recognition and leadership.',
+  s:'Your work supports who you are, and recognition comes naturally when you follow your own direction.',h:'Tension between your personal path and what the world expects of you.'},
+ 'moon|mercury':{c:'You think with your feelings and talk about them easily. You have a good memory, read moods well and communicate with empathy, though your thoughts can be coloured by your mood.',
+  s:'Emotional intelligence. You can put feelings into words, understand people well and communicate with warmth.',
+  h:'Head versus heart. Worry, nervousness or saying things in the heat of the moment are common. Writing things down or waiting before you respond helps.'},
+ 'moon|venus':{c:'Affectionate, gentle and sociable, with a love of comfort, beauty and harmony. You make people feel at home.',
+  s:'Warmth and charm in close relationships, good taste and an easy rapport with people, especially women.',
+  h:'Your emotional needs and what you find attractive do not always match. Comfort-seeking (food, spending) and tension in close relationships are the things to watch.'},
+ 'moon|mars':{c:'Emotional intensity and quick reactions. You are protective, brave in defending people you love, and can have a quick temper.',
+  s:'Emotional courage. You act on your feelings, stand up for yourself and have plenty of energy.',
+  h:'Irritability and emotional reactivity. Conflict at home or flare-ups when you feel threatened are common. Regular physical activity takes the edge off.'},
+ 'moon|jupiter':{c:'Generous, optimistic and nurturing. You have big feelings and a big heart, and people feel safe with you.',
+  s:'Emotional resilience and kindness. Home and family tend to be a source of good fortune.',
+  h:'Emotional excess: overindulging, overpromising or taking on everyone\'s needs. Generosity is a strength; limits keep it healthy.'},
+ 'moon|saturn':{c:'Emotional reserve and a strong need for security. You may have taken on responsibility early or felt alone, and you become remarkably self-reliant.',
+  s:'Emotional steadiness. You are dependable, calm in a crisis and mature about feelings.',
+  h:'Emotional restraint and a fear of rejection, often rooted in a strict or cold early environment. You learn self-reliance; the growth is in letting people in.'},
+ 'moon|uranus':{c:'You need emotional freedom and space. Moods can change suddenly, and an unconventional home or family life is common.',
+  s:'Open-minded and adaptable. You enjoy variety and bring excitement to relationships.',
+  h:'Restlessness and sudden emotional shifts. You may crave closeness and independence at the same time. Relationships with room to breathe work best.'},
+ 'moon|neptune':{c:'Very sensitive and empathic, almost psychic. You absorb the moods around you and have a rich imagination.',
+  s:'Compassion, intuition and imagination. Good for art, music, caring work and spiritual practice.',
+  h:'Emotional confusion and blurred boundaries. You may absorb others\' feelings, idealise people or slip into escapism. Protecting your energy is essential.'},
+ 'moon|pluto':{c:'Deep, intense emotions and a need for emotional truth. Feelings can be all-or-nothing, and relationships tend to be transformative.',
+  s:'Emotional strength and psychological insight. You can face difficult feelings and help others do the same.',
+  h:'Emotional power struggles, jealousy or compulsive feelings, often linked to an intense relationship with a parent. The work is releasing control and trusting others.'},
+ 'moon|asc':{c:'Sensitive and receptive, with moods that show on your face. People find you approachable and nurturing.',
+  s:'People trust you easily, and your emotional intelligence shows in how you meet the world.',h:'Your emotional needs pull against how you present yourself.'},
+ 'moon|mc':{c:'Your public life is tied to caring, people or the public itself. You are sensitive to your reputation.',
+  s:'Careers involving people, care, food, home or the public suit you.',h:'Home and family needs pull against career demands.'},
+ 'mercury|venus':{c:'A graceful, diplomatic way with words. You have artistic taste, a charming style and a gift for writing, design or persuasion.',
+  s:'Easy, pleasant communication and a good eye. You know how to say things nicely.',h:'Tension between saying what you think and keeping the peace.'},
+ 'mercury|mars':{c:'A sharp, quick mind and a sharp tongue. You love debate, decide fast and say what you think.',
+  s:'Mental energy and persuasiveness. You learn quickly, argue well and get ideas moving.',
+  h:'Argumentative or impatient thinking. Sharp words and nervous energy are common. Debate, writing or competitive problem-solving put it to good use.'},
+ 'mercury|jupiter':{c:'Big ideas, optimistic thinking and a gift for teaching, writing or selling. You see the big picture.',
+  s:'A broad, curious mind with good judgment. Learning comes easily and you explain things well.',
+  h:'Plenty of ideas but a tendency to overstate, scatter your focus or miss details. Check facts and finish what you start.'},
+ 'mercury|saturn':{c:'Serious, careful and methodical thinking. You concentrate well and your words carry weight.',
+  s:'A practical, disciplined mind. Good for planning, structure, science, law and anything that needs precision.',
+  h:'Self-doubt about your intelligence, worry or blocks in communication, sometimes from early criticism. You learn slowly but very thoroughly.'},
+ 'mercury|uranus':{c:'A brilliant, original and fast mind. Technology, science and unconventional ideas suit you.',
+  s:'Intuitive leaps and inventive thinking. You see solutions others miss.',
+  h:'A nervous, erratic or contrarian mind. You get impatient with slow people and routine; give yourself space to think.'},
+ 'mercury|neptune':{c:'An imaginative, poetic and intuitive mind. You think in images and feelings rather than straight lines.',
+  s:'Creative writing, music and intuition come easily, and you understand people without words.',
+  h:'Confusion, forgetfulness and misunderstandings. Get things in writing and check facts, especially in contracts.'},
+ 'mercury|pluto':{c:'A penetrating, investigative mind. You see beneath the surface, persuade powerfully and keep your own counsel.',
+  s:'Insight and strategy. Good for research, psychology and negotiation.',
+  h:'Obsessive thinking, suspicion or power struggles in conversation. Use the depth for research rather than for winning arguments.'},
+ 'mercury|asc':{c:'Talkative, curious and quick, with a youthful manner. People know you by your mind and your words.',
+  s:'You come across as articulate and bright.',h:'What you think and how you come across do not always match.'},
+ 'mercury|mc':{c:'Your career is built on communication: writing, teaching, speaking, trading or media.',
+  s:'Communication skills support your career.',h:'Your ideas pull against what the job demands.'},
+ 'venus|mars':{c:'Passion, magnetism and creative drive. Strong sexual chemistry, and a talent for art that needs energy.',
+  s:'A healthy balance of giving and taking in love. Charm and drive work together.',
+  h:'Passion with friction. You may be drawn to push-pull dynamics or conflict in love. Honest negotiation turns tension into chemistry.'},
+ 'venus|jupiter':{c:'Generous, sociable and lucky in love and money. You enjoy life and draw good things to you.',
+  s:'Good fortune in relationships and finances, plus warmth, artistic taste and popularity.',
+  h:'Too much of a good thing: overspending, overindulgence or overly high expectations in love.'},
+ 'venus|saturn':{c:'You take love seriously. Loyal, cautious and slow to commit, you may have felt unlovable at times, but relationships deepen with age.',
+  s:'Lasting relationships, mature taste and good money discipline.',
+  h:'Fear of rejection, restrictions in love or money, or a sense of not being valued. These challenges build high standards and relationships that last.'},
+ 'venus|uranus':{c:'Unconventional in love. You are drawn to unusual people and need freedom within relationships.',
+  s:'Exciting relationships that leave room for independence, and an original artistic style.',
+  h:'On-off relationships, sudden attractions and breakups. You need space; say so before you take it.'},
+ 'venus|neptune':{c:'Romantic idealism and artistic gifts. You long for a soulmate and see the best in people.',
+  s:'Artistic talent, compassion and a gentle, romantic nature.',
+  h:'Idealising partners and then being disappointed, or vagueness about money. Love with your eyes open.'},
+ 'venus|pluto':{c:'Intense, magnetic and all-or-nothing in love. Relationships transform you.',
+  s:'Deep, loyal bonds and a talent for regenerating money and resources.',
+  h:'Obsession, jealousy or power struggles in love and money. The work is trust without control.'},
+ 'venus|asc':{c:'Attractive, charming and graceful. People enjoy your company.',
+  s:'You come across as pleasant and easy to like.',h:'What you value pulls against how you present yourself.'},
+ 'venus|mc':{c:'A career in art, beauty, design, diplomacy or anything that pleases people. You are well liked publicly.',
+  s:'Favour at work and in public life.',h:'Values and career pull in different directions.'},
+ 'mars|jupiter':{c:'Enthusiastic, adventurous and full of energy. Sport, entrepreneurship and big ventures suit you.',
+  s:'Confident action that succeeds. Initiative is rewarded, often generously.',
+  h:'Overreaching, recklessness or impatience. Pick the battles worth fighting.'},
+ 'mars|saturn':{c:'Disciplined effort and enormous endurance, but frustration when blocked. You are a builder.',
+  s:'Stamina and controlled strength. You can work long and hard toward a goal.',
+  h:'Stop-start energy, frustration and suppressed anger. Obstacles test you; steady, patient effort beats force. Watch for strain injuries.'},
+ 'mars|uranus':{c:'Sudden action, a rebellious streak and courage to break new ground. Take care with speed and risk.',
+  s:'Quick, decisive and inventive action.',h:'Impulsive, volatile energy and a higher risk of accidents. Pause before acting.'},
+ 'mars|neptune':{c:'Inspired action and drive for art, dance, spirituality or causes, but energy can be inconsistent.',
+  s:'Action in service of ideals, and a gift for creative or charitable work.',
+  h:'Confusion about goals, low energy or anger that comes out sideways. Clear goals and honest conflict help.'},
+ 'mars|pluto':{c:'Tremendous willpower and intensity. You do not give up.',
+  s:'Endurance and strategic power. You can achieve a great deal.',
+  h:'Power struggles, rage or compulsive drive. Channel it into a goal; avoid escalating conflicts.'},
+ 'mars|asc':{c:'Energetic, assertive and competitive. You meet the world head-on.',
+  s:'Your drive shows and you come across as capable and confident.',h:'Your drive pulls against how others see you.'},
+ 'mars|mc':{c:'Ambitious and career-driven. Competitive or physical fields suit you.',
+  s:'Effective, energetic work and the drive to rise.',h:'Conflict with bosses or between work and home.'},
+ 'jupiter|saturn':{c:'A balance of vision and realism. You expand carefully and build things that last.',
+  s:'Steady, sensible growth and good business sense.',h:'Stop-go growth: tension between taking a chance and playing it safe.'},
+ 'jupiter|uranus':{c:'Sudden luck and freedom-loving beliefs.',s:'Lucky breaks and innovative ideas.',h:'Restlessness and a taste for risk.'},
+ 'jupiter|neptune':{c:'Idealistic, spiritual and generous, sometimes to a fault.',s:'Compassion, faith and creativity.',h:'Unrealistic hopes, gullibility or escapism.'},
+ 'jupiter|pluto':{c:'Ambition for power and impact.',s:'Success through determination.',h:'A pull toward extremes and power struggles.'},
+ 'jupiter|asc':{c:'A friendly, optimistic and generous presence. People feel good around you and luck follows.',s:'Good-natured and well received.',h:'Your enthusiasm can outrun your circumstances.'},
+ 'jupiter|mc':{c:'Career luck, high goals and recognition.',s:'Career growth comes naturally.',h:'Overreaching at work, or growth at home that competes with career.'},
+ 'saturn|uranus':{c:'Tradition and innovation meet; you can reform structures from within.',s:'Practical reform and modernising.',h:'Tension between security and freedom.'},
+ 'saturn|neptune':{c:'A gift for giving dreams a form.',s:'Disciplined imagination.',h:'Fears, uncertainty and disillusionment.'},
+ 'saturn|pluto':{c:'Endurance, ambition and intensity under pressure.',s:'Strategic persistence.',h:'Heavy pressures and responsibilities that harden you.'},
+ 'saturn|asc':{c:'A serious, reserved and mature presence. You seem older than your years and grow into yourself with age.',s:'You come across as dependable and capable.',h:'Responsibilities weigh on your personal freedom.'},
+ 'saturn|mc':{c:'Ambition and a slow, steady climb to authority.',s:'A respected, stable career.',h:'Career obstacles or a demanding authority figure, often a parent.'},
+ 'uranus|asc':{c:'An unusual, independent and unpredictable presence.',s:'An original style that people notice.',h:'Disruption that pushes you toward independence.'},
+ 'uranus|mc':{c:'An unconventional career with sudden changes.',s:'An innovative career path.',h:'Career instability and changes of direction.'},
+ 'neptune|asc':{c:'A dreamy, sensitive and chameleon-like presence.',s:'A compassionate, artistic presence.',h:'Confusion about direction or in relationships.'},
+ 'neptune|mc':{c:'An artistic, spiritual or caring vocation, with a direction that can be unclear.',s:'A creative or caring career.',h:'Career confusion; protect your reputation.'},
+ 'pluto|asc':{c:'An intense, magnetic and private presence.',s:'Quiet personal power.',h:'Power struggles that transform how you live.'},
+ 'pluto|mc':{c:'Ambition for power and a career that transforms over time.',s:'Influence at work.',h:'Power struggles at work or with a parent.'}};
+const NA_GEN='Both planets move slowly, so this aspect is shared by everyone born within a few years of you: it describes your generation more than you personally. It matters more if either planet sits on an angle or aspects your Sun, Moon or rising sign.';
+const NA_ASP={conj:'As a conjunction, the two work as a single unit.',tri:'As a trine, this comes naturally, so it is easy to take for granted.',sext:'As a sextile, it is a talent that grows when you use it.',
+ squ:'As a square, it creates inner friction that drives you to act and achieve.',opp:'As an opposition, it is often experienced through other people, and the work is to balance both sides.'};
+const NA_ANG={asc:{opp:'Opposite your Ascendant, it sits near the Descendant, so it shows up most through partners and close relationships.',squ:'Square your Ascendant, it sits near the top or bottom of the chart, so it plays out between your personal goals and your career or home life.'},
+ mc:{opp:'Opposite the Midheaven, it sits near the IC, so it lives mostly in home, family and private life.',squ:'Square the Midheaven, it sits near the Ascendant or Descendant, shaping your personal style or relationships and pulling against career goals.'}};
+const naKey=(a,b)=>{const i=NA_ORD.indexOf(a),j=NA_ORD.indexOf(b);if(i<0||j<0||i===j)return null;return i<j?a+'|'+b:b+'|'+a};
+const naFam=k=>k==='conj'?'c':k==='tri'||k==='sext'?'s':k==='squ'||k==='opp'?'h':null;
+// sitting houses, linked through the chart's own house system
+function naHouses(ch,a,b){if(!ch||ch.noHouses||!ch.cusps)return '';const hs=[a,b].filter(k=>!['asc','mc'].includes(k)&&ch.pts[k]).map(k=>[k,Calc.houseOf(ch.pts[k].lon,ch.cusps)]);
+ if(!hs.length)return '';if(a===b||hs.length===1)return ` In your chart it plays out mainly through your ${ord(hs[0][1])} house (${YT_HS[hs[0][1]]}).`;if(hs.length===2&&hs[0][1]===hs[1][1])return ` Both sit in your ${ord(hs[0][1])} house, so it plays out mainly through ${YT_HS[hs[0][1]]}.`;
+ return ` In your chart it links ${hs.map(([k,h])=>`your ${ord(h)} house (${YT_HS[h]})`).join(' and ')}.`}
+const NA_NODE={c:'{X} sits on your North Node, so its themes ({M}) are part of where you are meant to grow. Developing them brings a strong sense of purpose.',
+ s:'{X} supports your direction of growth: {M} help you move forward when you lean into them.',
+ h:'{X} is at odds with your nodal axis, so {M} can feel like a tug between the familiar and the new. Integrating them is part of your path.'};
+const NA_CHI={c:'{X} is fused with Chiron, so {M} carry an old sensitivity. Worked with, that sore spot becomes a gift for understanding and helping others.',
+ s:'Healing comes through {M}: they help you make peace with old hurts.',
+ h:'Old hurts surface around {M}. The wound and the gift are linked, and facing one releases the other.'};
+function naText(ch,a,b,asp){const f0=naFam(asp.k);if(!f0)return null;
+ for(const [pt,T] of [['node',NA_NODE],['chiron',NA_CHI]]){if(a===pt||b===pt){const o=a===pt?b:a;if(!MEANING[o]||o==='node'||o==='chiron'||!NA_ORD.includes(o))return null;return T[f0].replace('{X}',cap(rpThe(o))).replace('{M}',MEANING[o])+' '+(NA_ASP[asp.k]||'')+naHouses(ch,o,o)}}
+ const key=naKey(a,b),f=f0;if(!key)return null;const outer=['uranus','neptune','pluto'];
+ if(outer.includes(a)&&outer.includes(b))return NA_GEN;const L=NA[key];if(!L||!L[f])return null;
+ const ang=['asc','mc'].includes(a)?a:['asc','mc'].includes(b)?b:null,angTxt=ang&&NA_ANG[ang][asp.k]?' '+NA_ANG[ang][asp.k]:'',pl=ang?(a===ang?b:a):null;
+ const main=ang&&f==='h'&&pl?`${cap(rpThe(pl))} sits close to an angle of the chart, so its themes (${MEANING[pl]}) are a strong and visible part of your life.`:L[f];
+ return `${main}${ang?'':' '+(NA_ASP[asp.k]||'')}${angTxt}${naHouses(ch,a,b)}`}
+// transits on the site: slow planet to a natal point, with houses from the chart's own house system
+function ytSiteCtx(ch,k){if(!ch||!ch.pts||!ch.pts[k])return '';const sg=SIGN_N[Math.floor(ch.pts[k].lon/30)];
+ if(k==='asc'||k==='mc')return ch.noHouses?'':`Your ${k==='asc'?'Ascendant':'Midheaven'} is in ${sg}.`;
+ if(ch.noHouses||!ch.cusps)return `Your natal ${rpNm(k)} is in ${sg}.`;
+ const h=Calc.houseOf(ch.pts[k].lon,ch.cusps),rules=RULER.includes(k)?ch.cusps.map((c,i)=>RULER[Math.floor(c/30)]===k?i+1:null).filter(x=>x&&x!==h):[];
+ return `Your natal ${rpNm(k)} is in ${sg} in your ${ord(h)} house${rules.length?` and rules your ${rules.map(ord).join(' and ')}`:''}, so this also plays out through ${ytList([h,...rules].map(x=>YT_HS[x]))}.`}
+function ytSite(ch,b,ak,t){if(!['conj','sext','squ','tri','opp'].includes(ak))return null;const cls=rpCls(ak),L=YT[b]&&YT[b][t],ang=YT_ANG[b]&&YT_ANG[b][t],txt=(ang&&ang[ak])||(L?L[cls]:'');if(!txt)return null;
+ if(b===t&&ak==='conj'&&(b==='jupiter'||b==='saturn'))return {adv:'',txt:b==='jupiter'?'Jupiter returns to its birth position: a new twelve-year cycle of growth begins. Plant seeds now: what you start in the next few months tends to grow over the next twelve years.':'Saturn returns to its birth position: a once-in-29-years reckoning with your structures and commitments. Keep what is solid and rebuild what is not. It often feels heavy at the time and empowering afterwards.'};
+ const ctx=ytSiteCtx(ch,t);return {txt:`${txt} ${YT_ASP[ak]||''}${ctx?' '+ctx:''}`,adv:`${YT_ADV[b][cls]}${YT_TIP[t]?' '+YT_TIP[t][(cls==='soft'||(cls==='conj'&&b==='jupiter'))?0:1]:''}`}}
+// faster transits (Sun, Moon, Mercury, Venus, Mars): brief triggers, described by the transiting planet and what it touches
+const FT_DOM={sun:'your identity, confidence and vitality',moon:'your feelings, home and family',mercury:'your thinking, conversations and paperwork',venus:'your relationships, pleasures and money',mars:'your energy, drive and temper',
+ jupiter:'your plans for growth, beliefs and opportunities',saturn:'your commitments, responsibilities and long-term structures',uranus:'your need for freedom and change',neptune:'your ideals, dreams and intuition',pluto:'your sense of power and what you want to transform',
+ node:'your sense of direction',chiron:'old sore spots and how you heal',asc:'how you come across and how you feel physically',mc:'your career and public image'};
+const FT={sun:{len:'a few days',conj:'The spotlight falls on {T}. You feel more aware of this part of life and it is a good moment to act on it or be seen for it.',soft:'A pleasant boost of energy and confidence for {T}. Things go more smoothly than usual here.',hard:'Attention and some friction around {T}. Ego clashes or a need to prove yourself are possible; it passes quickly.'},
+ moon:{len:'a few hours',conj:'A mood that colours {T}. You feel this area more strongly today and instincts are sharp.',soft:'An easy emotional flow around {T}; a good few hours for comfort and connection.',hard:'A passing emotional reaction around {T}. Notice it rather than act on it.'},
+ mercury:{len:'a day or two',conj:'Thoughts, news and conversations about {T}. A good moment to talk, write or plan.',soft:'Clear thinking and helpful conversations about {T}.',hard:'Mixed messages, overthinking or a debate about {T}. Check details before deciding.'},
+ venus:{len:'a few days',conj:'A sweet, sociable touch to {T}: affection, enjoyment or a small gift or windfall.',soft:'Harmony and ease around {T}. Good for socialising, making up and enjoying yourself.',hard:'A wish for more pleasure or approval around {T}; watch spending and over-sensitivity.'},
+ mars:{len:'about a week',conj:'Energy and urgency around {T}. Good for starting things and taking action, but tempers can flare.',soft:'Drive and initiative for {T}. A productive window to get things done.',hard:'Friction, impatience or conflict around {T}. Use the energy for hard work rather than arguments, and take care physically.'}};
+function ftSite(b,ak,t,app){if(!['conj','sext','squ','tri','opp'].includes(ak))return null;const F=FT[b],D=FT_DOM[t];if(!F||!D)return null;const cls=rpCls(ak);return `${F[cls].replace('{T}',D)} ${YT_ASP[ak]} A ${b==='moon'?'very fast':'quick'} transit, it lasts ${F.len} around exact and is ${app?'still building':'already separating'}.`}
+
+/* ===== Synastry: what one person's planet does to the other's ({1} owns the first planet in NA_ORD order, {2} the second) ===== */
+const SY={
+ 'sun|sun':{c:'You share the same core drive and often the same outlook. Recognition is instant, though two people who want the same thing can compete for the spotlight.',
+  s:'Your basic natures get along. You respect each other\'s goals and it is easy to be yourselves together.',
+  h:'Your core drives pull in different directions. Each of you wants to lead in a different way, so the relationship works when you make room for both agendas.'},
+ 'moon|moon':{c:'You feel the same way about things and need the same kind of comfort. Living together tends to be easy and instinctive.',
+  s:'Emotional rhythms that fit. You understand each other\'s moods and make each other feel at home.',
+  h:'Different emotional needs and rhythms. What comforts one of you can irritate the other, so talking about needs (rather than guessing) matters.'},
+ 'mercury|mercury':{c:'You think alike and finish each other\'s sentences. Conversation is easy and constant.',
+  s:'Easy, enjoyable conversation and a good working partnership of minds.',
+  h:'You think and talk in different ways, which can lead to misunderstandings or debates. Patience with each other\'s style turns it into a useful second perspective.'},
+ 'venus|venus':{c:'Shared tastes and values. You like the same things and show affection in similar ways.',
+  s:'Your ideas of love, pleasure and beauty fit together comfortably.',
+  h:'Different ideas of what love, money or a good time look like. Neither is wrong, but compromise is needed.'},
+ 'mars|mars':{c:'Matching energy and drive. Great for doing things together, though you can butt heads when you both want to lead.',
+  s:'Your energy levels and ways of getting things done mesh well. A good team for projects, sport or building something.',
+  h:'Competing drives. Arguments flare easily and both of you dig in. Channel it into shared goals or friendly competition.'},
+ 'sun|moon':{c:'One of the classic signs of a strong bond. {1}\'s Sun lights up {2}\'s Moon: {2} feels seen and cared for, and {1} feels understood. Common in marriages and lasting partnerships.',
+  s:'A natural harmony between {1}\'s will and {2}\'s feelings. You support each other without having to try.',
+  h:'{1}\'s goals and {2}\'s emotional needs do not always fit. {2} may feel overlooked, or {1} may feel held back. With awareness it becomes a complementary partnership.'},
+ 'sun|mercury':{c:'{2} understands what {1} is about and can put it into words. Easy conversation and a strong mental connection.',
+  s:'{2}\'s ideas support {1}\'s aims; good for working together.',h:'{2}\'s opinions can challenge {1}\'s sense of self; debates are lively.'},
+ 'sun|venus':{c:'Warm affection and admiration. {2} finds {1} attractive and {1} feels appreciated. A lovely aspect for romance and friendship.',
+  s:'Easy affection. {2} brings warmth and pleasure into {1}\'s life, and {1} makes {2} feel valued.',
+  h:'Attraction with some mismatch in values. {2} may want more attention or a different kind of affection than {1} gives naturally.'},
+ 'sun|mars':{c:'Energy and attraction. {2} energises {1} and the chemistry is strong, though competitiveness or arguments can flare.',
+  s:'{2} spurs {1} on, and {1} gives direction to {2}\'s energy. A good team for action.',
+  h:'Friction. {2}\'s drive can feel aggressive or pushy to {1}, and egos clash. Physical activity or shared challenges help.'},
+ 'sun|jupiter':{c:'{2} believes in {1}, and {1} brings out {2}\'s generosity. A lucky, encouraging bond.',
+  s:'Mutual encouragement and good fortune. You are optimistic together and help each other grow.',
+  h:'Plenty of goodwill but a tendency to overdo things together, or for {2} to over-advise {1}.'},
+ 'sun|saturn':{c:'A serious, often lasting tie. {2} gives {1} structure, stability and commitment, but can also feel critical or limiting. Common in long marriages.',
+  s:'{2} offers {1} steady support and practical guidance; a stable, loyal connection.',
+  h:'{2} may feel like a judge or a brake to {1}, and {1} may feel held back. Respect and patience turn the weight into lasting commitment.'},
+ 'sun|uranus':{c:'Excitement and instant fascination. {2} awakens {1}\'s originality, but the bond can be unpredictable or on-off.',
+  s:'{2} brings freedom and fresh ideas to {1}; stimulating without being unsettling.',h:'{2} disrupts {1}\'s plans. Exciting but unstable; space is essential.'},
+ 'sun|neptune':{c:'Romantic, idealistic and spiritual. {2} sees {1} through rose-tinted glasses, or {1} inspires {2}\'s dreams. Beautiful, but keep it real.',
+  s:'Compassion and inspiration. {2} brings imagination and gentleness to {1}.',h:'Idealisation and confusion. Expectations may not match reality; be honest.'},
+ 'sun|pluto':{c:'Intense, magnetic and transformative. {2} has a powerful effect on {1}, and power dynamics are part of the deal.',
+  s:'{2} helps {1} grow stronger and more self-aware; deep and empowering.',h:'Power struggles and control issues. {2} may try to change {1}; transformation is possible if neither dominates.'},
+ 'sun|asc':{c:'{1} immediately feels familiar and likeable to {2}. Strong first-impression attraction and an easy fit.',
+  s:'You like each other\'s style and feel comfortable from the start.',h:'{1}\'s way of being and {2}\'s manner rub a little; you see the world differently.'},
+ 'sun|node':{c:'A "meant to be" feeling. {1} helps {2} move toward their life direction.',s:'{1} supports {2}\'s growth.',h:'{1} may pull {2} toward old habits rather than forward.'},
+ 'moon|mercury':{c:'{2} understands {1}\'s feelings and can talk about them. Emotional conversations are easy.',
+  s:'Good communication about feelings and daily life.',h:'{2}\'s logic can feel cold to {1}\'s feelings; listen before solving.'},
+ 'moon|venus':{c:'Tenderness and affection. {2} makes {1} feel loved and comfortable, and {1} nurtures {2}. One of the sweetest contacts.',
+  s:'Easy warmth and domestic harmony. Living together tends to be pleasant.',h:'Affection is there, but needs and tastes differ; small kindnesses keep it smooth.'},
+ 'moon|mars':{c:'Passion and emotional intensity. {2} stirs {1}\'s feelings strongly, for better or worse. Chemistry, but tempers can flare.',
+  s:'{2} protects and energises {1}; emotional courage together.',h:'{2} can seem insensitive or aggressive to {1}, and {1} may seem moody to {2}. Arguments flare at home.'},
+ 'moon|jupiter':{c:'{2} makes {1} feel safe, generous and optimistic. A warm, supportive bond.',
+  s:'Emotional generosity and good humour; you lift each other\'s mood.',h:'Over-indulgence or over-promising together; generosity needs limits.'},
+ 'moon|saturn':{c:'A committed, stabilising bond. {2} offers {1} security and responsibility, but can also feel cold or restrictive to {1}.',
+  s:'{2} offers {1} steady, reliable support; a loyal, long-term contact.',
+  h:'{1} may feel criticised or emotionally held back by {2}, and {2} may feel burdened by {1}\'s needs. With patience it matures into deep loyalty.'},
+ 'moon|uranus':{c:'Exciting and unpredictable. {2} unsettles {1} emotionally in a way that feels thrilling but hard to rely on.',
+  s:'{2} brings freshness and freedom to {1}\'s emotional life.',h:'Emotional instability; {1} wants security while {2} wants space.'},
+ 'moon|neptune':{c:'A deep, almost psychic connection. {2} and {1} sense each other\'s moods. Tender and romantic, but boundaries can blur.',
+  s:'Gentle compassion and intuitive understanding.',h:'Confusion or disappointment; {1} may feel deceived or {2} may feel drained. Honesty protects the bond.'},
+ 'moon|pluto':{c:'Intense emotional bonding. {2} reaches {1}\'s deepest feelings; this can be healing or possessive.',
+  s:'Deep emotional trust and the power to help each other heal.',h:'Jealousy, possessiveness or emotional manipulation are the risks. Trust must be earned.'},
+ 'moon|asc':{c:'{2} feels instantly at home with {1}. Comfortable, caring and familiar.',s:'Easy emotional rapport.',h:'{1}\'s moods and {2}\'s manner do not always match.'},
+ 'moon|node':{c:'A strong sense of emotional destiny; {1} feels like family to {2}.',s:'{1} nurtures {2}\'s growth.',h:'{1} may keep {2} in emotional comfort zones.'},
+ 'mercury|venus':{c:'Sweet words and easy charm. {1} says the things {2} loves to hear.',s:'Pleasant conversation and shared tastes.',h:'Words and values do not always line up; tact helps.'},
+ 'mercury|mars':{c:'Lively, stimulating conversation that can turn into argument. {2} challenges {1}\'s ideas.',
+  s:'You motivate each other mentally and get things done together.',h:'Arguments, sharp words and impatience; debate rather than fight.'},
+ 'mercury|jupiter':{c:'Big ideas together. {2} broadens {1}\'s mind and {1} gives shape to {2}\'s vision.',s:'Encouraging, philosophical conversation.',h:'Big talk, few details; agree on plans in writing.'},
+ 'mercury|saturn':{c:'{2} brings structure and seriousness to {1}\'s ideas; good for working together, though {2} can seem critical.',s:'Practical, productive communication.',h:'{1} may feel doubted or talked down to by {2}; respect matters.'},
+ 'mercury|uranus':{c:'Electric conversation and new ideas.',s:'Mental stimulation and fresh perspectives.',h:'Misunderstandings and abrupt shifts in conversation.'},
+ 'mercury|neptune':{c:'Intuitive, poetic understanding, but also misunderstandings.',s:'Imaginative communication.',h:'Confusion and unclear agreements; spell things out.'},
+ 'mercury|pluto':{c:'Deep, probing conversations.',s:'Insightful talk that gets to the truth.',h:'Mind games or controlling communication; keep it honest.'},
+ 'mercury|asc':{c:'Easy, natural conversation from the start.',s:'You understand each other\'s way of being.',h:'Communication styles differ.'},
+ 'venus|mars':{c:'Classic romantic and physical chemistry. {2} pursues and {1} is charmed. One of the strongest signs of attraction.',
+  s:'Romantic and sexual harmony; desire and affection flow easily between you.',
+  h:'Intense attraction with friction. Passion and arguments go together, and the push-pull can be addictive. Honest negotiation keeps it healthy.'},
+ 'venus|jupiter':{c:'Generous affection and good times. {2} spoils {1} and {1} delights {2}.',s:'Fun, warm and lucky together.',h:'Over-indulgence and expensive habits together.'},
+ 'venus|saturn':{c:'A serious, loyal bond that can last for decades. {2} commits to {1}, but may seem reserved or controlling about love or money.',
+  s:'Stable, faithful affection that deepens with time.',h:'{1} may feel unloved or restricted by {2}; affection needs to be expressed, not assumed.'},
+ 'venus|uranus':{c:'Sudden, electric attraction and an unconventional relationship. Exciting, but freedom is essential.',s:'Fresh, exciting affection with room to breathe.',h:'On-off romance and unpredictable affection.'},
+ 'venus|neptune':{c:'Dreamy, romantic, soulmate feelings. Wonderful for art and romance, but rose-tinted glasses can mislead.',s:'Tender, compassionate love.',h:'Idealisation and disappointment; see each other clearly.'},
+ 'venus|pluto':{c:'Obsessive, magnetic attraction and transformative love. Jealousy and control are the risks.',s:'Deep, loyal, transforming love.',h:'Possessiveness and power struggles in love or money.'},
+ 'venus|asc':{c:'{2} finds {1} lovely and easy to be around. Strong mutual liking.',s:'Natural affection and harmony.',h:'Attraction with differences in style.'},
+ 'venus|node':{c:'A fated romantic feeling.',s:'Love supports each other\'s growth.',h:'Comfortable love that may not stretch you.'},
+ 'mars|jupiter':{c:'Enthusiasm and adventure. You inspire each other to take action.',s:'Shared ventures succeed; great team energy.',h:'Overreaching or recklessness together.'},
+ 'mars|saturn':{c:'Effort meets discipline. {2} can control or frustrate {1}\'s drive, or help channel it into lasting results.',s:'Productive, disciplined teamwork.',h:'Frustration and resentment; {1} feels blocked by {2}. Agree on pace.'},
+ 'mars|uranus':{c:'Exciting, impulsive and volatile.',s:'Bold action together.',h:'Sudden conflicts and risk-taking.'},
+ 'mars|neptune':{c:'Inspired or confusing action; romantic and sensual but unclear.',s:'Shared ideals in action.',h:'Hidden resentments or confusion about desire.'},
+ 'mars|pluto':{c:'Intense passion and powerful drive together; conflicts can be fierce.',s:'Powerful teamwork.',h:'Power struggles and intense conflict.'},
+ 'mars|asc':{c:'{1} energises {2}. Strong physical attraction, but also potential for conflict.',s:'{1} motivates {2}.',h:'{1} can feel aggressive to {2}.'},
+ 'jupiter|saturn':{c:'A good balance of growth and stability; good business partners.',s:'Sensible growth together.',h:'One wants to expand while the other wants to be careful.'},
+ 'jupiter|asc':{c:'{1} makes {2} feel optimistic and lucky.',s:'Generosity and goodwill.',h:'{1} may overwhelm {2} with advice.'},
+ 'saturn|asc':{c:'{1} feels like a stabilising, sometimes heavy presence to {2}.',s:'{1} offers {2} security.',h:'{1} may feel critical or restrictive to {2}.'},
+ 'saturn|node':{c:'A karmic, serious connection with lessons to learn.',s:'Practical support on your paths.',h:'Lessons through obstacles.'}};
+function synText(a,b,asp,other,me){const f=naFam(asp.k);if(!f)return null;const key=naKey(a,b)||(a===b&&NA_ORD.includes(a)?a+'|'+a:null);if(!key||!SY[key]||!SY[key][f])return null;
+ const first=key.split('|')[0],n1=a===first?other:me,n2=a===first?me:other;
+ const asNote={conj:'As a conjunction, this is one of the more noticeable links between you.',tri:'As a trine, it comes easily, which makes it a natural strength of the relationship.',sext:'As a sextile, it is a pleasant link that grows when you both make the effort.',squ:'As a square, it creates friction that you work through together.',opp:'As an opposition, it is the attraction of opposites: you each have what the other lacks, and balance is the lesson.'}[asp.k]||'';
+ return `${SY[key][f].replace(/\{1\}/g,n1).replace(/\{2\}/g,n2)} ${asNote}`}
+
+/* ===== Composite: the relationship as its own chart ===== */
+const CM_M={sun:'the purpose and identity of the relationship',moon:'its emotional bond and sense of home',mercury:'how you talk and think together',venus:'affection, pleasure and shared values',mars:'shared drive, desire and conflict',jupiter:'growth, generosity and shared beliefs',saturn:'commitment, duty and staying power',uranus:'freedom and surprises',neptune:'shared ideals and dreams',pluto:'intensity, power and transformation',asc:'how the couple comes across',mc:'the public life and shared goals of the relationship',node:'where the relationship is heading'};
+function compText(a,b,asp){return null}
+/* ===== Asteroids and other points: what they bring when they touch a planet ===== */
+const AST_COL={chiron:'old sensitivities and healing',ceres:'nurture, care and the need to feed and be fed',pallas:'strategy, pattern-spotting and creative problem-solving',juno:'commitment, loyalty and fairness in partnership',vesta:'focus, devotion and the need for private, sacred space',
+ destinn:'sense of calling and having something to say',aeros:'desire, passion and erotic charge',psyche:'soul-level intimacy and the wish to be truly seen',hygiea:'health habits, cleanliness and prevention',astraea:'justice, fairness and idealism',sappho:'poetic, romantic and artistic love',amor:'unconditional, platonic love',hekate:'intuition, magic and big choices',
+ alilith:'independence and a refusal to submit',pholus:'small causes with big consequences',nessus:'boundaries and the misuse of power',chariklo:'grace, protection and safe space',eris:'rivalry, discord and the fight to be acknowledged',sedna:'deep transformation through isolation and survival',lilith:'raw instinct, sexuality and what refuses to be tamed',
+ node:'your direction of growth',snode:'familiar habits and the past',fortune:'material fortune and bodily wellbeing',spirit:'intention and chosen action',vertex:'fated encounters'};
+function astText(a,b,asp){const isA=k=>!!AST_COL[k]&&!NA_ORD.includes(k),ast=isA(a)?a:isA(b)?b:null;if(!ast)return null;const pl=ast===a?b:a;const D=FT_DOM[pl]||(AST_COL[pl]?`the ${AST_COL[pl]} of ${rpNm(pl)}`:null);if(!D)return null;const yp=FT_DOM[pl]?'your ':'';
+ const nm=cap(rpThe(ast)),col=AST_COL[ast],f=naFam(asp.k)||(['qui','bq','ssx'].includes(asp.k)?'s':'h');
+ return f==='c'?`${nm} sits on ${yp}${rpNm(pl)}, bringing ${col} into ${D}. This combination is a noticeable thread in your chart.`:
+  f==='s'?`${nm} supports ${yp}${rpNm(pl)}: ${col} help${/ and |, /.test(col)?'':'s'} ${D} work well. It is a background resource worth using on purpose.`:
+  `${nm} challenges ${yp}${rpNm(pl)}: ${col} and ${D} pull against each other, so this is an area that asks for awareness and small adjustments.`}
+
+/* ===== Minor aspects between the main planets: concrete wording ===== */
+const MIN_TXT={qcx:'{A} and {B} sit in signs with nothing in common, so they never quite understand each other. Life keeps asking you to adjust one to suit the other, and small, ongoing corrections work better than a dramatic fix.',
+ ssq:'{A} and {B} rub against each other in a low-level way. It shows up as minor irritations that prompt you to act before they grow.',
+ sqq:'{A} and {B} chafe, producing a restlessness that builds slowly. Regular small outlets keep it constructive.',
+ ssx:'{A} and {B} share a subtle link. They cooperate, but only when you deliberately connect them.',
+ qui:'{A} and {B} combine into a personal talent or style, the kind of aspect linked with skill and craft. It grows with practice.',
+ bq:'{A} and {B} combine into an unusual talent that matures over time and with refinement.'};
+function minText(a,b,asp){const T=MIN_TXT[asp.k],A=FT_DOM[a],B=FT_DOM[b];if(!T||!A||!B||!NA_ORD.includes(a)||!NA_ORD.includes(b))return null;return cap(T.replace('{A}',A).replace('{B}',B))}
+// relationship fallback for any pair: who brings what to whom
+const SY_ROLE={sun:'sense of self and purpose',moon:'emotional needs',mercury:'way of thinking and talking',venus:'way of loving and what they value',mars:'drive and desire',jupiter:'generosity and beliefs',saturn:'sense of duty and caution',uranus:'need for freedom',neptune:'dreams and ideals',pluto:'intensity and need for control',asc:'way of meeting the world',mc:'ambitions and public life',dsc:'idea of a partner',ic:'roots and sense of home',node:'life direction',snode:'old habits and comfort zone',chiron:'old sore spots'};
+const syRole=k=>SY_ROLE[k]||AST_COL[k]||(MEANING[k]?MEANING[k]:null);
+function synFallback(a,b,asp,other,me){const r1=syRole(a),r2=syRole(b);if(!r1||!r2)return null;const P1=`${other}'s ${rpNm(a)}`,P2=`${me}'s ${rpNm(b)}`;
+ const f=naFam(asp.k)||(['qui','bq','ssx'].includes(asp.k)?'s':'m');
+ return f==='c'?`${P1} lands right on ${P2}, linking ${other}'s ${r1} with ${me}'s ${r2}. ${me} feels ${other}'s influence here strongly, and it is one of the threads that ties you together.`:
+  f==='s'?`${P1} supports ${P2}: ${other}'s ${r1} helps ${me}'s ${r2}. It is a place where you naturally help each other.`:
+  f==='h'?`${P1} rubs against ${P2}: ${other}'s ${r1} and ${me}'s ${r2} want different things. It creates friction or misunderstanding to work through, and it can also be a source of growth.`:
+  `${P1} and ${P2} have an awkward link: ${other}'s ${r1} and ${me}'s ${r2} do not naturally understand each other, so small, ongoing adjustments help.`}
+// composite: also cover minor aspects and asteroids
+function compText2(a,b,asp){const A0=CM_M[a]||AST_COL[a],B0=CM_M[b]||AST_COL[b];if(!A0||!B0)return null;const A=`${rpThe(a)} (${A0})`,B=`${rpThe(b)} (${B0})`;const f=naFam(asp.k);
+ if(f==='c')return `In the composite chart, ${A} and ${B} are fused. This combination is central to what the relationship is and does.`;
+ if(f==='s')return `In the composite chart, ${A} and ${B} support each other. This is one of the relationship's natural strengths: it flows without much effort.`;
+ if(f==='h')return `In the composite chart, ${A} and ${B} pull against each other. This is a place where the relationship has to work things out, and doing so is what strengthens it.`;
+ return ['qui','bq','ssx'].includes(asp.k)?`In the composite chart, ${A} and ${B} share a subtle link: a quiet talent of the relationship that grows when you use it.`:`In the composite chart, ${A} and ${B} have an awkward link that needs ongoing small adjustments rather than one big fix.`}
 
 /* ===== Full reading, part 2: glossary, timeline, options, saved readings, PDF download ===== */
 
@@ -6106,7 +6658,7 @@ function cpCalEvents(A,months){const T=Date.now(),t0=Date.UTC(new Date(T).getUTC
   const tc=rpTry(()=>transitCalendar(ch,t0-40*864e5,months+2,'slow'),{events:[]});
   rpMerge(tc.events).filter(e=>RP_TW[e.b]&&({sun:3,moon:3,asc:3,mc:3,mercury:2,venus:2,mars:2,jupiter:1.5,saturn:1.5,node:1.2})[e.t]&&!(e.b===e.t&&e.b!=='jupiter'&&e.b!=='saturn')).forEach(e=>{const cls=rpCls(e.ak),txt=cap(RP_TR[e.b][cls]),nm=`${PNM(e.b)} ${RP_ASPN[e.ak]} your ${rpNm(e.t)}`;
    if(e.start<=T&&e.end>=T)active.push({e,nm,txt});
-   (e.hits||[]).forEach((h,i)=>add(h.ms,`${nm} (exact${e.hits.length>1?`, ${i+1} of ${e.hits.length}`:''})`,`${txt}, around your ${RP_TT[e.t]||rpNm(e.t)}. In effect ${rpRange(e.start,e.end)}.`,'Transit'))});
+   (e.hits||[]).forEach((h,i)=>add(h.ms,`${nm} (exact${e.hits.length>1?`, ${i+1} of ${e.hits.length}`:''})`,`${rpTry(()=>{const r=ytSite(ch,e.b,e.ak,e.t);return r?r.txt+(r.adv?' Working with it: '+r.adv:''):txt+', around your '+(RP_TT[e.t]||rpNm(e.t))+'.'},txt+'.')} In effect ${rpRange(e.start,e.end)}.`,'Transit'))});
   if(!ch.noHouses&&!A.timeUnknown){const age0=Math.floor(ageAt(A,t0));for(let g=age0;g<=age0+Math.ceil(months/12)+1;g++){const p=rpTry(()=>profAt(ch,A,bdayAt(A,g)+864e5),null);if(p)add(p.yStart,`Profection year: ${rpOrd(p.house)} house (${SIGN_N[p.ys]})`,`From this birthday the year focuses on ${RP_HT[p.house]}. Lord of the year: ${PNM(p.lord)}.`,'Profection')}}
   const sunL=ch.pts.sun.lon;for(let g=0;g<=Math.ceil(months/12)+1;g++){const b=bdayAt(A,Math.floor(ageAt(A,t0))+g),jd=rpTry(()=>Calc.findLonReturn('sun',sunL,msJd(b)-3,6,.5),null);if(jd)add(jdMs(jd),'Solar return','The Sun returns to its birth position: the start of your astrological year.','Return')}
   rpTry(()=>firdaria(ch,A),[]).forEach(f=>{add(f.start,`Firdaria: ${PNM(f.k)} period begins`,cap(FIRD_TXT[f.k]||'')+'.','Firdaria');(f.subs||[]).forEach(s=>add(s.start,`Firdaria: ${PNM(f.k)}/${PNM(s.k)} sub-period begins`,'','Firdaria'))});
