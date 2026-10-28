@@ -6429,7 +6429,7 @@ html[data-theme="paper"] .infotab,html[data-theme="pastel"] .infotab{color:var(-
   return _pl.apply(this,arguments)}})();
 
 /* ===== Background: no starfield, no grain ===== */
-(()=>{try{const st=document.createElement('style');st.textContent='.starfield{display:none!important}html::after,html[data-theme]::after{content:none!important;background:none!important;display:none!important}html:not([data-theme]),html[data-theme="orrery"]{--bg:#1d1d1e;--w-grey:#1d1d1e;--asp-field:#1d1d1e;--raised:#151616}html:not([data-theme]) body,html[data-theme="orrery"] body,html:not([data-theme]),html[data-theme="orrery"]{background-color:#1d1d1e}html:not([data-theme]) .stage:not(.fs),html[data-theme="orrery"] .stage:not(.fs){background-color:transparent}html:not([data-theme]) #side,html[data-theme="orrery"] #side{background-color:transparent}.top{border-bottom:2px solid #20132b!important}.top .seg .vbtn .vico,.top .seg .vbtn .vzr{filter:none!important}';document.head.append(st)}catch(e){}})();
+(()=>{try{const st=document.createElement('style');st.textContent='.starfield{display:none!important}html::after,html[data-theme]::after{content:none!important;background:none!important;display:none!important}html:not([data-theme]),html[data-theme="orrery"]{--bg:#1d1d1e;--w-grey:#151616;--w-ring:#151616;--w-decans:#151616;--asp-field:#1d1d1e;--raised:#151616}html:not([data-theme]) body,html[data-theme="orrery"] body,html:not([data-theme]),html[data-theme="orrery"]{background-color:#1d1d1e}html:not([data-theme]) .stage:not(.fs),html[data-theme="orrery"] .stage:not(.fs){background-color:transparent}html:not([data-theme]) #side,html[data-theme="orrery"] #side{background-color:transparent}.top{border-bottom:2px solid #20132b!important}.top .seg .vbtn .vico,.top .seg .vbtn .vzr{filter:none!important}';document.head.append(st)}catch(e){}})();
 
 /* ===== Wheel label buttons (degrees, minutes, signs, ring) fold behind one button ===== */
 (()=>{const w=document.querySelector('.wlab');if(!w)return;
@@ -6451,7 +6451,7 @@ html[data-theme="paper"] .infotab,html[data-theme="pastel"] .infotab{color:var(-
 })();
 
 /* ===== Accuracy helpers: birth-time sensitivity, time-zone check, node type; site version; first-visit tips ===== */
-const DN_VER='v171';
+const DN_VER='v172';
 const btFmt=m=>m==null?'more than 4 hours':m<60?`${m} min`:`${Math.floor(m/60)} h${m%60?' '+(m%60)+' min':''}`;
 /* how far the birth time can move before the rising sign, Midheaven, Moon sign or a planet's house changes */
 const BT_MEMO=new Map();
