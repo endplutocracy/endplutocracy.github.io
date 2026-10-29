@@ -6456,7 +6456,7 @@ html[data-theme="paper"] .infotab,html[data-theme="pastel"] .infotab{color:var(-
 })();
 
 /* ===== Accuracy helpers: birth-time sensitivity, time-zone check, node type; site version; first-visit tips ===== */
-const DN_VER='v193';
+const DN_VER='v194';
 const btFmt=m=>m==null?'more than 4 hours':m<60?`${m} min`:`${Math.floor(m/60)} h${m%60?' '+(m%60)+' min':''}`;
 /* how far the birth time can move before the rising sign, Midheaven, Moon sign or a planet's house changes */
 const BT_MEMO=new Map();
@@ -6724,11 +6724,11 @@ html body #cmBtn .cmstar{width:14px;height:14px;flex:none;fill:var(--muted);stro
 html body #cmBtn:hover .cmstar,html body #cmBtn:focus-visible .cmstar,html body #cmBtn[aria-expanded="true"] .cmstar{fill:var(--accent)}
 html body .sidehead #sideTog,html body #sideTog{color:var(--muted)!important;transition:color .25s ease}
 html body #sideTog svg{fill:currentColor!important}
-html body #sideTog:hover,html body #sideTog:focus-visible{color:var(--accent)!important}
+html body #sideTog:hover,html body #sideTog:focus-visible,html body #sideTog[aria-expanded="true"]{color:var(--accent)!important}
 #cmBtn:hover .cmstar,#cmBtn:focus-visible .cmstar,#cmBtn[aria-expanded="true"] .cmstar{transform:rotate(45deg)}
 @media (prefers-reduced-motion:reduce){#cmBtn .cmstar{transition:none}}
 html body #cmBtn strong{font-size:.9rem!important;color:var(--muted)!important}
-html body #cmBtn .cmmode{font-size:.8rem;color:var(--muted)!important;font-weight:500}
+html body #cmBtn .cmmode{font-size:.8rem;color:var(--accent)!important;font-weight:500}
 html body #cmBtn .cmmode::before{content:none}
 html body #cmBtn .cmcar{display:none}`;document.head.append(st);
 })();
