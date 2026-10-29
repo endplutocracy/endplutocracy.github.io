@@ -2738,7 +2738,7 @@ function renderList(){const q=$('q').value.trim().toLowerCase(),ff=$('folderFilt
  const groups={};list.forEach(c=>(groups[c.folder||'']=groups[c.folder||'']||[]).push(c));
  const AA=byId(activeId);let h=pickMode?'<p class="note" style="padding:6px 10px">Pick the second chart.</p>':thirdPick?`<p class="note" style="padding:6px 10px">Pick the third chart for the triwheel. Sky now adds the current transits.</p>${AA&&!AA.now?`<div class="trreloc"><label class="l" for="trQ">Or relocate ${esc(AA.name)}’s chart</label><div class="place"><input class="f" id="trQ" placeholder="Type a city" autocomplete="off" role="combobox" aria-controls="trSugg" aria-expanded="false"><ul class="sugg" id="trSugg" role="listbox" hidden></ul></div>${AA.cur?`<button class="btn ghost" id="trCur" type="button">Use ${esc(AA.cur.place.split(',')[0])}</button>`:''}</div>`:''}`:'';
  if(!pickMode)h+=itemHtml(NOW_CHART);
- Object.keys(groups).sort((a,b)=>a===''?-1:b===''?1:a.localeCompare(b)).forEach(f=>{if(f)h+=`<div class="folder">${esc(f)}</div>`;groups[f].forEach(c=>h+=itemHtml(c))});
+ Object.keys(groups).sort((a,b)=>a===''?-1:b===''?1:a.localeCompare(b)).forEach(f=>{if(!f){groups[f].forEach(c=>h+=itemHtml(c));return}const shut=!q&&!!(window.dnFoldShut&&window.dnFoldShut().has(f));h+=`<button type="button" class="folder fold" data-fold="${esc(f)}" aria-expanded="${!shut}"><svg class="fchev" viewBox="0 0 12 12" aria-hidden="true"><path d="M4.2 2.4 7.8 6l-3.6 3.6"/></svg><span class="fnm">${esc(f)}</span><span class="fct">${groups[f].length}</span></button><div class="fgrp"${shut?' hidden':''}>`;groups[f].forEach(c=>h+=itemHtml(c));h+='</div>'});
  if(!charts.length)h+=`<p class="note" style="padding:16px 10px">No saved charts yet. Choose “New chart” and enter a birth date, time and place. Your charts are kept ${db?'in this artifact’s private store, visible only to you':'in this browser'}.</p>`;
  $('list').innerHTML=h;
  if(thirdPick&&$('trQ')){const AA=byId(activeId),pick=it=>{thirdId='__reloc';thirdReloc={id:AA.id,lat:it.lat,lon:it.lon,label:it.label};closeLib();renderAll()};placePicker($('trQ'),$('trSugg'),pick);if($('trCur'))$('trCur').onclick=()=>pick({lat:AA.cur.lat,lon:AA.cur.lon,label:AA.cur.place})}
@@ -6377,14 +6377,16 @@ try{if(!S.aspg1){S.aspg1=true;S.layers={...S.layers,aspg:true};saveSet()}}catch(
  btn.innerHTML='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 12h12"/></svg>';cl.after(btn);
  const tab=document.createElement('button');tab.type='button';tab.id='infoTab';tab.className='infotab';tab.hidden=true;tab.title='Show the details';tab.setAttribute('aria-label','Show the details');tab.innerHTML=STAR;document.body.append(tab);
  let coll=false;
- const place=()=>{if(matchMedia('(max-width:600px)').matches){tab.style.left='';tab.style.top='';return}
+ const place=()=>{if(matchMedia('(max-width:600px)').matches){const lb=document.getElementById('openLayers'),r=lb&&lb.offsetParent?lb.getBoundingClientRect():null;
+   if(r&&r.width){tab.classList.add('under');tab.style.left=(r.left+scrollX)+'px';tab.style.top=(r.bottom+scrollY+8)+'px'}else{tab.classList.remove('under');tab.style.left='';tab.style.top=''}return}
+  tab.classList.remove('under');
   const r=box.getBoundingClientRect(),w=46;let L=r.right-w,T=r.top;if(!r.width){L=innerWidth-w-16;T=90}
   let sv=null;try{sv=JSON.parse(localStorage.getItem('orrery.infoTabPos')||'null')}catch(e){}if(sv&&isFinite(sv.x)&&isFinite(sv.y)){L=sv.x*innerWidth-w/2;T=sv.y*innerHeight-w/2}
   tab.style.left=Math.max(8,Math.min(innerWidth-w-8,L))+'px';tab.style.top=Math.max(64,Math.min(innerHeight-w-8,T))+'px'};
  const pos=()=>{const w=cl.offsetWidth||34;btn.style.right=`calc(10px + ${w+6}px)`;try{const c=getComputedStyle(cl);['width','height','border','borderRadius','background','boxShadow','top','padding'].forEach(p=>btn.style[p]=c[p])}catch(e){}};
  const desk=()=>!matchMedia('(max-width:600px)').matches;
  // point the box's scale animation at the star, so it shrinks into it and grows out of it
- function aimAt(){if(!desk()){box.style.transformOrigin='';return}const t=tab.getBoundingClientRect(),b=box.getBoundingClientRect(),tx=parseFloat(tab.style.left)||t.left,ty=parseFloat(tab.style.top)||t.top;
+ function aimAt(){if(!desk()){box.style.transformOrigin=tab.classList.contains('under')?'top right':'';return}const t=tab.getBoundingClientRect(),b=box.getBoundingClientRect(),tx=parseFloat(tab.style.left)||t.left,ty=parseFloat(tab.style.top)||t.top;
   box.style.transformOrigin=`${(tx+23-b.left).toFixed(0)}px ${(ty+23-b.top).toFixed(0)}px`}
  // desktop: open the box from wherever the star sits, its top-right corner at the star
  function openAtStar(){if(!desk())return;const tx=parseFloat(tab.style.left),ty=parseFloat(tab.style.top);if(!isFinite(tx)||!isFinite(ty))return;
@@ -6422,6 +6424,7 @@ try{if(!S.aspg1){S.aspg1=true;S.layers={...S.layers,aspg:true};saveSet()}}catch(
 .infotab.new svg{animation:itwinkle .9s ease 2}
 @keyframes itwinkle{0%,100%{transform:scale(1) rotate(0)}40%{transform:scale(1.35) rotate(45deg)}}
 @media (max-width:600px){.info{transform-origin:bottom right}.infotab{right:12px;bottom:calc(12px + env(safe-area-inset-bottom,0px));left:auto;top:auto}}
+@media (max-width:600px){.infotab.under{position:absolute;right:auto;bottom:auto;width:38px;height:32px;border-radius:8px;background:var(--raised,var(--panel));box-shadow:none}.infotab.under svg{width:17px;height:17px}}
 html[data-theme="paper"] .infotab,html[data-theme="pastel"] .infotab{color:var(--accent)}`;document.head.append(st);
 })();
 /* desktop: once the star has been dragged somewhere, every info box opens from that spot */
@@ -6431,7 +6434,7 @@ html[data-theme="paper"] .infotab,html[data-theme="pastel"] .infotab{color:var(-
   return _pl.apply(this,arguments)}})();
 
 /* ===== Background: no starfield, no grain ===== */
-(()=>{try{const st=document.createElement('style');st.textContent='.starfield{display:none!important}html::after,html[data-theme]::after{content:none!important;background:none!important;display:none!important}html:not([data-theme]),html[data-theme="orrery"]{--bg:#1d1d1e;--w-grey:#151616;--w-ring:#151616;--w-decans:#151616;--asp-field:#1d1d1e;--raised:#151616}html:not([data-theme]) body,html[data-theme="orrery"] body,html:not([data-theme]),html[data-theme="orrery"]{background-color:#1d1d1e}html:not([data-theme]) .stage:not(.fs),html[data-theme="orrery"] .stage:not(.fs){background-color:transparent}html:not([data-theme]) #side,html[data-theme="orrery"] #side{background-color:transparent}.top{border-bottom:2px solid #20132b!important}.top .seg .vbtn .vico,.top .seg .vbtn .vzr{filter:none!important}';document.head.append(st)}catch(e){}})();
+(()=>{try{const st=document.createElement('style');st.textContent='.starfield{display:none!important}html::after,html[data-theme]::after{content:none!important;background:none!important;display:none!important}html:not([data-theme]),html[data-theme="orrery"]{--bg:#1d1d1e;--w-grey:#151616;--w-ring:#151616;--w-decans:#151616;--asp-field:#1d1d1e;--raised:#151616}html:not([data-theme]) body,html[data-theme="orrery"] body,html:not([data-theme]),html[data-theme="orrery"]{background-color:#1d1d1e}html:not([data-theme]) .stage:not(.fs),html[data-theme="orrery"] .stage:not(.fs){background-color:transparent}html:not([data-theme]) #side,html[data-theme="orrery"] #side{background-color:transparent}.top{border-bottom:2px solid #20132b!important}html:not([data-theme]) body,html[data-theme="orrery"] body{background-image:linear-gradient(180deg,#29272d 0,#1d1d1e min(480px,calc(110px + 50vw)))!important;background-repeat:no-repeat!important;background-size:100% min(480px,calc(110px + 50vw))!important;background-attachment:scroll!important}.top .seg .vbtn .vico,.top .seg .vbtn .vzr{filter:none!important}';document.head.append(st)}catch(e){}})();
 
 /* ===== Wheel label buttons (degrees, minutes, signs, ring) fold behind one button ===== */
 (()=>{const w=document.querySelector('.wlab');if(!w)return;
@@ -6453,7 +6456,7 @@ html[data-theme="paper"] .infotab,html[data-theme="pastel"] .infotab{color:var(-
 })();
 
 /* ===== Accuracy helpers: birth-time sensitivity, time-zone check, node type; site version; first-visit tips ===== */
-const DN_VER='v174';
+const DN_VER='v177';
 const btFmt=m=>m==null?'more than 4 hours':m<60?`${m} min`:`${Math.floor(m/60)} h${m%60?' '+(m%60)+' min':''}`;
 /* how far the birth time can move before the rising sign, Midheaven, Moon sign or a planet's house changes */
 const BT_MEMO=new Map();
@@ -6560,6 +6563,11 @@ html body .item .nm{font-size:1.05rem!important}
 html body .fz{font-size:1.06em;white-space:nowrap}
 .vbtn[data-view=zr] .vico{overflow:visible}
 .vbtn[data-view=zr] .vico text{font-family:var(--serif);font-weight:600;fill:currentColor;stroke:none}
+/* every button above the chart is the same height */
+html body #chartBar #openLib,html body #chartBar #modeBtn,html body #chartBar #openShare,html body #chartBar #openLayers,html body #chartBar #editActive,html body #chartBar #thirdBtn,html body #chartBar #styleSeg button{height:32px!important;min-height:32px;box-sizing:border-box;align-items:center;padding-top:0!important;padding-bottom:0!important}
+html body #chartBar #styleSeg{padding:0!important;height:32px;align-items:center}
+html body #chartBar #styleSeg button{border-radius:8px}
+html body #chartBar #modesWrap,html body #chartBar #shareWrap{display:flex;align-items:center}
 /* the line under the header follows the theme */
 html[data-theme="oled"] .top{border-bottom-color:#2b2b2b!important}
 html[data-theme="paper"] .top{border-bottom-color:#cfc5b0!important}
@@ -6586,6 +6594,24 @@ html body .rp-brand .rp-logo{font:600 19pt/1 var(--serif);letter-spacing:.03em!i
    if(!nodes.some(n=>/[a-z]/.test(n.nodeValue)))return;nodes.forEach(n=>{const v=tc(n.nodeValue);if(v!==n.nodeValue)n.nodeValue=v})})};
  let q=0;const sched=()=>{if(q)return;q=requestAnimationFrame(()=>{q=0;run()})};
  try{new MutationObserver(sched).observe(document.documentElement,{childList:true,subtree:true,characterData:true})}catch(e){}sched()})();
+
+/* ===== Collapsible chart folders in the Charts list (remembered on this device; searching shows every match) ===== */
+(()=>{const K='orrery.foldShut';let shut;try{shut=new Set(JSON.parse(localStorage.getItem(K)||'[]'))}catch(e){shut=new Set()}
+ const save=()=>{try{localStorage.setItem(K,JSON.stringify([...shut]))}catch(e){}};
+ window.dnFoldShut=()=>shut;
+ const hook=()=>{const L=document.getElementById('list');if(!L)return setTimeout(hook,300);
+  L.addEventListener('click',e=>{const b=e.target.closest('[data-fold]');if(!b||!L.contains(b))return;e.stopPropagation();const f=b.dataset.fold,g=b.nextElementSibling,open=b.getAttribute('aria-expanded')!=='true';
+   b.setAttribute('aria-expanded',String(open));if(g&&g.classList.contains('fgrp'))g.hidden=!open;if(open)shut.delete(f);else shut.add(f);save()},true)};
+ hook();
+ try{const st=document.createElement('style');st.textContent=`
+#list .folder.fold{display:flex;align-items:center;gap:8px;width:100%;background:none;border:0;border-radius:8px;cursor:pointer;text-align:left;font:600 .8rem var(--ui);color:var(--muted);padding:12px 10px 6px;margin-top:2px}
+#list .folder.fold:hover{color:var(--fg)}
+#list .folder.fold:focus-visible{outline:2px solid var(--accent);outline-offset:-2px}
+#list .fchev{width:12px;height:12px;flex:none;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round;transform:rotate(90deg);transition:transform .18s ease}
+#list .folder.fold[aria-expanded="false"] .fchev{transform:none}
+#list .fnm{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#list .fct{font-weight:500;font-size:.72rem;opacity:.75;font-variant-numeric:tabular-nums}
+@media (prefers-reduced-motion:reduce){#list .fchev{transition:none}}`;document.head.append(st)}catch(e){}})();
 
 /* ===== Full reading, part 2: glossary, timeline, options, saved readings, PDF download ===== */
 
