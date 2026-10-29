@@ -6456,7 +6456,7 @@ html[data-theme="paper"] .infotab,html[data-theme="pastel"] .infotab{color:var(-
 })();
 
 /* ===== Accuracy helpers: birth-time sensitivity, time-zone check, node type; site version; first-visit tips ===== */
-const DN_VER='v185';
+const DN_VER='v186';
 const btFmt=m=>m==null?'more than 4 hours':m<60?`${m} min`:`${Math.floor(m/60)} h${m%60?' '+(m%60)+' min':''}`;
 /* how far the birth time can move before the rising sign, Midheaven, Moon sign or a planet's house changes */
 const BT_MEMO=new Map();
@@ -6553,17 +6553,15 @@ html body h3.sub,html body .rsec h3{font-weight:600!important;font-size:1.02rem!
 html body .info h4{font-weight:600!important;font-size:1.2rem!important}
 html body .readcard h3,html body .readdone h3,html body .ilink .ilh,html body .zrc-sign{font-weight:600!important;font-size:1.18rem!important}
 /* controls: Sky Now, chart type, panel tabs, chart names, lilac buttons, quick picks, theme names */
-html body #openLib,html body #modeBtn,html body #modeBtn strong,html body #modesWrap .menu button,html body .tabs button,html body #tabDDBtn,html body #tabDDBtn strong,html body #tabDDMenu button,html body #cmBtn strong,html body .cmpanel .cml,html body .cmpanel .cmopt,html body .item .nm,html body .fz{font-family:var(--serif)!important;font-weight:600!important;letter-spacing:.035em!important}
+html body #openLib,html body #modeBtn,html body #modeBtn strong,html body #modesWrap .menu button,html body .tabs button,html body #tabDDBtn,html body #tabDDBtn strong,html body #tabDDMenu button,html body #cmBtn strong,html body .item .nm,html body .fz{font-family:var(--serif)!important;font-weight:600!important;letter-spacing:.035em!important}
 html body #openLib,html body #modeBtn,html body #modeBtn strong{font-size:1rem!important}
 html body #openLib strong{font-family:var(--serif)!important;font-weight:600!important;font-size:1rem!important;line-height:normal!important;letter-spacing:.035em!important}
 html body #modesWrap .menu button,html body #tabDDMenu button{font-size:.95rem!important}
 html body #tabDDBtn,html body #tabDDBtn strong{font-size:1rem!important;line-height:normal}
 html body #cmBtn strong{font-size:1rem!important;line-height:normal}
-html body .cmpanel .cml{font-size:1rem!important}
-html body .cmpanel .cmopt{font-size:.95rem!important}
 html body #cmBtn .cmmode{font-size:.85rem}
 @media (min-width:900px){html body .tabs button{font-size:.95rem!important}}
-@media (max-width:560px){html body #cmBtn strong,html body .cmpanel .cml,html body #openLib,html body #openLib strong,html body #modeBtn,html body #modeBtn strong{font-size:.9rem!important}}
+@media (max-width:560px){html body #cmBtn strong,html body #openLib,html body #openLib strong,html body #modeBtn,html body #modeBtn strong{font-size:.9rem!important}}
 html body .item .nm{font-size:1.05rem!important}
 html body .fz{font-size:1.06em;white-space:nowrap}
 .vbtn[data-view=zr] .vico{overflow:visible}
@@ -6587,7 +6585,7 @@ html body .rp-doc h4{font-size:10.5pt!important;font-weight:600!important}
 html body .rp-brand .rp-logo{font:600 19pt/1 var(--serif);letter-spacing:.03em!important}
 `;document.head.append(st)}catch(e){}})();
 /* Title Case for everything set in Fraunces (short words stay lower case mid-title) */
-(()=>{const SEL='h2:not(.sr-only),h3.sub,.tarot-side .tt,.info h4,.dntcard h4,.readcard h3,.readdone h3,.rsec h3,.ilink .ilh,.zrc-sign,#openLib,#modeBtn,#modesWrap .menu button,.tabs button,#tabDDBtn,#tabDDMenu button,#cmName,.cmpanel .cml,.cmpanel .cmopt,.item .nm,.rp-doc h1,.rp-doc h3,.rp-doc h4,.fz',
+(()=>{const SEL='h2:not(.sr-only),h3.sub,.tarot-side .tt,.info h4,.dntcard h4,.readcard h3,.readdone h3,.rsec h3,.ilink .ilh,.zrc-sign,#openLib,#modeBtn,#modesWrap .menu button,.tabs button,#tabDDBtn,#tabDDMenu button,#cmName,.item .nm,.rp-doc h1,.rp-doc h3,.rp-doc h4,.fz',
  SMALL=new Set('a an the and or but nor of in on at to for by with from as vs via per into onto over up de la le du da di van von der den del y'.split(' '));
  const tc=t=>{const w=t.split(/(\s+)/);const first=w.findIndex(x=>/\S/.test(x));let last=w.length-1;while(last>=0&&!/\S/.test(w[last]))last--;
   return w.map((x,i)=>{if(!/\S/.test(x))return x;const m=x.match(/^([^A-Za-z]*)([a-z])(.*)$/);if(!m)return x;const core=(m[2]+m[3]).replace(/[^A-Za-z].*$/,'').toLowerCase();
@@ -6665,17 +6663,17 @@ html:not([data-theme]) #sideTog,html[data-theme="orrery"] #sideTog{background:#2
  const esc=t=>String(t).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
  const ICO={lib:'<path d="M4 7h16M4 12h16M4 17h10"/>',edit:'<path d="M4 20h4L19 9l-4-4L4 16v4z"/><path d="M14 6l4 4"/>',type:'<circle cx="12" cy="12" r="8.5"/><path d="M12 3.5v17M3.5 12h17"/>',style:'<rect x="4" y="4" width="16" height="16" rx="2"/><path d="M4 4l16 16M20 4L4 20"/>',third:'<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5.5"/><circle cx="12" cy="12" r="2"/>',share:'<path d="M12 14.5V3.5"/><path d="M7.5 8 12 3.5 16.5 8"/><path d="M5 12.5V19a1.5 1.5 0 0 0 1.5 1.5h11A1.5 1.5 0 0 0 19 19v-6.5"/>',layers:'<path d="M12 4 3 9l9 5 9-5-9-5z"/><path d="m3 14 9 5 9-5"/>'};
  const ic=k=>`<svg class="cmi" viewBox="0 0 24 24" aria-hidden="true">${ICO[k]}</svg>`;
- const row=(act,k,label,extra='')=>`<button type="button" role="menuitem" class="cmrow" data-cm="${act}">${ic(k)}<span class="cml">${esc(label)}</span>${extra}</button>`;
- const sec=(id,k,label,cur,items)=>`<button type="button" class="cmrow cmsec" data-cmsec="${id}" aria-expanded="${openSec===id}">${ic(k)}<span class="cml">${esc(label)}</span><span class="cmcur">${esc(cur)}</span><svg class="cmchev" viewBox="0 0 12 12" aria-hidden="true"><path d="M4.2 2.4 7.8 6l-3.6 3.6"/></svg></button><div class="cmsub" data-sub="${id}"${openSec===id?'':' hidden'}>${items}</div>`;
+ const row=(act,k,label,note='')=>`<button type="button" role="menuitem" class="cmrow" data-cm="${act}">${ic(k)}<span class="cml"><b>${esc(label)}</b>${note?`<small>${esc(note)}</small>`:''}</span></button>`;
+ const sec=(id,k,label,cur,items)=>`<button type="button" class="cmrow cmsec" data-cmsec="${id}" aria-expanded="${openSec===id}">${ic(k)}<span class="cml"><b>${esc(label)}</b>${cur?`<small>${esc(cur)}</small>`:''}</span><svg class="cmchev" viewBox="0 0 12 12" aria-hidden="true"><path d="M4.2 2.4 7.8 6l-3.6 3.6"/></svg></button><div class="cmsub" data-sub="${id}"${openSec===id?'':' hidden'}>${items}</div>`;
  const sub=(attr,val,label,checked)=>`<button type="button" role="menuitemradio" class="cmopt" ${attr}="${esc(val)}" aria-checked="${!!checked}">${esc(label)}</button>`;
- function build(){let h=row('lib','lib','Charts');
-  if(vis($$('editActive')))h+=row('edit','edit','Edit This Chart');
+ function build(){let h=row('lib','lib','Charts','Open, add or switch charts');
+  if(vis($$('editActive')))h+=row('edit','edit','Edit this chart','Name, birth time and place');
   if(vis($$('modesWrap'))){const its=[...document.querySelectorAll('#modes [data-mode]')];const cur=its.find(b=>b.getAttribute('aria-checked')==='true');
-   h+=sec('type','type','Chart Type',cur?cur.querySelector('span').textContent:'',its.map(b=>sub('data-cmmode',b.dataset.mode,b.querySelector('span').textContent,b.getAttribute('aria-checked')==='true')).join(''))}
+   h+=sec('type','type','Chart type',cur?cur.querySelector('span').textContent:'',its.map(b=>sub('data-cmmode',b.dataset.mode,b.querySelector('span').textContent,b.getAttribute('aria-checked')==='true')).join(''))}
   if(vis($$('styleSeg'))){const its=[...document.querySelectorAll('#styleSeg [data-cs]')];const cur=its.find(b=>b.getAttribute('aria-pressed')==='true');
-   h+=sec('style','style','Chart Style',cur?cur.title:'',its.map(b=>sub('data-cmstyle',b.dataset.cs,b.title,b.getAttribute('aria-pressed')==='true')).join(''))}
-  if(vis($$('thirdWrap'))){const on=$$('thirdBtn').getAttribute('aria-pressed')==='true';h+=row('third','third',on?'Remove Third Chart':'Add a Third Chart')}
-  if(vis($$('shareWrap')))h+=sec('share','share','Save or Share','',[...document.querySelectorAll('#shareMenu [role=menuitem]')].map((b,i)=>`<button type="button" role="menuitem" class="cmopt" data-cmshare="${i}">${esc(b.textContent.trim())}</button>`).join(''));
+   h+=sec('style','style','Chart style',cur?cur.title:'',its.map(b=>sub('data-cmstyle',b.dataset.cs,b.title,b.getAttribute('aria-pressed')==='true')).join(''))}
+  if(vis($$('thirdWrap'))){const on=$$('thirdBtn').getAttribute('aria-pressed')==='true';h+=row('third','third',on?'Remove the third chart':'Add a third chart','Triwheel')}
+  if(vis($$('shareWrap')))h+=sec('share','share','Save or share','Image, PDF, readings or a link',[...document.querySelectorAll('#shareMenu [role=menuitem]')].map((b,i)=>`<button type="button" role="menuitem" class="cmopt" data-cmshare="${i}">${esc(b.textContent.trim())}</button>`).join(''));
   panel.innerHTML=h}
  const place=()=>{const r=btn.getBoundingClientRect(),w=Math.min(320,innerWidth-24);panel.style.width=w+'px';panel.style.left=Math.max(12,Math.min(innerWidth-w-12,r.left))+'px';panel.style.top=(r.bottom+8)+'px';panel.style.maxHeight=Math.max(200,innerHeight-r.bottom-20)+'px'};
  const open=()=>{openSec=null;syncLbl();build();panel.hidden=false;btn.setAttribute('aria-expanded','true');place();const f=panel.querySelector('button');f&&f.focus({preventScroll:true})};
@@ -6707,16 +6705,18 @@ html body #chartBar #cmBtn{display:inline-flex;align-items:center;gap:8px;height
 #cmBtn .cmmode{color:var(--muted);white-space:nowrap;font-weight:500}
 #cmBtn .cmmode::before{content:"·";margin-right:8px;opacity:.7}
 #cmBtn .cmcar{font-size:.8rem;opacity:.85;flex:none}
-.cmpanel{position:fixed;z-index:40;background:var(--panel);border:0;border-radius:16px;padding:6px;display:grid;gap:2px;overflow-y:auto;overscroll-behavior:contain;box-shadow:0 18px 40px -18px rgba(0,0,0,.6)}
-.cmpanel .cmrow{display:flex;align-items:center;gap:12px;width:100%;background:none;border:0;border-radius:10px;padding:10px 12px;color:var(--fg);text-align:left;cursor:pointer}
-.cmpanel .cmrow:hover,.cmpanel .cmrow:focus-visible,.cmpanel .cmopt:hover,.cmpanel .cmopt:focus-visible{background:var(--raised);outline:none}
-.cmpanel .cmi{width:18px;height:18px;flex:none;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round;color:var(--accent)}
+.cmpanel{position:fixed;z-index:40;background:var(--panel);border:0;border-radius:18px;padding:12px;display:grid;gap:4px;overflow-y:auto;overscroll-behavior:contain;box-shadow:0 18px 40px -18px rgba(0,0,0,.6)}
+html body .cmpanel .cmrow{display:flex;align-items:center;gap:10px;width:100%;height:auto!important;min-height:0;background:none!important;border:0;border-radius:10px;padding:8px 10px!important;color:var(--fg);text-align:left;cursor:pointer;font:400 14px/1.5 var(--ui)}
+.cmpanel .cml b{display:block;font:600 .8rem var(--display)}
+.cmpanel .cml small{display:block;font-size:.78rem;line-height:1.5;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+html body .cmpanel .cmrow:hover,html body .cmpanel .cmrow:focus-visible,html body .cmpanel .cmopt:hover,html body .cmpanel .cmopt:focus-visible{background:var(--raised)!important;outline:none}
+.cmpanel .cmi{width:16px;height:16px;flex:none;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round;color:var(--accent)}
 .cmpanel .cml{flex:1;min-width:0}
 .cmpanel .cmcur{color:var(--muted);font-size:.8rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:45%}
 .cmpanel .cmchev{width:12px;height:12px;flex:none;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round;transition:transform .18s ease;color:var(--muted)}
 .cmpanel .cmsec[aria-expanded="true"] .cmchev{transform:rotate(90deg)}
-.cmpanel .cmsub{display:grid;gap:1px;padding:0 0 6px 30px}
-.cmpanel .cmopt{display:block;width:100%;background:none;border:0;border-radius:8px;padding:8px 12px;color:var(--fg);text-align:left;cursor:pointer;font-size:.92rem}
+.cmpanel .cmsub{display:grid;gap:1px;padding:0 0 6px 28px}
+html body .cmpanel .cmopt{display:block;width:100%;height:auto!important;background:none!important;border:0;border-radius:8px;padding:6px 10px!important;color:var(--fg);text-align:left;cursor:pointer;font:400 .8rem/1.5 var(--ui)}
 .cmpanel .cmopt[aria-checked="true"]{color:var(--accent)}
 @media (prefers-reduced-motion:reduce){.cmpanel .cmchev{transition:none}}`;document.head.append(st);
 })();
