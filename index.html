@@ -6456,7 +6456,7 @@ html[data-theme="paper"] .infotab,html[data-theme="pastel"] .infotab{color:var(-
 })();
 
 /* ===== Accuracy helpers: birth-time sensitivity, time-zone check, node type; site version; first-visit tips ===== */
-const DN_VER='v178';
+const DN_VER='v180';
 const btFmt=m=>m==null?'more than 4 hours':m<60?`${m} min`:`${Math.floor(m/60)} h${m%60?' '+(m%60)+' min':''}`;
 /* how far the birth time can move before the rising sign, Midheaven, Moon sign or a planet's house changes */
 const BT_MEMO=new Map();
@@ -6553,11 +6553,12 @@ html body h3.sub,html body .rsec h3{font-weight:600!important;font-size:1.02rem!
 html body .info h4{font-weight:600!important;font-size:1.2rem!important}
 html body .readcard h3,html body .readdone h3,html body .ilink .ilh,html body .zrc-sign{font-weight:600!important;font-size:1.18rem!important}
 /* controls: Sky Now, chart type, panel tabs, chart names, lilac buttons, quick picks, theme names */
-html body #openLib,html body #modeBtn,html body #modeBtn strong,html body #modesWrap .menu button,html body .tabs button,html body .item .nm,html body .fz{font-family:var(--serif)!important;font-weight:600!important;letter-spacing:.035em!important}
+html body #openLib,html body #modeBtn,html body #modeBtn strong,html body #modesWrap .menu button,html body .tabs button,html body #tabDDBtn,html body #tabDDBtn strong,html body #tabDDMenu button,html body .item .nm,html body .fz{font-family:var(--serif)!important;font-weight:600!important;letter-spacing:.035em!important}
 html body #openLib,html body #modeBtn,html body #modeBtn strong{font-size:1rem!important}
 html body #openLib strong{font-family:var(--serif)!important;font-weight:600!important;font-size:1rem!important;line-height:normal!important;letter-spacing:.035em!important}
-html body #modesWrap .menu button{font-size:.95rem!important}
-@media (min-width:601px){html body .tabs{container-type:inline-size;overflow-x:hidden}html body .tabs button{flex:1 1 auto;min-width:0;font-size:clamp(10px,2.3cqi,15.2px)!important;padding-left:clamp(5px,1.6cqi,12px)!important;padding-right:clamp(5px,1.6cqi,12px)!important}}
+html body #modesWrap .menu button,html body #tabDDMenu button{font-size:.95rem!important}
+html body #tabDDBtn,html body #tabDDBtn strong{font-size:1rem!important;line-height:normal}
+@media (min-width:900px){html body .tabs button{font-size:.95rem!important}}
 @media (max-width:560px){html body #openLib,html body #openLib strong,html body #modeBtn,html body #modeBtn strong{font-size:.9rem!important}}
 html body .item .nm{font-size:1.05rem!important}
 html body .fz{font-size:1.06em;white-space:nowrap}
@@ -6582,7 +6583,7 @@ html body .rp-doc h4{font-size:10.5pt!important;font-weight:600!important}
 html body .rp-brand .rp-logo{font:600 19pt/1 var(--serif);letter-spacing:.03em!important}
 `;document.head.append(st)}catch(e){}})();
 /* Title Case for everything set in Fraunces (short words stay lower case mid-title) */
-(()=>{const SEL='h2:not(.sr-only),h3.sub,.tarot-side .tt,.info h4,.dntcard h4,.readcard h3,.readdone h3,.rsec h3,.ilink .ilh,.zrc-sign,#openLib,#modeBtn,#modesWrap .menu button,.tabs button,.item .nm,.rp-doc h1,.rp-doc h3,.rp-doc h4,.fz',
+(()=>{const SEL='h2:not(.sr-only),h3.sub,.tarot-side .tt,.info h4,.dntcard h4,.readcard h3,.readdone h3,.rsec h3,.ilink .ilh,.zrc-sign,#openLib,#modeBtn,#modesWrap .menu button,.tabs button,#tabDDBtn,#tabDDMenu button,.item .nm,.rp-doc h1,.rp-doc h3,.rp-doc h4,.fz',
  SMALL=new Set('a an the and or but nor of in on at to for by with from as vs via per into onto over up de la le du da di van von der den del y'.split(' '));
  const tc=t=>{const w=t.split(/(\s+)/);const first=w.findIndex(x=>/\S/.test(x));let last=w.length-1;while(last>=0&&!/\S/.test(w[last]))last--;
   return w.map((x,i)=>{if(!/\S/.test(x))return x;const m=x.match(/^([^A-Za-z]*)([a-z])(.*)$/);if(!m)return x;const core=(m[2]+m[3]).replace(/[^A-Za-z].*$/,'').toLowerCase();
@@ -6612,6 +6613,41 @@ html body .rp-brand .rp-logo{font:600 19pt/1 var(--serif);letter-spacing:.03em!i
 #list .fnm{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 #list .fct{font-weight:500;font-size:.72rem;opacity:.75;font-variant-numeric:tabular-nums}
 @media (prefers-reduced-motion:reduce){#list .fchev{transition:none}}`;document.head.append(st)}catch(e){}})();
+
+/* ===== Desktop: the panel tabs become one drop-down button (touch screens keep the row of tabs) ===== */
+(()=>{const tabs=document.getElementById('tabs');if(!tabs)return;
+ const wrap=document.createElement('div');wrap.className='menuwrap tabsdd';wrap.id='tabsDD';
+ wrap.innerHTML='<button class="chip" id="tabDDBtn" type="button" aria-haspopup="menu" aria-expanded="false" aria-controls="tabDDMenu" title="Panel section"><strong id="tabDDLbl"></strong><span aria-hidden="true">▾</span></button><div class="menu" id="tabDDMenu" role="menu" aria-label="Panel section" hidden></div>';
+ tabs.after(wrap);
+ const btn=wrap.querySelector('#tabDDBtn'),lbl=wrap.querySelector('#tabDDLbl'),menu=wrap.querySelector('#tabDDMenu');
+ const live=()=>[...tabs.querySelectorAll('[role=tab]')].filter(b=>!b.hidden&&getComputedStyle(b).display!=='none');
+ const sync=()=>{const all=live(),cur=all.find(b=>b.getAttribute('aria-selected')==='true')||all[0];lbl.textContent=cur?cur.textContent.trim():'';
+  menu.innerHTML=all.map(b=>`<button type="button" role="menuitemradio" data-tabk="${b.dataset.tab}" aria-checked="${b===cur}"><span>${b.textContent.trim()}</span></button>`).join('')};
+ const close=()=>{menu.hidden=true;btn.setAttribute('aria-expanded','false')};
+ btn.addEventListener('click',e=>{e.stopPropagation();const open=menu.hidden;if(open)sync();menu.hidden=!open;btn.setAttribute('aria-expanded',String(open));if(open){const c=menu.querySelector('[aria-checked=true]');c&&c.focus({preventScroll:true})}});
+ menu.addEventListener('click',e=>{const it=e.target.closest('[data-tabk]');if(!it)return;e.stopPropagation();close();const t=tabs.querySelector(`[data-tab="${it.dataset.tabk}"]`);if(t)t.click();sync();btn.focus({preventScroll:true})});
+ menu.addEventListener('keydown',e=>{const its=[...menu.querySelectorAll('button')],i=its.indexOf(document.activeElement);if(e.key==='ArrowDown'||e.key==='ArrowUp'){e.preventDefault();its[(i+(e.key==='ArrowDown'?1:-1)+its.length)%its.length].focus()}});
+ document.addEventListener('click',e=>{if(!menu.hidden&&!wrap.contains(e.target))close()});
+ document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!menu.hidden){close();btn.focus({preventScroll:true});e.stopPropagation()}},true);
+ new MutationObserver(sync).observe(tabs,{subtree:true,childList:true,attributes:true,attributeFilter:['aria-selected','hidden','style']});sync();
+ const st=document.createElement('style');st.textContent=`
+#tabsDD{display:none}
+@media (min-width:601px) and (hover:hover) and (pointer:fine){
+ .sidehead #tabs{display:none!important}
+ #tabsDD{display:flex;align-items:center;margin:8px 16px 4px 10px}
+ .sidehead:has(#tabsDD){align-items:flex-start}
+ html body .sidehead #sideTog{width:38px!important;height:32px!important;min-width:38px;flex:none;border-radius:8px!important;margin:8px 0 0 10px!important;align-self:flex-start!important;display:grid;place-items:center;box-sizing:border-box;padding:0!important}
+ html body .sidehead #sideTog[aria-expanded="false"]{margin:8px 6px!important}
+ #tabDDBtn{display:inline-flex;align-items:center;gap:8px;height:32px;box-sizing:border-box;padding:0 12px;border:0;border-radius:8px;background:var(--raised);color:var(--fg);cursor:pointer}
+ #tabDDBtn span{font-size:.8rem;opacity:.85}
+ .sidehead:has(#sideTog[aria-expanded="false"]) #tabsDD{display:none!important}
+ #tabDDMenu{min-width:200px}
+ #tabDDMenu button{display:flex;align-items:center;width:100%;background:none;border:0;border-radius:10px;padding:9px 12px;color:var(--fg);text-align:left;cursor:pointer}
+ #tabDDMenu button:hover,#tabDDMenu button:focus-visible{background:var(--raised);outline:none}
+ #tabDDMenu button[aria-checked="true"]{color:var(--accent)}
+}
+html:not([data-theme]) #sideTog,html[data-theme="orrery"] #sideTog{background:#20132b!important}`;document.head.append(st);
+})();
 
 /* ===== Full reading, part 2: glossary, timeline, options, saved readings, PDF download ===== */
 
