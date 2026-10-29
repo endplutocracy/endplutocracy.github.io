@@ -1,6 +1,6 @@
 // Destinned offline cache: serves the site from cache, refreshing it in the background.
-const CACHE='orrery-v172';
-const FILES=['./','index.html','manifest.webmanifest','fonts/fonts.css','fonts/poppins-500.woff','fonts/poppins-600.woff','fonts/poppins-700.woff','fonts/poppins-800.woff','fonts/manrope.woff','fonts/noto-sans-symbols.woff','fonts/noto-sans-symbols-2.woff','icons/favicon-192.png','icons/icon-192.png','icons/icon-512.png','icons/apple-touch-icon.png','data/asteroids.js','data/tarot-cards.js','data/cities.js','data/map.js'];
+const CACHE='orrery-v173';
+const FILES=['./','index.html','manifest.webmanifest','fonts/fonts.css','fonts/poppins-400.woff','fonts/poppins-500.woff','fonts/poppins-600.woff','fonts/poppins-700.woff','fonts/poppins-800.woff','fonts/manrope.woff','fonts/fraunces.woff','fonts/noto-sans-symbols.woff','fonts/noto-sans-symbols-2.woff','icons/favicon-192.png','icons/icon-192.png','icons/icon-512.png','icons/apple-touch-icon.png','data/asteroids.js','data/tarot-cards.js','data/cities.js','data/map.js'];
 self.addEventListener('install',e=>{e.waitUntil(caches.open(CACHE).then(c=>c.addAll(FILES)).then(()=>self.skipWaiting()))});
 // On activate: drop old caches, take control of open pages, and if this replaced an older version, reload those pages so they run the new site.
 self.addEventListener('activate',e=>{e.waitUntil((async()=>{const ks=await caches.keys(),old=ks.filter(k=>k!==CACHE&&/^orrery-/.test(k));await Promise.all(ks.filter(k=>k!==CACHE).map(k=>caches.delete(k)));await self.clients.claim();

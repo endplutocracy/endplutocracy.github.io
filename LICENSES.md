@@ -32,5 +32,6 @@ Destinned bundles the following data, code, fonts and images.
 All are under the SIL Open Font License 1.1, and the license texts are in `fonts/`.
 
 - **Poppins** by Indian Type Foundry
+- **Fraunces** by Undercase Type (Phaedra Charles and Flavia Zimbardi)
 - **Manrope** by Mikhail Sharanda
 - **Noto Sans Symbols** and **Noto Sans Symbols 2** by Google. A lightweight subset of Noto Sans Symbols is also embedded in `index.html` for the chart glyphs.
