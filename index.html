@@ -6453,7 +6453,7 @@ html[data-theme="paper"] .infotab,html[data-theme="pastel"] .infotab{color:var(-
 })();
 
 /* ===== Accuracy helpers: birth-time sensitivity, time-zone check, node type; site version; first-visit tips ===== */
-const DN_VER='v173';
+const DN_VER='v174';
 const btFmt=m=>m==null?'more than 4 hours':m<60?`${m} min`:`${Math.floor(m/60)} h${m%60?' '+(m%60)+' min':''}`;
 /* how far the birth time can move before the rising sign, Midheaven, Moon sign or a planet's house changes */
 const BT_MEMO=new Map();
@@ -6552,9 +6552,10 @@ html body .readcard h3,html body .readdone h3,html body .ilink .ilh,html body .z
 /* controls: Sky Now, chart type, panel tabs, chart names, lilac buttons, quick picks, theme names */
 html body #openLib,html body #modeBtn,html body #modeBtn strong,html body #modesWrap .menu button,html body .tabs button,html body .item .nm,html body .fz{font-family:var(--serif)!important;font-weight:600!important;letter-spacing:.035em!important}
 html body #openLib,html body #modeBtn,html body #modeBtn strong{font-size:1rem!important}
+html body #openLib strong{font-family:var(--serif)!important;font-weight:600!important;font-size:1rem!important;line-height:normal!important;letter-spacing:.035em!important}
 html body #modesWrap .menu button{font-size:.95rem!important}
 @media (min-width:900px){html body .tabs button{font-size:.95rem!important}}
-@media (max-width:560px){html body #openLib,html body #modeBtn,html body #modeBtn strong{font-size:.9rem!important}}
+@media (max-width:560px){html body #openLib,html body #openLib strong,html body #modeBtn,html body #modeBtn strong{font-size:.9rem!important}}
 html body .item .nm{font-size:1.05rem!important}
 html body .fz{font-size:1.06em;white-space:nowrap}
 .vbtn[data-view=zr] .vico{overflow:visible}
