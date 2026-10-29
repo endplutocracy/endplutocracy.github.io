@@ -6456,7 +6456,7 @@ html[data-theme="paper"] .infotab,html[data-theme="pastel"] .infotab{color:var(-
 })();
 
 /* ===== Accuracy helpers: birth-time sensitivity, time-zone check, node type; site version; first-visit tips ===== */
-const DN_VER='v186';
+const DN_VER='v193';
 const btFmt=m=>m==null?'more than 4 hours':m<60?`${m} min`:`${Math.floor(m/60)} h${m%60?' '+(m%60)+' min':''}`;
 /* how far the birth time can move before the rising sign, Midheaven, Moon sign or a planet's house changes */
 const BT_MEMO=new Map();
@@ -6648,12 +6648,12 @@ html body .rp-brand .rp-logo{font:600 19pt/1 var(--serif);letter-spacing:.03em!i
  #tabDDMenu button:hover,#tabDDMenu button:focus-visible{background:var(--raised);outline:none}
  #tabDDMenu button[aria-checked="true"]{color:var(--accent)}
 }
-html:not([data-theme]) #sideTog,html[data-theme="orrery"] #sideTog{background:#20132b!important}`;document.head.append(st);
+html:not([data-theme]) #sideTog,html[data-theme="orrery"] #sideTog{background:var(--raised)!important}`;document.head.append(st);
 })();
 
 /* ===== One menu above the chart: the chart name and type on the button; charts, edit, type, style, triwheel, save/share and layers inside ===== */
 (()=>{const bar=document.getElementById('chartBar');if(!bar)return;const $$=id=>document.getElementById(id);
- const HAMB='<svg class="hamb" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>';
+ const HAMB='<svg class="cmstar" viewBox="6 8.4 7.2 7.2" aria-hidden="true"><path d="M9.6 8.4 L10.5 11.1 L13.2 12 L10.5 12.9 L9.6 15.6 L8.7 12.9 L6 12 L8.7 11.1 Z"/></svg>';
  const wrap=document.createElement('div');wrap.className='cmwrap';wrap.id='cmWrap';
  wrap.innerHTML=`<button class="chip" id="cmBtn" type="button" aria-haspopup="menu" aria-expanded="false" aria-controls="cmPanel" title="Charts and chart options">${HAMB}<strong id="cmName"></strong><span class="cmmode" id="cmMode"></span><span class="cmcar" aria-hidden="true">▾</span></button><div class="cmpanel" id="cmPanel" role="menu" aria-label="Charts and chart options" hidden></div>`;
  bar.prepend(wrap);bar.classList.add('cmon');
@@ -6666,13 +6666,13 @@ html:not([data-theme]) #sideTog,html[data-theme="orrery"] #sideTog{background:#2
  const row=(act,k,label,note='')=>`<button type="button" role="menuitem" class="cmrow" data-cm="${act}">${ic(k)}<span class="cml"><b>${esc(label)}</b>${note?`<small>${esc(note)}</small>`:''}</span></button>`;
  const sec=(id,k,label,cur,items)=>`<button type="button" class="cmrow cmsec" data-cmsec="${id}" aria-expanded="${openSec===id}">${ic(k)}<span class="cml"><b>${esc(label)}</b>${cur?`<small>${esc(cur)}</small>`:''}</span><svg class="cmchev" viewBox="0 0 12 12" aria-hidden="true"><path d="M4.2 2.4 7.8 6l-3.6 3.6"/></svg></button><div class="cmsub" data-sub="${id}"${openSec===id?'':' hidden'}>${items}</div>`;
  const sub=(attr,val,label,checked)=>`<button type="button" role="menuitemradio" class="cmopt" ${attr}="${esc(val)}" aria-checked="${!!checked}">${esc(label)}</button>`;
- function build(){let h=row('lib','lib','Charts','Open, add or switch charts');
+ function build(){let h='';if(vis($$('thirdWrap'))){const on=$$('thirdBtn').getAttribute('aria-pressed')==='true';h+=row('third','third',on?'Remove the third chart':'Add a third chart','Triwheel')}
+  h+=row('lib','lib','Charts','Open, add or switch charts');
   if(vis($$('editActive')))h+=row('edit','edit','Edit this chart','Name, birth time and place');
   if(vis($$('modesWrap'))){const its=[...document.querySelectorAll('#modes [data-mode]')];const cur=its.find(b=>b.getAttribute('aria-checked')==='true');
    h+=sec('type','type','Chart type',cur?cur.querySelector('span').textContent:'',its.map(b=>sub('data-cmmode',b.dataset.mode,b.querySelector('span').textContent,b.getAttribute('aria-checked')==='true')).join(''))}
   if(vis($$('styleSeg'))){const its=[...document.querySelectorAll('#styleSeg [data-cs]')];const cur=its.find(b=>b.getAttribute('aria-pressed')==='true');
    h+=sec('style','style','Chart style',cur?cur.title:'',its.map(b=>sub('data-cmstyle',b.dataset.cs,b.title,b.getAttribute('aria-pressed')==='true')).join(''))}
-  if(vis($$('thirdWrap'))){const on=$$('thirdBtn').getAttribute('aria-pressed')==='true';h+=row('third','third',on?'Remove the third chart':'Add a third chart','Triwheel')}
   if(vis($$('shareWrap')))h+=sec('share','share','Save or share','Image, PDF, readings or a link',[...document.querySelectorAll('#shareMenu [role=menuitem]')].map((b,i)=>`<button type="button" role="menuitem" class="cmopt" data-cmshare="${i}">${esc(b.textContent.trim())}</button>`).join(''));
   panel.innerHTML=h}
  const place=()=>{const r=btn.getBoundingClientRect(),w=Math.min(320,innerWidth-24);panel.style.width=w+'px';panel.style.left=Math.max(12,Math.min(innerWidth-w-12,r.left))+'px';panel.style.top=(r.bottom+8)+'px';panel.style.maxHeight=Math.max(200,innerHeight-r.bottom-20)+'px'};
@@ -6718,7 +6718,19 @@ html body .cmpanel .cmrow:hover,html body .cmpanel .cmrow:focus-visible,html bod
 .cmpanel .cmsub{display:grid;gap:1px;padding:0 0 6px 28px}
 html body .cmpanel .cmopt{display:block;width:100%;height:auto!important;background:none!important;border:0;border-radius:8px;padding:6px 10px!important;color:var(--fg);text-align:left;cursor:pointer;font:400 .8rem/1.5 var(--ui)}
 .cmpanel .cmopt[aria-checked="true"]{color:var(--accent)}
-@media (prefers-reduced-motion:reduce){.cmpanel .cmchev{transition:none}}`;document.head.append(st);
+@media (prefers-reduced-motion:reduce){.cmpanel .cmchev{transition:none}}
+html body #chartBar #cmBtn{gap:7px;padding:0 11px 0 10px}
+html body #cmBtn .cmstar{width:14px;height:14px;flex:none;fill:var(--muted);stroke:none;transition:transform .25s ease,fill .25s ease}
+html body #cmBtn:hover .cmstar,html body #cmBtn:focus-visible .cmstar,html body #cmBtn[aria-expanded="true"] .cmstar{fill:var(--accent)}
+html body .sidehead #sideTog,html body #sideTog{color:var(--muted)!important;transition:color .25s ease}
+html body #sideTog svg{fill:currentColor!important}
+html body #sideTog:hover,html body #sideTog:focus-visible{color:var(--accent)!important}
+#cmBtn:hover .cmstar,#cmBtn:focus-visible .cmstar,#cmBtn[aria-expanded="true"] .cmstar{transform:rotate(45deg)}
+@media (prefers-reduced-motion:reduce){#cmBtn .cmstar{transition:none}}
+html body #cmBtn strong{font-size:.9rem!important;color:var(--muted)!important}
+html body #cmBtn .cmmode{font-size:.8rem;color:var(--muted)!important;font-weight:500}
+html body #cmBtn .cmmode::before{content:none}
+html body #cmBtn .cmcar{display:none}`;document.head.append(st);
 })();
 
 /* ===== Full reading, part 2: glossary, timeline, options, saved readings, PDF download ===== */
