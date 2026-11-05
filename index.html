@@ -6456,7 +6456,7 @@ html[data-theme="paper"] .infotab,html[data-theme="pastel"] .infotab{color:var(-
 })();
 
 /* ===== Accuracy helpers: birth-time sensitivity, time-zone check, node type; site version; first-visit tips ===== */
-const DN_VER='v208';
+const DN_VER='v209';
 const btFmt=m=>m==null?'more than 4 hours':m<60?`${m} min`:`${Math.floor(m/60)} h${m%60?' '+(m%60)+' min':''}`;
 /* how far the birth time can move before the rising sign, Midheaven, Moon sign or a planet's house changes */
 const BT_MEMO=new Map();
@@ -6693,7 +6693,7 @@ html:not([data-theme]) #sideTog,html[data-theme="orrery"] #sideTog{background:va
   else if(a==='layers'){$$('openLayers').click();const m=$$('layersMenu');if(m&&!m.hidden){const r=btn.getBoundingClientRect(),w=m.offsetWidth;m.style.right='auto';m.style.left=Math.max(12,Math.min(innerWidth-w-12,r.left))+'px';m.style.top=(r.bottom+8)+'px'}}});
  panel.addEventListener('keydown',e=>{const its=[...panel.querySelectorAll('button')].filter(b=>b.offsetParent),i=its.indexOf(document.activeElement);
   if(e.key==='ArrowDown'||e.key==='ArrowUp'){e.preventDefault();its[(i+(e.key==='ArrowDown'?1:-1)+its.length)%its.length].focus()}});
- document.addEventListener('click',e=>{if(!panel.hidden&&!wrap.contains(e.target))close()});
+ document.body.append(panel);document.addEventListener('click',e=>{if(!panel.hidden&&!wrap.contains(e.target)&&!panel.contains(e.target))close()});
  document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!panel.hidden){close(true);e.stopPropagation()}},true);
  addEventListener('resize',()=>{if(!panel.hidden)place()});addEventListener('scroll',()=>{if(!panel.hidden)place()},{passive:true});
  const mo=new MutationObserver(syncLbl);['chartName','modeLabel','modesWrap','thirdBtn'].forEach(id=>{const el=$$(id);if(el)mo.observe(el,{childList:true,characterData:true,subtree:true,attributes:true,attributeFilter:['hidden','aria-pressed','title']})});syncLbl();
