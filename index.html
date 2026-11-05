@@ -6456,7 +6456,7 @@ html[data-theme="paper"] .infotab,html[data-theme="pastel"] .infotab{color:var(-
 })();
 
 /* ===== Accuracy helpers: birth-time sensitivity, time-zone check, node type; site version; first-visit tips ===== */
-const DN_VER='v205';
+const DN_VER='v207';
 const btFmt=m=>m==null?'more than 4 hours':m<60?`${m} min`:`${Math.floor(m/60)} h${m%60?' '+(m%60)+' min':''}`;
 /* how far the birth time can move before the rising sign, Midheaven, Moon sign or a planet's house changes */
 const BT_MEMO=new Map();
@@ -6700,7 +6700,7 @@ html:not([data-theme]) #sideTog,html[data-theme="orrery"] #sideTog{background:va
  const st=document.createElement('style');st.textContent=`
 #chartBar.cmon>#openLib,#chartBar.cmon>#editActive,#chartBar.cmon>#modesWrap,#chartBar.cmon>#thirdWrap,#chartBar.cmon>#styleSeg,#chartBar.cmon>#shareWrap{display:none!important}
 #chartBar.cmon>#openLayers{margin-left:auto!important}
-@media (min-width:861px){.stage:not(.fs):not(.hasmod)>.wheelwrap{margin-top:-53px;margin-bottom:10px}html body .stage:not(.fs):not(.hasmod)>.wheelwrap>#elemMini,html body .stage:not(.fs):not(.hasmod)>.wheelwrap>.wlab,html body .stage:not(.fs):not(.hasmod)>.wheelwrap>.wzoom{bottom:-18px!important}}
+@media (min-width:861px){.stage:not(.fs):not(.hasmod)>.wheelwrap{margin-top:-43px;margin-bottom:0}html body .stage:not(.fs):not(.hasmod)>.wheelwrap>#elemMini,html body .stage:not(.fs):not(.hasmod)>.wheelwrap>.wlab,html body .stage:not(.fs):not(.hasmod)>.wheelwrap>.wzoom{bottom:-8px!important}}
 .stage.wzoomed #chartBar,.stage.wzoomed .chartbar{background:transparent!important;box-shadow:none!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important}
 .cmwrap{position:relative;display:flex;align-items:center;min-width:0;max-width:100%}
 html body #chartBar #cmBtn{display:inline-flex;align-items:center;gap:8px;height:32px;box-sizing:border-box;padding:0 12px;border:0;border-radius:8px;background:var(--raised);color:var(--fg);cursor:pointer;min-width:0;max-width:100%}
@@ -6745,6 +6745,8 @@ html body #cmBtn .cmcar{display:none}`;document.head.append(st);
 (()=>{const st=document.createElement('style');st.textContent=`@media (max-width:600px){html body .stage:not(.fs):not(.hasmod)>.wheelwrap{margin-top:-28px!important}}`;document.head.append(st)})();
 /* phones: badges and zoom controls a little lower, with the time controls nudged down to keep the gap */
 (()=>{const st=document.createElement('style');st.textContent=`@media (max-width:600px){html body .wheelwrap>#elemMini,html body .wheelwrap>.wlab,html body .wheelwrap>.wzoom{bottom:-26px!important}html body .stage>.dial,html body .stage>.dialopen{margin-top:34px!important}}`;document.head.append(st)})();
+/* mid-sized screens: lift the wheel into the open space beside the chart menu and Layers buttons */
+(()=>{const st=document.createElement('style');st.textContent=`@media (min-width:601px) and (max-width:860px){html body .stage:not(.fs):not(.hasmod)>.wheelwrap{margin-top:-44px!important}}`;document.head.append(st)})();
 
 /* ===== Triwheel: choose the chart type of the third ring (transits, progressions, returns, solar arc...) ===== */
 (()=>{if(typeof computeIn!=='function')return;
