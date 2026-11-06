@@ -1909,7 +1909,7 @@ function aspectPairs(c1,c2){const keys1=aspKeys(c1),keys2=c2?aspKeys(c2):keys1;c
 function ring(r1,r2,segs,fill){const g=el('g',{});const mid=(r1+r2)/2;
  svg.append(el('circle',{cx:C,cy:C,r:r1,fill:fill||'none',stroke:'var(--w-line)'}));svg.append(el('circle',{cx:C,cy:C,r:r2,fill:'none',stroke:'var(--w-line)'}));
  segs.forEach(sg=>{const [a,b]=pt(sg.start,r1),[c,d]=pt(sg.start,r2);g.append(el('line',{x1:a,y1:b,x2:c,y2:d,stroke:'var(--w-line)','stroke-width':sg.major?1:.6}));
-  const [x,y]=pt((sg.start+sg.end)/2,mid);let rt=null;if(sg.tang){let r=Math.atan2(y-C,x-C)*180/Math.PI+90;r=((r+180)%360+360)%360-180;if(r>90)r-=180;else if(r<-90)r+=180;rt=`rotate(${r.toFixed(1)} ${x.toFixed(1)} ${y.toFixed(1)})`}const t=el('text',{x,y,'text-anchor':'middle','dominant-baseline':'central','font-size':sg.size||11,fill:sg.color||'var(--muted)','font-family':sg.font||'var(--sym)',...(rt?{transform:rt}:{})},sg.label);t.append(el('title',{},sg.title));g.append(t);if(sg.obj)g.append(hit({d:sector(r1,r2,sg.start,sg.end),fill:'transparent'},sg.obj))});
+  const [x,y]=pt((sg.start+sg.end)/2,mid);let rt=null;if(sg.tang){let r=Math.atan2(y-C,x-C)*180/Math.PI+90;r=((r+180)%360+360)%360-180;if(r>90)r-=180;else if(r<-90)r+=180;rt=`rotate(${r.toFixed(1)} ${x.toFixed(1)} ${y.toFixed(1)})`}const t=el('text',{x,y,'text-anchor':'middle','dominant-baseline':'central','font-size':sg.size||11,fill:sg.color||'var(--muted)','font-family':sg.font||'var(--sym)',...(rt?{transform:rt}:{})},sg.label);try{window.dnInkCenter&&dnInkCenter(t,x,y,sg)}catch(_){}t.append(el('title',{},sg.title));g.append(t);if(sg.obj)g.append(hit({d:sector(r1,r2,sg.start,sg.end),fill:'transparent'},sg.obj))});
  svg.append(g)}
 function starLon(st,jd,ay){return n360(st[1]+st[3]*(jd-2451545)/365.25-ay)}
 function starHits(ch){const out=[];if(!S.layers.stars)return out;const keys=[...Calc.BODY_KEYS,...astKeys(ch),'node',...(ch.noHouses?[]:['asc','mc'])].filter(k=>ch.pts[k]);
@@ -2350,7 +2350,7 @@ function renderWheel(v){
   let pi=0,last=null;keys.forEach(k=>{if(B[k]==='P'){pi=last==='P'?pi+1:0;B[k]=`var(--w-p${pi%2?2:1})`}else B[k]='var(--w-grey)';last=B[k].includes('-p')?'P':'G'});if(B.inner==='var(--w-p1)')B.inner='var(--w-pin,var(--w-p1))';return B};
  const ringKeys=['terms','decans','naks'].filter(k=>Ly[k]),bandKeys=[...ringKeys,...(tri?['third']:[]),...(bi?['outer']:[]),'inner'],BC=bandCols(bandKeys);
  // the first chart's planet band matches the single-chart wheel's planet band
- BC.inner='var(--w-planet)';if(bi)BC.outer='var(--w-planet)';if(BC.naks)BC.naks=`var(--w-naks-o,${BC.naks})`;if(BC.terms)BC.terms=`var(--w-terms-o,${BC.terms})`;
+ BC.inner='var(--w-planet)';if(bi)BC.outer='var(--w-planet)';if(BC.naks)BC.naks=`var(--w-naks-o,${BC.naks})`;if(BC.terms)BC.terms=`var(--w-terms-o,${BC.terms})`;if(ringKeys.length>1){const solo=bandCols(['decans','inner']).decans;ringKeys.slice(0,-1).forEach(k=>BC[k]=`color-mix(in srgb,${solo} 80%,#000)`);BC[ringKeys[ringKeys.length-1]]=solo}
  // on a triwheel all three planet bands share the natal planet-band purple
  if(tri)BC.third=BC.outer=BC.inner='var(--w-planet)';
  svg.append(el('circle',{cx:C,cy:C,r:Z1,fill:'var(--w-grey)',stroke:'var(--w-line)'}));
@@ -6456,7 +6456,7 @@ html[data-theme="paper"] .infotab,html[data-theme="pastel"] .infotab{color:var(-
 })();
 
 /* ===== Accuracy helpers: birth-time sensitivity, time-zone check, node type; site version; first-visit tips ===== */
-const DN_VER='v218';
+const DN_VER='v226';
 const btFmt=m=>m==null?'more than 4 hours':m<60?`${m} min`:`${Math.floor(m/60)} h${m%60?' '+(m%60)+' min':''}`;
 /* how far the birth time can move before the rising sign, Midheaven, Moon sign or a planet's house changes */
 const BT_MEMO=new Map();
@@ -7080,6 +7080,13 @@ html.nointerp .info .sdesc p.il{display:none!important}`;document.head.append(st
   if(rows.length&&bright)add+=`<p class="interp muted">${star} is one of the brighter stars, so its influence is easier to notice.</p>`;
   h+=add}catch(e){console.warn(e)}return h};
 })();
+
+/* ===== Planet glyphs in the decan and term rings sit on their visible centre, not the font's box ===== */
+window.dnInkCenter=function(t,x,y,sg){t.dataset.cx=x;t.dataset.cy=y;if(/^(decan|term|nak)/.test(sg.obj||''))t.classList.add('ringtx');if(window.__noInk)return;const s=String(sg.label||'').replace(/[︎️]/g,'');if(!/^[☉☽☿♀♂♃♄]$/.test(s)||t.hasAttribute('transform'))return;
+ const r=glyphInk(sg.label);if(!r)return;const k=(sg.size||11)/100;
+ t.setAttribute('text-anchor','start');t.setAttribute('dominant-baseline','alphabetic');
+ t.setAttribute('x',(x-(r.R-r.L)/2*k).toFixed(2));t.setAttribute('y',(y-(r.D-r.A)/2*k).toFixed(2))};
+(()=>{const st=document.createElement('style');st.textContent=`#wheel text.ringtx{fill:#e6e6e6}html[data-theme="paper"] #wheel text.ringtx,html[data-theme="pastel"] #wheel text.ringtx{fill:var(--fg)}`;document.head.append(st)})();
 
 /* ===== Full reading, part 2: glossary, timeline, options, saved readings, PDF download ===== */
 
