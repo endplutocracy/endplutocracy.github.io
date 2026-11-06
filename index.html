@@ -6456,7 +6456,7 @@ html[data-theme="paper"] .infotab,html[data-theme="pastel"] .infotab{color:var(-
 })();
 
 /* ===== Accuracy helpers: birth-time sensitivity, time-zone check, node type; site version; first-visit tips ===== */
-const DN_VER='v227';
+const DN_VER='v228';
 const btFmt=m=>m==null?'more than 4 hours':m<60?`${m} min`:`${Math.floor(m/60)} h${m%60?' '+(m%60)+' min':''}`;
 /* how far the birth time can move before the rising sign, Midheaven, Moon sign or a planet's house changes */
 const BT_MEMO=new Map();
@@ -7181,6 +7181,103 @@ window.dnInkCenter=function(t,x,y,sg){t.dataset.cx=x;t.dataset.cy=y;if(/^(decan|
  const _ph=patternsHtml;patternsHtml=function(v){let h='';try{h=_ph.apply(this,arguments)||''}catch(e){}try{if(v&&v.outer&&!SYNTH_MODES.includes(v.mode))h+=crossHtml(v)}catch(e){console.warn(e)}return h};
  const _xi=xInfo;xInfo=function(r){if(r&&r[0]==='xpat'){try{return infoXPat(r[1])}catch(e){console.warn(e);return null}}return _xi.apply(this,arguments)};
  const st=document.createElement('style');st.textContent=`.xpw-o{color:var(--outer-glyph,var(--lilac,var(--accent)))}.xpw-t{color:var(--third-glyph,#8fd3c7)}`;document.head.append(st)})();
+
+/* ===== Angles (Ascendant, Midheaven, Descendant, IC) and planets: a fuller personal reading in their info boxes ===== */
+(()=>{if(typeof infoPoint!=='function')return;
+ const SG=SIGN_N,ANG=['asc','mc','dsc','ic'];
+ const HM=['','self, body and outlook','money and resources','communication, study and siblings','home, family and roots','creativity, pleasure and romance','work, routines and health','partnership and close others','shared resources, intimacy and change','travel, learning and belief','career and reputation','friends, groups and hopes','solitude, retreat and the unseen'];
+ const TXT={
+ asc:['You meet the world head-on: quick to act, direct and competitive, with an energy others notice at once. You learn by doing and grow restless when life stands still.',
+  'You come across as calm, steady and grounded, with a pleasant, unhurried manner. You take your time, trust your senses and dislike being rushed.',
+  'You come across as curious, talkative and quick, often younger than your years. You meet life through questions and conversation, and need variety to stay engaged.',
+  'You come across as warm, protective and sensitive to mood. You approach new situations carefully, testing whether they feel safe before you open up, and you look after the people around you.',
+  'You come across as warm, confident and expressive, with a natural presence. You want to be seen for who you are and you bring generosity and some drama to first meetings.',
+  'You come across as observant, modest and capable. You notice details, want to be useful, and approach new situations by quietly working out how things fit together.',
+  'You come across as gracious, agreeable and socially aware. You approach life through relationships and balance, and dislike conflict or ugliness.',
+  'You come across as intense, private and perceptive. You size people up before revealing much, and there is a depth and magnetism to your presence.',
+  'You come across as open, frank and enthusiastic. You approach life as an adventure, looking for meaning and room to roam.',
+  'You come across as composed, capable and serious, often mature for your age. You approach life with a plan and earn trust through reliability.',
+  'You come across as independent, friendly and a little unconventional. You approach life with an eye for what could be different, and value your freedom.',
+  'You come across as gentle, receptive and imaginative. You pick up on atmospheres easily, adapt to others, and need time alone to recover your own shape.'],
+ mc:['Your public path calls for leadership and initiative: you do best when you can start things, compete and move fast.',
+  'Your public path is about building something of lasting value: steady work, resources, craft or beauty that holds its worth.',
+  'Your public path runs through communication: writing, teaching, trading ideas, or handling many projects at once.',
+  'Your public path involves care: looking after people, places or traditions, and creating security for others.',
+  'Your public path seeks visibility and creative leadership: work where your personality, talent or heart is on show.',
+  'Your public path is about skill and service: analysis, health, craft, improvement and work done well.',
+  'Your public path runs through partnership: mediation, design, diplomacy, law or anything that brings people and things into balance.',
+  'Your public path goes deep: research, investigation, psychology, finance, crisis work or transformation.',
+  'Your public path is about meaning: teaching, travel, publishing, law, belief or work that broadens horizons.',
+  'Your public path is about authority and achievement: building a reputation slowly and taking on responsibility.',
+  'Your public path is about innovation and the collective: technology, causes, groups and new ideas.',
+  'Your public path is guided by intuition: healing, the arts, spiritual or charitable work, or work behind the scenes.'],
+ dsc:['You are drawn to partners who are direct, energetic and independent, and relationships work best with some spark and honest challenge.',
+  'You are drawn to partners who are steady, loyal and sensual, and relationships work best when they feel secure and unhurried.',
+  'You are drawn to partners who are lively, curious and talkative, and relationships work best with plenty of conversation and variety.',
+  'You are drawn to partners who are caring and emotionally available, and relationships work best when they feel like home.',
+  'You are drawn to partners who are warm, generous and confident, and relationships work best with affection and some romance.',
+  'You are drawn to partners who are practical, attentive and helpful, and relationships work best through everyday care and shared routines.',
+  'You are drawn to partners who are gracious, fair and companionable, and relationships work best when they are balanced and equal.',
+  'You are drawn to partners who are intense and loyal, and relationships work best when they are honest at a deep level.',
+  'You are drawn to partners who are free-spirited and broad-minded, and relationships work best with shared adventures and room to grow.',
+  'You are drawn to partners who are mature, reliable and ambitious, and relationships work best when they are built for the long term.',
+  'You are drawn to partners who are independent and unconventional, and relationships work best as friendships with space.',
+  'You are drawn to partners who are sensitive, compassionate and imaginative, and relationships work best with emotional and spiritual closeness.'],
+ ic:['Home is a base for action: you need independence in your private life, and your roots may involve a strong-willed or energetic family.',
+  'Home needs to be comfortable, stable and well furnished; security and the physical feel of where you live matter a great deal.',
+  'Home is lively and full of talk, books or comings and goings; you may move more than most or keep two bases.',
+  'Home and family are central: you need a real nest, close ties and a place where you feel emotionally safe.',
+  'Home is somewhere to express yourself and be proud of; warmth, hospitality and family pride run deep.',
+  'Home works best when it is orderly and useful; you look after the practical side of family life.',
+  'Home needs to be harmonious and beautiful; peace in your private life matters more than you may show.',
+  'Home holds deep feelings: family matters can be intense, private or transformative, and you guard your private life closely.',
+  'Home is a base for exploration; you may live far from where you started, or feel at home in many places.',
+  'Home carries responsibility: family duty, structure or early seriousness, and a wish to build something solid to stand on.',
+  'Home needs freedom and space for the unusual; your family or upbringing may have been unconventional.',
+  'Home is a refuge: a quiet, sensitive space to recover, and family ties with a strong emotional or spiritual quality.']};
+ const ROLE={asc:'Ascendant',mc:'Midheaven',dsc:'Descendant',ic:'IC'};
+ const PADJ={sun:'confidence and vitality',moon:'sensitivity and changeable moods',mercury:'quick thinking and talk',venus:'charm and grace',mars:'drive and sharpness',jupiter:'warmth, optimism and generosity',saturn:'seriousness, caution and staying power',uranus:'independence and surprise',neptune:'sensitivity, idealism and a dreamy quality',pluto:'intensity and power',chiron:'old wounds and a gift for healing',node:'a sense of direction'};
+ const AREA={asc:'your appearance and manner',mc:'your career and public image',dsc:'your partners and close relationships',ic:'your home and family life'};
+ const ADJ_H={asc:1,mc:10,dsc:7,ic:4};
+ const n3=x=>((x%360)+360)%360,sOf=l=>Math.floor(n3(l)/30),d180=(a,b)=>Math.abs(((a-b+540)%360)-180);
+ const DOMS={sun:[4],moon:[3],mercury:[2,5],venus:[1,6],mars:[0,7],jupiter:[8,11],saturn:[9,10]},EXA={sun:0,moon:1,mercury:5,venus:11,mars:9,jupiter:3,saturn:6};
+ const dig=(k,s)=>!DOMS[k]?null:DOMS[k].includes(s)?'in its own sign':EXA[k]===s?'exalted':DOMS[k].some(d=>(d+6)%12===s)?'in detriment':(EXA[k]+6)%12===s?'in fall':null;
+ const hOf=(ch,l)=>{try{return Calc.houseOf(l,ch.cusps)}catch(e){return null}};
+ const angLon=(ch,k)=>k==='asc'?ch.pts.asc.lon:k==='mc'?ch.pts.mc.lon:k==='dsc'?n3(ch.pts.asc.lon+180):n3(ch.pts.mc.lon+180);
+ const PL=['sun','moon','mercury','venus','mars','jupiter','saturn','uranus','neptune','pluto','chiron','node'];
+ const ASP=[[0,'conjunct',8,0],[180,'opposite',8,-1],[120,'trine',6,1],[90,'square',6,-1],[60,'sextile',4,1]];
+ const aspOf=(a,b)=>{const d=d180(a,b);for(const [ang,nm,orb,q] of ASP)if(Math.abs(d-ang)<=orb)return {nm,o:Math.abs(d-ang),q};return null};
+ const num=n=>['no','one','two','three','four','five','six','seven','eight'][n]||String(n);
+ const cap=s=>s.replace(/^./,c=>c.toUpperCase()),P=t=>`<p class="interp">${t}</p>`;
+ const list=a=>a.length<2?a.join(''):a.slice(0,-1).join(', ')+' and '+a.at(-1);
+ function angleReading(ch,k){if(ch.noHouses||!ch.pts.asc||!ch.pts.mc)return '';const L=angLon(ch,k),s=sOf(L),deg=n3(L)%30;let h='';
+  h+=P(`<strong>${SG[s]} on your ${ROLE[k]}.</strong> ${TXT[k][s]}`);
+  if(deg<2)h+=P(`At ${Math.floor(deg)}° the ${ROLE[k]} has only just entered ${SG[s]}, so the qualities of ${SG[(s+11)%12]} may show too, especially if the birth time is uncertain.`);
+  else if(deg>=28)h+=P(`At ${Math.floor(deg)}° ${SG[s]}, the ${ROLE[k]} is about to move into ${SG[(s+1)%12]}; a few minutes’ difference in birth time would change the sign, so ${SG[(s+1)%12]} themes may also feel familiar.`);
+  const r=RULER[s],rp=ch.pts[r];if(rp){const rh=hOf(ch,rp.lon),rs=sOf(rp.lon),dg=dig(r,rs),sees=aspOf(rp.lon,L);
+   const lead={asc:'Your chart ruler',mc:'The ruler of your career',dsc:'The ruler of your partnerships',ic:'The ruler of your home and roots'}[k];
+   h+=P(`${lead} is ${glyphHtml(r)} <strong>${PNM(r)}</strong>, in ${SG[rs]}${rh?` and your ${ord(rh)} house`:''}${dg?`, ${dg}`:''}. ${rh&&rh===ADJ_H[k]?`It sits in the very area it rules, which makes ${AREA[k]} especially self-directed.`:rh?{asc:`Much of your life’s attention is drawn toward ${HM[rh]}.`,mc:`Your ambitions are worked out through ${HM[rh]}; career often grows out of this area.`,dsc:`You tend to meet partners, and work out partnership issues, through ${HM[rh]}.`,ic:`Your sense of home and belonging is tied up with ${HM[rh]}.`}[k]:''} ${dg==='in its own sign'||dg==='exalted'?'This ruler is strong, so this area of life has solid backing.':dg==='in detriment'||dg==='in fall'?'This ruler works against the grain of its sign, so this area asks for more conscious effort and can become a hard-won strength.':''} ${sees?`It ${sees.nm==='conjunct'?'sits on':'makes a '+sees.nm+' to'} the ${ROLE[k]}, so it can look after the matters of this angle directly.`:'It makes no aspect to the angle it rules, so it acts on these matters from a distance, through other people or circumstances.'}`)}
+  const on=PL.filter(p=>ch.pts[p]).map(p=>({p,a:aspOf(ch.pts[p].lon,L)})).filter(x=>x.a&&x.a.nm==='conjunct'&&x.a.o<=6);
+  on.forEach(({p,a})=>{h+=P(`<strong>${PNM(p)} on your ${ROLE[k]}</strong> (${a.o.toFixed(1)}°): ${AREA[k]} take on ${PADJ[p]||'its qualities'}. A planet this close to an angle is one of the most prominent in the chart.`)});
+  const inH=PL.filter(p=>ch.pts[p]&&!on.some(x=>x.p===p)&&hOf(ch,ch.pts[p].lon)===ADJ_H[k]);
+  if(inH.length)h+=P(`${list(inH.map(PNM))} ${inH.length>1?'are':'is'} in your ${ord(ADJ_H[k])} house, adding ${list(inH.map(p=>PADJ[p]||PNM(p)))} to ${AREA[k]}.`);
+  const asp=PL.filter(p=>ch.pts[p]&&!on.some(x=>x.p===p)).map(p=>({p,a:aspOf(ch.pts[p].lon,L)})).filter(x=>x.a&&x.a.o<=3&&x.a.nm!=='conjunct').sort((x,y)=>x.a.o-y.a.o).slice(0,4);
+  const sup=asp.filter(x=>x.a.q>0),ch2=asp.filter(x=>x.a.q<0);
+  if(sup.length)h+=P(`<strong>Support:</strong> ${list(sup.map(x=>`${PNM(x.p)} (${x.a.nm})`))} ${sup.length>1?'bring':'brings'} ${list(sup.map(x=>PADJ[x.p]||PNM(x.p)))} easily into ${AREA[k]}.`);
+  if(ch2.length)h+=P(`<strong>Challenge:</strong> ${list(ch2.map(x=>`${PNM(x.p)} (${x.a.nm})`))} ${ch2.length>1?'put':'puts'} pressure on ${AREA[k]}, through ${list(ch2.map(x=>PADJ[x.p]||PNM(x.p)))}. This is where effort and growth are concentrated.`);
+  return h}
+ /* planets: how the houses a planet rules are linked, and its overall support */
+ function planetReading(ch,k){if(!['sun','moon','mercury','venus','mars','jupiter','saturn'].includes(k)||ch.noHouses||!ch.cusps)return '';const p=ch.pts[k];if(!p)return '';
+  const rules=[];for(let i=0;i<12;i++){if(RULER[sOf(ch.cusps[i])]===k)rules.push(i+1)}const h=hOf(ch,p.lon);let t='';
+  if(rules.length&&h){t+=P(`<strong>What it connects.</strong> ${PNM(k)} rules your ${list(rules.map(ord))} house${rules.length>1?'s':''} (${list(rules.map(r=>HM[r]))}) and sits in your ${ord(h)} (${HM[h]}). So ${rules.includes(h)?`these matters are handled right where they arise.`:`what happens in ${list(rules.map(r=>HM[r]))} is bound up with ${HM[h]}: one area of life tends to lead you into the other.`}`)}
+  const as=PL.concat(['asc','mc']).filter(o=>o!==k&&ch.pts[o]).map(o=>({o,a:aspOf(p.lon,ch.pts[o].lon)})).filter(x=>x.a&&x.a.o<=6);
+  const sup=as.filter(x=>x.a.q>0).length,hard=as.filter(x=>x.a.q<0).length,conj=as.filter(x=>x.a.q===0).map(x=>PNM(x.o));
+  if(as.length){t+=P(`<strong>How supported it is.</strong> ${PNM(k)} makes ${num(sup)} easy and ${num(hard)} challenging aspect${hard===1?'':'s'}${conj.length?`, and is joined by ${list(conj)}`:''}. ${sup>hard+1?'It is well supported: its gifts come readily and can be relied on.':hard>sup+1?'It is under pressure: its themes are where you meet the most tests, and where the most growth happens.':'It has a mix of support and challenge, so it works best with some conscious effort.'}`)}
+  else t+=P(`<strong>How supported it is.</strong> ${PNM(k)} makes no major aspects. An unaspected planet tends to act on its own, all-or-nothing, and can feel separate from the rest of your personality until you consciously bring it in.`);
+  return t}
+ const _ip=infoPoint;infoPoint=function(which,k){let h=_ip.apply(this,arguments);try{if(!h||which!=='i'||(lastView&&SYNTH_MODES.includes(lastView.mode)))return h;const ch=lastView&&lastView.inner;if(!ch)return h;
+   const add=ANG.includes(k)?angleReading(ch,k):planetReading(ch,k);if(add)h+=`<p class="il">In this chart</p>${add}`}catch(e){console.warn(e)}return h};
+})();
 
 /* ===== Full reading, part 2: glossary, timeline, options, saved readings, PDF download ===== */
 
