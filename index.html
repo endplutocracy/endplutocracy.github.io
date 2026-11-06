@@ -6456,7 +6456,7 @@ html[data-theme="paper"] .infotab,html[data-theme="pastel"] .infotab{color:var(-
 })();
 
 /* ===== Accuracy helpers: birth-time sensitivity, time-zone check, node type; site version; first-visit tips ===== */
-const DN_VER='v210';
+const DN_VER='v214';
 const btFmt=m=>m==null?'more than 4 hours':m<60?`${m} min`:`${Math.floor(m/60)} h${m%60?' '+(m%60)+' min':''}`;
 /* how far the birth time can move before the rising sign, Midheaven, Moon sign or a planet's house changes */
 const BT_MEMO=new Map();
@@ -6748,6 +6748,19 @@ html body #cmBtn .cmcar{display:none}`;document.head.append(st);
 (()=>{const st=document.createElement('style');st.textContent=`@media (max-width:600px){html body .stage:not(.fs)>.wheelwrap>#elemMini,html body .stage:not(.fs)>.wheelwrap>.wlab,html body .stage:not(.fs)>.wheelwrap>.wzoom{bottom:-26px!important}html body .stage:not(.fs)>.dial,html body .stage:not(.fs)>.dialopen{margin-top:34px!important}}`;document.head.append(st)})();
 /* mid-sized screens: lift the wheel into the open space beside the chart menu and Layers buttons */
 (()=>{const st=document.createElement('style');st.textContent=`@media (min-width:601px) and (max-width:860px){html body .stage:not(.fs):not(.hasmod)>.wheelwrap{margin-top:-44px!important}}`;document.head.append(st)})();
+/* full window: the degree bar counts as part of the top stack, and the zoom controls sit under the wheel, just above the elements and modes */
+(()=>{if(typeof fsFit!=='function')return;const $=id=>document.getElementById(id);
+ fsFit=function(){const W=$('stage');if(!W||!W.classList.contains('fs'))return;const H=W.clientHeight;let t=0;
+  for(const el of [$('chartBar'),$('relocBar'),$('xBar'),$('modBar')]){if(!el||el.hidden||!el.offsetHeight)continue;t=Math.max(t,el.offsetTop+el.offsetHeight)}
+  let d=W.querySelector('.dial');if(d&&!d.offsetHeight)d=$('dialOpen');let b=d&&d.offsetHeight?H-d.offsetTop+(d.id==='dialOpen'?6:0):0;
+  const z=W.querySelector('.wzoom'),e=$('elemMini'),eh=e&&e.offsetHeight?e.offsetHeight:30,zh=z&&z.offsetHeight?z.offsetHeight:40;
+  W.style.setProperty('--fsT0',t+'px');W.style.setProperty('--fsB0',b+'px');W.style.setProperty('--fsEH',eh+'px');
+  if(matchMedia('(max-width:860px) and (min-height:500px)').matches){b+=eh+12+zh+10}
+  W.style.setProperty('--fsT',t+'px');W.style.setProperty('--fsB',b+'px')};
+ const st=document.createElement('style');st.textContent=`
+html body .stage.fs .wzoom{top:auto!important;bottom:calc(var(--fsB0,200px) + 6px + var(--fsEH,44px) + 10px)!important}
+html body .stage.fs>.modbar{position:relative;z-index:2}`;document.head.append(st);
+ try{fsFit()}catch(e){}})();
 
 /* ===== Triwheel: choose the chart type of the third ring (transits, progressions, returns, solar arc...) ===== */
 (()=>{if(typeof computeIn!=='function')return;
@@ -6782,6 +6795,206 @@ html body #cmBtn .cmcar{display:none}`;document.head.append(st);
 #list .ttsyn{padding:4px 10px 2px}
 #list .ttrow{display:flex;flex-wrap:wrap;gap:6px}
 #list .ttrow .chipbtn.on{background:var(--accent);color:var(--on-accent,#1d1d1e)}`;document.head.append(st)})();
+
+/* ===== Positions tab: triplicity rulers (Dorothean) of the Ascendant, lights, Midheaven and Fortune ===== */
+(()=>{if(typeof sectMoonHtml!=='function')return;
+ const ELN=['Fire','Earth','Air','Water'],SG='Aries Taurus Gemini Cancer Leo Virgo Libra Scorpio Sagittarius Capricorn Aquarius Pisces'.split(' ');
+ const TRIP=[['sun','jupiter','saturn'],['venus','moon','mars'],['saturn','mercury','jupiter'],['venus','mars','moon']];
+ const gl=k=>{try{if(typeof GLYPH_SVG!=='undefined'&&GLYPH_SVG[k])return svgGlyph(k)}catch(e){}const g=(PT[k]||[k])[0];return g.length>1?`<span style="font:600 .62rem var(--mono)">${g}</span>`:g+'︎'};
+ const nm=k=>(PT[k]&&PT[k][1])||k;
+ const lord=(ch,k)=>{const p=ch.pts[k];if(!p)return '';const s=Math.floor(n360(p.lon)/30);
+  return `<span class="trl clk" data-obj="pt:i:${k}" title="${nm(k)} in ${SG[s]}"><span class="trg">${gl(k)}</span>${nm(k)}<small>${SG[s]}</small></span>`};
+ function tripHtml(ch){if(!ch||!ch.pts||!ch.pts.sun||ch.noHouses===undefined&&!ch.pts.sun)return '';
+  const hasH=!ch.noHouses&&ch.pts.asc,day=!!ch.day,sectLight=day?'sun':'moon';
+  const keys=[...(hasH?['asc']:[]),'sun','moon',...(hasH&&ch.pts.mc?['mc']:[]),...(hasH&&ch.pts.fortune?['fortune']:[])];
+  const rows=keys.map(k=>{const p=ch.pts[k];if(!p)return '';const s=Math.floor(n360(p.lon)/30),e=s%4,[d,n,pa]=TRIP[e],ins=hasH?(day?d:n):d,out=hasH?(day?n:d):n;
+   return `<tr><td class="trp"><span class="clk" data-obj="pt:i:${k}">${nm(k)}</span>${k===sectLight&&hasH?'<small class="trsl">Sect light</small>':''}<small>${SG[s]} · ${ELN[e]}</small></td><td>${lord(ch,ins)}</td><td>${lord(ch,out)}</td><td>${lord(ch,pa)}</td></tr>`}).join('');
+  const note=hasH?`In a ${day?'day':'night'} chart the ${day?'day':'night'} ruler leads, the other ruler follows, and the participating ruler supports both. The sect light’s rulers describe the overall course of life; the Ascendant’s describe health and character.`:'Birth time unknown, so sect is uncertain: the day ruler is listed first.';
+  return `<h3 class="sub">Triplicity Rulers</h3><div class="trw"><table class="trip"><thead><tr><th></th><th>${hasH?'In sect':'Day'}</th><th>${hasH?'Out of sect':'Night'}</th><th>Participating</th></tr></thead><tbody>${rows}</tbody></table></div><p class="note trnote">${note}</p>`}
+ window.dnTripHtml=tripHtml;
+ const _sm=sectMoonHtml;sectMoonHtml=function(ch){let h=_sm.apply(this,arguments)||'';try{if(h&&!(lastView&&lastView.mode==='composite'))h+=tripHtml(ch)}catch(e){console.warn(e)}return h};
+ const st=document.createElement('style');st.textContent=`
+.trw{overflow-x:auto;margin:2px 0 4px}
+table.trip{width:100%;border-collapse:collapse;font-size:.86rem}
+table.trip th{font:600 .74rem var(--ui);color:var(--muted);text-align:left;padding:4px 6px 6px;white-space:nowrap}
+table.trip td{padding:7px 6px;border-top:1px solid var(--line);vertical-align:top}
+table.trip td small{display:block;color:var(--muted);font-size:.72rem;margin-top:1px}
+table.trip .trp>.clk{font-weight:600}
+table.trip .trsl{color:var(--accent)!important}
+table.trip .trl{display:inline-grid;grid-template-columns:auto 1fr;column-gap:6px;align-items:center;cursor:pointer}
+table.trip .trl small{grid-column:2}
+table.trip .trg{grid-row:span 2;font-size:1.05rem;color:var(--lilac,var(--accent));line-height:1}
+table.trip .trg svg{width:1em;height:1em}
+.trnote{margin-top:6px}
+@media (max-width:420px){table.trip{font-size:.8rem}table.trip td{padding:6px 4px}table.trip th{padding:4px 4px 6px;white-space:normal}table.trip .trl{column-gap:4px}}`;document.head.append(st)})();
+
+/* ===== Positions tab: every section heading opens an explanation plus a reading of that section for this chart ===== */
+(()=>{if(typeof infoFor!=='function')return;
+ const SG='Aries Taurus Gemini Cancer Leo Virgo Libra Scorpio Sagittarius Capricorn Aquarius Pisces'.split(' ');
+ const EL=['Fire','Earth','Air','Water'],MO=['Cardinal','Fixed','Mutable'];
+ const NM=k=>(PT[k]&&PT[k][1])||k;
+ const G=k=>{try{return glyphHtml(k)}catch(e){return ''}};
+ const n3=x=>((x%360)+360)%360,sOf=l=>Math.floor(n3(l)/30);
+ const DOM={sun:[4],moon:[3],mercury:[2,5],venus:[1,6],mars:[0,7],jupiter:[8,11],saturn:[9,10]};
+ const EXA={sun:0,moon:1,mercury:5,venus:11,mars:9,jupiter:3,saturn:6};
+ const CLASSIC=['sun','moon','mercury','venus','mars','jupiter','saturn'];
+ const dig=(k,s)=>{if(!DOM[k])return null;if(DOM[k].includes(s))return 'domicile';if(EXA[k]===s)return 'exaltation';if(DOM[k].some(d=>(d+6)%12===s))return 'detriment';if((EXA[k]+6)%12===s)return 'fall';return null};
+ const PK={sun:'identity, vitality and purpose',moon:'feelings, the body and daily needs',mercury:'the mind, speech and skill',venus:'love, pleasure and harmony',mars:'drive, courage and conflict',jupiter:'growth, faith and good fortune',saturn:'structure, duty and limits',uranus:'change, freedom and originality',neptune:'imagination, ideals and sensitivity',pluto:'power, depth and transformation',chiron:'old wounds and the healing that comes from them',ceres:'nurture, food and caring for others',pallas:'strategy, wisdom and pattern-seeing',juno:'commitment and partnership',vesta:'devotion and focus',node:'direction and growth',asc:'the body and how you meet the world',mc:'career and public standing',fortune:'material fortune and the body’s circumstances'};
+ const HM=['','self, body and outlook','money, possessions and resources','siblings, neighbours, study and everyday communication','home, family, roots and private life','creativity, pleasure, romance and children','work, routines, health and service','partners, marriage and open opponents','shared resources, debts, intimacy and inheritance','travel, higher learning, belief and publishing','career, reputation and public role','friends, groups, hopes and benefactors','solitude, retreat, hidden matters and the unseen'];
+ const ord=n=>{const v=n%100;return n+((v>=11&&v<=13)?'th':(['th','st','nd','rd'][n%10]||'th'))};
+ const ang=h=>[1,4,7,10].includes(h)?'angular':[2,5,8,11].includes(h)?'succedent':'cadent';
+ const ch0=()=>lastView&&lastView.inner;
+ const hasH=ch=>!ch.noHouses&&ch.pts.asc&&ch.cusps;
+ const hOf=(ch,l)=>{try{return Calc.houseOf(l,ch.cusps)}catch(e){return null}};
+ const where=(ch,k)=>{const p=ch.pts[k];if(!p)return '';const s=sOf(p.lon),h=hasH(ch)?hOf(ch,p.lon):null;return `${SG[s]}${h?`, ${ord(h)} house`:''}`};
+ // a simple traditional condition score: dignity + angularity
+ function cond(ch,k){const p=ch.pts[k];if(!p)return {sc:0,txt:''};const s=sOf(p.lon),d=dig(k,s),h=hasH(ch)?hOf(ch,p.lon):null;let sc=0;const bits=[];
+  if(d==='domicile'){sc+=2;bits.push(`at home in ${SG[s]}`)}else if(d==='exaltation'){sc+=2;bits.push(`exalted in ${SG[s]}`)}else if(d==='detriment'){sc-=2;bits.push(`in detriment in ${SG[s]}`)}else if(d==='fall'){sc-=2;bits.push(`in fall in ${SG[s]}`)}else bits.push(`in ${SG[s]}`);
+  if(h){const a=ang(h);sc+=a==='angular'?2:a==='succedent'?1:-1;bits.push(`${a} in the ${ord(h)} house`)}
+  if(p.speed<0&&!['sun','moon'].includes(k)){sc-=1;bits.push('retrograde')}
+  return {sc,txt:bits.join(', ')}}
+ const P=t=>`<p class="interp">${t}</p>`,L=t=>`<p class="il">${t}</p>`;
+ const box=(kick,title,what,mine)=>`<p class="kicker">${kick}</p><h4>${title}</h4>${L('What this is')}${what}${L('In this chart')}${mine}`;
+ // read numbers from the section as drawn, so the reading always matches what is on screen
+ const secEls=key=>{const h=document.querySelector(`#pane h3.sub[data-obj="sec:${key}"]`);const out=[];let e=h&&h.nextElementSibling;while(e&&!e.matches('h3.sub')){out.push(e);e=e.nextElementSibling}return out};
+ const secText=key=>secEls(key).map(e=>e.innerText).join('\n');
+ const pcts=(txt,names)=>names.map(n=>{const m=txt.match(new RegExp(n+'\\s+(\\d+)%'));return [n,m?+m[1]:0]});
+
+ const T={};
+ T.sectmoon=()=>{const ch=ch0();if(!ch||!ch.pts.sun||!ch.pts.moon)return null;const day=!!ch.day,H=hasH(ch);
+  const E=n3(ch.pts.moon.lon-ch.pts.sun.lon),i=Math.floor(((E+22.5)%360)/45),ill=Math.round((1-Math.cos(E*Math.PI/180))/2*100);
+  const PH=[['New Moon','You were born as a new lunar cycle began. Instinct runs ahead of reflection: you tend to start things on feeling and find out what they mean as you go.'],
+   ['Waxing Crescent','The cycle had just begun to grow. There is a push to break free of the past and establish something of your own, often against some resistance.'],
+   ['First Quarter','The Moon stood at a right angle to the Sun, a phase of action and decision. You tend to meet obstacles head on and build by overcoming them.'],
+   ['Waxing Gibbous','The light was nearly full. You refine, analyse and improve, wanting to perfect things before they are shown to the world.'],
+   ['Full Moon','The Moon stood opposite the Sun. Relationships and awareness of others are central: you see situations in full, and balancing your own needs with other people’s is a lifelong theme.'],
+   ['Waning Gibbous','The light had begun to fade after the peak. You are drawn to share what you have learned: teaching, explaining and passing knowledge on.'],
+   ['Last Quarter','The Moon was half lit and waning, a turning point. You tend to question old forms and beliefs, letting go of what no longer fits and reorienting toward something new.'],
+   ['Waning Crescent','The cycle was closing. There is a reflective, sometimes visionary quality: completing things, releasing the past and preparing the ground for what comes next.']][i];
+  const light=day?'sun':'moon',ben=day?'jupiter':'venus',mal=day?'saturn':'mars';
+  const what=P(`<strong>Sect</strong> sorts a chart into day or night by whether the Sun was above or below the horizon at birth. It decides which light leads the chart (the Sun by day, the Moon by night), which benefic helps most and which malefic is easier to handle.`)+P(`The <strong>Moon’s phase</strong> is the angle between the Sun and Moon. It describes the stage of a cycle you were born into and colours how you approach beginnings, growth and endings.`);
+  let mine='';
+  if(!H)mine+=P('The birth time is unknown, so whether the Sun was above the horizon cannot be confirmed.');
+  else{const cs=cond(ch,light),cb=cond(ch,ben),cm=cond(ch,mal);
+   mine+=P(`This is a <strong>${day?'day':'night'} chart</strong>${hOf(ch,ch.pts.sun.lon)?`, with the Sun in the ${ord(hOf(ch,ch.pts.sun.lon))} house`:''}. ${day?'The Sun leads: purpose, visibility and a clear direction are what keep you steady.':'The Moon leads: emotional security, instinct and a sense of belonging are what keep you steady, and life is often worked out more privately than publicly.'}`);
+   mine+=P(`Your sect light, ${G(light)} <strong>${NM(light)}</strong>, is ${cs.txt}. ${cs.sc>=2?'It is well placed, so the chart has a strong central support.':cs.sc<=-1?'It is not especially strong, so finding the conditions that suit it matters more than usual.':'It is moderately placed: dependable, if not dramatic.'}`);
+   mine+=P(`The benefic of sect, ${G(ben)} <strong>${NM(ben)}</strong>, is ${cb.txt}: this is where help most reliably comes from (${PK[ben]}). The malefic of sect, ${G(mal)} <strong>${NM(mal)}</strong>, is ${cm.txt}: its challenges are real but tend to be constructive, building ${mal==='saturn'?'patience and structure':'courage and drive'}.`)}
+  mine+=P(`The Moon is ${ill}% lit in the <strong>${PH[0]}</strong> phase. ${PH[1]}`);
+  return box('Positions','Sect & Moon',what,mine)};
+
+ T.trip=()=>{const ch=ch0();if(!ch||!ch.pts.sun)return null;const H=hasH(ch),day=!!ch.day;
+  const TR=[['sun','jupiter','saturn'],['venus','moon','mars'],['saturn','mercury','jupiter'],['venus','mars','moon']];
+  const what=P(`Each element has three <strong>triplicity rulers</strong>: one for day charts, one for night charts and a participating ruler that helps in both (the Dorothean scheme used here). Hellenistic astrologers read the triplicity rulers of the sect light as an outline of the whole life: the ruler of the chart’s own sect describes the first part of life, the other the later part, and the participating ruler describes support that runs throughout.`)+P(`The rulers of the Ascendant’s element describe the body, health and character in the same way. A ruler that is dignified and angular delivers more; one that is cadent, retrograde or in detriment or fall delivers less, or with more effort.`);
+  const light=H?(day?'sun':'moon'):'sun',ls=sOf(ch.pts[light].lon),[d,n,pa]=TR[ls%4],first=H?(day?d:n):d,second=H?(day?n:d):n;
+  const say=(k,role)=>{const c=cond(ch,k),area=role.startsWith('support')?'this support':'this part of life';const tone=c.sc>=3?'This is a strong ruler, so this part of life has solid backing.':c.sc>=1?'This ruler is reasonably placed: support is there, if not effortless.':c.sc>=-1?`This ruler is middling, so ${area} depends a good deal on effort and timing.`:'This ruler is weakly placed, so '+area+' can ask for more patience; it improves when its themes ('+(PK[k]||'')+') are worked with consciously.';
+   return `<li>${G(k)} <strong>${NM(k)}</strong> · ${role} <span class="muted">(${c.txt})</span><br><span class="muted">${tone}</span></li>`};
+  let mine=P(`Your sect light, ${G(light)} ${NM(light)}, is in ${SG[ls]}, ${ls%4===2?'an':'a'} ${EL[ls%4].toLowerCase()} sign.`)+`<ul class="ilist">${say(first,'first part of life')}${say(second,'later part of life')}${say(pa,'support throughout')}</ul>`;
+  if(H){const as=sOf(ch.pts.asc.lon),[ad,an,ap]=TR[as%4],a1=day?ad:an;const c=cond(ch,a1);
+   mine+=P(`The Ascendant is in ${SG[as]}, so ${G(a1)} <strong>${NM(a1)}</strong> leads for body and character (${c.txt}). ${c.sc>=2?'Your constitution and outlook have good underlying support.':c.sc<=-1?'Looking after the body and pacing yourself pays off more than average.':'Health and character are steady when routines are kept.'}`)}
+  if(!H)mine+=P('The birth time is unknown, so the day ruler is assumed to lead.');
+  return box('Positions','Triplicity Rulers',what,mine)};
+
+ const ELT={Fire:['enthusiasm, courage and the urge to act','You are driven by inspiration and initiative. You start things readily, warm others with your energy, and need room to act on your convictions.','Motivation and confidence may need deliberate kindling. Find activities that genuinely excite you, and don’t wait to feel ready before starting.'],
+  Earth:['practicality, patience and the physical world','You are grounded and practical. You trust what is tangible, build steadily, and value results, skill and reliability.','Practical follow-through and attention to the body can slip. Simple routines, budgets and physical habits give your ideas somewhere to land.'],
+  Air:['thought, communication and connection','You live through ideas and conversation. You see patterns, make connections between people and concepts, and need mental stimulation.','Stepping back to see things objectively may not come naturally. Writing things down and talking them through helps you gain perspective.'],
+  Water:['feeling, empathy and intuition','You are emotionally perceptive and intuitive. You read moods, bond deeply and are guided by what feels right.','Feelings may be understated or hard to name. Give emotions time and space, and pay attention to what your body tells you.']};
+ T.elements=()=>{const t=secText('elements')||secText('modes');const ps=pcts(t,EL);if(!ps.some(x=>x[1]))return null;const s=ps.slice().sort((a,b)=>b[1]-a[1]),hi=s[0],lo=s.filter(x=>x[1]===s[3][1]);
+  const what=P(`The four <strong>elements</strong> group the signs by temperament: fire (Aries, Leo, Sagittarius), earth (Taurus, Virgo, Capricorn), air (Gemini, Libra, Aquarius) and water (Cancer, Scorpio, Pisces). The balance counts where your planets and angles fall, weighting the lights and Ascendant more heavily, to show which temperament you lead with and which you have to develop.`);
+  let mine=P(`Your balance: ${ps.map(([n,v])=>`${n} ${v}%`).join(', ')}.`)+P(`<strong>Strongest: ${hi[0]}</strong> (${ELT[hi[0]][0]}). ${ELT[hi[0]][1]}`);
+  if(hi[1]-s[1][1]<=4)mine+=P(`${s[1][0]} is almost as strong, so you blend ${ELT[hi[0]][0].split(',')[0]} with ${ELT[s[1][0]][0].split(',')[0]}.`);
+  lo.forEach(([n,v])=>{mine+=P(`<strong>${v<=12?'Missing or low':'Weakest'}: ${n}</strong>. ${ELT[n][2]}`)});
+  return box('Positions','Elements',what,mine)};
+ const MOT={Cardinal:['initiating','You are a starter: you see what needs to happen and set it in motion. You are at your best leading, launching and responding to new situations.','Starting things may take a push. Set small, concrete beginnings rather than waiting for the perfect moment.'],
+  Fixed:['sustaining','You persevere. You hold steady, build over time and finish what you begin, though changing course can be hard.','Staying with one path can be difficult. Commitments you choose deliberately, and track, help you see things through.'],
+  Mutable:['adapting','You are flexible and responsive. You adjust, learn quickly and handle many things at once, though focus can scatter.','Adapting to change may not come easily. Building in slack and trying things on a small scale first makes change less daunting.']};
+ T.modes=()=>{const t=secText('modes')||secText('elements');const ps=pcts(t,MO);if(!ps.some(x=>x[1]))return null;const s=ps.slice().sort((a,b)=>b[1]-a[1]),hi=s[0],lo=s[2];
+  const what=P(`The three <strong>modes</strong> (or modalities) group the signs by how they act. Cardinal signs (Aries, Cancer, Libra, Capricorn) begin seasons and initiate. Fixed signs (Taurus, Leo, Scorpio, Aquarius) hold the middle of a season and sustain. Mutable signs (Gemini, Virgo, Sagittarius, Pisces) end seasons and adapt.`);
+  const mine=P(`Your balance: ${ps.map(([n,v])=>`${n} ${v}%`).join(', ')}.`)+P(`<strong>Dominant: ${hi[0]}</strong> (${MOT[hi[0]][0]}). ${MOT[hi[0]][1]}`)+P(`<strong>Weakest: ${lo[0]}</strong>. ${MOT[lo[0]][2]}`);
+  return box('Positions','Modes',what,mine)};
+
+ T.positions=()=>{const ch=ch0();if(!ch||!ch.pts.sun)return null;const H=hasH(ch);
+  const what=P(`This table lists every point in the chart: its zodiac <strong>position</strong> (degree and sign), the <strong>house</strong> it falls in, its <strong>daily motion</strong> (negative means retrograde), an overall <strong>strength</strong> score, any <strong>dignity</strong> (domicile, exaltation, detriment or fall), and the decan, term and nakshatra it occupies. Together they show what each planet is about, where in life it acts and how freely it can act.`);
+  let mine='';
+  if(H){const r=RULER[sOf(ch.pts.asc.lon)],c=cond(ch,r),h=hOf(ch,ch.pts[r].lon);
+   mine+=P(`<strong>Chart ruler:</strong> the Ascendant is in ${SG[sOf(ch.pts.asc.lon)]}, so ${G(r)} <strong>${NM(r)}</strong> rules the chart. It is ${c.txt}, which points your life’s attention toward ${HM[h]||'its house'}.`);
+   const angP=CLASSIC.concat(['uranus','neptune','pluto','chiron','node']).filter(k=>ch.pts[k]&&[1,4,7,10].includes(hOf(ch,ch.pts[k].lon)));
+   if(angP.length)mine+=P(`<strong>Angular planets</strong> (1st, 4th, 7th and 10th houses) act most visibly: ${angP.map(k=>`${G(k)} ${NM(k)} (${ord(hOf(ch,ch.pts[k].lon))})`).join(', ')}.`);
+   const hc={};CLASSIC.concat(['uranus','neptune','pluto']).forEach(k=>{if(ch.pts[k]){const h=hOf(ch,ch.pts[k].lon);(hc[h]=hc[h]||[]).push(k)}});
+   Object.entries(hc).filter(([h,a])=>a.length>=3).forEach(([h,a])=>{mine+=P(`<strong>Emphasis on the ${ord(+h)} house</strong>: ${a.map(NM).join(', ')} gather here, so ${HM[+h]} is a major arena of your life.`)})}
+  const sc={};CLASSIC.concat(['uranus','neptune','pluto']).forEach(k=>{if(ch.pts[k]){const s=sOf(ch.pts[k].lon);(sc[s]=sc[s]||[]).push(k)}});
+  Object.entries(sc).filter(([s,a])=>a.length>=3).forEach(([s,a])=>{mine+=P(`<strong>Stellium in ${SG[+s]}</strong>: ${a.map(NM).join(', ')} share this sign, so its qualities colour much of your character.`)});
+  const rx=CLASSIC.concat(['uranus','neptune','pluto']).filter(k=>ch.pts[k]&&ch.pts[k].speed<0);
+  if(rx.length)mine+=P(`<strong>Retrograde:</strong> ${rx.map(NM).join(', ')}. Retrograde planets tend to work inwardly first: their themes are reconsidered, revisited and personalised before they show outwardly.`);
+  const strong=CLASSIC.filter(k=>ch.pts[k]&&['domicile','exaltation'].includes(dig(k,sOf(ch.pts[k].lon)))),weak=CLASSIC.filter(k=>ch.pts[k]&&['detriment','fall'].includes(dig(k,sOf(ch.pts[k].lon))));
+  if(strong.length)mine+=P(`<strong>Dignified:</strong> ${strong.map(k=>`${NM(k)} (${dig(k,sOf(ch.pts[k].lon))})`).join(', ')}. These planets express themselves cleanly and are dependable resources.`);
+  if(weak.length)mine+=P(`<strong>Debilitated:</strong> ${weak.map(k=>`${NM(k)} (${dig(k,sOf(ch.pts[k].lon))})`).join(', ')}. These work less naturally in their signs; their themes take more conscious effort but often become areas of hard-won skill.`);
+  return box('Positions','The Planets',what,mine||P('Nothing unusual stands out in the placements.'))};
+
+ T.houses=()=>{const ch=ch0();if(!ch||!hasH(ch))return null;
+  const what=P(`The twelve <strong>houses</strong> divide the sky at the moment of birth into areas of life, starting from the Ascendant. Each cusp (beginning) falls in a sign, which colours how you approach that area, and the ruler of that sign shows where its affairs are carried out. Different house systems divide the sky differently; this list uses the system chosen in settings.`);
+  const a=sOf(ch.pts.asc.lon),m=ch.pts.mc?sOf(ch.pts.mc.lon):null;
+  const ASCT=['direct, energetic and quick to act','steady, sensual and calm','curious, talkative and adaptable','protective, sensitive and caring','warm, confident and expressive','observant, modest and precise','gracious, diplomatic and fair-minded','intense, private and perceptive','open, candid and adventurous','reserved, capable and serious','independent, friendly and unconventional','gentle, receptive and imaginative'];
+  const MCT=['leadership and initiative','building lasting value','communication and variety','caring for others','visibility and creative leadership','service, skill and analysis','partnership, design or mediation','research, depth and transformation','teaching, travel or belief','authority and long-term achievement','innovation and working with groups','healing, art or spiritual work'];
+  let mine=P(`<strong>Ascendant in ${SG[a]}</strong>: you come across as ${ASCT[a]}.`);
+  if(m!=null)mine+=P(`<strong>Midheaven in ${SG[m]}</strong>: public life and career are drawn toward ${MCT[m]}.`);
+  const cs=new Set((ch.cusps||[]).map(c=>sOf(c)));const inter=SG.map((s,i)=>i).filter(i=>!cs.has(i));
+  if(inter.length)mine+=P(`<strong>Intercepted signs:</strong> ${inter.map(i=>SG[i]).join(' and ')} sit inside houses without touching any cusp. Their qualities can be slower to come out and are often developed later in life.`);
+  const cnt=Array(13).fill(0);CLASSIC.concat(['uranus','neptune','pluto']).forEach(k=>{if(ch.pts[k])cnt[hOf(ch,ch.pts[k].lon)]++});
+  const busy=cnt.map((c,i)=>[i,c]).filter(x=>x[0]&&x[1]>=2).sort((x,y)=>y[1]-x[1]).slice(0,3);
+  if(busy.length)mine+=P(`<strong>Busiest houses:</strong> ${busy.map(([h,c])=>`the ${ord(h)} (${c} planets: ${HM[h]})`).join('; ')}.`);
+  const empt=[1,4,7,10].filter(h=>!cnt[h]);if(empt.length)mine+=P(`Empty houses are not empty of life: they are run by the ruler of the sign on their cusp. For example, your ${ord(empt[0])} house is ruled by ${NM(RULER[sOf(ch.cusps[empt[0]-1])])}, in ${where(ch,RULER[sOf(ch.cusps[empt[0]-1])])}.`);
+  return box('Positions','House Cusps',what,mine)};
+
+ const STAR={Regulus:'leadership and honour, kept by acting with integrity',Spica:'talent, gifts and protection',Aldebaran:'integrity, courage and success through honesty',Antares:'intensity and courage; all-or-nothing passions',Fomalhaut:'idealism and vision, best kept pure',Sirius:'brilliance and distinction',Arcturus:'pathfinding: a new or different way of doing things',Vega:'charisma, artistry and magnetism',Algol:'raw intensity and strong passions to master',Alcyone:'vision and insight, sometimes with sorrow',Betelgeuse:'success and recognition that comes readily',Rigel:'teaching, learning and skill',Capella:'curiosity and independence',Procyon:'quick rises that need steadying',Pollux:'sharp, competitive intelligence',Castor:'writing, storytelling and wit',Polaris:'a sense of direction; being a guide for others',Markab:'ambition and a drive to reach higher ground',Scheat:'free thinking; a need for care with risk',Denebola:'independent views, going against the grain',Rasalhague:'healing, restoration and knowledge of remedies',Alhena:'a mission or cause to carry forward',Aculeus:'sharp perception; keeping clear of pettiness',Shaula:'a sting: decisive action and sharp words',Achernar:'faith and endings that lead to new beginnings',Canopus:'navigation and guidance',Vindemiatrix:'gathering and harvest; calm under loss',Alphecca:'recognition and a crowning gift',Altair:'boldness and confidence',Deneb:'idealism and talent',Hamal:'independence and drive',Mirach:'receptiveness and beauty',Facies:'focus and precision',Acrux:'mysticism and ceremony',Zosma:'empathy for those who suffer',Algorab:'skill with words and persuasion',Sadalsuud:'luck and good fortune',Sadalmelik:'fortune that comes from persistence',Unukalhai:'resilience in tough situations',Bellatrix:'quick success and leadership',Menkar:'collective concerns and public causes',Mirfak:'strength and resolve',Thuban:'stewardship of what is valued',Dubhe:'leadership in learning',Zavijava:'careful observation',Murzims:'having something important to say',Wasat:'strong opinions and expression',Praesepe:'gatherings and community',Acubens:'protective instincts'};
+ const rowsOf=key=>{const out=[];secEls(key).forEach(e=>e.querySelectorAll('tr').forEach(r=>{const c=[...r.querySelectorAll('td')].map(td=>td.innerText.replace(/\s+/g,' ').trim());if(c.length)out.push(c)}));return out};
+ T.stars=()=>{const R=rowsOf('stars');
+  const what=P(`<strong>Fixed stars</strong> are the bright stars that stay in the same place relative to each other. A planet or angle within about a degree of a major star takes on that star’s character. Contacts with the Ascendant, Midheaven and lights are the most noticeable; brighter stars (lower magnitude numbers) are stronger.`);
+  if(!R.length)return box('Positions','Fixed Star Conjunctions',what,P('No major stars are close enough to your planets or angles to count as conjunctions.'));
+  const items=R.slice(0,6).map(c=>{const star=c[0].replace(/^✦\s*/,''),w=c[2],orb=c[3];return `<li><strong>${star}</strong> with ${w} <span class="muted">(${orb})</span><br><span class="muted">${STAR[star]?STAR[star][0].toUpperCase()+STAR[star].slice(1)+'.':'A less widely interpreted star.'} Through ${w}: ${PK[w.toLowerCase().replace(/^(the )?/,'').replace('ascendant','asc').replace('midheaven','mc').replace('lot of fortune','fortune').split(' ')[0]]||'this point'}.</span></li>`}).join('');
+  return box('Positions','Fixed Star Conjunctions',what,`<ul class="ilist">${items}</ul>`)};
+ T.decl=()=>{const R=rowsOf('decl');const oob=R.filter(c=>/out of bounds/i.test(c.join(' '))).map(c=>c[0].replace(/^\S+\s/,''));
+  const par=[];secEls('decl').forEach(e=>e.querySelectorAll('tr[data-obj^="x:par:"]').forEach(r=>{const [, ,a,b]=r.dataset.obj.split(':');const nmx=k=>k==='asc'?'Ascendant':k==='mc'?'Midheaven':NM(k);par.push(`${nmx(a)} ${/contra/i.test(r.innerText)?'contraparallel':'parallel'} ${nmx(b)} (${(r.innerText.match(/[\d.]+°/)||[''])[0]})`)}));par.splice(4);
+  const what=P(`<strong>Declination</strong> measures how far north or south of the celestial equator a planet is. Two planets at the same declination are <strong>parallel</strong> (working like a conjunction); at the same declination on opposite sides they are <strong>contraparallel</strong> (like an opposition). A planet beyond the Sun’s furthest reach (about 23°27′) is <strong>out of bounds</strong>: it works outside the usual rules, with unusual independence, originality or excess.`);
+  let mine='';
+  if(oob.length)mine+=P(`<strong>Out of bounds:</strong> ${oob.join(', ')}. ${oob.some(x=>/Moon/.test(x))?'An out-of-bounds Moon gives feelings and instincts an unconventional, intense or self-made quality; emotional needs may not fit the usual templates, and you often find your own way of meeting them.':'This planet acts in an unconventional, self-directed way, outside the normal rules.'}`);
+  else mine+=P('No planets are out of bounds, so every planet works within the usual range.');
+  if(par.length)mine+=P(`<strong>Closest parallels:</strong> ${par.join('; ')}. These act as hidden conjunctions or oppositions that strengthen the link between the planets involved.`);
+  return box('Positions','Declinations',what,mine)};
+ T.antiscia=()=>{const R=rowsOf('antiscia').filter(c=>/mirrors/i.test(c.join(' ')));
+  const what=P(`<strong>Antiscia</strong> are mirror points across the Cancer–Capricorn axis, the solstices. Two planets the same distance from a solstice “see” each other as if conjunct, even when no ordinary aspect links them. <strong>Contra-antiscia</strong> mirror across the Aries–Libra axis and work more like an opposition: a link with some tension.`);
+  const mine=R.length?`<ul class="ilist">${R.slice(0,5).map(c=>`<li>${c.join(' ')}<br><span class="muted">${/contra/i.test(c.join(' '))?'A hidden opposition: these themes pull against each other in the background and need balancing.':'A hidden conjunction: these themes blend and support each other more than the ordinary aspects suggest.'}</span></li>`).join('')}</ul>`:P('No close antiscia contacts.');
+  return box('Positions','Antiscia',what,mine)};
+ T.prenatal=()=>{const R=rowsOf('prenatal'),t=secText('prenatal');
+  const what=P(`The <strong>prenatal lunation</strong> is the last New or Full Moon before birth, and the <strong>prenatal eclipses</strong> are the last solar and lunar eclipses. They are read as the background “seed” of the chart: the sign and degree they fall on, and any planet they touch, describe themes you were born into.`);
+  const full=/Full Moon/i.test(t),on=(t.match(/\bon\s+(Sun|Moon|Mercury|Venus|Mars|Jupiter|Saturn|Uranus|Neptune|Pluto|Chiron|Ascendant|Midheaven)\b/)||[])[1];
+  let mine=P(`You were born after a <strong>${full?'Full':'New'} Moon</strong>. ${full?'A Full Moon birth emphasises awareness, relationship and seeing both sides; fulfilment comes through balancing your own aims with other people’s.':'A New Moon birth emphasises instinct, initiative and new starts; you tend to act first and understand later.'}${on?` It fell on your ${on}, so ${PK[on.toLowerCase()]||'that planet’s themes'} are a lifelong focus.`:''}`);
+  R.filter(c=>/eclipse/i.test(c[0])).forEach(c=>{const sg=SG.find(s=>c.join(' ').includes(s))||'';mine+=P(`<strong>${c[0]}:</strong> ${c.slice(1).join(' ')}.`)});
+  return box('Positions','Prenatal Lunation & Eclipses',what,mine)};
+ T.disp=()=>{const t=secText('disp'),note=((t.match(/(No planet[^\n]*|[A-Z][a-z]+ is the final dispositor[^\n]*|Final dispositor[^\n]*)/)||[])[0]||'').split(/\s*Receptions?:/)[0],rec=(t.match(/Receptions?:([^\n]*)/)||[])[1];
+  const what=P(`Every planet is “hosted” by the ruler of the sign it sits in, its <strong>dispositor</strong>. Following each chain of rulers shows which planets the chart ultimately depends on. A <strong>final dispositor</strong> (a planet in its own sign at the end of every chain) acts as the chart’s centre of gravity. A <strong>reception</strong> is when two planets sit in each other’s signs, so they cooperate and can stand in for each other.`);
+  let mine=note?P(note.replace(/\.$/,'')+'.'):'';
+  if(/loop/i.test(t)){const lp=[...new Set([...(t.matchAll(/→\s*(\S+)\s*→\s*(\S+)\s*\(loop\)/g))].map(m=>m[1]+m[2]))];mine+=P('Where chains end in a loop, two planets pass authority back and forth and jointly run the chart. Those planets are the ones to watch: strengthening them strengthens everything that depends on them.')}
+  if(rec)mine+=P(`<strong>Receptions:</strong> ${rec.trim()} These planets support each other and can swap roles when one is under pressure.`);
+  return box('Positions','Dispositors & Receptions',what,mine||P('No clear chains or receptions.'))};
+ T.lords=()=>{const t=secText('lords'),alm=(t.match(/Almuten[^:]*:\s*([A-Z][a-z]+)/i)||[])[1],hy=(t.match(/Hyleg:\s*([^·\n]+)/i)||[])[1];
+  const what=P(`The <strong>lords of the nativity</strong> are traditional measures of which planets govern the whole chart. The <strong>almuten figuris</strong> is the planet with the most dignity over the chart’s key points (the lights, Ascendant, Lot of Fortune and prenatal lunation), and is read as the ruler of the whole nativity. The <strong>hyleg</strong> is the point taken to carry the vitality of the chart; its ruler is called the alcocoden.`);
+  let mine='';
+  if(alm){const k=alm.toLowerCase();mine+=P(`<strong>${G(k)} ${alm}</strong> is the almuten of your chart${ch0()&&ch0().pts[k]?`, in ${where(ch0(),k)}`:''}. Its themes, ${PK[k]||'its own'}, run through the whole life, and how it is placed and timed matters more than for most planets.`)}
+  if(hy)mine+=P(`The hyleg is the <strong>${hy.trim()}</strong>. In traditional technique it marks where the chart’s vitality is concentrated, so periods that activate it tend to be felt physically and are worth meeting with good rest and care.`);
+  return box('Positions','Lords of the Nativity',what,mine||P('The lords could not be determined for this chart.'))};
+
+ const KEYS=[['sectmoon',/^sect\b/i],['trip',/^triplicity/i],['elements',/^elements$/i],['modes',/^modes$/i],['houses',/^house cusps/i],['stars',/^fixed star/i],['decl',/^declinations/i],['antiscia',/^antiscia/i],['prenatal',/^prenatal/i],['disp',/^dispositors/i],['lords',/^lords of the nativity/i]];
+ function tag(){const pane=document.getElementById('pane');if(!pane)return;pane.querySelectorAll('h3.sub:not([data-obj])').forEach(h=>{const tx=h.textContent.trim();let key=(KEYS.find(([k,re])=>re.test(tx))||[])[0];
+   if(!key){const n=h.nextElementSibling;if(n&&n.matches('.tblwrap')&&/Point\s*Position\s*House/i.test(n.innerText.slice(0,80)))key='positions'}
+   if(!key||!(lastView&&lastView.inner))return;h.dataset.obj='sec:'+key;h.classList.add('clk','sechd');h.title='What this is, and what it means for this chart';h.tabIndex=0;h.setAttribute('role','button')})}
+ const _if=infoFor;infoFor=function(obj){if(typeof obj==='string'&&obj.startsWith('sec:')){const f=T[obj.slice(4)];try{return f?f():null}catch(e){console.warn(e);return null}}return _if.apply(this,arguments)};
+ try{const pane=document.getElementById('pane');new MutationObserver(()=>{try{tag()}catch(e){}}).observe(pane,{childList:true,subtree:true});tag();
+  pane.addEventListener('keydown',e=>{if((e.key==='Enter'||e.key===' ')&&e.target.matches&&e.target.matches('h3.sechd')){e.preventDefault();const r=e.target.getBoundingClientRect();showInfo(e.target.dataset.obj,r.left+20,r.bottom)}})}catch(e){}
+ const st=document.createElement('style');st.textContent=`
+html body #pane h3.sechd{cursor:pointer;width:fit-content}
+html body #pane h3.sechd:hover{text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:4px}
+html body #pane h3.sechd:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:4px}
+.info ul.ilist{margin:4px 0 8px;padding-left:18px}.info ul.ilist li{margin:0 0 8px}`;document.head.append(st)})();
 
 /* ===== Full reading, part 2: glossary, timeline, options, saved readings, PDF download ===== */
 
