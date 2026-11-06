@@ -6456,7 +6456,7 @@ html[data-theme="paper"] .infotab,html[data-theme="pastel"] .infotab{color:var(-
 })();
 
 /* ===== Accuracy helpers: birth-time sensitivity, time-zone check, node type; site version; first-visit tips ===== */
-const DN_VER='v214';
+const DN_VER='v217';
 const btFmt=m=>m==null?'more than 4 hours':m<60?`${m} min`:`${Math.floor(m/60)} h${m%60?' '+(m%60)+' min':''}`;
 /* how far the birth time can move before the rising sign, Midheaven, Moon sign or a planet's house changes */
 const BT_MEMO=new Map();
@@ -6854,7 +6854,7 @@ table.trip .trg svg{width:1em;height:1em}
   if(p.speed<0&&!['sun','moon'].includes(k)){sc-=1;bits.push('retrograde')}
   return {sc,txt:bits.join(', ')}}
  const P=t=>`<p class="interp">${t}</p>`,L=t=>`<p class="il">${t}</p>`;
- const box=(kick,title,what,mine)=>`<p class="kicker">${kick}</p><h4>${title}</h4>${L('What this is')}${what}${L('In this chart')}${mine}`;
+ const box=(kick,title,what,mine)=>`<p class="kicker">${kick}</p><h4>${title}</h4><div class="sdesc">${L('What this is')}${what}</div><div class="smine">${L('In this chart')}${mine}</div>`;
  // read numbers from the section as drawn, so the reading always matches what is on screen
  const secEls=key=>{const h=document.querySelector(`#pane h3.sub[data-obj="sec:${key}"]`);const out=[];let e=h&&h.nextElementSibling;while(e&&!e.matches('h3.sub')){out.push(e);e=e.nextElementSibling}return out};
  const secText=key=>secEls(key).map(e=>e.innerText).join('\n');
@@ -6992,9 +6992,94 @@ table.trip .trg svg{width:1em;height:1em}
   pane.addEventListener('keydown',e=>{if((e.key==='Enter'||e.key===' ')&&e.target.matches&&e.target.matches('h3.sechd')){e.preventDefault();const r=e.target.getBoundingClientRect();showInfo(e.target.dataset.obj,r.left+20,r.bottom)}})}catch(e){}
  const st=document.createElement('style');st.textContent=`
 html body #pane h3.sechd{cursor:pointer;width:fit-content}
-html body #pane h3.sechd:hover{text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:4px}
-html body #pane h3.sechd:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:4px}
+html body #pane h3.sechd{transition:opacity .2s ease}
+html body #pane h3.sechd:hover,html body #pane h3.sechd:focus-visible{opacity:.55}
+html body #pane h3.sechd:focus-visible{outline:none}
 .info ul.ilist{margin:4px 0 8px;padding-left:18px}.info ul.ilist li{margin:0 0 8px}`;document.head.append(st)})();
+
+/* ===== Settings: turn the written interpretations in info boxes off or on ===== */
+(()=>{const KEY='orrery.noInterp';const get=()=>{try{return localStorage.getItem(KEY)==='1'}catch(e){return false}};
+ const apply=()=>document.documentElement.classList.toggle('nointerp',get());apply();
+ const inject=()=>{const m=document.getElementById('settingsModal');if(!m||m.hidden||m.querySelector('#sInterp'))return;const g=m.querySelector('.fgrid');if(!g)return;
+  const l=document.createElement('label');l.className='chk full';l.htmlFor='sInterp';l.innerHTML=`<input id="sInterp" type="checkbox" ${get()?'':'checked'}> Show interpretations in info boxes (turn off to see only the facts and positions)`;
+  g.append(l);l.querySelector('input').addEventListener('change',e=>{try{localStorage.setItem(KEY,e.target.checked?'0':'1')}catch(_){}apply()})};
+ const ob=document.getElementById('openSettings');if(ob)ob.addEventListener('click',()=>setTimeout(inject,0));
+ try{new MutationObserver(inject).observe(document.getElementById('settingsModal'),{childList:true,attributes:true,attributeFilter:['hidden']})}catch(e){}
+ const st=document.createElement('style');st.textContent=`
+html.nointerp .info .interp,html.nointerp .info p.il,html.nointerp .info p.il+p,html.nointerp .info details.rsnint,html.nointerp .info ul.ilist,html.nointerp .info .smine,html.nointerp .info .asptitle{display:none!important}
+html.nointerp .info .sdesc .interp{display:block!important}
+html.nointerp .info .sdesc p.il{display:none!important}`;document.head.append(st)})();
+
+/* ===== Fixed star boxes: a reading for each chart point the star is conjunct ===== */
+(()=>{if(typeof infoFor!=='function')return;
+ // [what the star brings, how to handle it] — written for this site
+ const SI={
+ 'Algol':['tremendous intensity and the power to face what others avoid','Strong passions need a channel: anger or obsession turned inward or outward is the risk, steady self-mastery the remedy.'],
+ 'Alcyone':['vision, insight and a sensitivity to what others cannot see','Its gifts can come with a sense of loss or sorrow; giving that feeling a creative or spiritual outlet keeps it from becoming heaviness.'],
+ 'Aldebaran':['honour, courage and success that rests on integrity','Its rewards hold as long as you act honestly; cutting corners is what tends to undo them.'],
+ 'Rigel':['a gift for teaching, learning and building knowledge that lasts','Share what you know generously; the star rewards those who pass skills on.'],
+ 'Capella':['curiosity, a quick mind and a strong love of independence','Restlessness can scatter your efforts, so choose a few interests to go deep in.'],
+ 'Bellatrix':['quick success, sharp judgement and the confidence to lead','Rises can be sudden and so can reversals; keep something in reserve when things go well.'],
+ 'Elnath':['eminence and good fortune that comes through boldness','Boldness works best when it is backed by preparation.'],
+ 'Betelgeuse':['success that comes readily and recognition for courage','Easy wins can breed overconfidence; keep earning what you are given.'],
+ 'Alhena':['a sense of mission and a cause worth carrying forward','Your cause can become a burden if you carry it alone; let others share it.'],
+ 'Sirius':['brilliance, ambition and the potential for distinction','The star’s heat can burn: keep ambition tied to something larger than yourself.'],
+ 'Canopus':['a gift for guidance, navigation and finding the way through','Trust your sense of direction, but check the map now and then.'],
+ 'Castor':['wit, storytelling and a talent with words','Sharp words can wound; use your cleverness to connect rather than to score points.'],
+ 'Pollux':['a sharp, competitive intelligence and fighting spirit','Rivalry can harden into cruelty; compete with yourself more than with others.'],
+ 'Procyon':['quick rises, energy and opportunity','What comes fast can go fast; build foundations while the wind is behind you.'],
+ 'Acubens':['protective instincts and a strong sense of home ground','Defensiveness can shut out help; know when to lower the shell.'],
+ 'Alphard':['depth of feeling, wisdom and a strong sense of self','Hidden resentments can sour things; deal with grievances openly and early.'],
+ 'Regulus':['leadership, honour and the capacity to rise high','The rule of the royal star: success lasts as long as you avoid revenge and keep your word.'],
+ 'Zosma':['empathy for people who suffer and a gift for helping them','Taking on others’ burdens can wear you down; keep healthy boundaries.'],
+ 'Denebola':['independent thinking and the courage to go against the grain','Going your own way can isolate you; choose your battles with care.'],
+ 'Algorab':['skill with words, persuasion and strategy','Persuasion is powerful; use it in the open rather than behind people’s backs.'],
+ 'Spica':['talent, gifts and a kind of protection or grace','Gifts are meant to be used; the star rewards generosity with what you have been given.'],
+ 'Arcturus':['pathfinding: a new or different way of doing things','You may feel out of step with the usual routes; trust the path that is genuinely yours.'],
+ 'Vindemiatrix':['the patience to gather a harvest and steadiness in hard times','Loss and regret can weigh heavily; look forward to the next season rather than back.'],
+ 'Zuben Elgenubi':['a strong sense of justice and the drive to put things right','A sense of being wronged can become unforgiving; aim for repair, not punishment.'],
+ 'Zuben Eschamali':['good fortune, fairness and the ability to see both sides','Luck is best shared; it grows when you use it to help others.'],
+ 'Unukalhai':['resilience and the ability to come through difficult situations','Toughness can turn into harshness; let your strength protect rather than strike.'],
+ 'Alphecca':['recognition, a crowning gift and artistic or intellectual talent','Honour comes most reliably through generosity rather than self-promotion.'],
+ 'Antares':['intensity, courage and an all-or-nothing commitment','Extremes are the risk; the star rewards courage that is tempered with patience.'],
+ 'Rasalhague':['healing, restoration and knowledge of remedies','Knowledge of what heals can also be misused; keep your motives clean.'],
+ 'Shaula':['decisive action and sharp, effective words','The sting can wound others; think before you strike.'],
+ 'Aculeus':['sharp perception and attention to detail','Keep clear of petty quarrels; your perception is wasted on small fights.'],
+ 'Acumen':['penetrating insight and a capacity for focus','Pressure builds when you hold things in; find ways to release tension.'],
+ 'Vega':['charisma, artistry and a magnetic presence','Charm can become performance; let what you show be real.'],
+ 'Altair':['boldness, confidence and the will to act','Rashness is the shadow; aim before you fly.'],
+ 'Deneb Algedi':['a sense of law, justice and responsibility toward others','Fairness can tip into judgement; temper principle with mercy.'],
+ 'Sadalsuud':['luck, good fortune and help that arrives at the right time','Fortune is best met with gratitude and use, not taken for granted.'],
+ 'Sadalmelik':['fortune that comes from persistence and service','Steady effort pays off more than shortcuts.'],
+ 'Fomalhaut':['idealism, vision and the power to inspire','The star asks that ideals stay pure; compromising them for gain is the risk.'],
+ 'Deneb Adige':['talent, idealism and a far-reaching mind','Keep your feet on the ground while your thoughts range widely.'],
+ 'Scheat':['free thinking, invention and a questioning mind','Take extra care with risk, especially around water and travel, and with impulsive decisions.'],
+ 'Markab':['ambition and a drive to reach higher ground','Pushing too hard can bring setbacks; pace your climb.'],
+ 'Achernar':['faith, endurance and endings that open new beginnings','Let go of what is finished; holding on delays the new start.'],
+ 'Hamal':['independence, drive and a pioneering spirit','Headstrong moves can backfire; listen before charging ahead.'],
+ 'Mirach':['receptiveness, beauty and a gift for harmony','Being too accommodating can lose you yourself; keep your own centre.'],
+ 'Alpheratz':['freedom, movement and a sense of honour','Restlessness can make commitments hard; choose freedom that does not cost others.'],
+ 'Menkar':['concern for the collective and for public causes','Taking on the world’s problems can overwhelm; act where you can make a difference.'],
+ 'Polaris':['a sense of direction and the ability to guide others','Others may lean on you; make sure you also have your own guide.'],
+ 'Acrux':['mysticism, ceremony and a feel for the sacred','Spiritual intensity needs grounding in everyday life.'],
+ 'Rigil Kentaurus':['nobility, friendship and a talent for bringing people together','Generosity is the key; the star rewards those who use influence for others.'],
+ 'Praesepe Cluster':['gatherings, community and a vivid imagination','Crowded feelings or a busy mind need quiet time to settle.']};
+ const LEAD={sun:'Through your Sun, in your sense of self and life purpose',moon:'Through your Moon, in your feelings, body and home life',mercury:'Through Mercury, in your mind, speech and skills',venus:'Through Venus, in love, taste and relationships',mars:'Through Mars, in your drive, courage and the way you fight',jupiter:'Through Jupiter, in growth, faith and opportunity',saturn:'Through Saturn, in duty, structure and long effort',uranus:'Through Uranus, in change and originality',neptune:'Through Neptune, in imagination and ideals',pluto:'Through Pluto, in power and transformation',chiron:'Through Chiron, in old wounds and the way you heal them',node:'Through the North Node, along your direction of growth',snode:'Through the South Node, in what comes naturally from the past',asc:'On your Ascendant, in your body, manner and first impressions',mc:'On your Midheaven, in career, reputation and public life',dsc:'On your Descendant, through partners and close others',ic:'On your IC, in home, family and roots',fortune:'Through the Lot of Fortune, in your circumstances and material luck',spirit:'Through the Lot of Spirit, in your choices and vocation',ceres:'Through Ceres, in nurture and caring for others',pallas:'Through Pallas, in strategy and wisdom',juno:'Through Juno, in commitment and partnership',vesta:'Through Vesta, in devotion and focus',lilith:'Through Lilith, in what you refuse to tame',vertex:'Through the Vertex, in fated meetings'};
+ const nm=k=>(PT[k]&&PT[k][1])||k;
+ const _if=infoFor;infoFor=function(obj){let h=_if.apply(this,arguments);try{
+  if(typeof obj!=='string'||!obj.startsWith('star:')||!h)return h;const star=obj.slice(5),S=SI[star];if(!S)return h;
+  // chart points listed in the box with their orbs
+  const hits=[],re=/data-obj="pt:[io]:([a-z0-9_]+)"[\s\S]*?([\d.]+)°/g;let m;const seen=new Set();
+  while((m=re.exec(h))){const k=m[1],o=+m[2];if(seen.has(k))continue;seen.add(k);hits.push([k,o])}
+  const mag=(h.match(/Magnitude[\s\S]*?(-?[\d.]+)/)||[])[1];const bright=mag!=null&&+mag<1.6;
+  const rows=hits.filter(x=>x[1]<=2).sort((a,b)=>a[1]-b[1]);
+  let add=`<p class="il">What it means in this chart</p>`;
+  if(!rows.length)add+=`<p class="interp">No chart points are close enough for ${star} to count as a conjunction here. In general it brings ${S[0]}.</p>`;
+  else rows.forEach(([k,o])=>{const isLot=/^Lot/.test(nm(k)),lead=LEAD[k]||(isLot?`Through the ${nm(k)}`:`Through the asteroid ${nm(k)}`),tight=o<=0.5?'This is a very close contact, so the star is a strong signature in your chart.':o<=1?'':'At this wider orb the effect is milder, showing at key moments rather than all the time.';
+   add+=`<p class="interp"><strong>${star} on ${isLot||!LEAD[k]?'':'your '}${nm(k)}</strong> <span class="muted">(${o.toFixed(2)}°)</span>. ${lead}, ${star} brings ${S[0]}. ${S[1]}${tight?' '+tight:''}</p>`});
+  if(rows.length&&bright)add+=`<p class="interp muted">${star} is one of the brighter stars, so its influence is easier to notice.</p>`;
+  h+=add}catch(e){console.warn(e)}return h};
+})();
 
 /* ===== Full reading, part 2: glossary, timeline, options, saved readings, PDF download ===== */
 
