@@ -6456,7 +6456,7 @@ html[data-theme="paper"] .infotab,html[data-theme="pastel"] .infotab{color:var(-
 })();
 
 /* ===== Accuracy helpers: birth-time sensitivity, time-zone check, node type; site version; first-visit tips ===== */
-const DN_VER='v228';
+const DN_VER='v229';
 const btFmt=m=>m==null?'more than 4 hours':m<60?`${m} min`:`${Math.floor(m/60)} h${m%60?' '+(m%60)+' min':''}`;
 /* how far the birth time can move before the rising sign, Midheaven, Moon sign or a planet's house changes */
 const BT_MEMO=new Map();
@@ -6761,6 +6761,8 @@ html body #cmBtn .cmcar{display:none}`;document.head.append(st);
 @media (max-width:860px) and (min-height:500px){html body .stage.fs .wzoom{top:auto!important;bottom:calc(var(--fsB0,200px) + 6px + var(--fsEH,44px) + 10px)!important}}
 html body .stage.fs>.modbar{position:relative;z-index:2}`;document.head.append(st);
  try{fsFit()}catch(e){}})();
+/* the bar above the wheel lets clicks through to the wheel (the MC sits under it); only its buttons catch clicks */
+(()=>{const st=document.createElement('style');st.textContent=`html body .stage:not(.fs) #chartBar{pointer-events:none}html body .stage:not(.fs) #chartBar>*{pointer-events:auto}`;document.head.append(st)})();
 
 /* ===== Triwheel: choose the chart type of the third ring (transits, progressions, returns, solar arc...) ===== */
 (()=>{if(typeof computeIn!=='function')return;
