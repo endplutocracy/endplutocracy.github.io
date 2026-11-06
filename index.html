@@ -6456,7 +6456,7 @@ html[data-theme="paper"] .infotab,html[data-theme="pastel"] .infotab{color:var(-
 })();
 
 /* ===== Accuracy helpers: birth-time sensitivity, time-zone check, node type; site version; first-visit tips ===== */
-const DN_VER='v209';
+const DN_VER='v210';
 const btFmt=m=>m==null?'more than 4 hours':m<60?`${m} min`:`${Math.floor(m/60)} h${m%60?' '+(m%60)+' min':''}`;
 /* how far the birth time can move before the rising sign, Midheaven, Moon sign or a planet's house changes */
 const BT_MEMO=new Map();
@@ -6663,7 +6663,8 @@ html:not([data-theme]) #sideTog,html[data-theme="orrery"] #sideTog{background:va
   try{const v=lastView;if(mv&&v&&v.outer){const clean=t=>String(t||'').replace(/\d+\s*$/,'').trim();const T=[];
     if(v.mode==='synastry'||mode==='synastry')T.push(clean(mv));else T.push('Natal',clean(mv));
     if(v.third){const tm=v.thirdMode;T.push(tm==='synastry'?(v.third.label||'Third chart'):tm==='relocated'?'Relocated':(window.dnTypeName?dnTypeName(tm):clean(v.third.label)))}
-    mv=T.join(' · ')}}catch(e){}$$('cmMode').textContent=mv;$$('cmMode').hidden=!mv};
+    mv=T.join(' · ')}}catch(e){}
+  try{const sg=document.querySelector('.stage');if(sg)sg.classList.toggle('cmmulti',!!(lastView&&lastView.outer&&mv))}catch(e){}$$('cmMode').textContent=mv;$$('cmMode').hidden=!mv};
  const esc=t=>String(t).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
  const ICO={lib:'<path d="M4 7h16M4 12h16M4 17h10"/>',edit:'<path d="M4 20h4L19 9l-4-4L4 16v4z"/><path d="M14 6l4 4"/>',type:'<circle cx="12" cy="12" r="8.5"/><path d="M12 3.5v17M3.5 12h17"/>',style:'<rect x="4" y="4" width="16" height="16" rx="2"/><path d="M4 4l16 16M20 4L4 20"/>',third:'<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5.5"/><circle cx="12" cy="12" r="2"/>',share:'<path d="M12 14.5V3.5"/><path d="M7.5 8 12 3.5 16.5 8"/><path d="M5 12.5V19a1.5 1.5 0 0 0 1.5 1.5h11A1.5 1.5 0 0 0 19 19v-6.5"/>',layers:'<path d="M12 4 3 9l9 5 9-5-9-5z"/><path d="m3 14 9 5 9-5"/>'};
  const ic=k=>`<svg class="cmi" viewBox="0 0 24 24" aria-hidden="true">${ICO[k]}</svg>`;
@@ -6742,7 +6743,7 @@ html body #cmBtn .cmcar{display:none}`;document.head.append(st);
 /* elements/modes badges, the label toggle and the zoom controls sit a little lower */
 (()=>{const st=document.createElement('style');st.textContent=`html body .stage:not(.fs)>.wheelwrap>#elemMini,html body .stage:not(.fs)>.wheelwrap>.wlab,html body .stage:not(.fs)>.wheelwrap>.wzoom{bottom:-8px!important}`;document.head.append(st)})();
 /* phones: lift the wheel up into the space beside the chart menu and Layers buttons */
-(()=>{const st=document.createElement('style');st.textContent=`@media (max-width:600px){html body .stage:not(.fs):not(.hasmod)>.wheelwrap{margin-top:-28px!important}}`;document.head.append(st)})();
+(()=>{const st=document.createElement('style');st.textContent=`@media (max-width:600px){html body .stage:not(.fs):not(.hasmod)>.wheelwrap{margin-top:-28px!important}html body .stage.cmmulti:not(.fs):not(.hasmod)>.wheelwrap{margin-top:-6px!important}}`;document.head.append(st)})();
 /* phones: badges and zoom controls a little lower, with the time controls nudged down to keep the gap */
 (()=>{const st=document.createElement('style');st.textContent=`@media (max-width:600px){html body .stage:not(.fs)>.wheelwrap>#elemMini,html body .stage:not(.fs)>.wheelwrap>.wlab,html body .stage:not(.fs)>.wheelwrap>.wzoom{bottom:-26px!important}html body .stage:not(.fs)>.dial,html body .stage:not(.fs)>.dialopen{margin-top:34px!important}}`;document.head.append(st)})();
 /* mid-sized screens: lift the wheel into the open space beside the chart menu and Layers buttons */
