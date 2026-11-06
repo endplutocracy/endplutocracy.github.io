@@ -6456,7 +6456,7 @@ html[data-theme="paper"] .infotab,html[data-theme="pastel"] .infotab{color:var(-
 })();
 
 /* ===== Accuracy helpers: birth-time sensitivity, time-zone check, node type; site version; first-visit tips ===== */
-const DN_VER='v226';
+const DN_VER='v227';
 const btFmt=m=>m==null?'more than 4 hours':m<60?`${m} min`:`${Math.floor(m/60)} h${m%60?' '+(m%60)+' min':''}`;
 /* how far the birth time can move before the rising sign, Midheaven, Moon sign or a planet's house changes */
 const BT_MEMO=new Map();
@@ -7087,6 +7087,100 @@ window.dnInkCenter=function(t,x,y,sg){t.dataset.cx=x;t.dataset.cy=y;if(/^(decan|
  t.setAttribute('text-anchor','start');t.setAttribute('dominant-baseline','alphabetic');
  t.setAttribute('x',(x-(r.R-r.L)/2*k).toFixed(2));t.setAttribute('y',(y-(r.D-r.A)/2*k).toFixed(2))};
 (()=>{const st=document.createElement('style');st.textContent=`#wheel text.ringtx{fill:#e6e6e6}html[data-theme="paper"] #wheel text.ringtx,html[data-theme="pastel"] #wheel text.ringtx{fill:var(--fg)}`;document.head.append(st)})();
+
+/* ===== Aspect patterns: fuller personal readings, and patterns formed between the charts of a biwheel or triwheel ===== */
+(()=>{if(typeof aspectPatterns!=='function'||typeof patternsHtml!=='function')return;
+ const SG=SIGN_N,EL=['fire','earth','air','water'],MO=['cardinal','fixed','mutable'];
+ const HM=['','self, body and outlook','money and resources','communication, study and siblings','home, family and roots','creativity, pleasure and romance','work, routines and health','partnership and close others','shared resources, intimacy and change','travel, learning and belief','career and reputation','friends, groups and hopes','solitude, retreat and the unseen'];
+ const SGQ=['bold and direct','steady and sensual','curious and versatile','caring and protective','warm and expressive','precise and helpful','fair-minded and relational','intense and probing','expansive and searching','disciplined and ambitious','independent and inventive','compassionate and imaginative'];
+ const ELT={fire:'confidence, inspiration and a readiness to act',earth:'practical skill, patience and a feel for the material world',air:'ideas, communication and an ease with people',water:'empathy, intuition and emotional depth'};
+ const MOT={cardinal:'The tension shows up as crises that demand action; you tend to tackle problems head-on, sometimes before thinking them through.',fixed:'The tension shows up as standoffs: you dig in and endure, and the challenge is knowing when to let go.',mutable:'The tension shows up as scattered energy and changing course; the challenge is focus and follow-through.'};
+ const dom=k=>(PLANET_DOMAIN&&PLANET_DOMAIN[k])||PNM(k).toLowerCase();
+ const sOf=l=>Math.floor(n360(l)/30);
+ const hOf=(ch,l)=>{try{return ch.noHouses?null:Calc.houseOf(l,ch.cusps)}catch(e){return null}};
+ const area=(ch,k)=>{const h=hOf(ch,ch.pts[k].lon);return h?`${HM[h]} (${ord(h)} house)`:`${SG[sOf(ch.pts[k].lon)]} matters`};
+ const list=a=>a.length<2?a.join(''):a.slice(0,-1).join(', ')+' and '+a.at(-1);
+ const P=t=>`<p class="interp">${String(t).replace(/^(\s*(?:<[^>]+>)?)([a-z])/,(m,a,b)=>a+b.toUpperCase())}</p>`;
+
+ /* ---- personal reading for a pattern in one chart ---- */
+ function natalReading(ch,p){const pl=p.pl,ap=p.apex,others=pl.filter(k=>k!==ap);let h='';
+  const el=EL[sOf(ch.pts[pl[0]].lon)%4],md=MO[sOf(ch.pts[pl[0]].lon)%3];
+  if(p.t==='gt'){h+=P(`Your ${list(pl.map(PNM))} support each other in a closed circle of ${el}, giving you ${ELT[el]}. Your ${list(pl.map(dom))} reinforce one another without effort.`);
+   h+=P(`It links ${list(pl.map(k=>area(ch,k)))}: progress in one of these areas tends to lift the others.`);
+   h+=P(`Because it comes so easily, this gift can be taken for granted. It grows when you give it a real challenge, a deadline or someone to serve.`)}
+  else if(p.t==='ts'){const [a,b]=others,opp=n360(ch.pts[ap].lon+180),hl=hOf(ch,opp);
+   h+=P(`Your ${PNM(a)} and ${PNM(b)} pull in opposite directions: ${dom(a)} against ${dom(b)}, played out between ${area(ch,a)} and ${area(ch,b)}.`);
+   h+=P(`Both press on your <strong>${PNM(ap)}</strong>, the apex, so ${dom(ap)} becomes the place where the tension is felt and where you work hardest. ${area(ch,ap).replace(/^./,c=>c.toUpperCase())} is where this drive is most visible.`);
+   h+=P(MOT[md]);
+   h+=P(`The empty point opposite the apex, in ${SG[sOf(opp)]}${hl?` and your ${ord(hl)} house (${HM[hl]})`:''}, shows the release: developing ${SGQ[sOf(opp)]} qualities there takes the pressure off and turns the strain into achievement.`)}
+  else if(p.t==='gx'){h+=P(`Your ${list(pl.map(PNM))} form a cross of ${md} tension, each pulling against two others. The areas involved, ${list(pl.map(k=>area(ch,k)))}, all ask for attention at once.`);
+   h+=P(MOT[md]+' Over time this builds great resilience: once you commit to a direction, you are very hard to throw off course.')}
+  else if(p.t==='yod'){const [a,b]=others,opp=n360(ch.pts[ap].lon+180),hl=hOf(ch,opp);
+   h+=P(`Your ${PNM(a)} and ${PNM(b)} work together smoothly (${dom(a)} with ${dom(b)}), and both point awkwardly at your <strong>${PNM(ap)}</strong>.`);
+   h+=P(`This makes ${dom(ap)}, in ${area(ch,ap)}, feel like a special task or sensitivity: something that does not fit easily and keeps asking for adjustment until you embrace it as a calling.`);
+   h+=P(`The point opposite the apex, in ${SG[sOf(opp)]}${hl?` (${ord(hl)} house)`:''}, often marks the moment or situation that brings the task into focus.`)}
+  else if(p.t==='kite'){const gt=pl.filter(k=>k!==pl.at(-1)),tail=pl.at(-1);
+   h+=P(`A grand trine in ${EL[sOf(ch.pts[gt[0]].lon)%4]} gives you ${ELT[EL[sOf(ch.pts[gt[0]].lon)%4]]}.`);
+   h+=P(`Your ${PNM(tail)} opposite ${PNM(ap)} gives that talent a direction: ${dom(tail)} provides the push, and ${dom(ap)} is where the gift is put to work, in ${area(ch,ap)}.`)}
+  else if(p.t==='mr'){h+=P(`Your ${list(pl.map(PNM))} form two oppositions linked by easy aspects. The tension between ${area(ch,pl[0])} and ${area(ch,pl[1])} is real, but the supporting links let you turn it into steady, practical results.`)}
+  else if(p.t==='st'){const r=RULER[p.sign],rh=hOf(ch,ch.pts[r]?ch.pts[r].lon:0);
+   h+=P(`With ${list(pl.map(PNM))} together in ${SG[p.sign]}, a ${SGQ[p.sign]} style colours your ${list(pl.map(dom))}.`);
+   if(ch.pts[r])h+=P(`${SG[p.sign]} is ruled by ${PNM(r)}, which is in ${SG[sOf(ch.pts[r].lon)]}${rh?`, ${ord(rh)} house`:''}. That placement shows where all this energy is ultimately directed.`)}
+  else if(p.t==='sth'){h+=P(`With ${list(pl.map(PNM))} in your ${ord(p.house)} house, ${HM[p.house]} becomes a central theme. A lot of your ${list(pl.map(dom))} goes into this area of life.`)}
+  return h}
+ const _ip=infoPat;infoPat=function(i){let h=_ip.apply(this,arguments);try{const ch=lastView&&lastView.inner;const p=ch&&aspectPatterns(ch)[+i];if(h&&p){h+=`<p class="il">In this chart</p>${natalReading(ch,p)}`}}catch(e){console.warn(e)}return h};
+
+ /* ---- patterns between charts ---- */
+ const TIMING=['transits','progressed','solararc','solar','lunar','preturn','tertiary','minor'];
+ const SLOW=['jupiter','saturn','uranus','neptune','pluto'];
+ function ringsOf(v){const R=[{w:'i',ch:v.inner,mode:'natal'}];if(v.outer)R.push({w:'o',ch:v.outer,mode:v.mode});if(v.third)R.push({w:'t',ch:v.third,mode:v.thirdMode||'synastry'});return R}
+ function crossPatterns(v){const R=ringsOf(v);if(R.length<2)return [];const pts=[];
+  const FAST=['sun','moon','mercury','venus','mars'];R.forEach(r=>{const keys=r.w==='i'?PAT_KEYS:r.mode==='transits'?SLOW:['progressed','tertiary','minor'].includes(r.mode)?FAST:PAT_KEYS;keys.forEach(k=>{if(r.ch&&r.ch.pts&&r.ch.pts[k])pts.push({id:r.w+':'+k,w:r.w,k,lon:r.ch.pts[k].lon})})});
+  const isT=w=>{const r=R.find(q=>q.w===w);return !!r&&TIMING.includes(r.mode)},M={},n=pts.length;
+  for(let i=0;i<n;i++)for(let j=0;j<n;j++){if(i===j||pts[i].w===pts[j].w&&pts[i].w!=='i'&&false)continue;const d=Math.abs(n180(pts[i].lon-pts[j].lon));for(const a in PAT_ANG){const orb=PAT_ORB[a]*(pts[i].w===pts[j].w?1:(isT(pts[i].w)||isT(pts[j].w))?0.6:0.8);if(Math.abs(d-PAT_ANG[a])<=orb){M[i+'|'+j]={a,o:Math.abs(d-PAT_ANG[a])}}}}
+  const has=(i,j,a)=>M[i+'|'+j]&&M[i+'|'+j].a===a,orbOf=(i,j)=>M[i+'|'+j]?M[i+'|'+j].o:0;
+  const out=[],seen=new Set(),push=(t,ix,apex)=>{const ws=new Set(ix.map(x=>pts[x].w));if(ws.size<2||!ws.has('i'))return;const id=t+':'+ix.slice().sort((a,b)=>a-b).join(',');if(seen.has(id))return;seen.add(id);
+   let mo=0;for(let a=0;a<ix.length;a++)for(let b=a+1;b<ix.length;b++)mo=Math.max(mo,orbOf(ix[a],ix[b]));out.push({t,ix,apex,orb:mo})};
+  for(let i=0;i<n;i++)for(let j=i+1;j<n;j++){if(has(i,j,'opp'))for(let k=0;k<n;k++){if(k===i||k===j)continue;if(has(i,k,'squ')&&has(j,k,'squ'))push('ts',[i,j,k],k)}
+   if(has(i,j,'sext'))for(let k=0;k<n;k++){if(k===i||k===j)continue;if(has(i,k,'qcx')&&has(j,k,'qcx'))push('yod',[i,j,k],k)}
+   for(let k=j+1;k<n;k++)if(has(i,j,'tri')&&has(j,k,'tri')&&has(i,k,'tri'))push('gt',[i,j,k])}
+  // grand crosses absorb their T-squares
+  for(let i=0;i<n;i++)for(let j=i+1;j<n;j++){if(!has(i,j,'opp'))continue;for(let k=0;k<n;k++)for(let l=k+1;l<n;l++){if([i,j].includes(k)||[i,j].includes(l)||!has(k,l,'opp'))continue;if(has(i,k,'squ')&&has(i,l,'squ')&&has(j,k,'squ')&&has(j,l,'squ'))push('gx',[i,j,k,l])}}
+  const gxs=out.filter(p=>p.t==='gx').map(p=>p.ix);
+  const res=out.filter(p=>!(p.t==='ts'&&gxs.some(g=>p.ix.every(x=>g.includes(x)))));
+  const rank={gx:0,ts:1,yod:2,gt:3};res.sort((a,b)=>(rank[a.t]-rank[b.t])||(a.orb-b.orb));
+  return res.slice(0,12).map(p=>({...p,pts:p.ix.map(x=>pts[x]),apexPt:p.apex!=null?pts[p.apex]:null}))}
+ const TN={gt:'Grand trine',ts:'T-square',yod:'Yod',gx:'Grand cross'};
+ function whoName(v,w){const A=byId(activeId);if(w==='i')return (A&&A.name)||'Natal';if(w==='o')return v.outer&&v.outer.label||'Second chart';return v.third&&v.third.label||'Third chart'}
+ function ptLabel(v,p,mine){const R=ringsOf(v).find(r=>r.w===p.w),m=R&&R.mode;
+  if(p.w==='i')return mine?`your ${PNM(p.k)}`:`${whoName(v,'i')}’s ${PNM(p.k)}`;
+  if(m==='synastry')return `${whoName(v,p.w)}’s ${PNM(p.k)}`;
+  const adj={transits:'transiting',progressed:'progressed',solararc:'solar-arc',solar:'solar-return',lunar:'lunar-return',preturn:'return',tertiary:'tertiary',minor:'minor-progressed',relocated:'relocated'}[m]||(whoName(v,p.w)+'’s');return `${adj} ${PNM(p.k)}`}
+ const glyphsOf=pp=>pp.map(p=>`<span class="xpw xpw-${p.w}">${glyphHtml(p.k)}</span>`).join(' ');
+ function crossReading(v,p){const modes=ringsOf(v).filter(r=>r.w!=='i').map(r=>r.mode),timing=p.pts.some(x=>x.w!=='i'&&TIMING.includes((ringsOf(v).find(r=>r.w===x.w)||{}).mode)),syn=!timing;
+  const L=x=>ptLabel(v,x,!syn||x.w==='i'),ap=p.apexPt,others=p.pts.filter(x=>x!==ap);let h='';
+  if(timing){const tp=p.pts.filter(x=>x.w!=='i'),np=p.pts.filter(x=>x.w==='i');
+   const dur=tp.some(x=>['pluto','neptune','uranus'].includes(x.k))?'a long, slow phase lasting a year or more':tp.some(x=>['saturn','jupiter'].includes(x.k))?'a phase of several months':'a shorter window';
+   if(p.t==='gt')h+=P(`${list(tp.map(L))} ${tp.length>1?'join':'joins'} ${list(np.map(L))} in a grand trine: a period when ${list(np.map(x=>dom(x.k)))} work together easily. Doors open with little effort, so this is a good time to act on opportunities rather than wait.`);
+   else if(p.t==='ts'){if(ap.w==='i')h+=P(`${list(others.map(L))} put pressure on your <strong>${PNM(ap.k)}</strong> from two sides. ${dom(ap.k).replace(/^./,c=>c.toUpperCase())} becomes the focus of the period: expect demands, decisions and effort here, which can produce real progress.`);
+    else h+=P(`${L(ap)} lands at the apex of your natal ${list(others.map(x=>PNM(x.k)))} opposition, triggering the tension between ${list(others.map(x=>dom(x.k)))}. This is a time when that old pull comes to a head and can be resolved through ${dom(ap.k)}.`)}
+   else if(p.t==='yod')h+=P(`${list(p.pts.map(L))} form a yod with ${L(ap)} at the apex: a period that asks for adjustment and can bring a sense of a task or turning point around ${dom(ap.k)}.`);
+   else if(p.t==='gx')h+=P(`${list(p.pts.map(L))} form a grand cross: a demanding period pulling in several directions at once. Prioritise; what you commit to now can be built to last.`);
+   h+=P(`Timing: this is ${dur}, strongest while the aspects are within about a degree.`)}
+  else{const names=[...new Set(p.pts.map(x=>whoName(v,x.w)))];
+   if(p.t==='gt')h+=P(`Between ${list(names)}, ${list(p.pts.map(L))} form a grand trine: a natural ease where ${list([...new Set(p.pts.map(x=>dom(x.k)))])} flow together. This is a shared talent or comfort zone in the relationship; it works best when you use it for something you build together.`);
+   else if(p.t==='ts')h+=P(`${list(others.map(L))} oppose each other and both square <strong>${L(ap)}</strong>. ${whoName(v,ap.w)} tends to feel the pressure of this tension most, around ${dom(ap.k)}. It is a source of friction, but also of drive: handled consciously it pushes you both to grow.`);
+   else if(p.t==='yod')h+=P(`${list(others.map(L))} both point at ${L(ap)} in a yod. This contact often feels fated or significant, centred on ${whoName(v,ap.w)}’s ${dom(ap.k)}, and asks for ongoing adjustment to make it work.`);
+   else if(p.t==='gx')h+=P(`${list(p.pts.map(L))} form a grand cross between you: strong, demanding chemistry with many pulls at once. It keeps the relationship dynamic, and it needs commitment and patience to stay balanced.`)}
+  return h}
+ function crossHtml(v){const C=crossPatterns(v);const lab=[...new Set(ringsOf(v).filter(r=>r.w!=='i').map(r=>r.w==='o'?(v.outer&&v.outer.label):(v.third&&v.third.label)))].filter(Boolean).join(' and ');
+  const rows=C.map((p,i)=>`<div class="yrow clk ${['ts','gx'].includes(p.t)?'do':''}" data-obj="x:xpat:${i}"><div class="yh"><strong>${TN[p.t]}</strong><span class="yg">${glyphsOf(p.pts)}</span></div><div class="yw">${XL(p.pts.map(x=>ptLabel(v,x,true).replace(/^./,c=>c.toUpperCase())))}${p.apexPt?' · apex '+PNM(p.apexPt.k):''} <span class="muted">· ${p.orb.toFixed(1)}°</span></div></div>`).join('');
+  return `<h3 class="sub">Patterns with ${lab||'the other charts'}</h3>${C.length?`<div class="ylist">${rows}</div>`:'<p class="muted">No aspect patterns form between the charts within orb.</p>'}`+RSN(`Grand trines, T-squares, grand crosses and yods that include at least one point from each chart. Orbs between charts are tighter than in a single chart (60% for transits and progressions, 80% for synastry). For transits only the slow planets, Jupiter to Pluto, are used; for progressions only the faster-moving progressed planets, Sun to Mars, since the others barely move.`)}
+ function infoXPat(i){const v=lastView;if(!v||!v.outer)return null;const p=crossPatterns(v)[+i];if(!p)return null;
+  const R=ringsOf(v);return `<p class="kicker">Aspect pattern · between charts</p><h4><span class="big">${glyphsOf(p.pts)}</span>${TN[p.t]}</h4><dl>${p.pts.map(x=>{const r=R.find(q=>q.w===x.w);const h=r&&r.w==='i'&&!v.inner.noHouses?`, ${ord(Calc.houseOf(x.lon,v.inner.cusps))} house`:'';return `<dt>${ptLabel(v,x,true).replace(/^./,c=>c.toUpperCase())}${p.apexPt===x?' · apex':''}</dt><dd>${lonTxt(x.lon)}${h}</dd>`}).join('')}<dt>Widest orb</dt><dd>${p.orb.toFixed(2)}°</dd></dl><p class="il">Interpretation</p>${crossReading(v,p)}`}
+ const _ph=patternsHtml;patternsHtml=function(v){let h='';try{h=_ph.apply(this,arguments)||''}catch(e){}try{if(v&&v.outer&&!SYNTH_MODES.includes(v.mode))h+=crossHtml(v)}catch(e){console.warn(e)}return h};
+ const _xi=xInfo;xInfo=function(r){if(r&&r[0]==='xpat'){try{return infoXPat(r[1])}catch(e){console.warn(e);return null}}return _xi.apply(this,arguments)};
+ const st=document.createElement('style');st.textContent=`.xpw-o{color:var(--outer-glyph,var(--lilac,var(--accent)))}.xpw-t{color:var(--third-glyph,#8fd3c7)}`;document.head.append(st)})();
 
 /* ===== Full reading, part 2: glossary, timeline, options, saved readings, PDF download ===== */
 
