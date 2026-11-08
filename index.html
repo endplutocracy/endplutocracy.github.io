@@ -6457,7 +6457,7 @@ html[data-theme="paper"] .infotab,html[data-theme="pastel"] .infotab{color:var(-
 })();
 
 /* ===== Accuracy helpers: birth-time sensitivity, time-zone check, node type; site version; first-visit tips ===== */
-const DN_VER='v237';
+const DN_VER='v239';
 const btFmt=m=>m==null?'more than 4 hours':m<60?`${m} min`:`${Math.floor(m/60)} h${m%60?' '+(m%60)+' min':''}`;
 /* how far the birth time can move before the rising sign, Midheaven, Moon sign or a planet's house changes */
 const BT_MEMO=new Map();
@@ -7511,13 +7511,14 @@ window.MANX=[
   const a=F.ally;h+=one(a,'Best suited',`${PNM(a.R)} is ${a.bits.length?a.bits.join(', '):'neutrally placed'}${a.rel.length?`, and ${RJ(a.rel)}`:''}. A talisman works best through a planet that is already strong in your chart, so this is the one most likely to answer.`);
   if(F.fix){const f=F.fix;h+=one(f,'Worth strengthening',`${PNM(f.R)} matters in your chart because ${RJ(f.rel)}, but it is ${f.bits.length?f.bits.join(', '):'weakly placed'}. In the Picatrix tradition a talisman made at a strong moment for a planet can support it where the birth chart leaves it weak.`)}
   return h+`</div></details>`}
+ const ETHIC=`<details class="elrow tlethic" open><summary><strong>Before you begin</strong></summary><p class="note">In the creation of a talisman, it is important for your physical and spiritual well-being that you maintain a constructive intention and avoid harming others or creation for selfish purposes. A talisman is a concentrated living energy, and that energy must be treated with respect in all interactions. If you create a talisman and wish to dispel it, then this must be done with great care: simply thank the talisman and state your request to the cosmic intelligence from which you were given the energy. Once you feel this wish has been acknowledged, destroy the talisman with thoughtful purpose. Creation for selfish or evil reasons is possible, but it is gravely discouraged and not recommended under any circumstances. For this reason it is not included here; other resources cover that information.</p></details>`;
  function mainHtml(){const P=PURP[st.purp],R=st.res&&st.res.purp===st.purp?st.res:null;let h='';
   if(!R)h+=`<p class="muted">Choose a purpose and press <strong>Find the best times</strong>. The search follows the rules of the <em>Picatrix</em>: the Moon in a suitable mansion and increasing in light, free of the malefics, the planet of the work strong and well placed, and the work begun in its day and hour.</p>`;
   else{h+=R.pick.length?`<div class="ellist">${R.pick.map((r,i)=>`<details class="elrow"${i===0?' open':''}><summary><span class="elst" title="Score ${r.sc.toFixed(1)}">${stars(r.sc)}</span><strong>${fmtT(r.t,R.pl)}</strong><span class="muted"> · day of ${PNM(r.dl||'sun')}, hour of ${PNM(r.hr||P.ruler)}${r.hs?` (${fmtH(r.hs,R.pl)}–${fmtH(r.he,R.pl)})`:''}</span></summary>${r.pre?`<p class="note elpre">Before sunrise, so this is still the planetary night of ${new Intl.DateTimeFormat(undefined,{weekday:'long',timeZone:R.pl.tz&&R.pl.tz!=='manual'?R.pl.tz:'UTC'}).format(new Date(r.pre))} (a planetary day runs from sunrise to sunrise).</p>`:''}
     <ul class="elg">${r.good.map(x=>`<li>${x}</li>`).join('')}</ul>${r.bad.length?`<ul class="elb">${r.bad.map(x=>`<li>${x}</li>`).join('')}</ul>`:''}
     <button type="button" class="chipbtn" data-elshow="${r.t}">Show this sky on the chart</button></details>`).join('')}</div>`:`<p class="muted">No strong times in this period. Try a longer search or another purpose.</p>`;
    if(R.now)h+=`<p class="muted elnow">Right now in ${esc(R.pl.name||'this place')}: <span class="elst" title="Score ${R.now.sc.toFixed(1)}">${stars(R.now.sc)}</span> · Moon in mansion ${R.now.m}, ${MANS[R.now.m-1][0]}.</p>`}
-  h=fitHtml()+matHtml(st.purp)+h;
+  h=ETHIC+fitHtml()+matHtml(st.purp)+h;
   h+=`<details class="rsn"><summary>Reasoning</summary><p class="note">${REASON}</p></details>`;return h}
  const V=()=>$('electView');
  function ensure(){const v=V();if(!v)return;const side=v.querySelector('.eph-side'),main=v.querySelector('.eph-main');if(!side||!main)return;
@@ -7550,9 +7551,9 @@ window.MANX=[
 .elg li::marker{content:"+ ";color:var(--accent)}.elb li::marker{content:"− ";color:#e07a7a}
 .elrow .chipbtn{margin-top:4px}
 .elnow{font-size:.82rem}
-.tlmat summary strong,.tlfit summary strong{font-family:var(--serif)}
+.tlmat summary strong,.tlfit summary strong,.tlethic summary strong{font-family:var(--serif)}
 .tlsugs{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px;margin-top:10px}.tlsug{display:flex;flex-direction:column;gap:6px;align-items:flex-start}.tlsug .note{margin:0}
-.tldl{display:grid;grid-template-columns:auto 1fr;gap:6px 14px;margin:10px 0 6px;font-size:.86rem}.tldl dt{color:var(--muted);font-weight:600}.tldl dd{margin:0}.tlalt{margin:0;padding-left:16px}.tlalt li{margin:0 0 4px}
+.tldl{display:grid;grid-template-columns:auto 1fr;gap:6px 14px;margin:10px 0 6px;font-size:.86rem}.tldl dt{color:var(--muted);font-weight:600}.tldl dd{margin:0}.tlethic .note{margin:8px 0 2px;line-height:1.6}.tlalt{margin:0;padding-left:16px}.tlalt li{margin:0 0 4px}
 @media (max-width:480px){.tldl{grid-template-columns:1fr}.tldl dt{margin-top:4px}}`;document.head.append(css)})();
 try{window.dnPlanetaryHours=planetaryHours}catch(e){}
 
