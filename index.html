@@ -6457,7 +6457,7 @@ html[data-theme="paper"] .infotab,html[data-theme="pastel"] .infotab{color:var(-
 })();
 
 /* ===== Accuracy helpers: birth-time sensitivity, time-zone check, node type; site version; first-visit tips ===== */
-const DN_VER='v243';
+const DN_VER='v245';
 const btFmt=m=>m==null?'more than 4 hours':m<60?`${m} min`:`${Math.floor(m/60)} h${m%60?' '+(m%60)+' min':''}`;
 /* how far the birth time can move before the rising sign, Midheaven, Moon sign or a planet's house changes */
 const BT_MEMO=new Map();
@@ -7387,15 +7387,15 @@ window.MANX=[
  const BEN=['venus','jupiter'],MAL=['mars','saturn'],PL=['sun','moon','mercury','venus','mars','jupiter','saturn'];
  const ASPS=[0,60,90,120,180];
  const aspNow=(a,b,orb)=>{const d=sep(a,b);for(const x of ASPS)if(Math.abs(d-x)<=orb)return {x,o:Math.abs(d-x)};return null};
- let st={purp:'love',loc:'cur',days:45,res:null,busy:false,key:''};
+ let st={purp:'love',loc:'cur',days:45,mild:false,res:null,busy:false,key:''};
  try{Object.assign(st,JSON.parse(localStorage.getItem('orrery.elec')||'{}'),{res:null,busy:false})}catch(e){}
- const save=()=>{try{localStorage.setItem('orrery.elec',JSON.stringify({purp:st.purp,loc:st.loc,days:st.days,view:st.view,any:st.any||null}))}catch(e){}};
+ const save=()=>{try{localStorage.setItem('orrery.elec',JSON.stringify({purp:st.purp,loc:st.loc,days:st.days,view:st.view,any:st.any||null,mild:!!st.mild}))}catch(e){}};
  const placeOf=A=>{if(st.loc==='any'&&st.any&&isFinite(st.any.lat))return {lat:st.any.lat,lon:st.any.lon,tz:st.any.tz,name:st.any.label};if(st.loc==='el'||st.loc==='any'||!A||A.now){try{const L=elLoc();return {lat:L.lat,lon:L.lon,tz:L.tz,name:L.label}}catch(e){}}return st.loc==='cur'&&A.cur&&isFinite(A.cur.lat)?{lat:A.cur.lat,lon:A.cur.lon,tz:A.cur.tz||A.tz,name:A.cur.place}:{lat:A.lat,lon:A.lon,tz:A.tz,offset:A.offset,name:A.place}};
- const fmtT=(ms,pl)=>{try{const o={timeZone:pl.tz&&pl.tz!=='manual'?pl.tz:'UTC',weekday:'short',month:'short',day:'numeric',hour:'numeric',minute:'2-digit'};return new Intl.DateTimeFormat(undefined,o).format(new Date(ms))}catch(e){return new Date(ms).toLocaleString()}};
+ const fmtT=(ms,pl)=>{try{const o={timeZone:pl.tz&&pl.tz!=='manual'?pl.tz:'UTC',weekday:'short',month:'short',day:'numeric',hour:'numeric',minute:'2-digit'};if(new Date(ms).getFullYear()!==new Date().getFullYear())o.year='numeric';return new Intl.DateTimeFormat(undefined,o).format(new Date(ms))}catch(e){return new Date(ms).toLocaleString()}};
  const fmtH=(ms,pl)=>{try{return new Intl.DateTimeFormat(undefined,{timeZone:pl.tz&&pl.tz!=='manual'?pl.tz:'UTC',hour:'numeric',minute:'2-digit'}).format(new Date(ms))}catch(e){return ''}};
  /* score one moment */
  function judge(ch,ch2,P,hr,dayLord,nat){const p=ch.pts,R=P.ruler,moon=p.moon.lon,sun=p.sun.lon,good=[],bad=[];let sc=0;
-  const add=(v,t)=>{sc+=v;(v>=0?good:bad).push(t)};
+  const add=(v,t)=>{sc+=v;(v>=0?good:bad).push(t)};let out=false;const blk=[];
   const m=Math.floor(n3(moon)/W)+1;
   if(P.man.includes(m))add(3,`Moon in mansion ${m}, ${MANS[m-1][0]}, suited to this work`);else add(-1.5,`Moon in mansion ${m}, ${MANS[m-1][0]}, not one of the mansions for this work`);
   const el=n3(moon-sun);
@@ -7407,8 +7407,16 @@ window.MANX=[
   const mNext=ch2.pts.moon.lon;PL.filter(k=>k!=='moon'&&k!=='sun').forEach(k=>{const a=aspNow(moon,p[k].lon,8);if(!a)return;const a2=sep(mNext,ch2.pts[k].lon);const applying=Math.abs(a2-a.x)<a.o;if(!applying)return;
    const harsh=a.x===90||a.x===180||(a.x===0&&MAL.includes(k));
    if(BEN.includes(k)&&!harsh)add(2,`Moon applying to ${PNM(k)} (${a.x===0?'conjunction':a.x===60?'sextile':a.x===120?'trine':a.x===90?'square':'opposition'})`);
-   else if(MAL.includes(k)&&harsh&&R!==k)add(-3,`Moon applying to a hard aspect with ${PNM(k)}`);
    else if(k===R&&!harsh)add(1.5,`Moon applying to ${PNM(k)}, the planet of this work`)});
+  // the Moon and the benefics must be free of the malefics (the malefic that rules the work is exempt)
+  {const MO={sun:7.5,moon:6,mercury:3.5,venus:3.5,mars:3.75,jupiter:4.5,saturn:4.5},AN={0:'conjunct',60:'sextile',90:'square',120:'trine',180:'opposite'};
+   ['moon',...BEN].forEach(t=>{if(t===R&&MAL.includes(t))return;const hits=[];
+    MAL.forEach(k=>{if(k===R)return;const orb=MO[t]+MO[k],d=sep(p[t].lon,p[k].lon);let a=null;for(const x of ASPS)if(Math.abs(d-x)<=orb){a={x,o:Math.abs(d-x)};break}if(!a)return;
+     const d2=sep(ch2.pts[t].lon,ch2.pts[k].lon),app=Math.abs(d2-a.x)<a.o;hits.push({k,x:a.x,o:a.o,app})});
+    if(!hits.length){add(t==='moon'?1:0.5,`${PNM(t)} free of Mars and Saturn`);return}
+    hits.forEach(h=>{const hard=h.x===0||h.x===90||h.x===180,txt=`${PNM(t)} ${AN[h.x]} ${PNM(h.k)} (${h.o.toFixed(1)}°, ${h.app?'applying':'separating'})`;
+     if(!st.mild){add(-20,txt);out=true;blk.push(`${PNM(t)} ${AN[h.x]} ${PNM(h.k)}`)}
+     else add(hard?(h.app?(t==='moon'?-3:-2):(t==='moon'?-2:-1.5)):(t==='moon'?-0.75:-0.5),txt)})})}
   // the planet of the work
   if(R!=='moon'){const rp=p[R],d=dig(R,sOf(rp.lon));if(d==='dom'||d==='exa')add(2,`${PNM(R)} ${d==='dom'?'in its own sign':'exalted'}`);else if(d)add(-2,`${PNM(R)} in ${d==='det'?'detriment':'fall'}`);
    if(rp.speed<0)add(-2,`${PNM(R)} retrograde`);
@@ -7423,7 +7431,7 @@ window.MANX=[
   // the person's own chart
   if(nat){const mn=nat.pts;['sun','moon'].concat(nat.noHouses?[]:['asc']).forEach(k=>{const a=aspNow(moon,mn[k].lon,4);if(a&&(a.x===60||a.x===120))add(0.75,`Moon ${a.x===60?'sextile':'trine'} your natal ${PNM(k)}`)});
    MAL.forEach(k=>{const a=aspNow(moon,mn[k].lon,3);if(a&&(a.x===90||a.x===180||a.x===0))add(-1,`Moon ${a.x===0?'on':a.x===90?'square':'opposite'} your natal ${PNM(k)}`)})}
-  return {sc,good,bad,m}}
+  return {sc,good,bad,m,out,blk}}
  const locDay=(ms,pl)=>{try{return new Intl.DateTimeFormat('en-CA',{timeZone:pl.tz&&pl.tz!=='manual'?pl.tz:'UTC'}).format(new Date(ms))}catch(e){return ''}};
  function run(){const A=chartA();const P=PURP[st.purp],pl=placeOf(A),nat=A?(()=>{try{return natalOf(A)}catch(e){return null}})():null;
   st.busy=true;st.res=null;paint();
@@ -7434,12 +7442,12 @@ window.MANX=[
      const ch=Calc.cast(t,pl.lat,lonE,o),ch2=Calc.cast(t+3600000,pl.lat,lonE,o);const j=judge(ch,ch2,P,hr&&hr.lord,ph&&ph.dayLord,nat);out.push({t,...j,hr:hr&&hr.lord,hs:hr&&hr.start,he:hr&&hr.end,dl:ph&&ph.dayLord,pre:ph&&!(hr&&hr.day)&&locDay(t,pl)!==locDay(ph.rise,pl)?ph.rise:0})}catch(e){}t+=STEP}
    if(t<t1){st.prog=(t-t0)/(t1-t0);paint(true);setTimeout(chunk,0);return}
    // best windows: keep the top moments, one per planetary hour, spread across days
-   out.sort((a,b)=>b.sc-a.sc);const pick=[];for(const r of out){if(pick.length>=8)break;if(r.sc<4)break;if(pick.some(p=>Math.abs(p.t-r.t)<6*3600000))continue;pick.push(r)}
+   out.sort((a,b)=>b.sc-a.sc);const pick=[];const nOut=out.filter(r=>r.out).length,bc={};out.forEach(r=>(r.blk||[]).forEach(b=>bc[b]=(bc[b]||0)+1));const blocks=Object.entries(bc).sort((a,b)=>b[1]-a[1]).map(([b,n])=>[b,Math.round(n/out.length*100)]);for(const r of out){if(pick.length>=8)break;if(r.out)continue;if(r.sc<4)break;if(pick.some(p=>Math.abs(p.t-r.t)<6*3600000))continue;pick.push(r)}
    const now=(()=>{try{const ph0=planetaryHours(Date.now(),pl),hr0=ph0&&ph0.hrs.find(h=>Date.now()>=h.start&&Date.now()<h.end);return judge(Calc.cast(Date.now(),pl.lat,lonE,o),Calc.cast(Date.now()+3600000,pl.lat,lonE,o),P,hr0&&hr0.lord,ph0&&ph0.dayLord,nat)}catch(e){return null}})();
-   st.res={pick,now,pl,purp:st.purp,forId:A?A.id:null,max:out.length?out[0].sc:0};st.busy=false;paint()};
+   st.res={pick,now,pl,purp:st.purp,mild:!!st.mild,nOut,tot:out.length,blocks,forId:A?A.id:null,max:out.length?out[0].sc:0};st.busy=false;paint()};
   setTimeout(chunk,30)}
  const stars=sc=>{const n=sc>=13?5:sc>=11?4:sc>=8?3:sc>=5?2:sc>=2?1:0;return '★★★★★'.slice(0,n)+'<span class="muted">'+'★★★★★'.slice(n)+'</span>'};
- const REASON=`Each half hour is scored: the Moon’s mansion (+3 if suited, otherwise −1.5); the Moon waxing (+2) or waning (−1.5), combust (−6) or in the via combusta (−3); the Moon applying to Venus or Jupiter (+2), to the planet of the work (+1.5) or to a hard aspect from Mars or Saturn (−3); the planet of the work dignified (+2), debilitated, retrograde or combust (−2 each), angular (+1 to +2) or cadent (−1); the rising sign ruled by the planet of the work or a benefic (+1.5); benefics on the 1st or 10th house (+1 each), malefics there (−2); the planetary hour (+2) and day (+1) of the planet of the work; and, when a saved chart is open, small adjustments for the Moon’s aspects to its natal Sun, Moon, Ascendant, Mars and Saturn. The best moments are listed at least six hours apart, with five stars for the strongest. Only beneficial purposes are included.`;
+ const REASON=`Each half hour is scored: the Moon’s mansion (+3 if suited, otherwise −1.5); the Moon waxing (+2) or waning (−1.5), combust (−6) or in the via combusta (−3); the Moon applying to Venus or Jupiter (+2) or to the planet of the work (+1.5); the Moon, Venus and Jupiter free of any aspect from Mars or Saturn (+1 for the Moon, +0.5 for each benefic), using the traditional orbs (half of each planet’s orb added together). Under the strict rule any aspect from Mars or Saturn to the Moon or a benefic rules the time out; under the milder rule a conjunction, square or opposition costs −2 to −3 when applying and −1.5 to −2 when separating, and a trine or sextile −0.5 to −0.75. When Mars or Saturn is itself the planet of the work, its own aspects are not counted; the planet of the work dignified (+2), debilitated, retrograde or combust (−2 each), angular (+1 to +2) or cadent (−1); the rising sign ruled by the planet of the work or a benefic (+1.5); benefics on the 1st or 10th house (+1 each), malefics there (−2); the planetary hour (+2) and day (+1) of the planet of the work; and, when a saved chart is open, small adjustments for the Moon’s aspects to its natal Sun, Moon, Ascendant, Mars and Saturn. The best moments are listed at least six hours apart, with five stars for the strongest. Only beneficial purposes are included.`;
  const chartA=()=>{const A=byId(activeId);return A&&!A.now?A:null};
  function sideHtml(){const A=chartA(),P=PURP[st.purp];let elL='';try{elL=elLoc().label||''}catch(e){}
   const opts=[];if(A&&A.cur&&A.cur.place)opts.push(['cur',A.cur.place]);if(A)opts.push(['birth',A.place||'Birthplace']);opts.push(['el',elL?`${elL} (elections place)`:'Elections place']);opts.push(['any','Somewhere else…']);
@@ -7448,7 +7456,8 @@ window.MANX=[
   <p class="note">${glyphHtml(P.ruler)} ${P.why} Good mansions: ${P.man.join(', ')}.</p>
   <label class="l" for="tlLoc">Where will it be made?<select class="f" id="tlLoc">${opts.map(([v,l])=>`<option value="${v}"${v===st.loc?' selected':''}>${esc(l)}</option>`).join('')}</select></label>
   ${st.loc==='any'?`<label class="l" for="tlQ">Place<div class="place"><input class="f" id="tlQ" placeholder="Type a city anywhere in the world" autocomplete="off" value="${esc(st.any&&st.any.label||'')}" role="combobox" aria-controls="tlSugg" aria-expanded="false"><ul class="sugg" id="tlSugg" role="listbox" hidden></ul></div></label>${st.any?'':'<p class="note">Until a place is chosen, the elections place is used.</p>'}`:''}
-  <label class="l" for="tlDays">Search<select class="f" id="tlDays">${[[14,'2 weeks'],[30,'1 month'],[45,'6 weeks'],[60,'2 months'],[90,'3 months']].map(([d,l])=>`<option value="${d}"${d===st.days?' selected':''}>${l}</option>`).join('')}</select></label>
+  <label class="l" for="tlRule">Aspects from Mars and Saturn<select class="f" id="tlRule"><option value="strict"${st.mild?'':' selected'}>Strict: any aspect to the Moon or a benefic rules a time out</option><option value="mild"${st.mild?' selected':''}>Milder: hard aspects cost points, trines and sextiles a little</option></select></label>
+  <label class="l" for="tlDays">Search<select class="f" id="tlDays">${[[14,'2 weeks'],[30,'1 month'],[45,'6 weeks'],[60,'2 months'],[90,'3 months'],[180,'6 months'],[365,'1 year']].map(([d,l])=>`<option value="${d}"${d===st.days?' selected':''}>${l}</option>`).join('')}</select></label>
   <p class="note">${A?`Times are also checked against ${esc(A.name)}’s chart.<br><button type="button" class="pillbtn tlopen" data-tlopen>Choose another chart</button>`:`Times can also be checked against one of your saved charts.<br><button type="button" class="pillbtn tlopen" data-tlopen>Choose a chart</button>`}</p>
   <button class="btn" type="button" id="tlGo"${st.busy?' disabled':''}>${st.busy?`Searching… ${Math.round((st.prog||0)*100)}%`:'Find the best times'}</button>`}
  /* traditional correspondences: planet materials, and an image for each purpose (described in our own words) */
@@ -7517,7 +7526,8 @@ window.MANX=[
   if(!R)h+=`<p class="muted">Choose a purpose and press <strong>Find the best times</strong>. The search follows the rules of the <em>Picatrix</em>: the Moon in a suitable mansion and increasing in light, free of the malefics, the planet of the work strong and well placed, and the work begun in its day and hour.</p>`;
   else{h+=R.pick.length?`<div class="ellist">${R.pick.map((r,i)=>`<details class="elrow"${i===0?' open':''}><summary><span class="elst" title="Score ${r.sc.toFixed(1)}">${stars(r.sc)}</span><strong>${fmtT(r.t,R.pl)}</strong><span class="muted"> · day of ${PNM(r.dl||'sun')}, hour of ${PNM(r.hr||P.ruler)}${r.hs?` (${fmtH(r.hs,R.pl)}–${fmtH(r.he,R.pl)})`:''}</span></summary>${r.pre?`<p class="note elpre">Before sunrise, so this is still the planetary night of ${new Intl.DateTimeFormat(undefined,{weekday:'long',timeZone:R.pl.tz&&R.pl.tz!=='manual'?R.pl.tz:'UTC'}).format(new Date(r.pre))} (a planetary day runs from sunrise to sunrise).</p>`:''}
     <ul class="elg">${r.good.map(x=>`<li>${x}</li>`).join('')}</ul>${r.bad.length?`<ul class="elb">${r.bad.map(x=>`<li>${x}</li>`).join('')}</ul>`:''}
-    <button type="button" class="chipbtn" data-elshow="${r.t}">Show this sky on the chart</button></details>`).join('')}</div>`:`<p class="muted">No strong times in this period. Try a longer search or another purpose.</p>`;
+    <button type="button" class="chipbtn" data-elshow="${r.t}">Show this sky on the chart</button></details>`).join('')}</div>`:(!R.mild&&R.nOut?`<p class="muted">No times in this period pass the strict rule. ${R.nOut===R.tot?'Every':`${Math.round(R.nOut/R.tot*100)}% of`} half hour${R.nOut===R.tot?'':'s'} searched ${R.nOut===R.tot?'has':'have'} the Moon or a benefic aspected by Mars or Saturn${R.blocks.length?`, most often ${R.blocks.slice(0,3).map(b=>`${b[0]} (${b[1]}% of the time)`).join(', ')}`:''}. Try a longer search, or choose the milder rules.</p>`:`<p class="muted">No strong times in this period. Try a longer search or another purpose.</p>`);
+   if(R.pick.length&&!R.mild&&R.nOut)h+=`<p class="muted">Strict rule: ${Math.round(R.nOut/R.tot*100)}% of the times searched were ruled out because the Moon or a benefic was aspected by Mars or Saturn.</p>`;
    if(R.now)h+=`<p class="muted elnow">Right now in ${esc(R.pl.name||'this place')}: <span class="elst" title="Score ${R.now.sc.toFixed(1)}">${stars(R.now.sc)}</span> · Moon in mansion ${R.now.m}, ${MANS[R.now.m-1][0]}.</p>`}
   h=ETHIC+fitHtml()+matHtml(st.purp)+h;
   h+=`<details class="rsn"><summary>Reasoning</summary><p class="note">${REASON}</p></details>`;return h}
@@ -7535,7 +7545,7 @@ window.MANX=[
  try{new MutationObserver(()=>{const v=V();if(v&&!v.hidden&&!$('tlSeg'))paint()}).observe(V(),{attributes:true,attributeFilter:['hidden']})}catch(e){}
  document.addEventListener('click',e=>{const b=e.target.closest('#tlSeg [data-tl]');if(b){st.view=b.dataset.tl;save();paint()}});
  document.addEventListener('click',e=>{const b=e.target.closest('[data-tlpick]');if(b){st.purp=b.dataset.tlpick;save();paint()}});
- document.addEventListener('change',e=>{const id=e.target&&e.target.id;if(id==='tlPurp'){st.purp=e.target.value;save();paint()}else if(id==='tlLoc'){st.loc=e.target.value;st.res=null;save();paint();if(st.loc==='any'&&!st.any){const q=$('tlQ');if(q)q.focus()}}else if(id==='tlDays'){st.days=+e.target.value;st.res=null;save();paint()}});
+ document.addEventListener('change',e=>{const id=e.target&&e.target.id;if(id==='tlPurp'){st.purp=e.target.value;save();paint()}else if(id==='tlLoc'){st.loc=e.target.value;st.res=null;save();paint();if(st.loc==='any'&&!st.any){const q=$('tlQ');if(q)q.focus()}}else if(id==='tlRule'){st.mild=e.target.value==='mild';st.res=null;save();paint()}else if(id==='tlDays'){st.days=+e.target.value;st.res=null;save();paint()}});
  document.addEventListener('click',e=>{if(e.target.closest('[data-tlopen]')){e.preventDefault();try{openLib()}catch(err){console.warn(err)}}});
  // repaint when a different chart is chosen; drop results worked out for the previous one
  try{const _ra=renderAll;renderAll=function(){const r=_ra.apply(this,arguments);try{const v=V();if(v&&!v.hidden&&st.view==='tal'&&!st.busy){const A=chartA(),id=A?A.id:null;if(st.res&&st.res.forId!==id)st.res=null;paint()}}catch(e){}return r}}catch(e){}
@@ -7555,6 +7565,7 @@ window.MANX=[
 .elg li::marker{content:"+ ";color:var(--accent)}.elb li::marker{content:"− ";color:#e07a7a}
 .elrow .chipbtn{margin-top:4px}
 .elnow{font-size:.82rem}
+html body #ephView .eph-out,html body #ephView .eph-out th,html body #zrView .zrcard,html body #zrView .zrsec{background:var(--raised)!important}
 button.tlopen{margin-top:8px;border-color:color-mix(in srgb,var(--lilac) 55%,transparent);color:var(--lilac)}button.tlopen:hover{background:color-mix(in srgb,var(--lilac) 14%,transparent)}
 .tlmat summary strong,.tlfit summary strong,.tlethic summary strong{font-family:var(--serif)}
 .tlsugs{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px;margin-top:10px}.tlsug{display:flex;flex-direction:column;gap:6px;align-items:flex-start}.tlsug .note{margin:0}
