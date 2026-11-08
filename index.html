@@ -6457,7 +6457,7 @@ html[data-theme="paper"] .infotab,html[data-theme="pastel"] .infotab{color:var(-
 })();
 
 /* ===== Accuracy helpers: birth-time sensitivity, time-zone check, node type; site version; first-visit tips ===== */
-const DN_VER='v241';
+const DN_VER='v242';
 const btFmt=m=>m==null?'more than 4 hours':m<60?`${m} min`:`${Math.floor(m/60)} h${m%60?' '+(m%60)+' min':''}`;
 /* how far the birth time can move before the rising sign, Midheaven, Moon sign or a planet's house changes */
 const BT_MEMO=new Map();
@@ -7448,7 +7448,7 @@ window.MANX=[
   <p class="note">${glyphHtml(P.ruler)} ${P.why} Good mansions: ${P.man.join(', ')}.</p>
   <label class="l" for="tlLoc">Where will it be made?<select class="f" id="tlLoc">${opts.map(([v,l])=>`<option value="${v}"${v===st.loc?' selected':''}>${esc(l)}</option>`).join('')}</select></label>
   <label class="l" for="tlDays">Search<select class="f" id="tlDays">${[[14,'2 weeks'],[30,'1 month'],[45,'6 weeks'],[60,'2 months'],[90,'3 months']].map(([d,l])=>`<option value="${d}"${d===st.days?' selected':''}>${l}</option>`).join('')}</select></label>
-  <p class="note">${A?`Times are also checked against ${esc(A.name)}’s chart.`:`Times can also be checked against one of your saved charts.<br><button type="button" class="pillbtn tlopen" data-tlopen>Choose a chart</button>`}</p>
+  <p class="note">${A?`Times are also checked against ${esc(A.name)}’s chart.<br><button type="button" class="pillbtn tlopen" data-tlopen>Choose another chart</button>`:`Times can also be checked against one of your saved charts.<br><button type="button" class="pillbtn tlopen" data-tlopen>Choose a chart</button>`}</p>
   <button class="btn" type="button" id="tlGo"${st.busy?' disabled':''}>${st.busy?`Searching… ${Math.round((st.prog||0)*100)}%`:'Find the best times'}</button>`}
  /* traditional correspondences: planet materials, and an image for each purpose (described in our own words) */
  const MAT={
@@ -7510,7 +7510,7 @@ window.MANX=[
   let h=`<details class="elrow tlfit" open><summary><strong>Suggested for ${esc(F.name)}</strong><span class="muted"> · from the birth chart</span></summary><div class="tlsugs">`;
   const a=F.ally;h+=one(a,'Best suited',`${PNM(a.R)} is ${a.bits.length?a.bits.join(', '):'neutrally placed'}${a.rel.length?`, and ${RJ(a.rel)}`:''}. A talisman works best through a planet that is already strong in your chart, so this is the one most likely to answer.`);
   if(F.fix){const f=F.fix;h+=one(f,'Worth strengthening',`${PNM(f.R)} matters in your chart because ${RJ(f.rel)}, but it is ${f.bits.length?f.bits.join(', '):'weakly placed'}. In the Picatrix tradition a talisman made at a strong moment for a planet can support it where the birth chart leaves it weak.`)}
-  return h+`</div></details>`}
+  return h+`</div><button type="button" class="pillbtn tlopen" data-tlopen>Choose another chart</button></details>`}
  const ETHIC=`<details class="elrow tlethic" open><summary><strong>Before you begin</strong></summary><p class="note">In the creation of a talisman, it is important for your physical and spiritual well-being that you maintain a constructive intention and avoid harming others or creation for selfish purposes. A talisman is a concentrated living energy, and that energy must be treated with respect in all interactions. If you create a talisman and wish to dispel it, then this must be done with great care: simply thank the talisman and state your request to the cosmic intelligence from which you were given the energy. Once you feel this wish has been acknowledged, destroy the talisman with thoughtful purpose. Creation for selfish or evil reasons is possible, but it is gravely discouraged and not recommended under any circumstances. For this reason it is not included here; other resources cover that information.</p></details>`;
  function mainHtml(){const P=PURP[st.purp],R=st.res&&st.res.purp===st.purp?st.res:null;let h='';
   if(!R)h+=`<p class="muted">Choose a purpose and press <strong>Find the best times</strong>. The search follows the rules of the <em>Picatrix</em>: the Moon in a suitable mansion and increasing in light, free of the malefics, the planet of the work strong and well placed, and the work begun in its day and hour.</p>`;
