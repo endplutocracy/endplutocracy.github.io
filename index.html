@@ -6457,7 +6457,7 @@ html[data-theme="paper"] .infotab,html[data-theme="pastel"] .infotab{color:var(-
 })();
 
 /* ===== Accuracy helpers: birth-time sensitivity, time-zone check, node type; site version; first-visit tips ===== */
-const DN_VER='v235';
+const DN_VER='v237';
 const btFmt=m=>m==null?'more than 4 hours':m<60?`${m} min`:`${Math.floor(m/60)} h${m%60?' '+(m%60)+' min':''}`;
 /* how far the birth time can move before the rising sign, Midheaven, Moon sign or a planet's house changes */
 const BT_MEMO=new Map();
@@ -7285,11 +7285,11 @@ window.dnInkCenter=function(t,x,y,sg){t.dataset.cx=x;t.dataset.cy=y;if(/^(decan|
 /* ===== Lunar mansions: the 28 Arabic manazil (tropical, equal 12°51′ divisions from 0° Aries) ===== */
 window.MANS=[
  ['Al-Sharatain','the two signs','Beginnings, departures and bold first steps; good for setting out on journeys. Tradition warns that quarrels flare easily here.'],
- ['Al-Butain','the little belly','Searching out what is hidden, finding resources and making peace. Quiet, patient effort pays.'],
+ ['Al-Butain','the little belly','Finding hidden treasure and keeping hold of what you have. Quiet, patient searching pays.'],
  ['Al-Thurayya','the Pleiades','One of the fortunate mansions: trade, gain, craft and good outcomes. Favoured for ventures and travel by water.'],
- ['Al-Dabaran','the follower','Persistence and pursuit, but also discord and separation; partnerships need care. Good for ending what should end.'],
+ ['Al-Dabaran','the follower','Undoing and hindrance: traditionally used to break things down, and a source of discord. Poor for building or partnerships; useful for clearing away what is no longer wanted.'],
  ['Al-Haq’ah','the white spot','Learning, study and good health. A favourable mansion for students, healing and safe travel.'],
- ['Al-Han’ah','the brand','Friendship, love and making alliances. Warm and cooperative; good for bringing people together.'],
+ ['Al-Han’ah','the brand','Hunting, pursuit and taking revenge; traditionally harmful to harvests and to the work of physicians.'],
  ['Al-Dhira’','the forearm','Gain, friendship and favour with others. Good for trade and for asking for help.'],
  ['Al-Nathrah','the gap','Love and companionship, though friction with outsiders. Bonds deepen while rivals are kept at a distance.'],
  ['Al-Tarf','the glance','A difficult mansion: harm, illness and separation. Best for defence, caution and protecting what you have.'],
@@ -7298,8 +7298,8 @@ window.MANS=[
  ['Al-Sarfah','the changer','Harvests, growth and service; also turning points and changes of course in partnerships.'],
  ['Al-’Awwa','the barker','Generosity, trade and gain; freeing what is bound. A helpful, benevolent mansion.'],
  ['Al-Simak','the unarmed (Spica)','One of the most fortunate mansions: love, marriage and healing. Gifts and grace come easily.'],
- ['Al-Ghafr','the covering','Finding what is buried, protection and friendship. Good for uncovering things and for quiet support.'],
- ['Al-Zubana','the claws','Trade and gain, and freeing what is held; a mansion of exchanges and of balancing accounts.'],
+ ['Al-Ghafr','the covering','Digging out what is buried, including the truth; also traditionally a mansion of separation and of hindrance to travellers.'],
+ ['Al-Zubana','the claws','Freeing what is held, but a poor time for journeys, marriage, harvests or trade.'],
  ['Al-Iklil','the crown','Strength, stability and love; good for building, for loyalty and for lasting commitments.'],
  ['Al-Qalb','the heart','Courage and victory over rivals, but also strife; strong-willed and intense. Good for building defences.'],
  ['Al-Shawlah','the sting','Decisive action and success against opposition; caution with travel and risk.'],
@@ -7309,17 +7309,17 @@ window.MANS=[
  ['Sa’d Bula’','luck of the swallower','Healing and freeing captives, also partings; endings that make room for something better.'],
  ['Sa’d al-Su’ud','luckiest of the lucky','The most fortunate mansion: marriage, success, trade and prosperity. Generous and rewarding.'],
  ['Sa’d al-Akhbiyah','luck of the tents','A harsh mansion of siege and settling scores; the good use is protection, privacy and keeping secrets.'],
- ['Al-Fargh al-Muqaddam','the upper spout','Union, love and protection for travellers. Good for joining together and for kindness.'],
+ ['Al-Fargh al-Muqaddam','the upper spout','Union, love and goodwill between people, and freedom for those held captive.'],
  ['Al-Fargh al-Mu’akhkhar','the lower spout','Increase in trade and harvest, and healing; quiet growth that builds over time.'],
  ['Batn al-Hut','belly of the fish','Increase, safe travel and harmony in marriage; a gentle, fortunate close to the cycle.']];
 /* nature (F fortunate, M mixed, D difficult), key themes, gift, shadow, best use */
 window.MANX=[
  ['M','initiative, departures and courage','You move first and open new ground; others follow your lead.','Impatience and quarrels flare quickly.','start projects and set out on journeys'],
- ['M','discovery, resourcefulness and reconciliation','You find what others overlook and can mend broken ties.','You may hold too much back, keeping your finds to yourself.','look for what is missing and make peace'],
+ ['M','discovery, retention and resourcefulness','You find what others overlook and keep hold of what matters.','You may hold too much back, keeping your finds to yourself.','search for what is missing and secure what you have'],
  ['F','abundance, trade, craft and good company','Luck tends to gather around you and your work; people enjoy being near you.','Easy fortune can make you careless with it.','trade, network, create and travel'],
- ['M','persistence, loyalty and endings','You follow through when others give up and can close chapters cleanly.','Stubbornness and rifts with partners.','finish what should end and pursue long goals'],
+ ['D','undoing, clearing and endings','You can take apart what no longer works and clear the ground.','Discord, and breaking down what should be kept.','clear away and end what should end'],
  ['F','learning, health and safe passage','You learn quickly and recover well; you are a natural student and teacher.','Restless curiosity can scatter you.','study, heal and travel'],
- ['F','affection, alliance and friendship','You bring people together and make warm, lasting friendships.','Over-reliance on others’ approval.','make friends, court and reconcile'],
+ ['D','pursuit, hunting and retaliation','You go after what you want with focus and persistence.','Vengefulness, and neglect of health and growth.','pursue a goal single-mindedly'],
  ['F','favour, gain and helpful friends','You attract support and opportunities through people who like you.','Taking help for granted.','ask for favours, trade and build goodwill'],
  ['M','intimacy and close bonds','Your inner circle is strong and loyal.','Friction with outsiders and a tendency to close ranks.','deepen close relationships'],
  ['D','vigilance, protection and self-defence','You sense danger early and protect yourself and others.','Worry, illness or loss when you neglect care.','rest, protect and avoid risks'],
@@ -7328,8 +7328,8 @@ window.MANX=[
  ['M','growth, harvest and turning points','You know when to change course and reap what you have sown.','Partings and changes of heart.','harvest, change direction and serve'],
  ['F','generosity, release and fair exchange','You help free people and situations, and your generosity comes back to you.','Giving away more than you can spare.','trade, give and release'],
  ['F','grace, love, marriage and healing','Gifts come to you, and you bring healing and beauty into others’ lives.','Relying on charm instead of effort.','marry, heal, create and ask for blessings'],
- ['M','protection, uncovering and quiet support','You can dig out the truth and quietly shelter others.','Secrecy and hidden worries.','research, uncover and protect'],
- ['M','balance, exchange and freeing','You settle accounts and negotiate well.','Restlessness about debts or obligations.','negotiate, trade and settle accounts'],
+ ['M','uncovering, research and separation','You can dig out the truth that others bury.','Separations and secrecy.','research and uncover'],
+ ['M','release and freeing','You help people and situations break free.','Delays in travel, trade and commitments.','free what is held and settle old matters'],
  ['F','stability, loyalty and lasting commitments','What you build lasts, and people trust your word.','Rigidity when circumstances change.','commit, build and strengthen bonds'],
  ['M','courage, passion and victory','You have heart and the will to win.','Strife and burning out in conflict.','compete, defend and act boldly'],
  ['M','decisive action and breakthrough','You cut through obstacles when it counts.','Recklessness and sharp words.','act decisively and remove obstacles'],
@@ -7339,7 +7339,7 @@ window.MANX=[
  ['M','release and making room for better','Endings in your life tend to clear the way for improvement.','Partings and loss.','release, heal and free yourself'],
  ['F','success, prosperity and happy unions','You attract fortune, success and good partnerships.','Complacency when things go well.','marry, launch, sign and celebrate'],
  ['D','privacy, protection and settling scores','You keep secrets well and protect what is yours.','Grudges and harshness.','guard, protect and keep things private'],
- ['F','union, kindness and safe travel','You bring people together and protect those on the move.','Losing yourself in others.','join together, travel and show kindness'],
+ ['F','union, love and goodwill','You bring people together and build goodwill.','Losing yourself in others.','join together, reconcile and show kindness'],
  ['F','quiet growth, increase and healing','Your efforts compound slowly into real gain.','Impatience with slow results.','invest, plant and heal'],
  ['F','harmony, increase and completion','You bring things to a gentle, successful close and keep the peace.','Avoiding necessary conflict.','travel, reconcile and complete']];
 (()=>{if(typeof infoFor!=='function')return;const W=360/28;
@@ -7371,16 +7371,16 @@ window.MANX=[
 /* ===== Elections tab: Picatrix-style rules for choosing a time to make a talisman ===== */
 (()=>{const $=id=>document.getElementById(id);
  const PURP={
-  love:{name:'Love and affection',ruler:'venus',man:[6,7,8,10,14,17,24,26],why:'Venus governs love; the Moon should be in a mansion of friendship and union.'},
-  peace:{name:'Friendship and reconciliation',ruler:'venus',man:[2,6,13,26,28],why:'Venus governs harmony; mansions of peace and making up are chosen.'},
-  wealth:{name:'Wealth and gain',ruler:'jupiter',man:[3,7,11,13,16,21,24,27,28],why:'Jupiter governs increase; the Moon should be in a mansion of gain and trade.'},
-  trade:{name:'Trade and commerce',ruler:'mercury',man:[3,7,13,16,24,27],why:'Mercury governs trade and exchange.'},
+  love:{name:'Love and affection',ruler:'venus',man:[7,8,10,14,17,24,26,28],why:'Venus governs love; the Moon should be in a mansion of love, friendship and union.'},
+  peace:{name:'Friendship and reconciliation',ruler:'venus',man:[7,8,10,13,26],why:'Venus governs harmony; mansions of friendship, goodwill and union are chosen.'},
+  wealth:{name:'Wealth and gain',ruler:'jupiter',man:[3,7,11,13,21,27,28],why:'Jupiter governs increase; the Moon should be in a mansion of gain and good harvests.'},
+  trade:{name:'Trade and commerce',ruler:'mercury',man:[3,7,11,13,27,28],why:'Mercury governs trade and exchange.'},
   health:{name:'Health and healing',ruler:'sun',man:[5,14,22,23,27],why:'The Sun governs vitality; mansions of healing and recovery are chosen.'},
-  honour:{name:'Honour, success and favour',ruler:'sun',man:[10,11,17,18,24],why:'The Sun governs rank and recognition.'},
-  study:{name:'Learning and eloquence',ruler:'mercury',man:[2,5,13,15],why:'Mercury governs the mind and speech.'},
-  travel:{name:'Safe travel',ruler:'moon',man:[1,3,5,11,26,28],why:'The Moon governs journeys; mansions of safe passage are chosen.'},
-  protect:{name:'Protection of home and goods',ruler:'saturn',man:[10,15,17,21,25],why:'Saturn governs walls, foundations and keeping things safe.'},
-  courage:{name:'Courage and victory',ruler:'mars',man:[1,11,18,19],why:'Mars governs boldness and winning.'}};
+  honour:{name:'Honour, success and favour',ruler:'sun',man:[10,11,17,24],why:'The Sun governs rank and recognition.'},
+  study:{name:'Learning and eloquence',ruler:'mercury',man:[5,13],why:'Mercury governs the mind and speech; mansion 5 is traditionally the mansion of scholars.'},
+  travel:{name:'Safe travel',ruler:'moon',man:[1,3,5,11,13,21,28],why:'The Moon governs journeys; mansions of safe passage are chosen.'},
+  protect:{name:'Protection of home and goods',ruler:'saturn',man:[10,17,18,21,25],why:'Saturn governs walls, foundations and keeping things safe; these mansions strengthen buildings.'},
+  courage:{name:'Courage and victory',ruler:'mars',man:[11,18,19,24],why:'Mars governs boldness and winning.'}};
  const DOMS={sun:[4],moon:[3],mercury:[2,5],venus:[1,6],mars:[0,7],jupiter:[8,11],saturn:[9,10]},EXA={sun:0,moon:1,mercury:5,venus:11,mars:9,jupiter:3,saturn:6};
  const dig=(k,s)=>DOMS[k].includes(s)?'dom':EXA[k]===s?'exa':DOMS[k].some(d=>(d+6)%12===s)?'det':(EXA[k]+6)%12===s?'fall':null;
  const n3=x=>((x%360)+360)%360,sep=(a,b)=>Math.abs(((a-b+540)%360)-180),sOf=l=>Math.floor(n3(l)/30),W=360/28;
@@ -7424,13 +7424,14 @@ window.MANX=[
   if(nat){const mn=nat.pts;['sun','moon'].concat(nat.noHouses?[]:['asc']).forEach(k=>{const a=aspNow(moon,mn[k].lon,4);if(a&&(a.x===60||a.x===120))add(0.75,`Moon ${a.x===60?'sextile':'trine'} your natal ${PNM(k)}`)});
    MAL.forEach(k=>{const a=aspNow(moon,mn[k].lon,3);if(a&&(a.x===90||a.x===180||a.x===0))add(-1,`Moon ${a.x===0?'on':a.x===90?'square':'opposite'} your natal ${PNM(k)}`)})}
   return {sc,good,bad,m}}
+ const locDay=(ms,pl)=>{try{return new Intl.DateTimeFormat('en-CA',{timeZone:pl.tz&&pl.tz!=='manual'?pl.tz:'UTC'}).format(new Date(ms))}catch(e){return ''}};
  function run(){const A=chartA();const P=PURP[st.purp],pl=placeOf(A),nat=A?(()=>{try{return natalOf(A)}catch(e){return null}})():null;
   st.busy=true;st.res=null;paint();
   const t0=Math.ceil(Date.now()/3600000)*3600000,t1=t0+st.days*86400000,STEP=30*60000,o=opt(),out=[];let t=t0,ph=null;
   const lonE=pl.lon;
   const chunk=()=>{const end=Date.now()+40;
    while(t<t1&&Date.now()<end){try{if(!ph||t>=ph.next)ph=planetaryHours(t,pl);const hr=ph&&ph.hrs.find(h=>t>=h.start&&t<h.end);
-     const ch=Calc.cast(t,pl.lat,lonE,o),ch2=Calc.cast(t+3600000,pl.lat,lonE,o);const j=judge(ch,ch2,P,hr&&hr.lord,ph&&ph.dayLord,nat);out.push({t,...j,hr:hr&&hr.lord,hs:hr&&hr.start,he:hr&&hr.end})}catch(e){}t+=STEP}
+     const ch=Calc.cast(t,pl.lat,lonE,o),ch2=Calc.cast(t+3600000,pl.lat,lonE,o);const j=judge(ch,ch2,P,hr&&hr.lord,ph&&ph.dayLord,nat);out.push({t,...j,hr:hr&&hr.lord,hs:hr&&hr.start,he:hr&&hr.end,dl:ph&&ph.dayLord,pre:ph&&!(hr&&hr.day)&&locDay(t,pl)!==locDay(ph.rise,pl)?ph.rise:0})}catch(e){}t+=STEP}
    if(t<t1){st.prog=(t-t0)/(t1-t0);paint(true);setTimeout(chunk,0);return}
    // best windows: keep the top moments, one per planetary hour, spread across days
    out.sort((a,b)=>b.sc-a.sc);const pick=[];for(const r of out){if(pick.length>=8)break;if(r.sc<4)break;if(pick.some(p=>Math.abs(p.t-r.t)<6*3600000))continue;pick.push(r)}
@@ -7451,13 +7452,13 @@ window.MANX=[
   <button class="btn" type="button" id="tlGo"${st.busy?' disabled':''}>${st.busy?`Searching… ${Math.round((st.prog||0)*100)}%`:'Find the best times'}</button>`}
  /* traditional correspondences: planet materials, and an image for each purpose (described in our own words) */
  const MAT={
-  venus:{metal:'Copper',stones:'Emerald, lapis lazuli, coral or rose quartz',colours:'Green, rose and white',incense:'Rose, sandalwood, myrtle or benzoin',cloth:'Green or rose silk',plant:'Rose petals, myrtle or violet'},
-  jupiter:{metal:'Tin (pewter is a practical substitute)',stones:'Sapphire, amethyst or blue topaz',colours:'Royal blue and purple',incense:'Cedar, nutmeg, saffron or aloeswood',cloth:'Blue or purple silk',plant:'Oak leaf, sage or cinquefoil'},
-  mercury:{metal:'Quicksilver is the traditional metal, but it is toxic; use a mixed alloy such as brass, or engrave on fine paper or parchment',stones:'Agate, citrine or topaz',colours:'Mixed colours, orange and yellow',incense:'Mastic, cinnamon, lavender or fennel seed',cloth:'Multicoloured or orange silk',plant:'Lavender, fennel or marjoram'},
-  sun:{metal:'Gold (gold leaf or gilt brass also work)',stones:'Ruby, heliotrope, citrine or chrysolite',colours:'Gold and yellow',incense:'Frankincense, myrrh, bay laurel or saffron',cloth:'Gold or yellow silk',plant:'Bay laurel, rosemary or marigold'},
-  moon:{metal:'Silver',stones:'Moonstone, pearl or clear crystal',colours:'White and silver',incense:'Camphor, jasmine or white myrrh',cloth:'White silk',plant:'Willow, jasmine or white rose'},
-  saturn:{metal:'Lead is traditional but toxic; pewter or blackened iron is a safer choice',stones:'Onyx, jet or obsidian',colours:'Black and deep brown',incense:'Myrrh, storax or patchouli',cloth:'Black silk or linen',plant:'Cypress, ivy or comfrey'},
-  mars:{metal:'Iron or steel',stones:'Bloodstone, red jasper or garnet',colours:'Red and scarlet',incense:'Dragon’s blood resin or black pepper',cloth:'Red silk',plant:'Nettle, basil or ginger'}};
+  venus:{metal:'Copper',stones:'Emerald, beryl, red coral or carnelian',colours:'Green, rose and white',incense:'Red rose, ambergris, musk or aloeswood',cloth:'Green or rose silk',plant:'Rose petals, myrtle or violet'},
+  jupiter:{metal:'Tin (pewter is a practical substitute)',stones:'Sapphire, beryl or green jasper',colours:'Royal blue and purple',incense:'Storax, benzoin or aloeswood',cloth:'Blue or purple silk',plant:'Oak leaf, sage or cinquefoil'},
+  mercury:{metal:'Quicksilver is the traditional metal, but it is toxic; use a mixed alloy such as brass, or engrave on fine paper or parchment',stones:'Agate or emerald',colours:'Mixed colours, orange and yellow',incense:'Mastic, frankincense or cloves',cloth:'Multicoloured or orange silk',plant:'Lavender, fennel or marjoram'},
+  sun:{metal:'Gold (gold leaf or gilt brass also work)',stones:'Carbuncle (ruby), chrysolite or heliotrope',colours:'Gold and yellow',incense:'Saffron, frankincense, aloeswood or balsam',cloth:'Gold or yellow silk',plant:'Bay laurel, rosemary or marigold'},
+  moon:{metal:'Silver',stones:'Selenite (moonstone), pearl, crystal or beryl',colours:'White and silver',incense:'Camphor, frankincense or white poppy seed',cloth:'White silk',plant:'Willow, jasmine or white rose'},
+  saturn:{metal:'Lead is traditional but toxic; pewter or blackened iron is a safer choice',stones:'Onyx, chalcedony or brown jasper',colours:'Black and deep brown',incense:'Myrrh (traditional lists also name henbane and mandrake, which are poisonous and should never be burned)',cloth:'Black silk or linen',plant:'Cypress, ivy or comfrey'},
+  mars:{metal:'Iron or steel',stones:'Bloodstone, red jasper or diamond',colours:'Red and scarlet',incense:'Dragon’s blood or bdellium resin (traditional lists also name sulphur and euphorbium, whose fumes are harmful)',cloth:'Red silk',plant:'Nettle, basil or ginger'}};
  const IMG={
   love:'Two figures facing each other and embracing, or a crowned woman holding a mirror in one hand and a flower in the other.',
   peace:'Two figures clasping right hands, with a dove or an olive branch between them.',
@@ -7469,9 +7470,18 @@ window.MANX=[
   travel:'A ship under full sail beneath a crescent Moon, or a traveller with a staff and lantern.',
   protect:'A walled tower with a closed gate, or an old man seated holding a key.',
   courage:'An armed warrior in a helmet holding a raised sword, standing on or beside a lion.'};
+ /* easier substitutes, chosen by the same logic: the planet's colour, nature or material */
+ const ALT={
+  venus:[['Ambergris and musk','labdanum resin or ambrette seed, which give the same warm, sweet, animal-like scent from plants'],['Aloeswood (agarwood)','sandalwood or benzoin, fragrant sweet woods and resins'],['Emerald and beryl','malachite or green aventurine: malachite is itself a copper ore, so it belongs to Venus twice over (use it whole; its dust is harmful)'],['Red coral','carnelian or rose quartz, warm pink-red stones that are easy to find'],['Silk','green or rose cotton or linen']],
+  jupiter:[['Storax','benzoin, a sweet resin of the same family of uses'],['Aloeswood (agarwood)','cedar or benzoin, rich woods and resins with a stately scent'],['Sapphire and beryl','lapis lazuli, sodalite or blue glass, keeping Jupiter’s deep blue'],['Tin','pewter, which is mostly tin'],['Silk','blue or purple cotton or linen']],
+  mercury:[['Quicksilver','brass or a mixed alloy, or fine paper or parchment written in ink'],['Mastic','frankincense or a pinch of dried lavender, light and quick-burning'],['Emerald','agate in banded or mixed colours, Mercury’s own stone'],['Silk','orange or multicoloured cotton']],
+  sun:[['Gold','gold leaf, gilt brass or yellow brass'],['Saffron','safflower or calendula petals, which give the same golden colour'],['Aloeswood (agarwood)','frankincense or cinnamon bark, warm solar resins and spices'],['Balsam','copaiba or frankincense'],['Ruby (carbuncle)','garnet (the traditional carbuncle is often garnet), sunstone or citrine'],['Silk','gold or yellow cotton']],
+  moon:[['Pearl','mother-of-pearl, which is the same material'],['Beryl','clear quartz or a pale aquamarine-coloured glass'],['White poppy seed','white sesame or other pale seeds'],['Silver','sterling or silver-plated metal'],['Silk','white cotton or linen']],
+  saturn:[['Onyx and chalcedony','black tourmaline, jet or obsidian, keeping Saturn’s black'],['Lead','pewter or blackened iron'],['Silk','black linen or wool']],
+  mars:[['Diamond','clear quartz, a common stand-in for diamond, or a red stone such as garnet'],['Bdellium','myrrh or guggul, which come from the same family of resins'],['Silk','red cotton']]};
  const CHAR={sun:'☉',moon:'☽',mercury:'☿',venus:'♀',mars:'♂',jupiter:'♃',saturn:'♄'};
  function matHtml(k){const P=PURP[k],M=MAT[P.ruler];return `<details class="elrow tlmat" open><summary><strong>Materials and image</strong><span class="muted"> · ${P.name}, under ${PNM(P.ruler)}</span></summary>
-  <dl class="tldl"><dt>Image</dt><dd>${IMG[k]}</dd><dt>Metal</dt><dd>${M.metal}</dd><dt>Stones</dt><dd>${M.stones}</dd><dt>Colours</dt><dd>${M.colours}</dd><dt>Incense</dt><dd>${M.incense}</dd><dt>Plants</dt><dd>${M.plant}</dd><dt>Wrap it in</dt><dd>${M.cloth}</dd><dt>Inscription</dt><dd>The image on one side; on the other, the glyph of ${PNM(P.ruler)} (${glyphHtml(P.ruler)}) and the purpose written in your own words.</dd></dl>
+  <dl class="tldl"><dt>Image</dt><dd>${IMG[k]}</dd><dt>Metal</dt><dd>${M.metal}</dd><dt>Stones</dt><dd>${M.stones}</dd><dt>Colours</dt><dd>${M.colours}</dd><dt>Incense</dt><dd>${M.incense}</dd><dt>Plants</dt><dd>${M.plant}</dd><dt>Wrap it in</dt><dd>${M.cloth}</dd>${ALT[P.ruler]?`<dt>Easier substitutes</dt><dd><ul class="tlalt">${ALT[P.ruler].map(([x,y])=>`<li><strong>${x}:</strong> ${y}</li>`).join('')}</ul></dd>`:''}<dt>Inscription</dt><dd>The image on one side; on the other, the glyph of ${PNM(P.ruler)} (${glyphHtml(P.ruler)}) and the purpose written in your own words.</dd></dl>
   <p class="note">Traditionally the image is engraved or drawn while the elected hour is running, the talisman is suffumigated (passed through the smoke of the incense), then wrapped in the cloth and kept close. Burn incense in a ventilated room, and do not heat, sand or handle lead or mercury.</p></details>`}
  /* which talisman suits this birth chart: work with the strongest relevant planet, and repair an important weak one */
  const PHOUSE={love:[7,5],peace:[11,7],wealth:[2,11],trade:[2,3],health:[6,1],honour:[10],study:[9,3],travel:[9,3],protect:[4],courage:[1]};
@@ -7503,7 +7513,7 @@ window.MANX=[
   return h+`</div></details>`}
  function mainHtml(){const P=PURP[st.purp],R=st.res&&st.res.purp===st.purp?st.res:null;let h='';
   if(!R)h+=`<p class="muted">Choose a purpose and press <strong>Find the best times</strong>. The search follows the rules of the <em>Picatrix</em>: the Moon in a suitable mansion and increasing in light, free of the malefics, the planet of the work strong and well placed, and the work begun in its day and hour.</p>`;
-  else{h+=R.pick.length?`<div class="ellist">${R.pick.map((r,i)=>`<details class="elrow"${i===0?' open':''}><summary><span class="elst" title="Score ${r.sc.toFixed(1)}">${stars(r.sc)}</span><strong>${fmtT(r.t,R.pl)}</strong><span class="muted"> · hour of ${PNM(r.hr||P.ruler)}${r.hs?` (${fmtH(r.hs,R.pl)}–${fmtH(r.he,R.pl)})`:''}</span></summary>
+  else{h+=R.pick.length?`<div class="ellist">${R.pick.map((r,i)=>`<details class="elrow"${i===0?' open':''}><summary><span class="elst" title="Score ${r.sc.toFixed(1)}">${stars(r.sc)}</span><strong>${fmtT(r.t,R.pl)}</strong><span class="muted"> · day of ${PNM(r.dl||'sun')}, hour of ${PNM(r.hr||P.ruler)}${r.hs?` (${fmtH(r.hs,R.pl)}–${fmtH(r.he,R.pl)})`:''}</span></summary>${r.pre?`<p class="note elpre">Before sunrise, so this is still the planetary night of ${new Intl.DateTimeFormat(undefined,{weekday:'long',timeZone:R.pl.tz&&R.pl.tz!=='manual'?R.pl.tz:'UTC'}).format(new Date(r.pre))} (a planetary day runs from sunrise to sunrise).</p>`:''}
     <ul class="elg">${r.good.map(x=>`<li>${x}</li>`).join('')}</ul>${r.bad.length?`<ul class="elb">${r.bad.map(x=>`<li>${x}</li>`).join('')}</ul>`:''}
     <button type="button" class="chipbtn" data-elshow="${r.t}">Show this sky on the chart</button></details>`).join('')}</div>`:`<p class="muted">No strong times in this period. Try a longer search or another purpose.</p>`;
    if(R.now)h+=`<p class="muted elnow">Right now in ${esc(R.pl.name||'this place')}: <span class="elst" title="Score ${R.now.sc.toFixed(1)}">${stars(R.now.sc)}</span> · Moon in mansion ${R.now.m}, ${MANS[R.now.m-1][0]}.</p>`}
@@ -7542,8 +7552,9 @@ window.MANX=[
 .elnow{font-size:.82rem}
 .tlmat summary strong,.tlfit summary strong{font-family:var(--serif)}
 .tlsugs{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px;margin-top:10px}.tlsug{display:flex;flex-direction:column;gap:6px;align-items:flex-start}.tlsug .note{margin:0}
-.tldl{display:grid;grid-template-columns:auto 1fr;gap:6px 14px;margin:10px 0 6px;font-size:.86rem}.tldl dt{color:var(--muted);font-weight:600}.tldl dd{margin:0}
+.tldl{display:grid;grid-template-columns:auto 1fr;gap:6px 14px;margin:10px 0 6px;font-size:.86rem}.tldl dt{color:var(--muted);font-weight:600}.tldl dd{margin:0}.tlalt{margin:0;padding-left:16px}.tlalt li{margin:0 0 4px}
 @media (max-width:480px){.tldl{grid-template-columns:1fr}.tldl dt{margin-top:4px}}`;document.head.append(css)})();
+try{window.dnPlanetaryHours=planetaryHours}catch(e){}
 
 /* ===== Full reading, part 2: glossary, timeline, options, saved readings, PDF download ===== */
 
