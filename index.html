@@ -1725,7 +1725,7 @@ const NAK_INFO=[
 ['Ahir Budhnya, serpent of the deep','the back legs of a funeral cot','Uttara Bhadrapada is the calm depth after the fire. Wise, restrained and compassionate, it steadies others and holds space for transformation. Patience and inner discipline are its gifts.'],
 ['Pushan, protector of travellers','a fish or a drum','Revati completes the cycle. Gentle, nurturing and imaginative, it guides journeys safely to their end and looks after the lost. Its kindness is boundless; it needs protection from being taken advantage of.']];
 const NAK_LORD=['Ketu','Venus','Sun','Moon','Mars','Rahu','Jupiter','Saturn','Mercury'];
-const LAYERS=[['asteroids','Asteroids','Choose which asteroids, centaurs and dwarf planets to show'],['stars','Fixed stars','50 traditional stars; conjunctions listed'],['decans','Decans','Chaldean faces ring'],['terms','Terms','Egyptian bounds ring'],['naks','Nakshatras','27 lunar mansions (Lahiri)'],['modbar','Degree bar','Every point by its degree in its sign (modulus 30°), shown above the wheel'],['aspg','Aspect symbols','The aspect’s symbol at the middle of each aspect line']];
+const LAYERS=[['asteroids','Asteroids','Choose which asteroids, centaurs and dwarf planets to show'],['stars','Fixed stars','50 traditional stars; conjunctions listed'],['decans','Decans','Chaldean faces ring'],['terms','Terms','Egyptian bounds ring'],['naks','Nakshatras','27 Vedic lunar mansions (Lahiri)'],['mansions','Lunar mansions','28 Arabic mansions (tropical)'],['modbar','Degree bar','Every point by its degree in its sign (modulus 30°), shown above the wheel'],['aspg','Aspect symbols','The aspect’s symbol at the middle of each aspect line']];
 const decanOf=lon=>{const d=Math.floor(n360(lon)/10);return {n:d%3+1,ruler:CHALDEAN[d%7]}};
 const termOf=lon=>{const s=Math.floor(n360(lon)/30),x=n360(lon)-s*30;return TERMS[s].find(t=>x<t[1])[0]};
 const nakOf=(lon,jd,ay)=>{const l=n360(lon+ay-Calc.ayanamsa(jd,'lahiri')),i=Math.floor(l/(360/27));return {i,pada:Math.floor((l-i*360/27)/(360/108))+1}};
@@ -2344,11 +2344,11 @@ function renderWheel(v){
  svg.replaceChildren();const inner=v.inner,outer=v.outer,bi=!!outer,third=bi&&v.third||null,tri=!!third,Ly=S.layers;
  WARP=S.houseWheel&&!inner.noHouses&&inner.cusps&&!['whole','equal'].includes(inner.houseUsed)&&!inner.locked?{c:inner.cusps.slice(0,12).map(n360),a:n360(inner.cusps[0])}:null;
  const ascLon=inner.noHouses?0:inner.pts.asc.lon;rot=180-(inner.locked&&lockSnap?lockSnap.asc:ascLon);
- const nr=['terms','decans','naks'].filter(k=>Ly[k]).length;
+ const nr=['terms','decans','naks','mansions'].filter(k=>Ly[k]).length;
  const Z1=Ly.stars?382:394,Z2=Z1-26,base=Z2-22*nr,wn=(S.wDeg!==false?1:0)+(S.wMin!==false?1:0)+(S.wSign?1:0),OB=Math.round(tri?(base-80)*.325:bi?58+wn*15:50+wn*42/3),OT=tri?OB:0,oTop=base-OT,iTop=oTop-OB,IN=Math.round(tri?80:bi?base-OB-56-wn*15:base-84-wn*62/3);v.ob=OB;v.ot=OT;
  const bandCols=keys=>{const B={};let prev='G';keys.forEach(k=>{B[k]=prev==='G'?'P':'G';prev=B[k]});if(B.inner==='G')B.inner='P';
   let pi=0,last=null;keys.forEach(k=>{if(B[k]==='P'){pi=last==='P'?pi+1:0;B[k]=`var(--w-p${pi%2?2:1})`}else B[k]='var(--w-grey)';last=B[k].includes('-p')?'P':'G'});if(B.inner==='var(--w-p1)')B.inner='var(--w-pin,var(--w-p1))';return B};
- const ringKeys=['terms','decans','naks'].filter(k=>Ly[k]),bandKeys=[...ringKeys,...(tri?['third']:[]),...(bi?['outer']:[]),'inner'],BC=bandCols(bandKeys);
+ const ringKeys=['terms','decans','naks','mansions'].filter(k=>Ly[k]),bandKeys=[...ringKeys,...(tri?['third']:[]),...(bi?['outer']:[]),'inner'],BC=bandCols(bandKeys);
  // the first chart's planet band matches the single-chart wheel's planet band
  BC.inner='var(--w-planet)';if(bi)BC.outer='var(--w-planet)';if(BC.naks)BC.naks=`var(--w-naks-o,${BC.naks})`;if(BC.terms)BC.terms=`var(--w-terms-o,${BC.terms})`;if(ringKeys.length>1){const solo=bandCols(['decans','inner']).decans;ringKeys.slice(0,-1).forEach(k=>BC[k]=`color-mix(in srgb,${solo} 80%,#000)`);BC[ringKeys[ringKeys.length-1]]=solo}
  // on a triwheel all three planet bands share the natal planet-band purple
@@ -2361,6 +2361,7 @@ function renderWheel(v){
  if(Ly.terms){const segs=[];TERMS.forEach((t,s)=>{let a=s*30;t.forEach(([pl,end])=>{segs.push({obj:`term:${s}:${a-s*30}`,start:a,end:s*30+end,label:glyph(pl),title:`Term of ${PT[pl][1]}, ${SIGN_N[s]} ${a-s*30}°–${end}°`,size:10,major:a===s*30});a=s*30+end})});ring(r,r-22,segs,BC.terms);r-=22}
  if(Ly.decans){const segs=[];for(let d=0;d<36;d++){const pl=CHALDEAN[d%7];segs.push({obj:`decan:${d}`,start:d*10,end:d*10+10,label:glyph(pl),title:`Decan ${d%3+1} of ${SIGN_N[Math.floor(d/3)]}: ${PT[pl][1]}`,size:11,major:d%3===0})}ring(r,r-22,segs,BC.decans);r-=22}
  if(Ly.naks){const off=Calc.ayanamsa(inner.jd,'lahiri')-(inner.ayanamsa||0),w=360/27,segs=[];for(let i=0;i<27;i++)segs.push({obj:`nak:${i}`,start:i*w+off,end:(i+1)*w+off,label:NAK_AB[i],tang:true,title:`${i+1}. ${NAKS[i]} (lord ${NAK_LORD[i%9]})`,size:9.5,font:'var(--mono)',color:'var(--nak-lab,var(--lilac,var(--muted)))',major:true});ring(r,r-22,segs,BC.naks);r-=22}
+ if(Ly.mansions&&window.MANS){const w=360/28,segs=[];for(let i=0;i<28;i++)segs.push({obj:`man:${i}`,start:i*w,end:(i+1)*w,label:String(i+1),tang:true,title:`Mansion ${i+1}: ${MANS[i][0]} (${MANS[i][1]})`,size:9.5,font:'var(--mono)',color:'var(--nak-lab,var(--lilac,var(--muted)))',major:true});ring(r,r-22,segs,BC.mansions);r-=22}
  {const gid='wPlanetG',d=el('defs',{}),g=el('radialGradient',{id:gid,gradientUnits:'userSpaceOnUse',cx:C,cy:C,r:base});g.append(el('stop',{offset:Math.max(0,Math.min(1,IN/base)),'stop-color':'var(--w-pg1,var(--w-planet))'}),el('stop',{offset:1,'stop-color':'var(--w-pg2,var(--w-planet))'}));d.append(g);svg.append(d);['inner','outer','third'].forEach(k=>{if(BC[k]==='var(--w-planet)')BC[k]=`url(#${gid})`})}
  svg.append(el('circle',{cx:C,cy:C,r:base,fill:tri?BC.third:bi?BC.outer:BC.inner,stroke:'none'}));if(tri)svg.append(el('circle',{cx:C,cy:C,r:oTop,fill:BC.outer,stroke:'none'}));if(bi)svg.append(el('circle',{cx:C,cy:C,r:iTop,fill:BC.inner,stroke:'none'}));
  for(let i=0;i<360;i+=1){if(i%30===0)continue;const len=i%10===0?11:i%5===0?7:4;const [a,b]=pt(i,base),[c,d]=pt(i,base-len);svg.append(el('line',{x1:a,y1:b,x2:c,y2:d,stroke:'var(--muted-line,var(--muted))','stroke-width':.7,opacity:.55}))}
@@ -2459,9 +2460,9 @@ function strengthHtml(ch,k){const st=planetStrength(ch,k);if(!st)return '';const
  <details class="rsn"><summary><svg class="rsnico" viewBox="6 8.4 7.2 7.2" aria-hidden="true"><path d="M9.6 8.4 L10.5 11.1 L13.2 12 L10.5 12.9 L9.6 15.6 L8.7 12.9 L6 12 L8.7 11.1 Z"/></svg>Reasoning</summary><p class="note rsnp">${k==='lilith'?'Black Moon Lilith is a calculated point (the Moon’s apogee) with no dignities or meaningful motion, so it is judged by house, aspects to the lights, benefics and malefics, the nodes and fixed stars. ':k==='vertex'?'The Vertex is a calculated point on the western side of the chart, so it is judged by house, aspects to the lights, benefics and malefics, the nodes and fixed stars. ':''}${['asc','mc','dsc','ic'].includes(k)?'An angle is judged by the condition of the planet that rules its sign, and by planets aspecting or sitting on it. ':['node','snode'].includes(k)?'The nodes are judged by sign (traditional exaltation in Gemini and Sagittarius), house, closeness to the Sun and Moon, and aspects to the benefics and malefics. ':LOTS.includes(k)?'Lots have no dignity of their own, so they are judged mainly by the condition and placement of their lord, then by house and aspects. ':Calc.ALL_AST.includes(k)||Calc.URA_KEYS.includes(k)?'Asteroids and Uranian points have no traditional dignities, so their score comes from house, motion, the lights and aspects. ':''}A traditional tally of essential dignity (sign, exaltation, triplicity, term, face), house, motion, the Sun’s rays, sect, aspects to the benefics and malefics, the nodes and key fixed stars. The points are added up and scaled so 50% is neutral and 100% is full strength. Strength shows how freely a planet can act, not whether it is “good”.</p></details>`}
 function posTable(ch,title,ref){const keys=[...shownKeys(),...(ch.noHouses?[]:['asc','mc','dsc','ic'])].filter(k=>ch.pts[k]&&!(ch.noHouses&&[...LOTS,'vertex'].includes(k)));
  const cusps=(ref||ch).noHouses?null:(ref||ch).cusps;
- const Ly=S.layers;const tk='pos:'+(ref?'outer':'inner');let h=`<h3 class="sub">${title}</h3><div class="tblwrap"><table><thead><tr><th></th><th>Point</th><th>Position</th><th>${ref?'In natal':'House'}</th><th>Daily</th><th>Strength</th><th>Dignity</th>${Ly.decans?'<th>Decan</th>':''}${Ly.terms?'<th>Term</th>':''}${Ly.naks?'<th>Nakshatra</th>':''}</tr></thead><tbody>`;
+ const Ly=S.layers;const tk='pos:'+(ref?'outer':'inner');let h=`<h3 class="sub">${title}</h3><div class="tblwrap"><table><thead><tr><th></th><th>Point</th><th>Position</th><th>${ref?'In natal':'House'}</th><th>Daily</th><th>Strength</th><th>Dignity</th>${Ly.decans?'<th>Decan</th>':''}${Ly.terms?'<th>Term</th>':''}${Ly.naks?'<th>Nakshatra</th>':''}${Ly.mansions?'<th>Mansion</th>':''}</tr></thead><tbody>`;
  for(const k of keys){const p=ch.pts[k],dg=dignity(k,p.lon),g=PT[k][0],isPl=!!GLYPH_SVG[k],isText=g.length>1&&!/[☀-⯿]/.test(g);
-  h+=`<tr class="clk" data-obj="pt:${lastView&&ch===lastView.outer?'o':'i'}:${k}"><td class="g" ${isText?'style="font:600 .75rem var(--mono)"':''}>${isPl?svgGlyph(k):isText?g:g+VS}</td><td>${PT[k][1]}</td><td>${lonHtml(p.lon)}${p.speed<0&&!['node','snode'].includes(k)?' <span class="rx">℞</span>':''}</td><td class="mono">${cusps&&!['asc','mc','dsc','ic'].includes(k)?Calc.houseOf(p.lon,cusps):''}</td><td class="mono muted">${p.speed?(p.speed>0?'+':'−')+Math.abs(p.speed).toFixed(Math.abs(p.speed)<1?3:2)+'°':''}</td><td>${(()=>{const st=planetStrength(ch,k);return st?`<span class="sgcell">${strGauge(st,1)}<span class="mono muted">${st.pct}%</span></span>`:''})()}</td><td>${dg?`<span class="dig ${dg[0]}">${dg[1]}</span>`:''}</td>${Ly.decans?(()=>{const d=decanOf(p.lon);return `<td><span class="sym">${PT[d.ruler][0]+VS}</span> <span class="muted">${d.n}</span></td>`})():''}${Ly.terms?(()=>{const t=termOf(p.lon);return `<td><span class="sym">${PT[t][0]+VS}</span> <span class="muted">${PT[t][1]}</span></td>`})():''}${Ly.naks?(()=>{const n=nakOf(p.lon,ch.jd,ch.ayanamsa||0);return `<td>${NAKS[n.i]} <span class="muted mono">p${n.pada}</span></td>`})():''}</tr>`}
+  h+=`<tr class="clk" data-obj="pt:${lastView&&ch===lastView.outer?'o':'i'}:${k}"><td class="g" ${isText?'style="font:600 .75rem var(--mono)"':''}>${isPl?svgGlyph(k):isText?g:g+VS}</td><td>${PT[k][1]}</td><td>${lonHtml(p.lon)}${p.speed<0&&!['node','snode'].includes(k)?' <span class="rx">℞</span>':''}</td><td class="mono">${cusps&&!['asc','mc','dsc','ic'].includes(k)?Calc.houseOf(p.lon,cusps):''}</td><td class="mono muted">${p.speed?(p.speed>0?'+':'−')+Math.abs(p.speed).toFixed(Math.abs(p.speed)<1?3:2)+'°':''}</td><td>${(()=>{const st=planetStrength(ch,k);return st?`<span class="sgcell">${strGauge(st,1)}<span class="mono muted">${st.pct}%</span></span>`:''})()}</td><td>${dg?`<span class="dig ${dg[0]}">${dg[1]}</span>`:''}</td>${Ly.decans?(()=>{const d=decanOf(p.lon);return `<td><span class="sym">${PT[d.ruler][0]+VS}</span> <span class="muted">${d.n}</span></td>`})():''}${Ly.terms?(()=>{const t=termOf(p.lon);return `<td><span class="sym">${PT[t][0]+VS}</span> <span class="muted">${PT[t][1]}</span></td>`})():''}${Ly.naks?(()=>{const n=nakOf(p.lon,ch.jd,ch.ayanamsa||0);return `<td>${NAKS[n.i]} <span class="muted mono">p${n.pada}</span></td>`})():''}${Ly.mansions&&window.MANS?(()=>{const m=Math.floor(n360(p.lon)/(360/28));return `<td><span class="mono">${m+1}</span> <span class="muted">${MANS[m][0]}</span></td>`})():''}</tr>`}
  h+='</tbody></table></div>';
  if(!ch.noHouses&&ch.houseUsed!=='whole'&&ch.cusps&&!ch.cusps.slice(0,12).every(c=>{const v=n360(+c||0);return v<1/120||v>360-1/120})){const sk='cusps:'+title;h+=`<h3 class="sub">House cusps · ${HOUSES.find(x=>x[0]===ch.houseUsed)?.[1]||''}</h3><div class="tblwrap"><table><tbody>`;
   for(let r=0;r<6;r++)h+=`<tr><td class="mono muted clk" data-obj="house:${r+1}">${r+1}</td><td class="clk" data-obj="house:${r+1}">${lonHtml(ch.cusps[r])}</td><td class="mono muted clk" data-obj="house:${r+7}">${r+7}</td><td class="clk" data-obj="house:${r+7}">${lonHtml(ch.cusps[r+6])}</td></tr>`;h+='</tbody></table></div>'}
@@ -6456,7 +6457,7 @@ html[data-theme="paper"] .infotab,html[data-theme="pastel"] .infotab{color:var(-
 })();
 
 /* ===== Accuracy helpers: birth-time sensitivity, time-zone check, node type; site version; first-visit tips ===== */
-const DN_VER='v229';
+const DN_VER='v235';
 const btFmt=m=>m==null?'more than 4 hours':m<60?`${m} min`:`${Math.floor(m/60)} h${m%60?' '+(m%60)+' min':''}`;
 /* how far the birth time can move before the rising sign, Midheaven, Moon sign or a planet's house changes */
 const BT_MEMO=new Map();
@@ -7280,6 +7281,269 @@ window.dnInkCenter=function(t,x,y,sg){t.dataset.cx=x;t.dataset.cy=y;if(/^(decan|
  const _ip=infoPoint;infoPoint=function(which,k){let h=_ip.apply(this,arguments);try{if(!h||which!=='i'||(lastView&&SYNTH_MODES.includes(lastView.mode)))return h;const ch=lastView&&lastView.inner;if(!ch)return h;
    const add=ANG.includes(k)?angleReading(ch,k):planetReading(ch,k);if(add)h+=`<p class="il">In this chart</p>${add}`}catch(e){console.warn(e)}return h};
 })();
+
+/* ===== Lunar mansions: the 28 Arabic manazil (tropical, equal 12°51′ divisions from 0° Aries) ===== */
+window.MANS=[
+ ['Al-Sharatain','the two signs','Beginnings, departures and bold first steps; good for setting out on journeys. Tradition warns that quarrels flare easily here.'],
+ ['Al-Butain','the little belly','Searching out what is hidden, finding resources and making peace. Quiet, patient effort pays.'],
+ ['Al-Thurayya','the Pleiades','One of the fortunate mansions: trade, gain, craft and good outcomes. Favoured for ventures and travel by water.'],
+ ['Al-Dabaran','the follower','Persistence and pursuit, but also discord and separation; partnerships need care. Good for ending what should end.'],
+ ['Al-Haq’ah','the white spot','Learning, study and good health. A favourable mansion for students, healing and safe travel.'],
+ ['Al-Han’ah','the brand','Friendship, love and making alliances. Warm and cooperative; good for bringing people together.'],
+ ['Al-Dhira’','the forearm','Gain, friendship and favour with others. Good for trade and for asking for help.'],
+ ['Al-Nathrah','the gap','Love and companionship, though friction with outsiders. Bonds deepen while rivals are kept at a distance.'],
+ ['Al-Tarf','the glance','A difficult mansion: harm, illness and separation. Best for defence, caution and protecting what you have.'],
+ ['Al-Jabhah','the forehead','Strength, love and help against enemies. Good for building, strengthening and securing.'],
+ ['Al-Zubrah','the mane','Respect and gain through courage; good for journeys and trade, and for commanding attention.'],
+ ['Al-Sarfah','the changer','Harvests, growth and service; also turning points and changes of course in partnerships.'],
+ ['Al-’Awwa','the barker','Generosity, trade and gain; freeing what is bound. A helpful, benevolent mansion.'],
+ ['Al-Simak','the unarmed (Spica)','One of the most fortunate mansions: love, marriage and healing. Gifts and grace come easily.'],
+ ['Al-Ghafr','the covering','Finding what is buried, protection and friendship. Good for uncovering things and for quiet support.'],
+ ['Al-Zubana','the claws','Trade and gain, and freeing what is held; a mansion of exchanges and of balancing accounts.'],
+ ['Al-Iklil','the crown','Strength, stability and love; good for building, for loyalty and for lasting commitments.'],
+ ['Al-Qalb','the heart','Courage and victory over rivals, but also strife; strong-willed and intense. Good for building defences.'],
+ ['Al-Shawlah','the sting','Decisive action and success against opposition; caution with travel and risk.'],
+ ['Al-Na’aim','the ostriches','Taming, training and binding; good for discipline and restraint, harder for freedom.'],
+ ['Al-Baldah','the city','Building, harvests and steady gain; settling down and making foundations.'],
+ ['Sa’d al-Dhabih','luck of the slaughterer','Healing and escape from trouble, but also separation; a mansion of necessary cuts.'],
+ ['Sa’d Bula’','luck of the swallower','Healing and freeing captives, also partings; endings that make room for something better.'],
+ ['Sa’d al-Su’ud','luckiest of the lucky','The most fortunate mansion: marriage, success, trade and prosperity. Generous and rewarding.'],
+ ['Sa’d al-Akhbiyah','luck of the tents','A harsh mansion of siege and settling scores; the good use is protection, privacy and keeping secrets.'],
+ ['Al-Fargh al-Muqaddam','the upper spout','Union, love and protection for travellers. Good for joining together and for kindness.'],
+ ['Al-Fargh al-Mu’akhkhar','the lower spout','Increase in trade and harvest, and healing; quiet growth that builds over time.'],
+ ['Batn al-Hut','belly of the fish','Increase, safe travel and harmony in marriage; a gentle, fortunate close to the cycle.']];
+/* nature (F fortunate, M mixed, D difficult), key themes, gift, shadow, best use */
+window.MANX=[
+ ['M','initiative, departures and courage','You move first and open new ground; others follow your lead.','Impatience and quarrels flare quickly.','start projects and set out on journeys'],
+ ['M','discovery, resourcefulness and reconciliation','You find what others overlook and can mend broken ties.','You may hold too much back, keeping your finds to yourself.','look for what is missing and make peace'],
+ ['F','abundance, trade, craft and good company','Luck tends to gather around you and your work; people enjoy being near you.','Easy fortune can make you careless with it.','trade, network, create and travel'],
+ ['M','persistence, loyalty and endings','You follow through when others give up and can close chapters cleanly.','Stubbornness and rifts with partners.','finish what should end and pursue long goals'],
+ ['F','learning, health and safe passage','You learn quickly and recover well; you are a natural student and teacher.','Restless curiosity can scatter you.','study, heal and travel'],
+ ['F','affection, alliance and friendship','You bring people together and make warm, lasting friendships.','Over-reliance on others’ approval.','make friends, court and reconcile'],
+ ['F','favour, gain and helpful friends','You attract support and opportunities through people who like you.','Taking help for granted.','ask for favours, trade and build goodwill'],
+ ['M','intimacy and close bonds','Your inner circle is strong and loyal.','Friction with outsiders and a tendency to close ranks.','deepen close relationships'],
+ ['D','vigilance, protection and self-defence','You sense danger early and protect yourself and others.','Worry, illness or loss when you neglect care.','rest, protect and avoid risks'],
+ ['F','strength, love and support against opposition','You build solid foundations and have allies when you need them.','Forcing things through.','build, strengthen and secure'],
+ ['F','dignity, courage and respect','You command attention and earn respect by standing tall.','Pride and fear of losing face.','lead, travel and present yourself'],
+ ['M','growth, harvest and turning points','You know when to change course and reap what you have sown.','Partings and changes of heart.','harvest, change direction and serve'],
+ ['F','generosity, release and fair exchange','You help free people and situations, and your generosity comes back to you.','Giving away more than you can spare.','trade, give and release'],
+ ['F','grace, love, marriage and healing','Gifts come to you, and you bring healing and beauty into others’ lives.','Relying on charm instead of effort.','marry, heal, create and ask for blessings'],
+ ['M','protection, uncovering and quiet support','You can dig out the truth and quietly shelter others.','Secrecy and hidden worries.','research, uncover and protect'],
+ ['M','balance, exchange and freeing','You settle accounts and negotiate well.','Restlessness about debts or obligations.','negotiate, trade and settle accounts'],
+ ['F','stability, loyalty and lasting commitments','What you build lasts, and people trust your word.','Rigidity when circumstances change.','commit, build and strengthen bonds'],
+ ['M','courage, passion and victory','You have heart and the will to win.','Strife and burning out in conflict.','compete, defend and act boldly'],
+ ['M','decisive action and breakthrough','You cut through obstacles when it counts.','Recklessness and sharp words.','act decisively and remove obstacles'],
+ ['D','discipline, training and restraint','You can master yourself and tame wild situations.','Feeling confined or restricted.','train, discipline and contain'],
+ ['F','foundations, settling and steady gain','You create secure ground and solid results.','Resistance to moving on.','build, settle and plant'],
+ ['M','healing through necessary cuts','You know what to let go of and can escape what harms you.','Separations and painful endings.','heal, cut ties and escape'],
+ ['M','release and making room for better','Endings in your life tend to clear the way for improvement.','Partings and loss.','release, heal and free yourself'],
+ ['F','success, prosperity and happy unions','You attract fortune, success and good partnerships.','Complacency when things go well.','marry, launch, sign and celebrate'],
+ ['D','privacy, protection and settling scores','You keep secrets well and protect what is yours.','Grudges and harshness.','guard, protect and keep things private'],
+ ['F','union, kindness and safe travel','You bring people together and protect those on the move.','Losing yourself in others.','join together, travel and show kindness'],
+ ['F','quiet growth, increase and healing','Your efforts compound slowly into real gain.','Impatience with slow results.','invest, plant and heal'],
+ ['F','harmony, increase and completion','You bring things to a gentle, successful close and keep the peace.','Avoiding necessary conflict.','travel, reconcile and complete']];
+(()=>{if(typeof infoFor!=='function')return;const W=360/28;
+ const fmt=l=>{try{return lonTxt(l)}catch(e){return l.toFixed(2)+'°'}};
+ const NAT={F:'Fortunate',M:'Mixed',D:'Challenging'};
+ const HM=['','self, body and outlook','money and resources','communication, study and siblings','home, family and roots','creativity, pleasure and romance','work, routines and health','partnership and close others','shared resources, intimacy and change','travel, learning and belief','career and reputation','friends, groups and hopes','solitude, retreat and the unseen'];
+ const PTW={sun:['identity and purpose','who you are and what you are here to do'],moon:['feelings, instincts and daily life','what you need to feel safe and how you react'],mercury:['thinking and speech','how you think, learn and talk'],venus:['love and values','whom and what you love, and how you relate'],mars:['drive and courage','how you pursue goals and handle conflict'],jupiter:['growth and opportunity','where luck and generosity come through'],saturn:['duty and long effort','where you work hardest and build slowly'],asc:['body and outlook','your manner, health and first impressions'],mc:['career and reputation','your public path and achievements'],fortune:['material fortune','your circumstances and what comes to you'],node:['direction of growth','where your life is heading'],ic:['home and roots','your home, family and private life'],dsc:['partners','the partners and close allies you attract']};
+ const hOf=(ch,l)=>{try{return ch.noHouses?null:Calc.houseOf(l,ch.cusps)}catch(e){return null}};
+ function infoMan(i){const M=MANS[i],X=MANX[i];if(!M)return null;const ch=lastView&&lastView.inner;
+  const here=ch?Object.keys(ch.pts).filter(k=>PT[k]&&ch.pts[k]&&Math.floor(n360(ch.pts[k].lon)/W)===i):[];
+  let h=`<p class="kicker">Lunar mansion · ${NAT[X[0]]}</p><h4>${i+1}. ${M[0]}</h4><dl><dt>Meaning</dt><dd>${M[1].replace(/^./,c=>c.toUpperCase())}</dd><dt>Span</dt><dd>${fmt(i*W)} to ${fmt((i+1)*W)}</dd><dt>Themes</dt><dd>${X[1].replace(/^./,c=>c.toUpperCase())}</dd>${here.length?`<dt>Chart points here</dt><dd>${here.map(k=>`<span class="clk" data-obj="pt:i:${k}">${glyphHtml(k)} ${PNM(k)}</span>`).join(', ')}</dd>`:''}</dl>`;
+  h+=`<p class="il">Traditional associations</p><p class="interp">${M[2]}</p><p class="interp"><strong>Gift:</strong> ${X[2]} <strong>Shadow:</strong> ${X[3]}</p>`;
+  const main=here.filter(k=>PTW[k]);
+  if(main.length){h+=`<p class="il">In this chart</p>`;
+   main.forEach(k=>{const p=ch.pts[k],hh=hOf(ch,p.lon),deg=n360(p.lon)-i*W,pos=deg<2?' at the very start of the mansion, so the previous mansion’s themes blend in':deg>W-2?' at the very end of the mansion, so the next mansion’s themes blend in':'';
+    const where=hh?` It sits in your ${ord(hh)} house, so these themes play out through ${HM[hh]}.`:'';
+    if(k==='moon')h+=`<p class="interp"><strong>Your natal Moon is in ${M[0]}</strong>${pos}. In the mansion tradition this is your most personal mansion. Emotionally you are drawn to ${X[1]}: ${X[2].replace(/^You /,'you ').replace(/^./,c=>c.toLowerCase())} The shadow to watch: ${X[3].replace(/^./,c=>c.toLowerCase())}${where}</p><p class="interp">The Moon returns to this mansion about every 27⅓ days. Those two or three days each month are a natural time for you to ${X[4]}, and you may notice you feel most like yourself then.</p>`;
+    else if(k==='asc')h+=`<p class="interp"><strong>Your Ascendant is in ${M[0]}</strong>${pos}, so ${X[1]} show in your body, manner and first impressions. ${X[2]} Watch for: ${X[3].replace(/^./,c=>c.toLowerCase())}</p>`;
+    else if(k==='mc')h+=`<p class="interp"><strong>Your Midheaven is in ${M[0]}</strong>${pos}, so your public path draws on ${X[1]}. Careers that let you ${X[4]} suit this placement. Watch for: ${X[3].replace(/^./,c=>c.toLowerCase())}</p>`;
+    else h+=`<p class="interp"><strong>Your ${PNM(k)} is in ${M[0]}</strong>${pos}. This brings ${X[1]} into ${PTW[k][1]}. ${X[2]} Watch for: ${X[3].replace(/^./,c=>c.toLowerCase())}${where}</p>`})}
+  else if(ch){const mm=ch.pts.moon?Math.floor(n360(ch.pts.moon.lon)/W):null;if(mm!=null)h+=`<p class="il">In this chart</p><p class="interp">None of your main points fall here. When the transiting Moon passes through this mansion (about two days each month) it is a good time to ${X[4]}. Your own Moon is in mansion ${mm+1}, ${MANS[mm][0]}.</p>`}
+  h+=`<p class="interp muted">The 28 mansions divide the zodiac into equal parts, one for each day of the Moon’s monthly circuit. This site uses the tropical version from the Arabic and medieval European tradition, starting at 0° Aries. They are mostly used to choose times by the Moon’s position; the Vedic nakshatras are a related but separate system.</p>`;
+  return h}
+ window.dnManInfo=infoMan;
+ const _if=infoFor;infoFor=function(obj){if(typeof obj==='string'&&obj.startsWith('man:'))return infoMan(+obj.slice(4));return _if.apply(this,arguments)};
+ const _ic=window.dnInkCenter;if(_ic)window.dnInkCenter=function(t,x,y,sg){if(/^man:/.test(sg.obj||''))t.classList.add('ringtx');return _ic.apply(this,arguments)};
+})();
+
+/* ===== Elections tab: Picatrix-style rules for choosing a time to make a talisman ===== */
+(()=>{const $=id=>document.getElementById(id);
+ const PURP={
+  love:{name:'Love and affection',ruler:'venus',man:[6,7,8,10,14,17,24,26],why:'Venus governs love; the Moon should be in a mansion of friendship and union.'},
+  peace:{name:'Friendship and reconciliation',ruler:'venus',man:[2,6,13,26,28],why:'Venus governs harmony; mansions of peace and making up are chosen.'},
+  wealth:{name:'Wealth and gain',ruler:'jupiter',man:[3,7,11,13,16,21,24,27,28],why:'Jupiter governs increase; the Moon should be in a mansion of gain and trade.'},
+  trade:{name:'Trade and commerce',ruler:'mercury',man:[3,7,13,16,24,27],why:'Mercury governs trade and exchange.'},
+  health:{name:'Health and healing',ruler:'sun',man:[5,14,22,23,27],why:'The Sun governs vitality; mansions of healing and recovery are chosen.'},
+  honour:{name:'Honour, success and favour',ruler:'sun',man:[10,11,17,18,24],why:'The Sun governs rank and recognition.'},
+  study:{name:'Learning and eloquence',ruler:'mercury',man:[2,5,13,15],why:'Mercury governs the mind and speech.'},
+  travel:{name:'Safe travel',ruler:'moon',man:[1,3,5,11,26,28],why:'The Moon governs journeys; mansions of safe passage are chosen.'},
+  protect:{name:'Protection of home and goods',ruler:'saturn',man:[10,15,17,21,25],why:'Saturn governs walls, foundations and keeping things safe.'},
+  courage:{name:'Courage and victory',ruler:'mars',man:[1,11,18,19],why:'Mars governs boldness and winning.'}};
+ const DOMS={sun:[4],moon:[3],mercury:[2,5],venus:[1,6],mars:[0,7],jupiter:[8,11],saturn:[9,10]},EXA={sun:0,moon:1,mercury:5,venus:11,mars:9,jupiter:3,saturn:6};
+ const dig=(k,s)=>DOMS[k].includes(s)?'dom':EXA[k]===s?'exa':DOMS[k].some(d=>(d+6)%12===s)?'det':(EXA[k]+6)%12===s?'fall':null;
+ const n3=x=>((x%360)+360)%360,sep=(a,b)=>Math.abs(((a-b+540)%360)-180),sOf=l=>Math.floor(n3(l)/30),W=360/28;
+ const BEN=['venus','jupiter'],MAL=['mars','saturn'],PL=['sun','moon','mercury','venus','mars','jupiter','saturn'];
+ const ASPS=[0,60,90,120,180];
+ const aspNow=(a,b,orb)=>{const d=sep(a,b);for(const x of ASPS)if(Math.abs(d-x)<=orb)return {x,o:Math.abs(d-x)};return null};
+ let st={purp:'love',loc:'cur',days:45,res:null,busy:false,key:''};
+ try{Object.assign(st,JSON.parse(localStorage.getItem('orrery.elec')||'{}'),{res:null,busy:false})}catch(e){}
+ const save=()=>{try{localStorage.setItem('orrery.elec',JSON.stringify({purp:st.purp,loc:st.loc,days:st.days,view:st.view}))}catch(e){}};
+ const placeOf=A=>{if(st.loc==='el'||!A||A.now){try{const L=elLoc();return {lat:L.lat,lon:L.lon,tz:L.tz,name:L.label}}catch(e){}}return st.loc==='cur'&&A.cur&&isFinite(A.cur.lat)?{lat:A.cur.lat,lon:A.cur.lon,tz:A.cur.tz||A.tz,name:A.cur.place}:{lat:A.lat,lon:A.lon,tz:A.tz,offset:A.offset,name:A.place}};
+ const fmtT=(ms,pl)=>{try{const o={timeZone:pl.tz&&pl.tz!=='manual'?pl.tz:'UTC',weekday:'short',month:'short',day:'numeric',hour:'numeric',minute:'2-digit'};return new Intl.DateTimeFormat(undefined,o).format(new Date(ms))}catch(e){return new Date(ms).toLocaleString()}};
+ const fmtH=(ms,pl)=>{try{return new Intl.DateTimeFormat(undefined,{timeZone:pl.tz&&pl.tz!=='manual'?pl.tz:'UTC',hour:'numeric',minute:'2-digit'}).format(new Date(ms))}catch(e){return ''}};
+ /* score one moment */
+ function judge(ch,ch2,P,hr,dayLord,nat){const p=ch.pts,R=P.ruler,moon=p.moon.lon,sun=p.sun.lon,good=[],bad=[];let sc=0;
+  const add=(v,t)=>{sc+=v;(v>=0?good:bad).push(t)};
+  const m=Math.floor(n3(moon)/W)+1;
+  if(P.man.includes(m))add(3,`Moon in mansion ${m}, ${MANS[m-1][0]}, suited to this work`);else add(-1.5,`Moon in mansion ${m}, ${MANS[m-1][0]}, not one of the mansions for this work`);
+  const el=n3(moon-sun);
+  if(el<12||el>348){add(-6,'Moon combust, too close to the Sun');}
+  else if(el<=180)add(el>=30?2:1,`Moon waxing (${Math.round(el/180*100)}% of the way to full), increasing in light`);else add(-1.5,'Moon waning, decreasing in light');
+  if(n3(moon)>=195&&n3(moon)<=225)add(-3,'Moon in the via combusta (15° Libra to 15° Scorpio)');
+  if(p.moon.speed>13.2)add(0.5,'Moon fast in motion');
+  // Moon's next contacts: applying aspects within 8°
+  const mNext=ch2.pts.moon.lon;PL.filter(k=>k!=='moon'&&k!=='sun').forEach(k=>{const a=aspNow(moon,p[k].lon,8);if(!a)return;const a2=sep(mNext,ch2.pts[k].lon);const applying=Math.abs(a2-a.x)<a.o;if(!applying)return;
+   const harsh=a.x===90||a.x===180||(a.x===0&&MAL.includes(k));
+   if(BEN.includes(k)&&!harsh)add(2,`Moon applying to ${PNM(k)} (${a.x===0?'conjunction':a.x===60?'sextile':a.x===120?'trine':a.x===90?'square':'opposition'})`);
+   else if(MAL.includes(k)&&harsh&&R!==k)add(-3,`Moon applying to a hard aspect with ${PNM(k)}`);
+   else if(k===R&&!harsh)add(1.5,`Moon applying to ${PNM(k)}, the planet of this work`)});
+  // the planet of the work
+  if(R!=='moon'){const rp=p[R],d=dig(R,sOf(rp.lon));if(d==='dom'||d==='exa')add(2,`${PNM(R)} ${d==='dom'?'in its own sign':'exalted'}`);else if(d)add(-2,`${PNM(R)} in ${d==='det'?'detriment':'fall'}`);
+   if(rp.speed<0)add(-2,`${PNM(R)} retrograde`);
+   if(R!=='sun'&&sep(rp.lon,sun)<8)add(-2,`${PNM(R)} combust, hidden by the Sun`)}
+  const rh=Calc.houseOf(p[R].lon,ch.cusps);if([1,10].includes(rh))add(2,`${PNM(R)} strong in the ${rh===1?'1st':'10th'} house`);else if([4,7].includes(rh))add(1,`${PNM(R)} angular in the ${rh===4?'4th':'7th'} house`);else if([3,6,9,12].includes(rh))add(-1,`${PNM(R)} cadent in the ${rh}th house`);
+  // Ascendant
+  const aR=RULER[sOf(p.asc.lon)];if(aR===R||BEN.includes(aR))add(1.5,`${SIGN_N[sOf(p.asc.lon)]} rising, ruled by ${PNM(aR)}`);else if(MAL.includes(aR)&&!MAL.includes(R))add(-1,`${SIGN_N[sOf(p.asc.lon)]} rising, ruled by ${PNM(aR)}`);
+  BEN.forEach(k=>{const h=Calc.houseOf(p[k].lon,ch.cusps);if(h===1||h===10)add(1,`${PNM(k)} on an angle (${h===1?'1st':'10th'} house)`)});
+  MAL.forEach(k=>{if(k===R)return;const h=Calc.houseOf(p[k].lon,ch.cusps);if(h===1||h===10)add(-2,`${PNM(k)} on an angle (${h===1?'1st':'10th'} house)`)});
+  // day and hour
+  if(hr===R)add(2,`Hour of ${PNM(R)}`);if(dayLord===R)add(1,`Day of ${PNM(R)}`);
+  // the person's own chart
+  if(nat){const mn=nat.pts;['sun','moon'].concat(nat.noHouses?[]:['asc']).forEach(k=>{const a=aspNow(moon,mn[k].lon,4);if(a&&(a.x===60||a.x===120))add(0.75,`Moon ${a.x===60?'sextile':'trine'} your natal ${PNM(k)}`)});
+   MAL.forEach(k=>{const a=aspNow(moon,mn[k].lon,3);if(a&&(a.x===90||a.x===180||a.x===0))add(-1,`Moon ${a.x===0?'on':a.x===90?'square':'opposite'} your natal ${PNM(k)}`)})}
+  return {sc,good,bad,m}}
+ function run(){const A=chartA();const P=PURP[st.purp],pl=placeOf(A),nat=A?(()=>{try{return natalOf(A)}catch(e){return null}})():null;
+  st.busy=true;st.res=null;paint();
+  const t0=Math.ceil(Date.now()/3600000)*3600000,t1=t0+st.days*86400000,STEP=30*60000,o=opt(),out=[];let t=t0,ph=null;
+  const lonE=pl.lon;
+  const chunk=()=>{const end=Date.now()+40;
+   while(t<t1&&Date.now()<end){try{if(!ph||t>=ph.next)ph=planetaryHours(t,pl);const hr=ph&&ph.hrs.find(h=>t>=h.start&&t<h.end);
+     const ch=Calc.cast(t,pl.lat,lonE,o),ch2=Calc.cast(t+3600000,pl.lat,lonE,o);const j=judge(ch,ch2,P,hr&&hr.lord,ph&&ph.dayLord,nat);out.push({t,...j,hr:hr&&hr.lord,hs:hr&&hr.start,he:hr&&hr.end})}catch(e){}t+=STEP}
+   if(t<t1){st.prog=(t-t0)/(t1-t0);paint(true);setTimeout(chunk,0);return}
+   // best windows: keep the top moments, one per planetary hour, spread across days
+   out.sort((a,b)=>b.sc-a.sc);const pick=[];for(const r of out){if(pick.length>=8)break;if(r.sc<4)break;if(pick.some(p=>Math.abs(p.t-r.t)<6*3600000))continue;pick.push(r)}
+   const now=(()=>{try{const ph0=planetaryHours(Date.now(),pl),hr0=ph0&&ph0.hrs.find(h=>Date.now()>=h.start&&Date.now()<h.end);return judge(Calc.cast(Date.now(),pl.lat,lonE,o),Calc.cast(Date.now()+3600000,pl.lat,lonE,o),P,hr0&&hr0.lord,ph0&&ph0.dayLord,nat)}catch(e){return null}})();
+   st.res={pick,now,pl,purp:st.purp,max:out.length?out[0].sc:0};st.busy=false;paint()};
+  setTimeout(chunk,30)}
+ const stars=sc=>{const n=sc>=13?5:sc>=11?4:sc>=8?3:sc>=5?2:sc>=2?1:0;return '★★★★★'.slice(0,n)+'<span class="muted">'+'★★★★★'.slice(n)+'</span>'};
+ const REASON=`Each half hour is scored: the Moon’s mansion (+3 if suited, otherwise −1.5); the Moon waxing (+2) or waning (−1.5), combust (−6) or in the via combusta (−3); the Moon applying to Venus or Jupiter (+2), to the planet of the work (+1.5) or to a hard aspect from Mars or Saturn (−3); the planet of the work dignified (+2), debilitated, retrograde or combust (−2 each), angular (+1 to +2) or cadent (−1); the rising sign ruled by the planet of the work or a benefic (+1.5); benefics on the 1st or 10th house (+1 each), malefics there (−2); the planetary hour (+2) and day (+1) of the planet of the work; and, when a saved chart is open, small adjustments for the Moon’s aspects to its natal Sun, Moon, Ascendant, Mars and Saturn. The best moments are listed at least six hours apart, with five stars for the strongest. Only beneficial purposes are included.`;
+ const chartA=()=>{const A=byId(activeId);return A&&!A.now?A:null};
+ function sideHtml(){const A=chartA(),P=PURP[st.purp];let elL='';try{elL=elLoc().label||''}catch(e){}
+  const opts=[];if(A&&A.cur&&A.cur.place)opts.push(['cur',A.cur.place]);if(A)opts.push(['birth',A.place||'Birthplace']);opts.push(['el',elL?`${elL} (elections place)`:'Elections place']);
+  if(!opts.some(o=>o[0]===st.loc))st.loc=opts[0][0];
+  return `<label class="l" for="tlPurp">What is the talisman for?<select class="f" id="tlPurp">${Object.entries(PURP).map(([k,p])=>`<option value="${k}"${k===st.purp?' selected':''}>${p.name}</option>`).join('')}</select></label>
+  <p class="note">${glyphHtml(P.ruler)} ${P.why} Good mansions: ${P.man.join(', ')}.</p>
+  <label class="l" for="tlLoc">Where will it be made?<select class="f" id="tlLoc">${opts.map(([v,l])=>`<option value="${v}"${v===st.loc?' selected':''}>${esc(l)}</option>`).join('')}</select></label>
+  <label class="l" for="tlDays">Search<select class="f" id="tlDays">${[[14,'2 weeks'],[30,'1 month'],[45,'6 weeks'],[60,'2 months'],[90,'3 months']].map(([d,l])=>`<option value="${d}"${d===st.days?' selected':''}>${l}</option>`).join('')}</select></label>
+  <p class="note">${A?`Times are also checked against ${esc(A.name)}’s chart.`:'Open a saved chart to have times checked against it as well.'}</p>
+  <button class="btn" type="button" id="tlGo"${st.busy?' disabled':''}>${st.busy?`Searching… ${Math.round((st.prog||0)*100)}%`:'Find the best times'}</button>`}
+ /* traditional correspondences: planet materials, and an image for each purpose (described in our own words) */
+ const MAT={
+  venus:{metal:'Copper',stones:'Emerald, lapis lazuli, coral or rose quartz',colours:'Green, rose and white',incense:'Rose, sandalwood, myrtle or benzoin',cloth:'Green or rose silk',plant:'Rose petals, myrtle or violet'},
+  jupiter:{metal:'Tin (pewter is a practical substitute)',stones:'Sapphire, amethyst or blue topaz',colours:'Royal blue and purple',incense:'Cedar, nutmeg, saffron or aloeswood',cloth:'Blue or purple silk',plant:'Oak leaf, sage or cinquefoil'},
+  mercury:{metal:'Quicksilver is the traditional metal, but it is toxic; use a mixed alloy such as brass, or engrave on fine paper or parchment',stones:'Agate, citrine or topaz',colours:'Mixed colours, orange and yellow',incense:'Mastic, cinnamon, lavender or fennel seed',cloth:'Multicoloured or orange silk',plant:'Lavender, fennel or marjoram'},
+  sun:{metal:'Gold (gold leaf or gilt brass also work)',stones:'Ruby, heliotrope, citrine or chrysolite',colours:'Gold and yellow',incense:'Frankincense, myrrh, bay laurel or saffron',cloth:'Gold or yellow silk',plant:'Bay laurel, rosemary or marigold'},
+  moon:{metal:'Silver',stones:'Moonstone, pearl or clear crystal',colours:'White and silver',incense:'Camphor, jasmine or white myrrh',cloth:'White silk',plant:'Willow, jasmine or white rose'},
+  saturn:{metal:'Lead is traditional but toxic; pewter or blackened iron is a safer choice',stones:'Onyx, jet or obsidian',colours:'Black and deep brown',incense:'Myrrh, storax or patchouli',cloth:'Black silk or linen',plant:'Cypress, ivy or comfrey'},
+  mars:{metal:'Iron or steel',stones:'Bloodstone, red jasper or garnet',colours:'Red and scarlet',incense:'Dragon’s blood resin or black pepper',cloth:'Red silk',plant:'Nettle, basil or ginger'}};
+ const IMG={
+  love:'Two figures facing each other and embracing, or a crowned woman holding a mirror in one hand and a flower in the other.',
+  peace:'Two figures clasping right hands, with a dove or an olive branch between them.',
+  wealth:'A crowned man seated on a throne holding a sceptre, with a full purse or a horn of plenty at his feet.',
+  trade:'A young man with winged sandals holding a staff entwined with two serpents in one hand and a purse in the other.',
+  health:'A crowned king seated on a throne in full light, holding a sprig of laurel; or a radiant sun with a calm face.',
+  honour:'A crowned king on a throne, holding a sceptre and receiving a laurel wreath.',
+  study:'A young man seated at a desk writing in a book, with a winged staff beside him.',
+  travel:'A ship under full sail beneath a crescent Moon, or a traveller with a staff and lantern.',
+  protect:'A walled tower with a closed gate, or an old man seated holding a key.',
+  courage:'An armed warrior in a helmet holding a raised sword, standing on or beside a lion.'};
+ const CHAR={sun:'☉',moon:'☽',mercury:'☿',venus:'♀',mars:'♂',jupiter:'♃',saturn:'♄'};
+ function matHtml(k){const P=PURP[k],M=MAT[P.ruler];return `<details class="elrow tlmat" open><summary><strong>Materials and image</strong><span class="muted"> · ${P.name}, under ${PNM(P.ruler)}</span></summary>
+  <dl class="tldl"><dt>Image</dt><dd>${IMG[k]}</dd><dt>Metal</dt><dd>${M.metal}</dd><dt>Stones</dt><dd>${M.stones}</dd><dt>Colours</dt><dd>${M.colours}</dd><dt>Incense</dt><dd>${M.incense}</dd><dt>Plants</dt><dd>${M.plant}</dd><dt>Wrap it in</dt><dd>${M.cloth}</dd><dt>Inscription</dt><dd>The image on one side; on the other, the glyph of ${PNM(P.ruler)} (${glyphHtml(P.ruler)}) and the purpose written in your own words.</dd></dl>
+  <p class="note">Traditionally the image is engraved or drawn while the elected hour is running, the talisman is suffumigated (passed through the smoke of the incense), then wrapped in the cloth and kept close. Burn incense in a ventilated room, and do not heat, sand or handle lead or mercury.</p></details>`}
+ /* which talisman suits this birth chart: work with the strongest relevant planet, and repair an important weak one */
+ const PHOUSE={love:[7,5],peace:[11,7],wealth:[2,11],trade:[2,3],health:[6,1],honour:[10],study:[9,3],travel:[9,3],protect:[4],courage:[1]};
+ const HNAME={1:'self and body',2:'money',3:'communication and short trips',4:'home',5:'romance and pleasure',6:'health and work',7:'partnership',9:'learning and travel',10:'career and reputation',11:'friends and gains'};
+ function natalFit(A){const ch=(()=>{try{return natalOf(A)}catch(e){return null}})();if(!ch||!ch.pts.sun)return null;const H=!ch.noHouses&&ch.cusps,day=!!ch.day;
+  const strength={};PL.forEach(k=>{const p=ch.pts[k],s=sOf(p.lon),d=dig(k,s),bits=[];let sc=0;
+   if(d==='dom'){sc+=2;bits.push('in its own sign')}else if(d==='exa'){sc+=2;bits.push('exalted')}else if(d==='det'){sc-=2;bits.push('in detriment')}else if(d==='fall'){sc-=2;bits.push('in fall')}
+   if(H){const h=Calc.houseOf(p.lon,ch.cusps);if([1,4,7,10].includes(h)){sc+=2;bits.push(`angular in the ${ord(h)} house`)}else if([2,5,8,11].includes(h)){sc+=1;bits.push(`in the ${ord(h)} house`)}else{sc-=1;bits.push(`cadent in the ${ord(h)} house`)}}
+   if(p.speed<0&&k!=='sun'&&k!=='moon'){sc-=1;bits.push('retrograde')}
+   if(k!=='sun'&&sep(p.lon,ch.pts.sun.lon)<8){sc-=2;bits.push('combust')}
+   if((day&&k==='jupiter')||(!day&&k==='venus')){sc+=1;bits.push('the benefic of your sect')}
+   if((day&&k==='mars')||(!day&&k==='saturn')){sc-=1;bits.push('the malefic out of sect')}
+   strength[k]={sc,bits}});
+  const ruled=k=>H?ch.cusps.map((c,i)=>RULER[sOf(c)]===k?i+1:0).filter(Boolean):[];
+  const chartRuler=H?RULER[sOf(ch.pts.asc.lon)]:null,light=day?'sun':'moon';
+  const rows=Object.keys(PURP).map(k=>{const R=PURP[k].ruler,st0=strength[R],rel=[];let r=0;
+   if(R===chartRuler){r+=2;rel.push('it rules your Ascendant')}if(H&&R===light){r+=1;rel.push('it is your sect light')}
+   const hs=ruled(R).filter(h=>PHOUSE[k].includes(h));if(hs.length){r+=1.5;rel.push(`it rules your ${hs.map(h=>ord(h)).join(' and ')} house (${hs.map(h=>HNAME[h]).join(', ')})`)}
+   return {k,R,st:st0.sc,bits:st0.bits,r,rel}});
+  // best ally: strong and relevant; to strengthen: relevant but weak
+  const ally=rows.slice().sort((a,b)=>(b.st+b.r)-(a.st+a.r))[0];
+  const fix=rows.filter(x=>x.r>=1.5&&x.st<=0&&x.R!==ally.R).sort((a,b)=>(a.st-a.r*0.5)-(b.st-b.r*0.5))[0]||null;
+  return {ally,fix,name:A.name}}
+ function fitHtml(){const A=chartA();if(!A)return `<div class="elrow tlfit"><p class="note" style="margin:0">Open a saved chart to get a talisman suggestion based on its birth chart.</p></div>`;
+  const F=natalFit(A);if(!F)return '';const RJ=a=>a.map((x,i)=>i?x.replace(/^it /,''):x).join(' and ');const one=(x,label,why)=>`<div class="tlsug"><div><span class="muted">${label}</span><br><strong>${glyphHtml(x.R)} ${PURP[x.k].name}</strong><span class="muted"> · ${PNM(x.R)}</span></div><p class="note">${why}</p>${st.purp===x.k?'<span class="muted">Selected</span>':`<button type="button" class="chipbtn" data-tlpick="${x.k}">Use this purpose</button>`}</div>`;
+  let h=`<details class="elrow tlfit" open><summary><strong>Suggested for ${esc(F.name)}</strong><span class="muted"> · from the birth chart</span></summary><div class="tlsugs">`;
+  const a=F.ally;h+=one(a,'Best suited',`${PNM(a.R)} is ${a.bits.length?a.bits.join(', '):'neutrally placed'}${a.rel.length?`, and ${RJ(a.rel)}`:''}. A talisman works best through a planet that is already strong in your chart, so this is the one most likely to answer.`);
+  if(F.fix){const f=F.fix;h+=one(f,'Worth strengthening',`${PNM(f.R)} matters in your chart because ${RJ(f.rel)}, but it is ${f.bits.length?f.bits.join(', '):'weakly placed'}. In the Picatrix tradition a talisman made at a strong moment for a planet can support it where the birth chart leaves it weak.`)}
+  return h+`</div></details>`}
+ function mainHtml(){const P=PURP[st.purp],R=st.res&&st.res.purp===st.purp?st.res:null;let h='';
+  if(!R)h+=`<p class="muted">Choose a purpose and press <strong>Find the best times</strong>. The search follows the rules of the <em>Picatrix</em>: the Moon in a suitable mansion and increasing in light, free of the malefics, the planet of the work strong and well placed, and the work begun in its day and hour.</p>`;
+  else{h+=R.pick.length?`<div class="ellist">${R.pick.map((r,i)=>`<details class="elrow"${i===0?' open':''}><summary><span class="elst" title="Score ${r.sc.toFixed(1)}">${stars(r.sc)}</span><strong>${fmtT(r.t,R.pl)}</strong><span class="muted"> · hour of ${PNM(r.hr||P.ruler)}${r.hs?` (${fmtH(r.hs,R.pl)}–${fmtH(r.he,R.pl)})`:''}</span></summary>
+    <ul class="elg">${r.good.map(x=>`<li>${x}</li>`).join('')}</ul>${r.bad.length?`<ul class="elb">${r.bad.map(x=>`<li>${x}</li>`).join('')}</ul>`:''}
+    <button type="button" class="chipbtn" data-elshow="${r.t}">Show this sky on the chart</button></details>`).join('')}</div>`:`<p class="muted">No strong times in this period. Try a longer search or another purpose.</p>`;
+   if(R.now)h+=`<p class="muted elnow">Right now in ${esc(R.pl.name||'this place')}: <span class="elst" title="Score ${R.now.sc.toFixed(1)}">${stars(R.now.sc)}</span> · Moon in mansion ${R.now.m}, ${MANS[R.now.m-1][0]}.</p>`}
+  h=fitHtml()+matHtml(st.purp)+h;
+  h+=`<details class="rsn"><summary>Reasoning</summary><p class="note">${REASON}</p></details>`;return h}
+ const V=()=>$('electView');
+ function ensure(){const v=V();if(!v)return;const side=v.querySelector('.eph-side'),main=v.querySelector('.eph-main');if(!side||!main)return;
+  if(!$('tlSeg')){const seg=document.createElement('div');seg.className='seg';seg.id='tlSeg';seg.setAttribute('role','group');seg.setAttribute('aria-label','Kind of election');seg.innerHTML='<button type="button" data-tl="gen" aria-pressed="true">Elections</button><button type="button" data-tl="tal" aria-pressed="false">Talismans</button>';side.prepend(seg);
+   const ts=document.createElement('div');ts.id='tlSide';ts.style.cssText='display:grid;gap:14px';ts.hidden=true;side.append(ts);
+   const tm=document.createElement('div');tm.id='tlMain';tm.style.cssText='display:grid;gap:12px';tm.hidden=true;main.append(tm)}
+  const tal=st.view==='tal';$('tlSeg').querySelectorAll('button').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.tl===(tal?'tal':'gen'))));
+  const f=$('elForm'),o=$('elOut');if(f)f.hidden=tal;if(o)o.hidden=tal;$('tlSide').hidden=!tal;$('tlMain').hidden=!tal;
+  const h2=v.querySelector('.eph-head h2'),sub=$('elSub');if(h2){if(!h2.dataset.orig)h2.dataset.orig=h2.textContent;h2.textContent=tal?'Talisman Elections':h2.dataset.orig}
+  if(sub){if(sub.dataset.orig==null)sub.dataset.orig=sub.textContent;if(tal)sub.textContent='The best times to make a talisman, by the rules of the Picatrix.';else if(sub.textContent.startsWith('The best times to make a talisman'))sub.textContent=sub.dataset.orig}}
+ function paint(progOnly){ensure();if(st.view!=='tal')return;if(progOnly){const b=$('tlGo');if(b)b.textContent=`Searching… ${Math.round((st.prog||0)*100)}%`;return}
+  try{$('tlSide').innerHTML=sideHtml();$('tlMain').innerHTML=mainHtml()}catch(e){console.warn(e)}}
+ try{new MutationObserver(()=>{const v=V();if(v&&!v.hidden&&!$('tlSeg'))paint()}).observe(V(),{attributes:true,attributeFilter:['hidden']})}catch(e){}
+ document.addEventListener('click',e=>{const b=e.target.closest('#tlSeg [data-tl]');if(b){st.view=b.dataset.tl;save();paint()}});
+ document.addEventListener('click',e=>{const b=e.target.closest('[data-tlpick]');if(b){st.purp=b.dataset.tlpick;save();paint()}});
+ document.addEventListener('change',e=>{const id=e.target&&e.target.id;if(id==='tlPurp'){st.purp=e.target.value;save();paint()}else if(id==='tlLoc'){st.loc=e.target.value;st.res=null;save();paint()}else if(id==='tlDays'){st.days=+e.target.value;st.res=null;save();paint()}});
+ document.addEventListener('click',e=>{if(e.target.closest('#tlGo')){if(!st.busy)run();return}
+  const s=e.target.closest('[data-elshow]');if(s){const t=+s.dataset.elshow;try{try{setView('chart')}catch(_){}if(mode!=='transits'){const b=document.querySelector('#modes [data-mode="transits"]');if(b)b.click()}offsetMin=Math.round((t-Date.now())/60000);renderAll()}catch(err){console.warn(err)}}});
+ const css=document.createElement('style');css.textContent=`
+.elform{display:flex;flex-wrap:wrap;gap:10px 12px;align-items:flex-end;margin:6px 0 10px}
+.elform label{display:flex;flex-direction:column;gap:4px;font:600 .74rem var(--ui);color:var(--muted)}
+.elform select{min-width:0;max-width:100%}
+.elwhy{font-size:.8rem;margin:0 0 10px}.elwhy .clk{text-decoration:underline dotted;cursor:pointer}
+.ellist{display:flex;flex-direction:column;gap:6px;margin-bottom:8px}
+.elrow{background:var(--raised,rgba(255,255,255,.03));border-radius:10px;padding:8px 10px}
+.elrow summary{cursor:pointer;display:flex;flex-wrap:wrap;gap:4px 8px;align-items:baseline;list-style:none}
+.elrow summary::-webkit-details-marker{display:none}
+.elst{color:var(--accent);letter-spacing:.05em}
+.elrow ul{margin:8px 0 4px;padding-left:18px;font-size:.82rem}
+.elg li::marker{content:"+ ";color:var(--accent)}.elb li::marker{content:"− ";color:#e07a7a}
+.elrow .chipbtn{margin-top:4px}
+.elnow{font-size:.82rem}
+.tlmat summary strong,.tlfit summary strong{font-family:var(--serif)}
+.tlsugs{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px;margin-top:10px}.tlsug{display:flex;flex-direction:column;gap:6px;align-items:flex-start}.tlsug .note{margin:0}
+.tldl{display:grid;grid-template-columns:auto 1fr;gap:6px 14px;margin:10px 0 6px;font-size:.86rem}.tldl dt{color:var(--muted);font-weight:600}.tldl dd{margin:0}
+@media (max-width:480px){.tldl{grid-template-columns:1fr}.tldl dt{margin-top:4px}}`;document.head.append(css)})();
 
 /* ===== Full reading, part 2: glossary, timeline, options, saved readings, PDF download ===== */
 
