@@ -6457,7 +6457,7 @@ html[data-theme="paper"] .infotab,html[data-theme="pastel"] .infotab{color:var(-
 })();
 
 /* ===== Accuracy helpers: birth-time sensitivity, time-zone check, node type; site version; first-visit tips ===== */
-const DN_VER='v245';
+const DN_VER='v252';
 const btFmt=m=>m==null?'more than 4 hours':m<60?`${m} min`:`${Math.floor(m/60)} h${m%60?' '+(m%60)+' min':''}`;
 /* how far the birth time can move before the rising sign, Midheaven, Moon sign or a planet's house changes */
 const BT_MEMO=new Map();
@@ -7434,17 +7434,17 @@ window.MANX=[
   return {sc,good,bad,m,out,blk}}
  const locDay=(ms,pl)=>{try{return new Intl.DateTimeFormat('en-CA',{timeZone:pl.tz&&pl.tz!=='manual'?pl.tz:'UTC'}).format(new Date(ms))}catch(e){return ''}};
  function run(){const A=chartA();const P=PURP[st.purp],pl=placeOf(A),nat=A?(()=>{try{return natalOf(A)}catch(e){return null}})():null;
-  st.busy=true;st.res=null;paint();
+  st.busy=true;st.cancel=false;st.prog=0;st.res=null;paint();
   const t0=Math.ceil(Date.now()/3600000)*3600000,t1=t0+st.days*86400000,STEP=30*60000,o=opt(),out=[];let t=t0,ph=null;
   const lonE=pl.lon;
-  const chunk=()=>{const end=Date.now()+40;
+  const chunk=()=>{if(st.cancel){st.cancel=false;st.busy=false;st.busyFrom=null;st.prog=0;paint();return}const end=Date.now()+40;
    while(t<t1&&Date.now()<end){try{if(!ph||t>=ph.next)ph=planetaryHours(t,pl);const hr=ph&&ph.hrs.find(h=>t>=h.start&&t<h.end);
      const ch=Calc.cast(t,pl.lat,lonE,o),ch2=Calc.cast(t+3600000,pl.lat,lonE,o);const j=judge(ch,ch2,P,hr&&hr.lord,ph&&ph.dayLord,nat);out.push({t,...j,hr:hr&&hr.lord,hs:hr&&hr.start,he:hr&&hr.end,dl:ph&&ph.dayLord,pre:ph&&!(hr&&hr.day)&&locDay(t,pl)!==locDay(ph.rise,pl)?ph.rise:0})}catch(e){}t+=STEP}
    if(t<t1){st.prog=(t-t0)/(t1-t0);paint(true);setTimeout(chunk,0);return}
    // best windows: keep the top moments, one per planetary hour, spread across days
    out.sort((a,b)=>b.sc-a.sc);const pick=[];const nOut=out.filter(r=>r.out).length,bc={};out.forEach(r=>(r.blk||[]).forEach(b=>bc[b]=(bc[b]||0)+1));const blocks=Object.entries(bc).sort((a,b)=>b[1]-a[1]).map(([b,n])=>[b,Math.round(n/out.length*100)]);for(const r of out){if(pick.length>=8)break;if(r.out)continue;if(r.sc<4)break;if(pick.some(p=>Math.abs(p.t-r.t)<6*3600000))continue;pick.push(r)}
    const now=(()=>{try{const ph0=planetaryHours(Date.now(),pl),hr0=ph0&&ph0.hrs.find(h=>Date.now()>=h.start&&Date.now()<h.end);return judge(Calc.cast(Date.now(),pl.lat,lonE,o),Calc.cast(Date.now()+3600000,pl.lat,lonE,o),P,hr0&&hr0.lord,ph0&&ph0.dayLord,nat)}catch(e){return null}})();
-   st.res={pick,now,pl,purp:st.purp,mild:!!st.mild,nOut,tot:out.length,blocks,forId:A?A.id:null,max:out.length?out[0].sc:0};st.busy=false;paint()};
+   st.res={days:st.days,pick,now,pl,purp:st.purp,mild:!!st.mild,nOut,tot:out.length,blocks,forId:A?A.id:null,max:out.length?out[0].sc:0};st.busy=false;st.busyFrom=null;paint();try{if(!V().hidden&&st.view==='tal')openPop()}catch(e){}};
   setTimeout(chunk,30)}
  const stars=sc=>{const n=sc>=13?5:sc>=11?4:sc>=8?3:sc>=5?2:sc>=2?1:0;return '★★★★★'.slice(0,n)+'<span class="muted">'+'★★★★★'.slice(n)+'</span>'};
  const REASON=`Each half hour is scored: the Moon’s mansion (+3 if suited, otherwise −1.5); the Moon waxing (+2) or waning (−1.5), combust (−6) or in the via combusta (−3); the Moon applying to Venus or Jupiter (+2) or to the planet of the work (+1.5); the Moon, Venus and Jupiter free of any aspect from Mars or Saturn (+1 for the Moon, +0.5 for each benefic), using the traditional orbs (half of each planet’s orb added together). Under the strict rule any aspect from Mars or Saturn to the Moon or a benefic rules the time out; under the milder rule a conjunction, square or opposition costs −2 to −3 when applying and −1.5 to −2 when separating, and a trine or sextile −0.5 to −0.75. When Mars or Saturn is itself the planet of the work, its own aspects are not counted; the planet of the work dignified (+2), debilitated, retrograde or combust (−2 each), angular (+1 to +2) or cadent (−1); the rising sign ruled by the planet of the work or a benefic (+1.5); benefics on the 1st or 10th house (+1 each), malefics there (−2); the planetary hour (+2) and day (+1) of the planet of the work; and, when a saved chart is open, small adjustments for the Moon’s aspects to its natal Sun, Moon, Ascendant, Mars and Saturn. The best moments are listed at least six hours apart, with five stars for the strongest. Only beneficial purposes are included.`;
@@ -7459,7 +7459,7 @@ window.MANX=[
   <label class="l" for="tlRule">Aspects from Mars and Saturn<select class="f" id="tlRule"><option value="strict"${st.mild?'':' selected'}>Strict: any aspect to the Moon or a benefic rules a time out</option><option value="mild"${st.mild?' selected':''}>Milder: hard aspects cost points, trines and sextiles a little</option></select></label>
   <label class="l" for="tlDays">Search<select class="f" id="tlDays">${[[14,'2 weeks'],[30,'1 month'],[45,'6 weeks'],[60,'2 months'],[90,'3 months'],[180,'6 months'],[365,'1 year']].map(([d,l])=>`<option value="${d}"${d===st.days?' selected':''}>${l}</option>`).join('')}</select></label>
   <p class="note">${A?`Times are also checked against ${esc(A.name)}’s chart.<br><button type="button" class="pillbtn tlopen" data-tlopen>Choose another chart</button>`:`Times can also be checked against one of your saved charts.<br><button type="button" class="pillbtn tlopen" data-tlopen>Choose a chart</button>`}</p>
-  <button class="btn" type="button" id="tlGo"${st.busy?' disabled':''}>${st.busy?`Searching… ${Math.round((st.prog||0)*100)}%`:'Find the best times'}</button>`}
+  <div class="tlgorow"><button class="btn" type="button" id="tlGo"${st.busy?' disabled':''}>${st.busy?`Searching… ${Math.round((st.prog||0)*100)}%`:'Find the best times'}</button>${st.busy?'<button type="button" class="pillbtn tlstop" data-tlstop>Stop</button>':''}</div>`}
  /* traditional correspondences: planet materials, and an image for each purpose (described in our own words) */
  const MAT={
   venus:{metal:'Copper',stones:'Emerald, beryl, red coral or carnelian',colours:'Green, rose and white',incense:'Red rose, ambergris, musk or aloeswood',cloth:'Green or rose silk',plant:'Rose petals, myrtle or violet'},
@@ -7516,20 +7516,29 @@ window.MANX=[
   const fix=rows.filter(x=>x.r>=1.5&&x.st<=0&&x.R!==ally.R).sort((a,b)=>(a.st-a.r*0.5)-(b.st-b.r*0.5))[0]||null;
   return {ally,fix,name:A.name}}
  function fitHtml(){const A=chartA();if(!A)return `<div class="elrow tlfit"><p class="note" style="margin:0">Choose a saved chart to get a talisman suggestion based on its birth chart.<br><button type="button" class="pillbtn tlopen" data-tlopen>Choose a chart</button></p></div>`;
-  const F=natalFit(A);if(!F)return '';const RJ=a=>a.map((x,i)=>i?x.replace(/^it /,''):x).join(' and ');const one=(x,label,why)=>`<div class="tlsug"><div><span class="muted">${label}</span><br><strong>${glyphHtml(x.R)} ${PURP[x.k].name}</strong><span class="muted"> · ${PNM(x.R)}</span></div><p class="note">${why}</p>${st.purp===x.k?'<span class="muted">Selected</span>':`<button type="button" class="chipbtn" data-tlpick="${x.k}">Use this purpose</button>`}</div>`;
+  const F=natalFit(A);if(!F)return '';const RJ=a=>a.map((x,i)=>i?x.replace(/^it /,''):x).join(' and ');const one=(x,label,why)=>`<div class="tlsug"><div><span class="muted">${label}</span><br><strong>${glyphHtml(x.R)} ${PURP[x.k].name}</strong><span class="muted"> · ${PNM(x.R)}</span></div><p class="note">${why}</p>${st.busy&&st.busyFrom===x.k?`<div class="tlgorow"><span class="tlprog">Searching… ${Math.round((st.prog||0)*100)}%</span><button type="button" class="pillbtn tlstop" data-tlstop>Stop</button></div>`:st.purp===x.k&&!st.busyFrom?'<span class="muted">Selected</span>':`<button type="button" class="chipbtn" data-tlpick="${x.k}"${st.busy?' disabled':''}>Use this purpose</button>`}</div>`;
   let h=`<details class="elrow tlfit" open><summary><strong>Suggested for ${esc(F.name)}</strong><span class="muted"> · from the birth chart</span></summary><div class="tlsugs">`;
   const a=F.ally;h+=one(a,'Best suited',`${PNM(a.R)} is ${a.bits.length?a.bits.join(', '):'neutrally placed'}${a.rel.length?`, and ${RJ(a.rel)}`:''}. A talisman works best through a planet that is already strong in your chart, so this is the one most likely to answer.`);
   if(F.fix){const f=F.fix;h+=one(f,'Worth strengthening',`${PNM(f.R)} matters in your chart because ${RJ(f.rel)}, but it is ${f.bits.length?f.bits.join(', '):'weakly placed'}. In the Picatrix tradition a talisman made at a strong moment for a planet can support it where the birth chart leaves it weak.`)}
   return h+`</div><button type="button" class="pillbtn tlopen" data-tlopen>Choose another chart</button></details>`}
  const ETHIC=`<details class="elrow tlethic" open><summary><strong>Before you begin</strong></summary><p class="note">In the creation of a talisman, it is important for your physical and spiritual well-being that you maintain a constructive intention and avoid harming others or creation for selfish purposes. A talisman is a concentrated living energy, and that energy must be treated with respect in all interactions. If you create a talisman and wish to dispel it, then this must be done with great care: simply thank the talisman and state your request to the cosmic intelligence from which you were given the energy. Once you feel this wish has been acknowledged, destroy the talisman with thoughtful purpose. Creation for selfish or evil reasons is possible, but it is gravely discouraged and not recommended under any circumstances. For this reason it is not included here; other resources cover that information.</p></details>`;
- function mainHtml(){const P=PURP[st.purp],R=st.res&&st.res.purp===st.purp?st.res:null;let h='';
-  if(!R)h+=`<p class="muted">Choose a purpose and press <strong>Find the best times</strong>. The search follows the rules of the <em>Picatrix</em>: the Moon in a suitable mansion and increasing in light, free of the malefics, the planet of the work strong and well placed, and the work begun in its day and hour.</p>`;
-  else{h+=R.pick.length?`<div class="ellist">${R.pick.map((r,i)=>`<details class="elrow"${i===0?' open':''}><summary><span class="elst" title="Score ${r.sc.toFixed(1)}">${stars(r.sc)}</span><strong>${fmtT(r.t,R.pl)}</strong><span class="muted"> · day of ${PNM(r.dl||'sun')}, hour of ${PNM(r.hr||P.ruler)}${r.hs?` (${fmtH(r.hs,R.pl)}–${fmtH(r.he,R.pl)})`:''}</span></summary>${r.pre?`<p class="note elpre">Before sunrise, so this is still the planetary night of ${new Intl.DateTimeFormat(undefined,{weekday:'long',timeZone:R.pl.tz&&R.pl.tz!=='manual'?R.pl.tz:'UTC'}).format(new Date(r.pre))} (a planetary day runs from sunrise to sunrise).</p>`:''}
+ function resHtml(R,P){let h='';
+  if(!R)return h;`<p class="muted">Choose a purpose and press <strong>Find the best times</strong>. The search follows the rules of the <em>Picatrix</em>: the Moon in a suitable mansion and increasing in light, free of the malefics, the planet of the work strong and well placed, and the work begun in its day and hour.</p>`;
+  {h+=R.pick.length?`<div class="ellist">${R.pick.map((r,i)=>`<details class="elrow"${i===0?' open':''}><summary><span class="elst" title="Score ${r.sc.toFixed(1)}">${stars(r.sc)}</span><strong>${fmtT(r.t,R.pl)}</strong><span class="muted"> · day of ${PNM(r.dl||'sun')}, hour of ${PNM(r.hr||P.ruler)}${r.hs?` (${fmtH(r.hs,R.pl)}–${fmtH(r.he,R.pl)})`:''}</span></summary>${r.pre?`<p class="note elpre">Before sunrise, so this is still the planetary night of ${new Intl.DateTimeFormat(undefined,{weekday:'long',timeZone:R.pl.tz&&R.pl.tz!=='manual'?R.pl.tz:'UTC'}).format(new Date(r.pre))} (a planetary day runs from sunrise to sunrise).</p>`:''}
     <ul class="elg">${r.good.map(x=>`<li>${x}</li>`).join('')}</ul>${r.bad.length?`<ul class="elb">${r.bad.map(x=>`<li>${x}</li>`).join('')}</ul>`:''}
     <button type="button" class="chipbtn" data-elshow="${r.t}">Show this sky on the chart</button></details>`).join('')}</div>`:(!R.mild&&R.nOut?`<p class="muted">No times in this period pass the strict rule. ${R.nOut===R.tot?'Every':`${Math.round(R.nOut/R.tot*100)}% of`} half hour${R.nOut===R.tot?'':'s'} searched ${R.nOut===R.tot?'has':'have'} the Moon or a benefic aspected by Mars or Saturn${R.blocks.length?`, most often ${R.blocks.slice(0,3).map(b=>`${b[0]} (${b[1]}% of the time)`).join(', ')}`:''}. Try a longer search, or choose the milder rules.</p>`:`<p class="muted">No strong times in this period. Try a longer search or another purpose.</p>`);
    if(R.pick.length&&!R.mild&&R.nOut)h+=`<p class="muted">Strict rule: ${Math.round(R.nOut/R.tot*100)}% of the times searched were ruled out because the Moon or a benefic was aspected by Mars or Saturn.</p>`;
    if(R.now)h+=`<p class="muted elnow">Right now in ${esc(R.pl.name||'this place')}: <span class="elst" title="Score ${R.now.sc.toFixed(1)}">${stars(R.now.sc)}</span> · Moon in mansion ${R.now.m}, ${MANS[R.now.m-1][0]}.</p>`}
-  h=ETHIC+fitHtml()+matHtml(st.purp)+h;
+  return h}
+ const dur=d=>({14:'2 weeks',30:'month',45:'6 weeks',60:'2 months',90:'3 months',180:'6 months',365:'year'})[d]||d+' days';
+ function popHtml(){const P=PURP[st.purp],R=st.res;if(!R)return '';return `<div class="tlpophead"><div><h2>Best times · ${P.name}</h2><p class="muted">${esc(R.pl.name||'')}${R.pl.name?' · ':''}the next ${R.days?dur(R.days):'period'} · ${R.mild?'milder':'strict'} malefic rule</p></div><button type="button" class="iconbtn" data-tlclose aria-label="Close">✕</button></div>${resHtml(R,P)}`}
+ function openPop(){let sc=$('tlPopScrim'),pp=$('tlPop');if(!pp){sc=document.createElement('div');sc.id='tlPopScrim';sc.className='scrim';sc.dataset.tlclose='';pp=document.createElement('div');pp.id='tlPop';pp.className='modal';pp.setAttribute('role','dialog');pp.setAttribute('aria-modal','true');pp.setAttribute('aria-label','Best times');document.body.append(sc,pp)}
+  pp.innerHTML=popHtml();sc.hidden=false;pp.hidden=false;try{pp.querySelector('[data-tlclose]').focus()}catch(e){}}
+ function closePop(){const sc=$('tlPopScrim'),pp=$('tlPop');if(sc)sc.hidden=true;if(pp)pp.hidden=true}
+ function mainHtml(){const P=PURP[st.purp],R=st.res&&st.res.purp===st.purp?st.res:null;let h='';
+  if(!R)h+=`<p class="muted">Choose a purpose and press <strong>Find the best times</strong>. The search follows the rules of the <em>Picatrix</em>: the Moon in a suitable mansion and increasing in light, free of the malefics, the planet of the work strong and well placed, and the work begun in its day and hour. The best times open in a window as soon as the search finishes.</p>`;
+  let top='';if(R){const b=R.pick[0];top=`<div class="elrow tlbest"><div>${b?`<span class="muted">Best time found</span><br><span class="elst">${stars(b.sc)}</span> <strong>${fmtT(b.t,R.pl)}</strong><span class="muted"> · ${R.pick.length} time${R.pick.length===1?'':'s'} listed</span>`:`<strong>No times found</strong><br><span class="muted">See the details for why.</span>`}</div><button type="button" class="pillbtn tlopen" data-tlpop>${b?'Show the best times':'Show details'}</button></div>`}
+  h=top+ETHIC+fitHtml()+matHtml(st.purp)+h;
   h+=`<details class="rsn"><summary>Reasoning</summary><p class="note">${REASON}</p></details>`;return h}
  const V=()=>$('electView');
  function ensure(){const v=V();if(!v)return;const side=v.querySelector('.eph-side'),main=v.querySelector('.eph-main');if(!side||!main)return;
@@ -7540,16 +7549,19 @@ window.MANX=[
   const f=$('elForm'),o=$('elOut');if(f)f.hidden=tal;if(o)o.hidden=tal;$('tlSide').hidden=!tal;$('tlMain').hidden=!tal;
   const h2=v.querySelector('.eph-head h2'),sub=$('elSub');if(h2){if(!h2.dataset.orig)h2.dataset.orig=h2.textContent;h2.textContent=tal?'Talisman Elections':h2.dataset.orig}
   if(sub){if(sub.dataset.orig==null)sub.dataset.orig=sub.textContent;if(tal)sub.textContent='The best times to make a talisman, by the rules of the Picatrix.';else if(sub.textContent.startsWith('The best times to make a talisman'))sub.textContent=sub.dataset.orig}}
- function paint(progOnly){ensure();if(st.view!=='tal')return;if(progOnly){const b=$('tlGo');if(b)b.textContent=`Searching… ${Math.round((st.prog||0)*100)}%`;return}
+ function paint(progOnly){ensure();if(st.view!=='tal')return;if(progOnly){const t=`Searching… ${Math.round((st.prog||0)*100)}%`,b=$('tlGo');if(b)b.textContent=t;document.querySelectorAll('#tlMain .tlprog').forEach(e=>e.textContent=t);return}
   try{$('tlSide').innerHTML=sideHtml();$('tlMain').innerHTML=mainHtml();const q=$('tlQ');if(q)placePicker(q,$('tlSugg'),it=>{st.any={lat:it.lat,lon:it.lon,label:it.label,tz:it.tz};st.res=null;save();paint()})}catch(e){console.warn(e)}}
- try{new MutationObserver(()=>{const v=V();if(v&&!v.hidden&&!$('tlSeg'))paint()}).observe(V(),{attributes:true,attributeFilter:['hidden']})}catch(e){}
+ try{new MutationObserver(()=>{const v=V();if(!v||v.hidden)return;if(!$('tlSeg')){paint();return}if(st.view==='tal'&&!st.busy){const A=chartA(),id=A?A.id:null;if(st.res&&st.res.forId!==id)st.res=null;paint()}}).observe(V(),{attributes:true,attributeFilter:['hidden']})}catch(e){}
  document.addEventListener('click',e=>{const b=e.target.closest('#tlSeg [data-tl]');if(b){st.view=b.dataset.tl;save();paint()}});
- document.addEventListener('click',e=>{const b=e.target.closest('[data-tlpick]');if(b){st.purp=b.dataset.tlpick;save();paint()}});
+ document.addEventListener('click',e=>{const b=e.target.closest('[data-tlpick]');if(b){if(st.busy)return;st.purp=b.dataset.tlpick;st.busyFrom=b.dataset.tlpick;save();run()}});
  document.addEventListener('change',e=>{const id=e.target&&e.target.id;if(id==='tlPurp'){st.purp=e.target.value;save();paint()}else if(id==='tlLoc'){st.loc=e.target.value;st.res=null;save();paint();if(st.loc==='any'&&!st.any){const q=$('tlQ');if(q)q.focus()}}else if(id==='tlRule'){st.mild=e.target.value==='mild';st.res=null;save();paint()}else if(id==='tlDays'){st.days=+e.target.value;st.res=null;save();paint()}});
+ document.addEventListener('click',e=>{if(e.target.closest('[data-tlstop]')&&st.busy){st.cancel=true}});
+ document.addEventListener('click',e=>{if(e.target.closest('[data-tlpop]')){openPop();return}if(e.target.closest('[data-tlclose]')){closePop();return}if(e.target.closest('#tlPop [data-elshow]'))closePop()},true);
+ document.addEventListener('keydown',e=>{if(e.key==='Escape'){const pp=$('tlPop');if(pp&&!pp.hidden){closePop();e.stopPropagation()}}},true);
  document.addEventListener('click',e=>{if(e.target.closest('[data-tlopen]')){e.preventDefault();try{openLib()}catch(err){console.warn(err)}}});
  // repaint when a different chart is chosen; drop results worked out for the previous one
  try{const _ra=renderAll;renderAll=function(){const r=_ra.apply(this,arguments);try{const v=V();if(v&&!v.hidden&&st.view==='tal'&&!st.busy){const A=chartA(),id=A?A.id:null;if(st.res&&st.res.forId!==id)st.res=null;paint()}}catch(e){}return r}}catch(e){}
- document.addEventListener('click',e=>{if(e.target.closest('#tlGo')){if(!st.busy)run();return}
+ document.addEventListener('click',e=>{if(e.target.closest('#tlGo')){if(!st.busy){st.busyFrom=null;run()}return}
   const s=e.target.closest('[data-elshow]');if(s){const t=+s.dataset.elshow;try{try{setView('chart')}catch(_){}if(mode!=='transits'){const b=document.querySelector('#modes [data-mode="transits"]');if(b)b.click()}offsetMin=Math.round((t-Date.now())/60000);renderAll()}catch(err){console.warn(err)}}});
  const css=document.createElement('style');css.textContent=`
 .elform{display:flex;flex-wrap:wrap;gap:10px 12px;align-items:flex-end;margin:6px 0 10px}
@@ -7566,6 +7578,15 @@ window.MANX=[
 .elrow .chipbtn{margin-top:4px}
 .elnow{font-size:.82rem}
 html body #ephView .eph-out,html body #ephView .eph-out th,html body #zrView .zrcard,html body #zrView .zrsec{background:var(--raised)!important}
+html body *{hyphens:manual!important;-webkit-hyphens:manual!important}
+#tlSeg{width:fit-content;overflow:hidden}
+.tlgorow{display:flex;gap:8px;align-items:center}.tlgorow #tlGo{flex:1}.tlgorow .tlstop{margin:0;flex:none;border:1px solid color-mix(in srgb,var(--fg) 35%,transparent);color:var(--fg)}.tlgorow .tlstop:hover{border-color:#e57a7a;color:#e57a7a}[data-tlpick]:disabled{opacity:.4;cursor:default}#tlSide .tlgorow .tlstop{padding:9px 16px}
+.tlprog{font:600 .82rem var(--ui);color:var(--lilac);padding:6px 0}
+#tlPop{width:min(720px,calc(100% - 24px));max-height:calc(100% - 48px);gap:10px;z-index:43}#tlPopScrim{z-index:42}
+#tlPop .tlpophead{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;position:sticky;top:-20px;background:var(--panel);margin:-20px -20px 0;padding:18px 20px 10px;z-index:1}
+#tlPop h2{margin:0 0 2px;font-family:var(--serif);font-size:1.25rem}#tlPop .muted{margin:0}
+#tlPop .elrow{background:var(--raised)}
+.tlbest{display:flex;flex-wrap:wrap;gap:10px 16px;align-items:center;justify-content:space-between;padding:12px 14px;border:1px solid color-mix(in srgb,var(--lilac) 45%,transparent)}.tlbest button.tlopen{margin-top:0}
 button.tlopen{margin-top:8px;border-color:color-mix(in srgb,var(--lilac) 55%,transparent);color:var(--lilac)}button.tlopen:hover{background:color-mix(in srgb,var(--lilac) 14%,transparent)}
 .tlmat summary strong,.tlfit summary strong,.tlethic summary strong{font-family:var(--serif)}
 .tlsugs{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px;margin-top:10px}.tlsug{display:flex;flex-direction:column;gap:6px;align-items:flex-start}.tlsug .note{margin:0}
