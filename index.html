@@ -1820,7 +1820,7 @@ function computeIn(realMode){
  try{xCompute2(out,A,target)}catch(e){console.warn(e)}
  try{xCompute3(out,A,target)}catch(e){console.warn(e)}
  if(out.inner.houseNote)out.notes.push(out.inner.houseNote);
- if(A.timeUnknown)out.notes.push('Birth time unknown: noon chart, houses and angles hidden.');
+ if(A.timeUnknown)out.notes.push('Birth time unknown: noon chart, angles hidden, houses counted from 0° Aries.');
  return out;}
 
 /* ---------- wheel ---------- */
@@ -2369,10 +2369,10 @@ function renderWheel(v){
    const t=el('text',{x,y,'text-anchor':'middle','dominant-baseline':'central','font-size':isHit?13:Math.max(6,10-st[4]*1.5),fill:isHit?'var(--accent)':'var(--muted)','font-family':'var(--sym)'},'✦'+VS);t.append(el('title',{},`${st[0]} ${deg(L).txt} ${SIGN_N[deg(L).s]}${isHit?' (conjunct a chart point)':''}`));svg.append(t);svg.append(el('circle',{cx:x,cy:y,r:9,fill:'transparent','data-obj':`star:${st[0]}`,class:'hit'}))})}
  if(bi){svg.append(el('circle',{cx:C,cy:C,r:iTop,fill:'none',stroke:'var(--outer-line)','stroke-width':1.2}))}if(tri){svg.append(el('circle',{cx:C,cy:C,r:oTop,fill:'none',stroke:'var(--outer-line)','stroke-width':1.2}))}
  svg.append(el('circle',{cx:C,cy:C,r:IN,fill:'var(--w-ring,var(--w-grey))',stroke:'var(--w-line)'}));
- if(!inner.noHouses){inner.cusps.forEach((c,i)=>{const ang=i%3===0;const [a,b]=pt(c,bi&&ang&&mode==='progressed'?iTop:base),[x,y]=pt(c,IN);
+ {const _nat=!!inner.noHouses,_cu=_nat?natCusps():inner.cusps;_cu.forEach((c,i)=>{const ang=!_nat&&i%3===0;const [a,b]=pt(c,bi&&ang&&mode==='progressed'?iTop:base),[x,y]=pt(c,IN);
    svg.append(el('line',{x1:a,y1:b,x2:x,y2:y,stroke:ang?'var(--cusp-ang)':'var(--cusp-line)','stroke-width':ang?1.3:1,opacity:1}));
-   const mid=c+n360(inner.cusps[(i+1)%12]-c)/2,[hx,hy]=pt(mid,IN-14);svg.append(hit({d:sector(IN,IN-26,c,inner.cusps[(i+1)%12]),fill:'transparent'},`house:${i+1}`));svg.append(el('text',{x:hx,y:hy,'text-anchor':'middle','dominant-baseline':'central','font-size':12,fill:'var(--muted)','font-family':'var(--mono)'},i+1))});
-  [['asc','AC'],['mc','MC'],['dsc','DC'],['ic','IC']].forEach(([k,l])=>{const lon=inner.pts[k].lon;const pin=bi&&mode==='progressed',rE=pin?iTop:base;{if(!pin){const [t1,t2]=pt(lon,Z1),[t3,t4]=pt(lon,Z2);svg.append(el('line',{x1:t1,y1:t2,x2:t3,y2:t4,stroke:'var(--lilac)','stroke-width':2.6,'stroke-linecap':'round',class:'angtick'}))}const [t5,t6]=pt(lon,rE),[t7,t8]=pt(lon,rE-12);svg.append(el('line',{x1:t5,y1:t6,x2:t7,y2:t8,stroke:'var(--lilac)','stroke-width':2.6,class:'angtick'}))}const [lx,ly]=pin?pt(lon+(k==='asc'||k==='dsc'?-4.2:4.2),rE-20):pt(angLabA(lon),Z1+12);
+   const mid=c+n360(_cu[(i+1)%12]-c)/2,[hx,hy]=pt(mid,IN-14);svg.append(hit({d:sector(IN,IN-26,c,_cu[(i+1)%12]),fill:'transparent'},`house:${i+1}`));svg.append(el('text',{x:hx,y:hy,'text-anchor':'middle','dominant-baseline':'central','font-size':12,fill:'var(--muted)','font-family':'var(--mono)'},i+1))});
+  if(!_nat)[['asc','AC'],['mc','MC'],['dsc','DC'],['ic','IC']].forEach(([k,l])=>{const lon=inner.pts[k].lon;const pin=bi&&mode==='progressed',rE=pin?iTop:base;{if(!pin){const [t1,t2]=pt(lon,Z1),[t3,t4]=pt(lon,Z2);svg.append(el('line',{x1:t1,y1:t2,x2:t3,y2:t4,stroke:'var(--lilac)','stroke-width':2.6,'stroke-linecap':'round',class:'angtick'}))}const [t5,t6]=pt(lon,rE),[t7,t8]=pt(lon,rE-12);svg.append(el('line',{x1:t5,y1:t6,x2:t7,y2:t8,stroke:'var(--lilac)','stroke-width':2.6,class:'angtick'}))}const [lx,ly]=pin?pt(lon+(k==='asc'||k==='dsc'?-4.2:4.2),rE-20):pt(angLabA(lon),Z1+12);
    svg.append(el('text',{x:lx,y:ly,'text-anchor':'middle','dominant-baseline':'central','font-size':pin?12:13,'font-weight':700,fill:'var(--lilac)','font-family':'var(--mono)',opacity:pin?1:angLabOp(lon).toFixed(2)},l));svg.append(hit({cx:lx,cy:ly,r:14,fill:'transparent'},`pt:i:${k}`))});}
  const allP=aspectPairs(inner,outer||null);allP.forEach(p=>{p.s=wStr(p,!!outer)});const pairs=allP.filter(p=>p.asp.k!=='conj').sort((x,y)=>x.s-y.s);WGLOW=new Map();WHARD=new Map();allP.forEach(p=>{if(p.asp.cls!=='major'||!WSTRONG_K.includes(p.a)||!WSTRONG_K.includes(p.b))return;[['i:'+p.a],[(outer?'o:':'i:')+p.b]].forEach(([k])=>{if(p.s>(WGLOW.get(k)||0)){WGLOW.set(k,p.s);WHARD.set(k,p.asp.k==='squ'||p.asp.k==='opp')}})});
  const aspR=IN-26;svg.append(el('circle',{cx:C,cy:C,r:aspR,fill:'var(--asp-field)',stroke:'none'}));pairs.forEach(p=>{const [x1,y1]=pt((outer||inner).pts[p.b].lon,aspR),[x2,y2]=pt(inner.pts[p.a].lon,aspR);
@@ -2459,7 +2459,7 @@ function strengthHtml(ch,k){const st=planetStrength(ch,k);if(!st)return '';const
  <ul class="sglist">${st.F.map(f=>`<li><span>${f.t}</span><span class="mono ${f.v>0?'sgp':f.v<0?'sgn':'muted'}">${f.v>0?'+':''}${f.v}</span></li>`).join('')}</ul>
  <details class="rsn"><summary><svg class="rsnico" viewBox="6 8.4 7.2 7.2" aria-hidden="true"><path d="M9.6 8.4 L10.5 11.1 L13.2 12 L10.5 12.9 L9.6 15.6 L8.7 12.9 L6 12 L8.7 11.1 Z"/></svg>Reasoning</summary><p class="note rsnp">${k==='lilith'?'Black Moon Lilith is a calculated point (the Moon’s apogee) with no dignities or meaningful motion, so it is judged by house, aspects to the lights, benefics and malefics, the nodes and fixed stars. ':k==='vertex'?'The Vertex is a calculated point on the western side of the chart, so it is judged by house, aspects to the lights, benefics and malefics, the nodes and fixed stars. ':''}${['asc','mc','dsc','ic'].includes(k)?'An angle is judged by the condition of the planet that rules its sign, and by planets aspecting or sitting on it. ':['node','snode'].includes(k)?'The nodes are judged by sign (traditional exaltation in Gemini and Sagittarius), house, closeness to the Sun and Moon, and aspects to the benefics and malefics. ':LOTS.includes(k)?'Lots have no dignity of their own, so they are judged mainly by the condition and placement of their lord, then by house and aspects. ':Calc.ALL_AST.includes(k)||Calc.URA_KEYS.includes(k)?'Asteroids and Uranian points have no traditional dignities, so their score comes from house, motion, the lights and aspects. ':''}A traditional tally of essential dignity (sign, exaltation, triplicity, term, face), house, motion, the Sun’s rays, sect, aspects to the benefics and malefics, the nodes and key fixed stars. The points are added up and scaled so 50% is neutral and 100% is full strength. Strength shows how freely a planet can act, not whether it is “good”.</p></details>`}
 function posTable(ch,title,ref){const keys=[...shownKeys(),...(ch.noHouses?[]:['asc','mc','dsc','ic'])].filter(k=>ch.pts[k]&&!(ch.noHouses&&[...LOTS,'vertex'].includes(k)));
- const cusps=(ref||ch).noHouses?null:(ref||ch).cusps;
+ const cusps=(ref||ch).noHouses?natCusps():(ref||ch).cusps;
  const Ly=S.layers;const tk='pos:'+(ref?'outer':'inner');let h=`<h3 class="sub">${title}</h3><div class="tblwrap"><table><thead><tr><th></th><th>Point</th><th>Position</th><th>${ref?'In natal':'House'}</th><th>Daily</th><th>Strength</th><th>Dignity</th>${Ly.decans?'<th>Decan</th>':''}${Ly.terms?'<th>Term</th>':''}${Ly.naks?'<th>Nakshatra</th>':''}${Ly.mansions?'<th>Mansion</th>':''}</tr></thead><tbody>`;
  for(const k of keys){const p=ch.pts[k],dg=dignity(k,p.lon),g=PT[k][0],isPl=!!GLYPH_SVG[k],isText=g.length>1&&!/[☀-⯿]/.test(g);
   h+=`<tr class="clk" data-obj="pt:${lastView&&ch===lastView.outer?'o':'i'}:${k}"><td class="g" ${isText?'style="font:600 .75rem var(--mono)"':''}>${isPl?svgGlyph(k):isText?g:g+VS}</td><td>${PT[k][1]}</td><td>${lonHtml(p.lon)}${p.speed<0&&!['node','snode'].includes(k)?' <span class="rx">℞</span>':''}</td><td class="mono">${cusps&&!['asc','mc','dsc','ic'].includes(k)?Calc.houseOf(p.lon,cusps):''}</td><td class="mono muted">${p.speed?(p.speed>0?'+':'−')+Math.abs(p.speed).toFixed(Math.abs(p.speed)<1?3:2)+'°':''}</td><td>${(()=>{const st=planetStrength(ch,k);return st?`<span class="sgcell">${strGauge(st,1)}<span class="mono muted">${st.pct}%</span></span>`:''})()}</td><td>${dg?`<span class="dig ${dg[0]}">${dg[1]}</span>`:''}</td>${Ly.decans?(()=>{const d=decanOf(p.lon);return `<td><span class="sym">${PT[d.ruler][0]+VS}</span> <span class="muted">${d.n}</span></td>`})():''}${Ly.terms?(()=>{const t=termOf(p.lon);return `<td><span class="sym">${PT[t][0]+VS}</span> <span class="muted">${PT[t][1]}</span></td>`})():''}${Ly.naks?(()=>{const n=nakOf(p.lon,ch.jd,ch.ayanamsa||0);return `<td>${NAKS[n.i]} <span class="muted mono">p${n.pada}</span></td>`})():''}${Ly.mansions&&window.MANS?(()=>{const m=Math.floor(n360(p.lon)/(360/28));return `<td><span class="mono">${m+1}</span> <span class="muted">${MANS[m][0]}</span></td>`})():''}</tr>`}
@@ -2797,7 +2797,7 @@ function openForm(c){const f=c||{name:'',folder:'',y:'',mo:'',d:'',h:null,mi:nul
    <input class="f" id="fHour" inputmode="numeric" placeholder="Hour" aria-label="Hour" value="${f.timeUnknown?'':h12}" maxlength="2">
    <input class="f" id="fMin" inputmode="numeric" placeholder="Min" aria-label="Minute" value="${f.timeUnknown||f.mi==null?'':String(f.mi).padStart(2,'0')}" maxlength="2">
    <select class="f" id="fAmpm" aria-label="AM or PM"><option value="am" ${!pm?'selected':''}>AM</option><option value="pm" ${pm?'selected':''}>PM</option></select></div></div>
-  <label class="chk full" for="fUnknown"><input id="fUnknown" type="checkbox" ${f.timeUnknown?'checked':''}> Birth time unknown (cast at noon, hide houses and angles)</label>
+  <label class="chk full" for="fUnknown"><input id="fUnknown" type="checkbox" ${f.timeUnknown?'checked':''}> Birth time unknown (cast at noon; houses start at 0° Aries, angles hidden)</label>
   <div class="l full place"><label for="fPlaceQ">Birthplace</label><input class="f" id="fPlaceQ" value="${esc(f.place||'')}" placeholder="Start typing a city or town, e.g. Trois-Rivières" autocomplete="off" role="combobox" aria-controls="fSugg" aria-expanded="false"><ul class="sugg" id="fSugg" role="listbox" hidden></ul></div>
   <p class="picked full" id="fPicked"></p>
 
@@ -3462,7 +3462,7 @@ function pointText(which,k,p,inner,house){const v=lastView,s=Math.floor(p.lon/30
  else if(sp!=null&&Math.abs(sp)<0.004&&!['moon','node','snode','asc','mc',...LOTS,'vertex','lilith'].includes(k)&&sp!==0)t+=' Nearly stationary, its influence is concentrated and emphatic.';
  return t}
 function infoPoint(which,k){const ch=chartOf(which),p=ch.pts[k];if(!p)return null;const v=lastView,inner=v.inner,s=Math.floor(p.lon/30);
- const house=!inner.noHouses&&!['asc','mc','dsc','ic'].includes(k)?Calc.houseOf(p.lon,inner.cusps):null;
+ const house=!['asc','mc','dsc','ic'].includes(k)?Calc.houseOf(p.lon,inner.noHouses?natCusps():inner.cusps):null;
  const sp=p.speed,motion=['asc','mc',...LOTS,'vertex','dsc','ic'].includes(k)?null:Math.abs(sp)<(['moon'].includes(k)?0:0.004)?'Stationary':sp<0?(['node','snode'].includes(k)?'Moving backward (normal for the node)':'Retrograde'):'Direct';
  const dg=dignity(k,p.lon),dec=decanOf(p.lon),term=termOf(p.lon),nk=nakOf(p.lon,ch.jd,ch.ayanamsa||0);
  const ruler=RULER[s],rp=ch.pts[ruler];
@@ -3497,10 +3497,11 @@ function infoSign(s){const v=lastView,inner=v.inner,[el2,mod,rul,modern,ex,fall]
  <p class="il">About</p><p class="interp">${SIGN_TEXT[s]}${houses.length?` In this chart it colours the ${houses.map(ord).join(' and ')} house${houses.length>1?'s':''}, so those areas are approached ${SIGN_STYLE[s]}.`:''}</p>
  <p class="il">Gifts</p><p>${cap(SIGN_GIFT[s])}.</p><p class="il">Shadow</p><p>${cap(SIGN_SHADOW[s])}.</p>
  ${inSign.length?`<p class="il">In this sign</p><ul>${inSign.map(k=>`<li class="clk" data-obj="pt:i:${k}">${glyphHtml(k)} ${PT[k][1]} <span class="muted mono">${deg(inner.pts[k].lon).txt}</span></li>`).join('')}</ul>`:'<p class="il">No chart points in this sign</p>'}`}
-function infoHouse(n){const inner=lastView.inner;if(inner.noHouses)return null;const c=inner.cusps[n-1],s=Math.floor(c/30),ruler=RULER[s],rp=inner.pts[ruler];
+function natCusps(){return [0,30,60,90,120,150,180,210,240,270,300,330]}
+function infoHouse(n){const _in=lastView.inner,inner=_in.noHouses?{..._in,noHouses:false,cusps:natCusps(),houseUsed:'natural'}:_in;const c=inner.cusps[n-1],s=Math.floor(c/30),ruler=RULER[s],rp=inner.pts[ruler];
  const occ=shownKeys().filter(k=>inner.pts[k]&&Calc.houseOf(inner.pts[k].lon,inner.cusps)===n);const occO=lastView.outer?shownKeys().filter(k=>lastView.outer.pts[k]&&Calc.houseOf(lastView.outer.pts[k].lon,inner.cusps)===n):[];
  const size=n360(inner.cusps[n%12]-c);
- return `<p class="kicker">House · ${HOUSES.find(h=>h[0]===inner.houseUsed)?.[1]||''}</p><h4><span class="big" style="font:700 1.4rem var(--display)">${n}</span>${ord(n)} house</h4>
+ return `<p class="kicker">House · ${inner.houseUsed==='natural'?'Natural houses from 0° Aries':HOUSES.find(h=>h[0]===inner.houseUsed)?.[1]||''}</p>${inner.houseUsed==='natural'?'<p class="note">Birth time unknown, so the houses are counted from 0° Aries (Aries as the 1st house). They show the natural order of the houses, not the person’s own Ascendant.</p>':''}<h4><span class="big" style="font:700 1.4rem var(--display)">${n}</span>${ord(n)} house</h4>
  <dl><dt>Cusp</dt><dd>${dms(c)}</dd><dt>Size</dt><dd>${size.toFixed(2)}°</dd><dt>Type</dt><dd>${[1,4,7,10].includes(n)?'Angular':[2,5,8,11].includes(n)?'Succedent':'Cadent'}</dd>
  <dt>Ruler</dt><dd>${glyphHtml(ruler)} ${PT[ruler][1]}${rp?` in the ${ord(Calc.houseOf(rp.lon,inner.cusps))}, ${SIGN_N[Math.floor(rp.lon/30)]}`:''}</dd><dt>Topics</dt><dd>${HOUSE_TOPICS[n-1]}</dd></dl>
  <p class="il">In everyday life</p><p>${HOUSE_LIFE[n-1]}</p><p class="il">About</p><p class="interp">${HOUSE_TEXT[n-1]} With ${SIGN_N[s]} on the cusp, these matters are handled ${SIGN_STYLE[s]}, and ${pn(ruler)}${rp&&!inner.noHouses?`, placed in the ${ord(Calc.houseOf(rp.lon,inner.cusps))} house,`:''} shows where they lead.${occ.length?'':' With no planets inside, the ruler carries most of the story.'} At their best these matters bring ${SIGN_GIFT[s]}; watch for ${SIGN_SHADOW[s]}.</p>${occ.length?`<p class="il">Working with it</p><p>${HOUSE_ADVICE[n-1]}</p>`:''}
@@ -6457,7 +6458,7 @@ html[data-theme="paper"] .infotab,html[data-theme="pastel"] .infotab{color:var(-
 })();
 
 /* ===== Accuracy helpers: birth-time sensitivity, time-zone check, node type; site version; first-visit tips ===== */
-const DN_VER='v252';
+const DN_VER='v253';
 const btFmt=m=>m==null?'more than 4 hours':m<60?`${m} min`:`${Math.floor(m/60)} h${m%60?' '+(m%60)+' min':''}`;
 /* how far the birth time can move before the rising sign, Midheaven, Moon sign or a planet's house changes */
 const BT_MEMO=new Map();
