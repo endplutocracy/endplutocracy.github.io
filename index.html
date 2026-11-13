@@ -4022,21 +4022,24 @@ function profAspects(ch,A,p,lord){const key='pa|'+chartKey(A)+'|'+p.age;return m
  const tgtOK=['sun','moon','mercury','venus','mars','jupiter','saturn','asc','mc'];
  d.events.forEach(e=>{const hits=e.hits.filter(inY);if(!hits.length)return;
   const hard=['conj','squ','opp'].includes(e.ak);
-  if(e.b===lord&&tgtOK.includes(e.t)&&e.t!==lord&&(!fast||(['sun','moon','asc','mc'].includes(e.t)?hard:e.ak==='conj')))out.push({kind:'from',e,hits});
-  else if(e.t===lord&&['mars',...TC_SLOW].includes(e.b)&&e.b!==lord&&(e.b!=='mars'||hard))out.push({kind:'to',e,hits});
+  const soft=e.ak==='tri'||e.ak==='sext';
+  if(e.b===lord&&tgtOK.includes(e.t)&&e.t!==lord){if(!fast||(['sun','moon','asc','mc'].includes(e.t)?hard:e.ak==='conj'))out.push({kind:'from',e,hits});else if(soft)out.push({kind:'from',e,hits,soft:true})}
+  else if(e.t===lord&&['mars',...TC_SLOW].includes(e.b)&&e.b!==lord){if(e.b!=='mars'||hard)out.push({kind:'to',e,hits});else if(soft)out.push({kind:'to',e,hits,soft:true})}
   else if(e.b===lord&&e.t===lord&&e.ak==='conj')out.push({kind:'ret',e,hits})});
  (d.stations||[]).forEach(st=>{if(st.b!==lord)return;const ms=jdMs(st.jd);if(ms>=p.yStart&&ms<p.yEnd)out.push({kind:'st',st,hits:[{ms}]})});
  return out.sort((a,b)=>a.hits[0].ms-b.hits[0].ms)})}
 function profAspHtml(ch,A,p,lord){if(lord==='moon')return `<p class="il">Major aspects for the year</p><p class="interp">With the Moon as lord of the year, the time lord moves through every sign each month, so look to the monthly profections and the Moon’s monthly return to its natal place for the turning points.</p>`;
  let L;try{L=profAspects(ch,A,p,lord)}catch(e){console.warn(e);return ''}if(!L.length)return '';
+ const nS=L.filter(x=>x.soft).length;let showS=false;try{showS=localStorage.getItem('orrery.profSoft')==='1'}catch(e){}
  const D=ms=>fmtDay(ms,A).replace(/ /g,' '),cls=k=>k==='conj'?'':['squ','opp'].includes(k)?'xhard':'xsoft',pick=(a,i)=>a[i%a.length];
  const rows=L.map((x,i)=>{if(x.kind==='st'){const st=x.st,hs=((Math.floor(st.lon/30)-Math.floor(ch.pts.asc.lon/30)+12)%12)+1;return `<li><div><strong>${glyphHtml(lord)} ${PNM(lord)} turns ${st.retro?'retrograde':'direct'}</strong> <span class="muted mono">${D(x.hits[0].ms)}</span></div><div class="interp" style="margin-top:2px">${st.retro?`The lord of the year slows and turns back in your ${ord(hs)} house. The weeks that follow suit reviewing, repairing and finishing what the year has started rather than launching new things.`:`The lord of the year moves forward again in your ${ord(hs)} house. Matters that stalled can move ahead, and decisions held back during the retrograde can be made.`}</div></li>`}const e=x.e,dates=x.hits.map(h=>D(h.ms)+(h.retro?' ℞':'')).join(' · '),sym=`${glyphHtml(e.b)} <span class="${cls(e.ak)}">${ASPN[e.ak][0]}</span> ${glyphHtml(e.t)}`;
   let txt;if(x.kind==='ret')txt=`${PNM(lord)} returns to its natal place, renewing the themes it holds in your chart. A key moment of the year.`;
   else if(x.kind==='from')txt=`The lord of the year ${pick(PA_ASP[e.ak],i)} ${PA_TGT[e.t]}.${x.hits.length>1?' It is exact more than once, so the theme develops over several weeks.':''}`;
   else txt=`Transiting ${PNM(e.b)} ${PA_BY[e.b]} the lord of the year, and with it the year’s themes${['squ','opp'].includes(e.ak)?', so expect this stretch to ask more of you':['tri','sext'].includes(e.ak)?', usually in a helpful way':''}.${x.hits.length>1?' Exact more than once, so this is a long-running influence.':''}`;
-  return `<li><div><strong>${sym} ${PNM(e.b)} ${ASPN[e.ak][1]} ${x.kind==='to'||x.kind==='ret'?'natal ':'your '}${PNM(e.t)}</strong> <span class="muted mono">${dates}</span></div><div class="interp" style="margin-top:2px">${txt}</div></li>`});
- return `<p class="il">Major aspects for the year</p><p class="muted" style="margin:0 0 6px">Transits made by ${PNM(lord)}, the lord of the year, to your natal planets and angles, and transits from the slower planets to ${PNM(lord)} itself. These are the dates when the year’s themes are most likely to show up.</p><ul class="profasp">${rows.join('')}</ul>`}
+  return `<li${x.soft?' class="pasoft"':''}><div><strong>${sym} ${PNM(e.b)} ${ASPN[e.ak][1]} ${x.kind==='to'||x.kind==='ret'?'natal ':'your '}${PNM(e.t)}</strong> <span class="muted mono">${dates}</span></div><div class="interp" style="margin-top:2px">${txt}</div></li>`});
+ return `<p class="il">Major aspects for the year</p><p class="muted" style="margin:0 0 6px">Transits made by ${PNM(lord)}, the lord of the year, to your natal planets and angles, and transits from the slower planets to ${PNM(lord)} itself. These are the dates when the year’s themes are most likely to show up.</p>${nS?`<button type="button" class="pillbtn tlopen" data-profsoft aria-pressed="${showS}" style="margin:0 0 8px">${showS?'Hide':'Show'} supportive aspects (${nS})</button>`:''}<ul class="profasp${showS?' showsoft':''}">${rows.join('')}</ul>`}
 
+document.addEventListener('click',e=>{const b=e.target.closest('[data-profsoft]');if(!b)return;const ul=b.parentElement.querySelector('ul.profasp');if(!ul)return;const on=!ul.classList.contains('showsoft');ul.classList.toggle('showsoft',on);b.setAttribute('aria-pressed',on);b.textContent=b.textContent.replace(/^(Show|Hide)/,on?'Hide':'Show');try{localStorage.setItem('orrery.profSoft',on?'1':'0')}catch(_){}});
 /* ---------- firdaria ---------- */
 const FIRD_DAY=[['sun',10],['venus',8],['mercury',13],['moon',9],['saturn',11],['jupiter',12],['mars',7],['node',3],['snode',2]];
 const FIRD_NIGHT=[['moon',9],['saturn',11],['jupiter',12],['mars',7],['sun',10],['venus',8],['mercury',13],['node',3],['snode',2]];
@@ -6515,7 +6518,7 @@ html[data-theme="paper"] .infotab,html[data-theme="pastel"] .infotab{color:var(-
 })();
 
 /* ===== Accuracy helpers: birth-time sensitivity, time-zone check, node type; site version; first-visit tips ===== */
-const DN_VER='v256';
+const DN_VER='v257';
 const btFmt=m=>m==null?'more than 4 hours':m<60?`${m} min`:`${Math.floor(m/60)} h${m%60?' '+(m%60)+' min':''}`;
 /* how far the birth time can move before the rising sign, Midheaven, Moon sign or a planet's house changes */
 const BT_MEMO=new Map();
@@ -7638,6 +7641,7 @@ window.MANX=[
 html body #ephView .eph-out,html body #ephView .eph-out th,html body #zrView .zrcard,html body #zrView .zrsec{background:var(--raised)!important}
 html body *{hyphens:manual!important;-webkit-hyphens:manual!important}
 #tlSeg{width:fit-content;overflow:hidden}
+ul.profasp li.pasoft{display:none;border-left:3px solid color-mix(in srgb,var(--lilac) 60%,transparent)}ul.profasp.showsoft li.pasoft{display:block}
 ul.profasp{list-style:none;margin:0;padding:0;display:grid;gap:8px}ul.profasp li{padding:8px 10px;border-radius:8px;background:var(--raised)}ul.profasp .interp{margin:2px 0 0}
 .tlgorow{display:flex;gap:8px;align-items:center}.tlgorow #tlGo{flex:1}.tlgorow .tlstop{margin:0;flex:none;border:1px solid color-mix(in srgb,var(--fg) 35%,transparent);color:var(--fg)}.tlgorow .tlstop:hover{border-color:#e57a7a;color:#e57a7a}[data-tlpick]:disabled{opacity:.4;cursor:default}#tlSide .tlgorow .tlstop{padding:9px 16px}
 .tlprog{font:600 .82rem var(--ui);color:var(--lilac);padding:6px 0}
