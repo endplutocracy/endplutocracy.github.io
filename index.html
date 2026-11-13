@@ -1228,7 +1228,7 @@ html[data-theme="paper"],html[data-theme="pastel"]{--cusp-line:color-mix(in srgb
 </div>
 
 <footer class="sitefoot">
-  <details class="disc"><summary><strong>Hi! Full Disclosure:</strong><svg viewBox="6 8.4 7.2 7.2" aria-hidden="true"><path d="M9.6 8.4 L10.5 11.1 L13.2 12 L10.5 12.9 L9.6 15.6 L8.7 12.9 L6 12 L8.7 11.1 Z"/></svg></summary><p>This site was created with the help of AI, which is one of the many reasons I’m making it free to use. It may make mistakes or have bugs here and there, but I’m constantly updating it to add features and fix issues as I notice them. It isn’t perfect, but I wanted a tool that fit my needs and thought it might help someone else too. This site does cost money to run, so if you’d like to support this effort, please donate any amount you feel is fair. Or get a personal reading from me.</p></details>
+  
   <div class="footbtns"><a class="btn" id="donateBtn" href="https://buymeacoffee.com/destinned" target="_blank" rel="noopener">Donate</a><button class="btn" type="button" id="readBtn">Get a Reading</button><button class="btn" type="button" data-guide>Guide</button></div>
 </footer>
 <div class="scrim" id="scrim" hidden></div>
@@ -6518,7 +6518,7 @@ html[data-theme="paper"] .infotab,html[data-theme="pastel"] .infotab{color:var(-
 })();
 
 /* ===== Accuracy helpers: birth-time sensitivity, time-zone check, node type; site version; first-visit tips ===== */
-const DN_VER='v257';
+const DN_VER='v258';
 const btFmt=m=>m==null?'more than 4 hours':m<60?`${m} min`:`${Math.floor(m/60)} h${m%60?' '+(m%60)+' min':''}`;
 /* how far the birth time can move before the rising sign, Midheaven, Moon sign or a planet's house changes */
 const BT_MEMO=new Map();
