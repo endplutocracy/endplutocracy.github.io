@@ -3923,7 +3923,15 @@ function renderYearPage(){const side=$('tyForm'),main=$('tyMain'),A=byId(activeI
  setTimeout(()=>{if(run!==tyRun)return;let R;try{R=memo(key,()=>tyBuild(A,T0,T1))}catch(e){console.error(e);main.innerHTML='<p class="empty">Could not calculate this period.</p>';return}paint(R)},30)}
 
 /* ---------- phone: bottom page bar and chart library button ---------- */
-(()=>{try{const m={chart:'Chart',year:'Year',acg:'Map',eph:'Ephem',zr:'Releasing',elect:'Elect',tarot:'Tarot'};document.querySelectorAll('#views .vbtn').forEach(b=>{b.dataset.short=m[b.dataset.view]||b.getAttribute('aria-label')||''});setTimeout(()=>{try{const h=document.getElementById('hdrLib'),cw=document.getElementById('cmWrap');if(h&&cw){const home=cw.parentNode,next=cw.nextSibling,mq=matchMedia('(max-width:640px)'),place=()=>{try{if(mq.matches)h.parentNode.insertBefore(cw,h);else home.insertBefore(cw,next)}catch(e){}};mq.addEventListener('change',place);place()}}catch(e){console.warn(e)}},0)}catch(e){console.warn(e)}})();
+(()=>{try{const m={chart:'Chart',year:'Year',acg:'Map',eph:'Ephem',zr:'Releasing',elect:'Elect',tarot:'Tarot'};document.querySelectorAll('#views .vbtn').forEach(b=>{b.dataset.short=m[b.dataset.view]||b.getAttribute('aria-label')||''});setTimeout(()=>{try{const h=document.getElementById('hdrLib'),cw=document.getElementById('cmWrap');if(h&&cw){const home=cw.parentNode,next=cw.nextSibling,mq=matchMedia('(max-width:640px)'),place=()=>{try{if(mq.matches)h.parentNode.insertBefore(cw,h);else home.insertBefore(cw,next)}catch(e){}};mq.addEventListener('change',place);place();
+ const n=document.getElementById('cmName'),m=document.getElementById('cmMode'),b=document.getElementById('cmBtn');
+ const AB=[['Tertiary Progressed','Tert Prog'],['Minor Progressed','Min Prog'],['Solar Return','Sol Ret'],['Lunar Return','Lun Ret'],['Planet Return','Pl Ret'],['Solar Arc','Sol Arc'],['Progressed','Prog'],['Synastry','Syn'],['Transits','Tr'],['Composite','Comp'],['Relocated','Reloc'],['Draconic','Drac'],['Heliocentric','Helio'],['Harmonic','Harm'],['Davison','Dav'],['Lunation','Lun'],['Ingress','Ingr'],['Natal','Nat']];
+ const set=(a,c)=>{if(n.textContent!==a)n.textContent=a;if(m.textContent!==c)m.textContent=c;n.dataset.ab=a;m.dataset.ab=c},over=()=>n.scrollWidth>n.clientWidth+1||m.scrollWidth>m.clientWidth+1;
+ const fit=()=>{try{if(n.textContent!==n.dataset.ab)n.dataset.full=n.textContent;if(m.textContent!==m.dataset.ab)m.dataset.full=m.textContent;let N=n.dataset.full||'',M=m.dataset.full||'';b.title=N+(M?' · '+M:'');b.setAttribute('aria-label',b.title);set(N,M);if(!mq.matches||!over())return;
+  AB.forEach(([l,k])=>{M=M.split(l).join(k)});set(N,M);if(!over())return;
+  N=N.split(' + ').map(x=>x.trim().split(/\s+/)[0]).join(' + ');set(N,M);if(!over())return;
+  N=N.split(' + ').map(x=>x.length>4?x.slice(0,3)+'.':x).join(' + ');set(N,M)}catch(e){}};
+ new MutationObserver(()=>{if(n.textContent!==n.dataset.ab||m.textContent!==m.dataset.ab)fit()}).observe(b,{childList:true,characterData:true,subtree:true});addEventListener('resize',fit);mq.addEventListener('change',fit);setTimeout(fit,50);if(document.fonts&&document.fonts.ready)document.fonts.ready.then(fit)}}catch(e){console.warn(e)}},0)}catch(e){console.warn(e)}})();
 
 (()=>{try{const f=document.getElementById('tyForm');if(!f)return;const b=document.createElement('button');b.type='button';b.id='tyOptBtn';b.className='btn ghost';b.setAttribute('aria-expanded','false');b.setAttribute('aria-controls','tyForm');b.innerHTML='<span>Options: chart, dates and detail</span><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4 6l4 4 4-4"/></svg>';f.parentNode.insertBefore(b,f);b.onclick=()=>{const o=f.classList.toggle('open');b.setAttribute('aria-expanded',o?'true':'false')}}catch(e){console.warn(e)}})();
 /* ---------- this year: notes, calendar file, print ---------- */
@@ -6663,7 +6671,7 @@ html[data-theme="paper"] .infotab,html[data-theme="pastel"] .infotab{color:var(-
 })();
 
 /* ===== Accuracy helpers: birth-time sensitivity, time-zone check, node type; site version; first-visit tips ===== */
-const DN_VER='v266';
+const DN_VER='v267';
 const btFmt=m=>m==null?'more than 4 hours':m<60?`${m} min`:`${Math.floor(m/60)} h${m%60?' '+(m%60)+' min':''}`;
 /* how far the birth time can move before the rising sign, Midheaven, Moon sign or a planet's house changes */
 const BT_MEMO=new Map();
@@ -7813,9 +7821,9 @@ html body .top #cmWrap{flex:1 1 0;min-width:0;margin:0 6px 0 10px}
 html body .top #cmBtn{width:100%;height:34px;display:flex;align-items:center;gap:8px;padding:0 10px 0 12px;border:0;border-radius:8px;background:rgba(0,0,0,.3);color:inherit;box-shadow:none}
 html[data-theme="pastel"] body .top #cmBtn,html[data-theme="paper"] body .top #cmBtn{background:rgba(0,0,0,.1)}html[data-theme="oled"] body .top #cmBtn,html[data-theme="retro"] body .top #cmBtn{background:color-mix(in srgb,currentColor 14%,transparent)}
 html body .top #cmBtn #cmName{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0;color:inherit}
-html body .top #cmBtn #cmMode{flex:none;white-space:nowrap}
+html body .top #cmBtn #cmMode{flex:0 1 auto;min-width:0;overflow:hidden;white-space:nowrap;text-overflow:clip}
 html body .top #cmBtn .cmcar{margin-left:auto}
-html body #chartBar{justify-content:flex-end}
+html body #stage{position:relative;padding-top:26px}html body #chartBar{position:absolute;top:8px;right:16px;left:auto;width:auto;z-index:6;justify-content:flex-end;margin:0;pointer-events:none}html body #chartBar>*{pointer-events:auto}
 html body .dial-top #tLoc{flex:1 1 100%;display:flex}html body .dial-top #tLoc button{flex:1}
 }
 
