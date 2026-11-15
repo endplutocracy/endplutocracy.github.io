@@ -1226,8 +1226,9 @@ html[data-theme="paper"],html[data-theme="pastel"]{--cusp-line:color-mix(in srgb
     <div class="tabs" role="tablist" id="tabs">
       <button role="tab" data-tab="pos" aria-selected="true">Positions</button>
       <button role="tab" data-tab="asp" aria-selected="false">Aspects</button>
-      <button role="tab" data-tab="zr" aria-selected="false">Releasing</button>
+      
       <button role="tab" data-tab="time" aria-selected="false">Timing</button>
+      <button role="tab" data-tab="topic" aria-selected="false">Topics</button>
       <button role="tab" data-tab="ved" aria-selected="false">Vedic</button><button role="tab" data-tab="bazi" aria-selected="false">BaZi</button><button role="tab" data-tab="info" aria-selected="false">Chart</button>
     </div></div>
     <div class="pane" id="pane"></div>
@@ -1765,7 +1766,7 @@ const applyTheme=()=>{const t=['oled','paper','retro','pastel'].includes(S.theme
 const NOW_CHART={id:'__now',name:'Sky now',folder:'',fav:false,now:true,place:'Durham, NC, USA',lat:35.994,lon:-78.899,tz:'America/New_York'};
 let lockSnap=null,charts=[],db=null,activeId='__now',otherId=null,thirdId=null,thirdReloc=null,mode='natal',offsetMin=0,tab='pos',zrOpen=null;
 // every visit or refresh opens on Sky now (natal); only the side tab is remembered
-try{const st=JSON.parse(localStorage.getItem('orrery.view')||'{}');if(st.tab)tab=st.tab}catch(e){}
+try{const st=JSON.parse(localStorage.getItem('orrery.view')||'{}');if(st.tab)tab=st.tab==='zr'?'time':st.tab}catch(e){}
 const saveView=()=>{try{localStorage.setItem('orrery.view',JSON.stringify({activeId,mode,otherId,tab}))}catch(e){}};
 const localCharts=()=>{try{return JSON.parse(localStorage.getItem('orrery.charts')||'[]')}catch(e){return[]}};
 const saveLocal=()=>{try{localStorage.setItem('orrery.charts',JSON.stringify(charts))}catch(e){}};
@@ -2679,7 +2680,7 @@ function renderAll(){const A=byId(activeId);try{if(!offsetMin&&!jog){tickPos=0;$
  if(infoObj&&!$('info').hidden){let h=null;try{h=infoFor(infoObj)}catch(e){console.warn(e)}if(!h){try{hideInfo()}catch(_){}}if(h){$('infoBody').innerHTML=h;try{wrapInterp($('infoBody'))}catch(e){}placeInfo()}else hideInfo()}
  const P=$('pane');if(mode==='acg'){P.innerHTML=renderAcgPanel(v)+eclPanelHtml();acgPanelWire();mlRender(v);saveView();return}
  if(tab==='elem')tab='pos';P.innerHTML=tab==='pos'?(()=>{let e='';try{if(v.inner&&v.inner.pts.sun){if(v.outer&&v.outer.pts&&v.outer.pts.sun){const nI=v.mode==='composite'?'Composite':byId(activeId).name,nO=v.outer.label||'Outer',lab=(x,n)=>x.replace('<h3 class="sub">Elements</h3>',`<h3 class="sub">Elements · ${esc(n)}</h3>`).replace('<h3 class="sub">Modes</h3>',`<h3 class="sub">Modes · ${esc(n)}</h3>`);
-   e=`<div class="poselem">${lab(elemBalance(v.inner),nI)}</div><div class="poselem">${lab(elemBalance(v.outer),nO).replace(/data-obj="elem:/g,'data-obj="oelem:').replace(/data-obj="mode:/g,'data-obj="omode:')}</div>`}else e=`<div class="poselem">${elemBalance(v.inner)}</div>`}}catch(_){}let sm='';try{sm=sectMoonHtml(v.inner)}catch(_){}let xt='',xb='';try{xt=xPosTop(v);xb=xPosBottom(v)}catch(_){}return xt+sm+e+renderPositions(v)+xb})():tab==='asp'?(()=>{let p='';try{p=patternsHtml(v)}catch(_){}return p+renderAspects(v)})():tab==='zr'?renderZR():tab==='ved'?renderVedicData(v):tab==='bazi'?bzTabHtml(v):tab==='time'?renderTiming(v):renderInfo(v);
+   e=`<div class="poselem">${lab(elemBalance(v.inner),nI)}</div><div class="poselem">${lab(elemBalance(v.outer),nO).replace(/data-obj="elem:/g,'data-obj="oelem:').replace(/data-obj="mode:/g,'data-obj="omode:')}</div>`}else e=`<div class="poselem">${elemBalance(v.inner)}</div>`}}catch(_){}let sm='';try{sm=sectMoonHtml(v.inner)}catch(_){}let xt='',xb='';try{xt=xPosTop(v);xb=xPosBottom(v)}catch(_){}return xt+sm+e+renderPositions(v)+xb})():tab==='asp'?(()=>{let p='';try{p=patternsHtml(v)}catch(_){}return p+renderAspects(v)})():tab==='zr'?renderZR():tab==='ved'?renderVedicData(v):tab==='bazi'?bzTabHtml(v):tab==='time'?renderTiming(v):tab==='topic'?renderTopics(v):renderInfo(v);
  saveView();}
 
 /* ---------- interactions ---------- */
@@ -2689,7 +2690,7 @@ $('modes').addEventListener('keydown',e=>{const items=[...$('modes').querySelect
 document.addEventListener('click',e=>{if(!e.target.closest('#modesWrap'))closeModeMenu()});
 $('modes').addEventListener('click',e=>{const b=e.target.closest('[data-mode]');if(!b)return;closeModeMenu();const nm=b.dataset.mode;if(mode==='acg')prevMode=nm;else mode=nm;offsetMin=0;if(nm==='progressed'&&+$('step').value<43830)$('step').value='525960';if(['synastry','composite','davison'].includes(nm)&&!otherId){openLib('pick')}renderAll()});
 document.querySelectorAll('#tabs button').forEach(b=>b.addEventListener('click',()=>{tab=b.dataset.tab;renderAll()}));
-$('pane').addEventListener('click',e=>{const zx=e.target.closest('[data-zx]');if(zx&&tab==='zr'){const k=zx.dataset.zx;zrOpenSet.has(k)?zrOpenSet.delete(k):zrOpenSet.add(k);const P=$('pane'),st=P.scrollTop;P.innerHTML=renderZR();P.scrollTop=st;return}const z=e.target.closest('[data-zr]');if(z){const i=+z.dataset.zr;zrOpen=z.getAttribute('aria-expanded')==='true'?-1:i;renderAll();return}
+$('pane').addEventListener('click',e=>{const zx=e.target.closest('[data-zx]');if(zx&&tab==='time'){const k=zx.dataset.zx;zrOpenSet.has(k)?zrOpenSet.delete(k):zrOpenSet.add(k);const P=$('pane'),st=P.scrollTop,wy=window.scrollY;renderAll();P.scrollTop=st;window.scrollTo(0,wy);return}const z=e.target.closest('[data-zr]');if(z){const i=+z.dataset.zr;zrOpen=z.getAttribute('aria-expanded')==='true'?-1:i;renderAll();return}
  const zl=e.target.closest('[data-zl]');if(zl){S.zrLot=zl.dataset.zl;zrOpen=null;zrOpenSet.clear();saveSet();renderAll();return}
  const act=e.target.closest('[data-act]');if(!act)return;const A=byId(activeId);
  if(act.dataset.act==='edit')openForm(A);
@@ -3883,7 +3884,7 @@ function tyTimeline(R){const {A,T0,T1}=R,W=760,LW=118,PR=8,CW=W-LW-PR,x=t=>LW+Ma
  const now=Date.now();if(now>T0&&now<T1)h+=`<line x1="${x(now).toFixed(1)}" y1="${top-8}" x2="${x(now).toFixed(1)}" y2="${H-4}" class="tynow"/>`;
  return `<div class="tytl"><svg viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" role="img" aria-label="Timeline of the period">${h}</svg></div>`}
 function tyEvHtml(e,A,open){const nk=tyNoteKey(e,A),note=tyNotes[nk]||'';const dates=(e.hits&&e.hits.length?e.hits:[{ms:e.ms}]).map(h=>tyDayY(h.ms,A)+(h.retro?' ℞':'')).join(' · ');
- return `<details class="tyev c-${e.cat}"${open?' open':''}><summary><span class="tyd">${tyDay(e.ms,A)}</span><span class="tyg">${e.g||''}</span><span class="tyt"><strong>${e.title}</strong>${e.tag?`<span class="tag">${e.tag}</span>`:''}<span class="tag tynmark"${note?'':' hidden'}>note</span>${e.sub?`<span class="tys">${e.sub}</span>`:''}</span></summary><div class="tyb">${e.txt?`<p class="interp">${e.txt}</p>`:''}${e.adv?`<p class="il">Working with it</p><p class="interp">${e.adv}</p>`:''}<p class="muted tyx">${e.hits&&e.hits.length>1?'Exact: ':''}${dates}${e.range&&(e.range[0]||e.range[1])?` · within 1° ${e.range[0]?'from '+tyDayY(e.range[0],A):'already'}${e.range[1]?' to '+tyDayY(e.range[1],A):' and beyond this period'}`:''}</p><button type="button" class="linkbtn" data-elshow="${Math.round(e.ms)}">Show this sky on the chart</button><label class="tynote"><span class="muted">Your note</span><textarea class="f" rows="2" data-tynote="${esc(nk)}" placeholder="What happened around this date? Notes stay on this device.">${esc(note)}</textarea></label></div></details>`}
+ return `<details class="tyev c-${e.cat}"${open?' open':''}><summary><span class="tyd">${tyDay(e.ms,A)}</span><span class="tyg">${e.g||''}</span><span class="tyt"><strong>${e.title}</strong>${e.tag?`<span class="tag">${e.tag}</span>`:''}${tyRep&&e.key&&e.key.split('|').some(k=>tyRep.has(k))?'<span class="tag">agrees</span>':''}<span class="tag tynmark"${note?'':' hidden'}>note</span>${e.sub?`<span class="tys">${e.sub}</span>`:''}</span></summary><div class="tyb">${e.txt?`<p class="interp">${e.txt}</p>`:''}${e.adv?`<p class="il">Working with it</p><p class="interp">${e.adv}</p>`:''}<p class="muted tyx">${e.hits&&e.hits.length>1?'Exact: ':''}${dates}${e.range&&(e.range[0]||e.range[1])?` · within 1° ${e.range[0]?'from '+tyDayY(e.range[0],A):'already'}${e.range[1]?' to '+tyDayY(e.range[1],A):' and beyond this period'}`:''}</p><button type="button" class="linkbtn" data-elshow="${Math.round(e.ms)}">Show this sky on the chart</button><label class="tynote"><span class="muted">Your note</span><textarea class="f" rows="2" data-tynote="${esc(nk)}" placeholder="What happened around this date? Notes stay on this device.">${esc(note)}</textarea></label></div></details>`}
 function renderYearPage(){const side=$('tyForm'),main=$('tyMain'),A=byId(activeId),[T0,T1]=tyWindow(),d0=new Date(T0),dv=`${d0.getFullYear()}-${String(d0.getMonth()+1).padStart(2,'0')}-${String(d0.getDate()).padStart(2,'0')}`;
  side.innerHTML=`<div class="efield"><span>Chart</span><button class="btn ghost" type="button" id="tyPick" style="justify-content:flex-start;text-transform:none;letter-spacing:0;font-size:.9rem">${esc(A.name)} · change</button></div>
   <div class="efield"><span>Starting</span><div style="display:flex;gap:8px"><input class="f" type="date" id="tyDate" value="${dv}"><button class="btn ghost" type="button" id="tyToday">Today</button></div>${A.now?'':'<button type="button" class="linkbtn" id="tyBday">Start from my last birthday</button>'}</div>
@@ -3907,6 +3908,7 @@ function renderYearPage(){const side=$('tyForm'),main=$('tyMain'),A=byId(activeI
   let h=cards.length?`<div class="tycards">${cards.join('')}</div>`:'';
   if(!R.hasH)h+=`<p class="note">${esc(A.name)}’s birth time is unknown, so profections, firdaria, zodiacal releasing and house positions are left out. Transits and eclipses are still shown.</p>`;
   if(p)h+=`<div class="zrsec"><h3 class="sub">The year in brief</h3><p class="interp" style="margin:0">${YT_PROF[p.house]||''} ${PNM(p.lord)} is the lord of the year, so the year takes on its themes: ${(PROF_PL[p.lord]||[''])[0]}. ${(PROF_PL[p.lord]||['',''])[1]}</p></div>`;
+  try{h+=tyAgreeHtml(R,A,T)}catch(e){console.warn(e)}
   const all=R.ev,minW=tyPrefs.detail==='hi'?6:tyPrefs.detail==='std'?3:0,vis=all.filter(e=>tyPrefs.cats[e.cat]&&(e.w>=minW||(e.cat==='pm'&&tyPrefs.detail!=='hi')));
   tyLast={A,vis};h+=`<div class="tyact"><button class="btn ghost" type="button" data-tyics>Add these dates to my calendar</button><button class="btn ghost" type="button" data-typrint>Print this page</button><span class="muted">${vis.length} date${vis.length===1?'':'s'} at this level of detail</span></div>`;
   const hi=all.filter(e=>e.cat!=='pm').slice().sort((a,b)=>b.w-a.w).slice(0,6).sort((a,b)=>a.ms-b.ms);
@@ -3950,6 +3952,49 @@ document.addEventListener('click',ev=>{const t=ev.target.closest&&ev.target.clos
  else{const opened=[];document.querySelectorAll('#tyMain .zrsec:not(:last-child) details.tyev:not([open])').forEach(d=>{d.open=true;opened.push(d)});document.body.classList.add('typrint');const done=()=>{document.body.classList.remove('typrint');opened.forEach(d=>d.open=false);removeEventListener('afterprint',done)};addEventListener('afterprint',done);setTimeout(()=>{try{window.print()}catch(e){done()}},60)}});
 document.addEventListener('input',ev=>{const t=ev.target;if(!t||!t.matches||!t.matches('[data-tynote]'))return;const k=t.dataset.tynote,v=t.value.trim();if(v)tyNotes[k]=t.value;else delete tyNotes[k];try{localStorage.setItem('orrery.tyNotes',JSON.stringify(tyNotes))}catch(e){}
  document.querySelectorAll('#tyMain [data-tynote]').forEach(o=>{if(o.dataset.tynote===k){if(o!==t)o.value=t.value;const m=o.closest('details').querySelector('.tynmark');if(m)m.hidden=!v}})});
+
+/* ---------- traditional synthesis: topics, agreement of techniques, events against techniques ---------- */
+const TP_TOPICS=[['career','Career and reputation',[10],['spirit'],['sun','mercury']],['money','Money and livelihood',[2],['fortune'],['jupiter']],['love','Partnership and marriage',[7],['marriage'],['venus']],['children','Children and creativity',[5],['children'],['jupiter','venus']],['home','Home and parents',[4],['father','mother'],['moon','saturn']],['health','Body, health and daily work',[1,6],[],['moon']],['siblings','Siblings and communication',[3],['siblings'],['mercury']],['travel','Travel, study and belief',[9],[],['jupiter']],['friends','Friends and allies',[11],[],['jupiter']],['shared','Shared money and debts',[8],[],['saturn']],['hidden','Hidden matters and retreat',[12],[],['saturn']]];
+const TP_SEE=['is in that sign itself','does not see it (aversion)','sees it by sextile','sees it by square','sees it by trine','does not see it (aversion)','sees it by opposition'];
+const TP_TECH={prof:'profections',fird:'firdaria',zr:'releasing'};
+let tpSel='career',tyRep=null;try{tpSel=localStorage.getItem('orrery.topic')||'career'}catch(e){}
+function tpTimeLords(ch,A,T){const o={by:{},p:null,z1:null,z2:null},add=(k,r,t)=>{if(!k)return;(o.by[k]=o.by[k]||[]).push({r,t})};
+ try{const p=profAt(ch,A,T);if(p){add(p.lord,'lord of the year','prof');o.p=p}}catch(e){}
+ try{const f=firdaria(ch,A).find(x=>T>=x.start&&T<x.end);if(f){add(f.k,'firdaria lord','fird');const sb=(f.subs||[]).find(x=>T>=x.start&&T<x.end);if(sb&&sb.k!==f.k)add(sb.k,'firdaria sub-lord','fird');o.f=f;o.fs=sb}}catch(e){}
+ try{const z=A.id===activeId?zrData():null;if(z){const l1=z.L1.find(x=>T>=x.start&&T<x.end);if(l1){o.z1=l1;o.zk=z.key;add(RULER[l1.sign],'releasing lord (level 1)','zr');const l2=zrKids(l1,z.fSign,z.yd).find(x=>T>=x.start&&T<x.end);if(l2){o.z2=l2;if(RULER[l2.sign]!==RULER[l1.sign])add(RULER[l2.sign],'releasing lord (level 2)','zr')}}}}catch(e){}
+ o.rep=Object.keys(o.by).filter(k=>new Set(o.by[k].map(x=>x.t)).size>=2);return o}
+function renderTopics(v){const A=byId(activeId);if(A.now)return '<p class="muted">Topics are read from a birth chart. Open a saved chart from the library.</p>';const ch=natalOf(A);if(!ch||ch.noHouses)return '<p class="muted">Topics are read from the houses, so they need a birth time.</p>';
+ const tp=TP_TOPICS.find(t=>t[0]===tpSel)||TP_TOPICS[0],asc=ch.pts.asc.lon,ascS=Math.floor(n360(asc)/30),T=Date.now(),TL=tpTimeLords(ch,A,T),hs=l=>wsHouse(n360(l),asc),sg=k=>Math.floor(n360(ch.pts[k].lon)/30);
+ const cond=k=>{let st=null;try{st=planetStrength(ch,k)}catch(e){}const d=PT[k]&&EXALT[k]!=null||k==='sun'||k==='moon'?dignity(k,n360(ch.pts[k].lon)):null;return `${st?strGauge(st,true):''} <span class="muted">${st?st.label.toLowerCase():''}${d?' · '+d[1].toLowerCase():''}</span>`};
+ const pl=k=>`<strong>${glyphHtml(k)} ${PNM(k)}</strong>`,where=k=>`${SIGN_N[sg(k)]}, ${ord(hs(ch.pts[k].lon))} house`,roles=k=>TL.by[k]?` <span class="tag">${TL.by[k].map(x=>x.r).join(' · ')}</span>`:'';
+ const keys=new Set();let h=`<p class="note" style="margin:0 0 10px">Choose a subject to see everything in ${esc(A.name)}’s chart that bears on it: the house, the planets in it, its ruler, the lot, the natural significators, and what is active now. Houses are counted by whole signs from the Ascendant.</p><div class="efield" style="margin-bottom:6px"><span>Subject</span><select class="f" id="tpSel" aria-label="Subject">${TP_TOPICS.map(t=>`<option value="${t[0]}"${t[0]===tp[0]?' selected':''}>${t[1]}</option>`).join('')}</select></div>`;
+ tp[2].forEach(hn=>{const s=(ascS+hn-1)%12,r=RULER[s],occ=[...STR_KEYS,'node'].filter(k=>ch.pts[k]&&hs(ch.pts[k].lon)===hn),dd=((s-sg(r))%12+12)%12,see=TP_SEE[Math.min(dd,12-dd)];keys.add(r);occ.forEach(k=>keys.add(k));
+  h+=`<h3 class="sub">The ${ord(hn)} house · ${signSpan(s)} ${SIGN_N[s]}</h3><p class="muted" style="margin:0 0 8px;font-size:.84rem">${HOUSE_TOPICS[hn-1]}</p><div class="tblwrap"><table class="tptbl"><tbody>
+  <tr><th>Planets here</th><td>${occ.length?occ.map(k=>`<div>${pl(k)} ${cond(k)}${roles(k)}</div>`).join(''):'<span class="muted">None. Judge the house by its ruler.</span>'}</td></tr>
+  <tr><th>Ruler</th><td><div>${pl(r)} in ${where(r)} ${cond(r)}${roles(r)}</div><div class="muted" style="font-size:.84rem">From there ${PNM(r)} ${see}.</div></td></tr></tbody></table></div>`});
+ if(tp[3].length){const L=tp[3].filter(k=>ch.pts[k]);if(L.length)h+=`<h3 class="sub">The lot${L.length>1?'s':''}</h3><div class="tblwrap"><table class="tptbl"><tbody>${L.map(k=>{const s=sg(k),r=RULER[s];keys.add(r);return `<tr><th>${PNM(k)}</th><td><div>${lonHtml(n360(ch.pts[k].lon))} · ${ord(hs(ch.pts[k].lon))} house</div><div>Its ruler ${pl(r)} in ${where(r)} ${cond(r)}${roles(r)}</div></td></tr>`}).join('')}</tbody></table></div>`}
+ h+=`<h3 class="sub">Natural significator${tp[4].length>1?'s':''}</h3><div class="tblwrap"><table class="tptbl"><tbody>${tp[4].map(k=>{keys.add(k);return `<tr><th>${glyphHtml(k)} ${PNM(k)}</th><td>${where(k)} ${cond(k)}${roles(k)}</td></tr>`}).join('')}</tbody></table></div>`;
+ const act=[];if(TL.p){if(tp[2].includes(TL.p.house))act.push(`This is the <strong>profected house of the year</strong> (age ${TL.p.age}), so the subject is in focus until ${tyDayY(TL.p.yEnd,A)}.`);const mh=((TL.p.ms-ascS+12)%12)+1;if(tp[2].includes(mh))act.push(`It is the profected house of the month, until ${tyDayY(TL.p.mEnd,A)}.`)}
+ [...keys].forEach(k=>{if(TL.by[k])act.push(`${pl(k)} is the ${XL(TL.by[k].map(x=>x.r))}${TL.rep.includes(k)?', named by more than one technique':''}.`)});
+ if(TL.z2){const zh=((TL.z2.sign-ascS+12)%12)+1;if(tp[2].includes(zh))act.push(`Releasing from ${PNM(TL.zk)} is in ${SIGN_N[TL.z2.sign]}, this house, until ${tyDayY(TL.z2.end,A)}.`)}
+ h+=`<h3 class="sub">Active now</h3>${act.length?`<ul class="tpact">${act.map(x=>`<li>${x}</li>`).join('')}</ul>`:'<p class="muted" style="margin:0 0 6px">None of the current time lords point at this subject.</p>'}`;
+ const tg=new Set(keys);if(tp[2].includes(10))tg.add('mc');if(tp[2].includes(1))tg.add('asc');const kk=[...tg].sort().join(',');
+ h+=`<h3 class="sub">Transits to these planets, next 12 months</h3>${lazySec('tp|'+chartKey(A)+'|'+kk+'|'+Math.floor(T/DAYMS),()=>{const d=transitCalendar(ch,T,12,'slow'),rows=d.events.filter(e=>tg.has(e.t)&&e.hits&&e.hits.length).map(e=>({e,ms:e.hits[0].ms})).filter(x=>x.ms>=T-DAYMS).sort((a,b)=>a.ms-b.ms).slice(0,14);
+  return rows.length?`<div class="tblwrap"><table class="tptbl"><tbody>${rows.map(({e,ms})=>`<tr><th class="mono" style="white-space:nowrap">${tyDayY(ms,A)}</th><td>${glyphHtml(e.b)} ${PNM(e.b)} ${ASPN[e.ak]?ASPN[e.ak][1]:e.ak} ${glyphHtml(e.t)} ${PNM(e.t)}${e.hits.length>1?` <span class="muted">· ${e.hits.length} passes</span>`:''} <button type="button" class="linkbtn" data-elshow="${Math.round(ms)}">show</button></td></tr>`).join('')}</tbody></table></div>`:'<p class="muted">No exact transits from the slower planets to these points in the next year.</p>'})}`;
+ return h}
+document.addEventListener('change',e=>{if(e.target&&e.target.id==='tpSel'){tpSel=e.target.value;try{localStorage.setItem('orrery.topic',tpSel)}catch(_){}paneRefresh()}});
+function tyAgreeHtml(R,A,T){tyRep=null;if(!R.hasH)return '';const TL=tpTimeLords(R.ch,A,T),names=Object.keys(TL.by);if(!names.length)return '';
+ const cnt=k=>R.ev.filter(e=>e.key&&e.key.split('|').includes(k)).length;let b='';
+ if(TL.rep.length){tyRep=new Set(TL.rep);b=TL.rep.map(k=>{const n=cnt(k),tech=[...new Set(TL.by[k].map(x=>TP_TECH[x.t]))];return `<p class="interp" style="margin:0 0 6px"><strong>${glyphHtml(k)} ${PNM(k)}</strong> is named by ${XL(tech)}: ${XL(TL.by[k].map(x=>x.r))}. When separate techniques point to the same planet, its natal promise is the main story of the period.${n?` ${n} dated ${n===1?'entry':'entries'} below involve${n===1?'s':''} ${PNM(k)} and ${n===1?'is':'are'} marked “agrees”.`:''}</p>`}).join('')}
+ else b=`<p class="muted" style="margin:0;font-size:.86rem">Right now each technique names a different planet, so no single planet dominates: ${names.map(k=>`${PNM(k)} (${TL.by[k].map(x=>x.r).join(', ')})`).join('; ')}. When two or more techniques name the same planet it is flagged here and on the dates below.</p>`;
+ return `<div class="zrsec"><h3 class="sub">Where the techniques agree</h3>${b}</div>`}
+const EV_FIT={rel:[7,5],child:[5],move:[4,3,9],career:[10,6,2],loss:[8,4,12],health:[6,1,12]};
+function evActiveHtml(A){const ev=A.events||[];if(!ev.length||A.now||A.timeUnknown)return '';const ch=natalOf(A);if(!ch||ch.noHouses)return '';const asc=ch.pts.asc.lon,ascS=Math.floor(n360(asc)/30),F=firdaria(ch,A),z=A.id===activeId?zrData():null;
+ const touch=k=>{const o=new Set([wsHouse(n360(ch.pts[k].lon),asc)]);for(let hn=1;hn<=12;hn++)if(RULER[(ascS+hn-1)%12]===k)o.add(hn);return o},hit=(k,HS)=>!!k&&ch.pts[k]&&HS.some(x=>touch(k).has(x)),ok='<span class="evok" title="Fits the kind of event">✓</span>';
+ const tot={p:0,f:0,z:0,n:0};const rows=ev.map(x=>{const [y,m,d]=x.d.split('-').map(Number),ms=Date.UTC(y,m-1,d,12);if(!isFinite(ms)||ms<chartUtc(A))return '';const HS=EV_FIT[x.k]||null,p=profAt(ch,A,ms),f=F.find(q=>ms>=q.start&&ms<q.end),sb=f&&(f.subs||[]).find(q=>ms>=q.start&&ms<q.end);let l1=null,l2=null;if(z){l1=z.L1.find(q=>ms>=q.start&&ms<q.end);if(l1)l2=zrKids(l1,z.fSign,z.yd).find(q=>ms>=q.start&&ms<q.end)}
+  const fp=HS&&p&&(HS.includes(p.house)||hit(p.lord,HS)),ff=HS&&f&&(hit(f.k,HS)||(sb&&hit(sb.k,HS))),zh=l2?((l2.sign-ascS+12)%12)+1:0,fz=HS&&l2&&(!!l2.peak||!!l2.lb||HS.includes(zh)||hit(RULER[l2.sign],HS));if(HS){tot.n++;if(fp)tot.p++;if(ff)tot.f++;if(fz)tot.z++}
+  return `<tr><td><span class="mono">${esc(x.d)}</span><br><small class="muted">${esc(x.t||(EV_KINDS.find(k=>k[0]===x.k)||EV_KINDS[6])[1])}</small></td><td>${p?`${ord(p.house)} house · ${PNM(p.lord)}${fp?' '+ok:''}`:''}</td><td>${f?`${PNM(f.k)}${sb&&sb.k!==f.k?' / '+PNM(sb.k):''}${ff?' '+ok:''}`:''}</td><td>${l2?`${SIGN_N[l1.sign].slice(0,3)} / ${SIGN_N[l2.sign].slice(0,3)}${l2.peak?' · peak':''}${l2.lb?' · loosing':''}${fz?' '+ok:''}`:'<span class="muted">open this chart</span>'}</td></tr>`}).join('');
+ if(!rows)return '';return `<h3 class="sub">What was active at each event</h3><p class="note" style="margin:0 0 8px">The time lords running on each date. A tick means the technique pointed at a house that suits that kind of event: the profected house or the lord of the year, the firdaria lords, or the releasing period${z?` from ${PNM(z.key)}`:''} (a peak, a loosing of the bond, or a fitting house).</p><div class="tblwrap"><table class="evact"><thead><tr><th>Event</th><th>Profection</th><th>Firdaria</th><th>Releasing</th></tr></thead><tbody>${rows}</tbody></table></div>${tot.n?`<p class="note" style="margin:8px 0 0">Across ${tot.n} classified event${tot.n===1?'':'s'}: profections fit ${tot.p}, firdaria ${tot.f}${z?`, releasing ${tot.z}`:''}. With only a few events this is a rough guide to which technique tracks this life most closely, not a test.</p>`:''}`}
 
 /* ---------- zodiacal releasing page ---------- */
 const ZR_LOTS=['spirit','fortune','eros','necessity','courage','victory','nemesis'];
@@ -4288,6 +4333,7 @@ function renderTiming(v){const A=byId(activeId);if(A.now){let al='';try{al=alert
  h+=sec('prof','Annual profections',()=>profHtml(A,ch,T));
  h+=sec('fird','Firdaria',()=>firdHtml(A,ch,T));
  h+=sec('dec','Decennials',()=>decHtml(A,ch,T));
+  h+=sec('zr','Zodiacal releasing',()=>renderZR());
  h+=sec('prog','Progressions',()=>progHtml(A,ch,T));
  h+=sec('tc','Transit calendar',()=>tcHtml(A,ch,T));
  h+=sec('ret','Planetary returns',()=>retHtml(A,ch,T));
@@ -4853,7 +4899,7 @@ var rectRes=null;
 function notesHtml(A){if(A.now||A.shared)return '';const ev=A.events||[];
  return `<h3 class="sub">Notes</h3><textarea class="f" id="xNotes" rows="4" placeholder="Private notes about this chart" style="width:100%;resize:vertical">${esc(A.notes||'')}</textarea>
  <h3 class="sub">Life events</h3><div class="tblwrap"><table><tbody>${ev.map((x,i)=>`<tr><td class="mono">${esc(x.d)}</td><td>${esc(x.t||'')}<br><small class="muted">${(EV_KINDS.find(k=>k[0]===x.k)||EV_KINDS[6])[1]}</small></td><td><button type="button" class="linkbtn" data-evdel="${i}" aria-label="Remove">✕</button></td></tr>`).join('')||'<tr><td class="muted">No events yet.</td></tr>'}</tbody></table></div>
- <div class="evadd" style="display:flex;gap:6px;flex-wrap:wrap;margin-top:8px"><input class="f" type="date" id="evD" aria-label="Event date"><input class="f" id="evT" placeholder="What happened" aria-label="Event" style="flex:1;min-width:140px"><select class="f" id="evK" aria-label="Kind of event">${EV_KINDS.map(k=>`<option value="${k[0]}">${k[1]}</option>`).join('')}</select><button class="btn ghost" type="button" data-evadd>Add</button></div>
+ <div class="evadd" style="display:flex;gap:6px;flex-wrap:wrap;margin-top:8px"><input class="f" type="date" id="evD" aria-label="Event date"><input class="f" id="evT" placeholder="What happened" aria-label="Event" style="flex:1;min-width:140px"><select class="f" id="evK" aria-label="Kind of event">${EV_KINDS.map(k=>`<option value="${k[0]}">${k[1]}</option>`).join('')}</select><button class="btn ghost" type="button" data-evadd>Add</button></div>${(()=>{try{return evActiveHtml(A)}catch(e){console.warn(e);return ''}})()}
  ${ev.length>=2?`<h3 class="sub">Rectification</h3><p class="note" style="margin:0 0 8px">Test birth times ${A.timeUnknown?'across the whole day':'within ±2 hours'} against these events.</p><button class="btn" type="button" data-rect>Test birth times</button>${rectRes&&rectRes.id===A.id?rectHtml(A):''}`:'<p class="note" style="margin-top:8px">Add at least two dated events to test possible birth times.</p>'}`}
 function rectify(A){const ev=(A.events||[]).map(x=>{const [y,m,d]=x.d.split('-').map(Number);return {ms:Date.UTC(y,m-1,d,12),x}}).filter(e=>isFinite(e.ms));const base=Date.UTC(A.y,A.mo-1,A.d,12);
  const nominal=chartUtc({...A,timeUnknown:false,h:A.timeUnknown?12:A.h,mi:A.timeUnknown?0:A.mi}),cands=[];
@@ -6671,7 +6717,7 @@ html[data-theme="paper"] .infotab,html[data-theme="pastel"] .infotab{color:var(-
 })();
 
 /* ===== Accuracy helpers: birth-time sensitivity, time-zone check, node type; site version; first-visit tips ===== */
-const DN_VER='v267';
+const DN_VER='v271';
 const btFmt=m=>m==null?'more than 4 hours':m<60?`${m} min`:`${Math.floor(m/60)} h${m%60?' '+(m%60)+' min':''}`;
 /* how far the birth time can move before the rising sign, Midheaven, Moon sign or a planet's house changes */
 const BT_MEMO=new Map();
@@ -6958,7 +7004,7 @@ html body #cmBtn .cmcar{display:none}`;document.head.append(st);
 /* elements/modes badges, the label toggle and the zoom controls sit a little lower */
 (()=>{const st=document.createElement('style');st.textContent=`html body .stage:not(.fs)>.wheelwrap>#elemMini,html body .stage:not(.fs)>.wheelwrap>.wlab,html body .stage:not(.fs)>.wheelwrap>.wzoom{bottom:-8px!important}`;document.head.append(st)})();
 /* phones: lift the wheel up into the space beside the chart menu and Layers buttons */
-(()=>{const st=document.createElement('style');st.textContent=`@media (max-width:600px){html body .stage:not(.fs):not(.hasmod)>.wheelwrap{margin-top:-28px!important}html body .stage.cmmulti:not(.fs):not(.hasmod)>.wheelwrap{margin-top:-6px!important}}`;document.head.append(st)})();
+(()=>{const st=document.createElement('style');st.textContent=`@media (max-width:600px){html body .stage:not(.fs):not(.hasmod)>.wheelwrap{margin-top:-28px!important}html body .stage.cmmulti:not(.fs):not(.hasmod)>.wheelwrap{margin-top:-28px!important}}`;document.head.append(st)})();
 /* phones: badges and zoom controls a little lower, with the time controls nudged down to keep the gap */
 (()=>{const st=document.createElement('style');st.textContent=`@media (max-width:600px){html body .stage:not(.fs)>.wheelwrap>#elemMini,html body .stage:not(.fs)>.wheelwrap>.wlab,html body .stage:not(.fs)>.wheelwrap>.wzoom{bottom:-26px!important}html body .stage:not(.fs)>.dial,html body .stage:not(.fs)>.dialopen{margin-top:34px!important}}`;document.head.append(st)})();
 /* mid-sized screens: lift the wheel into the open space beside the chart menu and Layers buttons */
@@ -7795,6 +7841,9 @@ html body #ephView .eph-out,html body #ephView .eph-out th,html body #zrView .zr
 html body *{hyphens:manual!important;-webkit-hyphens:manual!important}
 #tlSeg{width:fit-content;overflow:hidden}
 #hdrLib{display:none}
+.tptbl th{text-align:left;vertical-align:top;font-weight:500;color:var(--muted);font-size:.8rem;padding:6px 10px 6px 0;white-space:nowrap}.tptbl td{padding:6px 0;vertical-align:top}.tptbl td>div+div{margin-top:4px}.tptbl .tag{margin-left:4px}
+.tpact{margin:0 0 6px;padding-left:18px;display:grid;gap:5px}.evact td,.evact th{font-size:.82rem;vertical-align:top}.evok{color:var(--soft,#3fbf8f);font-weight:700}
+@media (max-width:640px){html body #tabs{display:flex;flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none}html body #tabs::-webkit-scrollbar{display:none}html body #tabs button{flex:none}}
 html[data-theme="pastel"] body #cmBtn #cmMode,html.pastel body #cmBtn #cmMode{color:var(--fg)!important;opacity:.82}
 html[data-theme="pastel"]{--fire:#b03a5c;--earth:#256b4a;--air:#14658f;--water:#5a43b0}
 html[data-theme="pastel"] body .chipbtn:not([aria-pressed="true"]):not(.on):not(.active),html[data-theme="pastel"] body .pillbtn,html[data-theme="pastel"] body .trg,html[data-theme="pastel"] body .linkbtn{color:#14658f}
@@ -7823,7 +7872,7 @@ html[data-theme="pastel"] body .top #cmBtn,html[data-theme="paper"] body .top #c
 html body .top #cmBtn #cmName{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0;color:inherit}
 html body .top #cmBtn #cmMode{flex:0 1 auto;min-width:0;overflow:hidden;white-space:nowrap;text-overflow:clip}
 html body .top #cmBtn .cmcar{margin-left:auto}
-html body #stage{position:relative;padding-top:26px}html body #chartBar{position:absolute;top:8px;right:16px;left:auto;width:auto;z-index:6;justify-content:flex-end;margin:0;pointer-events:none}html body #chartBar>*{pointer-events:auto}
+html body #stage{position:relative;padding-top:34px}html body #chartBar{position:absolute;top:8px;right:16px;left:auto;width:auto;z-index:6;justify-content:flex-end;margin:0;pointer-events:none}html body #chartBar>*{pointer-events:auto}
 html body .dial-top #tLoc{flex:1 1 100%;display:flex}html body .dial-top #tLoc button{flex:1}
 }
 
