@@ -1752,7 +1752,7 @@ const DEFAULT_SET={house:'placidus',zodiac:'tropical',node:'true',theme:'system'
  layers:{asteroids:true,stars:true,decans:true,terms:true,naks:true},aspects:{conj:true,sext:true,squ:true,tri:true,opp:true,ssx:false,ssq:false,qui:false,sqq:false,bq:false,qcx:true},
  orbs:{conj:8,sext:5,squ:7,tri:7,opp:8,ssx:2,ssq:2,qui:2,sqq:2,bq:2,qcx:3},transitOrb:0.4,zrLot:'spirit',zrYear:360,step:'1440'};
 let S;try{S=Object.assign(structuredClone(DEFAULT_SET),JSON.parse(localStorage.getItem('orrery.settings')||'{}'))}catch(e){S=structuredClone(DEFAULT_SET)}
-S.show=Object.assign({},DEFAULT_SET.show,S.show);S.layers=Object.assign({},DEFAULT_SET.layers,S.layers);
+S.show=Object.assign({},DEFAULT_SET.show,S.show);S.acgTypes={planet:true,paran:false,ls:false,asp:false};S.layers=Object.assign({},DEFAULT_SET.layers,S.layers);
 const saveSet=()=>{try{localStorage.setItem('orrery.settings',JSON.stringify(S))}catch(e){}};
 const THEMES=[['orrery','Destinned','Purple'],['oled','OLED','Black and white'],['paper','Paper','White and black'],['retro','Retro','Green CRT'],['pastel','Pastel','Trans flag'],['lapis','Lapis','Blue and gold'],['atlas','Atlas','Night globe'],['atlaslight','Atlas Light','Day globe']];
 /* Only the Atlas pair is offered. The older themes stay defined above and can be switched back on by adding them to THEMES_ON. */
@@ -3035,19 +3035,24 @@ function synAspLines(o,ch,who){const gst=acgGst(ch),eps=Calc.obliquity(ch.jd)*DR
  keys.forEach(r=>keys.forEach(c=>{const pr=o.pts[r],pc=ch.pts[c];if(!pr||!pc||(f!=='all'&&r!==f&&c!==f))return;const A=Calc.aspectBetween(pr,pc,orbs,en);if(!A||!ASPL_ANG[A.k])return;
   const L0=n360(pr.lon+(o.ayanamsa||0)),C0=n360(pc.lon+(ch.ayanamsa||0)),ang=ASPL_ANG[A.k],cand=A.k==='opp'?[n360(L0+180)]:[n360(L0+ang),n360(L0-ang)],lam=cand.sort((x,y)=>Math.abs(w180b(x-C0))-Math.abs(w180b(y-C0)))[0];
   const lr=lam*DR,ra=n360(Math.atan2(Math.sin(lr)*Math.cos(eps),Math.cos(lr))/DR),dec=Math.asin(Math.sin(eps)*Math.sin(lr))/DR,mc=w180b(ra-gst),syn={c,who,orb:A.orb};
-  out.push({k:r,a:A.k,lam,ang:'MC',pts:[[mc,85],[mc,-85]],mer:mc,syn});const pts=[],td=Math.tan(dec*DR);for(let b=-84;b<=84;b+=0.5){const x=-Math.tan(b*DR)*td;if(Math.abs(x)>1)continue;pts.push([w180b(ra-Math.acos(x)/DR-gst),b])}out.push({k:r,a:A.k,lam,ang:'ASC',pts,syn})}));return out}
+  out.push({k:r,a:A.k,lam,ang:'MC',pts:[[mc,90],[mc,-90]],mer:mc,syn});const pts=acgAD(ra,dec,gst)[0];out.push({k:r,a:A.k,lam,ang:'ASC',pts,syn})}));return out}
 function aspectLinesAcg(ch){const jd=ch.jd,gst=acgGst(ch),eps=Calc.obliquity(jd)*DR,f=S.acgFocus||'sun',asp=S.acgAsp||['squ','tri'],ANG=ASPL_ANG,out=[];
  acgKeys().filter(k=>f==='all'||k===f).forEach(k=>{const L0=ch.acgEq?(ch.pts[k]?n360(ch.pts[k].lon+(ch.ayanamsa||0)):null):Calc.bodyLon(k,jd,S.node);if(L0==null)return;
   asp.filter(a=>ANG[a]).forEach(a=>(a==='opp'?[1]:[1,-1]).forEach(sg=>{const lam=n360(L0+sg*ANG[a]),lr=lam*DR,ra=n360(Math.atan2(Math.sin(lr)*Math.cos(eps),Math.cos(lr))/DR),dec=Math.asin(Math.sin(eps)*Math.sin(lr))/DR,mc=w180b(ra-gst);
-   out.push({k,a,lam,ang:'MC',pts:[[mc,85],[mc,-85]],mer:mc});const pts=[],td=Math.tan(dec*DR);for(let b=-84;b<=84;b+=0.5){const x=-Math.tan(b*DR)*td;if(Math.abs(x)>1)continue;pts.push([w180b(ra-Math.acos(x)/DR-gst),b])}out.push({k,a,lam,ang:'ASC',pts})}))});return out}
+   out.push({k,a,lam,ang:'MC',pts:[[mc,90],[mc,-90]],mer:mc});const pts=acgAD(ra,dec,gst)[0];out.push({k,a,lam,ang:'ASC',pts})}))});return out}
 const compass=az=>['N','NNE','NE','ENE','E','ESE','SE','SSE','S','SSW','SW','WSW','W','WNW','NW','NNW'][Math.round(az/22.5)%16];
 const acgKeys=()=>{const base=[...Calc.BODY_KEYS,'node',...astKeys()];const on=S.acgShow||Calc.BODY_KEYS;return base.filter(k=>on.includes(k))};
 const lonX=l=>(l+180)*10,latY=b=>(90-b)*10,w180b=x=>((x+180)%360+360)%360-180;
+/* ASC and DSC of a body as one continuous loop: sampled by hour angle (so the ends close up where the two lines meet
+   on the MC and IC meridians near the poles) plus by latitude (so the steep parts stay smooth) */
+function acgAD(ra,dec,gst){const td=Math.tan(dec*DR),asc=[],dsc=[];
+ if(Math.abs(td)<1e-7){for(let b=-90;b<=90;b+=1){asc.push([w180b(ra-90-gst),b]);dsc.push([w180b(ra+90-gst),b])}return [asc,dsc]}
+ const H=[];for(let h=0;h<=180;h+=0.75)H.push(h);for(let b=-89.5;b<=89.5;b+=0.5){const x=-Math.tan(b*DR)*td;if(Math.abs(x)<1)H.push(Math.acos(x)/DR)}H.sort((a,b)=>a-b);
+ let last=-1;for(const h of H){if(h-last<1e-4)continue;last=h;const b=Math.atan(-Math.cos(h*DR)/td)/DR;asc.push([w180b(ra-h-gst),b]);dsc.push([w180b(ra+h-gst),b])}return [asc,dsc]}
 function acgLines(ch){const jd=ch.jd,gst=acgGst(ch),out=[];
  acgKeys().forEach(k=>{const q=acgEq(ch,k);if(!q)return;const mc=w180b(q.ra-gst);
-  out.push({k,a:'MC',pts:[[mc,85],[mc,-85]],mer:mc});out.push({k,a:'IC',pts:[[w180b(mc+180),85],[w180b(mc+180),-85]],mer:w180b(mc+180)});
-  const asc=[],dsc=[];const td=Math.tan(q.dec*Math.PI/180);
-  for(let b=-84;b<=84;b+=0.5){const x=-Math.tan(b*Math.PI/180)*td;if(Math.abs(x)>1)continue;const H=Math.acos(x)*180/Math.PI;asc.push([w180b(q.ra-H-gst),b]);dsc.push([w180b(q.ra+H-gst),b])}
+  out.push({k,a:'MC',pts:[[mc,90],[mc,-90]],mer:mc});out.push({k,a:'IC',pts:[[w180b(mc+180),90],[w180b(mc+180),-90]],mer:w180b(mc+180)});
+  const [asc,dsc]=acgAD(q.ra,q.dec,gst);
   out.push({k,a:'ASC',pts:asc});out.push({k,a:'DSC',pts:dsc})});
  return out}
 function segPath(pts){let d='',prev=null;for(const [l,b] of pts){const x=lonX(l).toFixed(1),y=latY(b).toFixed(1);d+=(prev==null||Math.abs(l-prev)>180?'M':'L')+x+' '+y;prev=l}return d}
@@ -3091,7 +3096,7 @@ function renderMap(v){const map=$('map'),MC_=mapChart(v),ch=MC_.ch,A=byId(active
  $('mPins').innerHTML=`<g>${h}</g><g transform="translate(-3600 0)">${h}</g><g transform="translate(3600 0)">${h}</g>`;
  if(GL&&GL.on){if(GL.lkey!==mbLines.key){glBuildLines(v);GL.lkey=mbLines.key}GL.sun=glSun(v);GL.moon=glMoon(v);glQueue()}}
 function acgControls(v){const A=byId(activeId),all=[...Calc.BODY_KEYS,'node',...astKeys()],on=S.acgShow||Calc.BODY_KEYS,T=acgT(),f=S.acgFocus||'sun',asel=S.acgAsp||['squ','tri'],lso=S.lsOrigin||'birth';
- return `<div class="acgopts"><label class="chk" for="acgDet"><input type="checkbox" id="acgDet" ${S.acgDetail!==false?'checked':''}> States and provinces</label><label class="chk" for="acgCap"><input type="checkbox" id="acgCap" ${S.acgCaps!==false?'checked':''}> Capital cities</label><label class="chk" for="acgGeo"><input type="checkbox" id="acgGeo" ${S.acgGeo!==false?'checked':''}> Rivers and mountains</label><label class="chk" for="acgGlb"><input type="checkbox" id="acgGlb" ${S.acgGlobe!==false?'checked':''}> Globe view</label></div><p class="note" style="margin:2px 0 6px">Borders, rivers and labels appear as you zoom in.</p><h3 class="sub hrow">Line types<span class="allnone"><button type="button" class="linkbtn" data-acgall="types" data-v="1">Select all</button><button type="button" class="linkbtn" data-acgall="types" data-v="0">Clear all</button></span></h3><div class="acgleg">${[['planet','Planet lines','linear-gradient(90deg,#ffcf5a,#ff6b6b,#7fe0a6,#6f9dff)'],['paran','Parans',PARAN_COL],['ls','Local space','linear-gradient(90deg,#8ff5dc,#3fd1b0,#2c8db0)'],['asp','Aspect lines','linear-gradient(90deg,#3fe0b0,#5ea8ff,#ff5c72)']].map(([k,l,c])=>`<label for="acgt-${k}"><input type="checkbox" id="acgt-${k}" data-acgt="${k}" ${T[k]?'checked':''}><i style="background:${c}"></i>${l}</label>`).join('')}</div>
+ return `<div class="acgopts"><label class="chk" for="acgDet"><input type="checkbox" id="acgDet" ${S.acgDetail!==false?'checked':''}> States and provinces</label><label class="chk" for="acgCap"><input type="checkbox" id="acgCap" ${S.acgCaps!==false?'checked':''}> Capital cities</label><label class="chk" for="acgGlb"><input type="checkbox" id="acgGlb" ${S.acgGlobe!==false?'checked':''}> Globe view</label></div><p class="note" style="margin:2px 0 6px">Borders and labels appear as you zoom in.</p><h3 class="sub hrow">Line types<span class="allnone"><button type="button" class="linkbtn" data-acgall="types" data-v="1">Select all</button><button type="button" class="linkbtn" data-acgall="types" data-v="0">Clear all</button></span></h3><div class="acgleg">${[['planet','Planet lines','linear-gradient(90deg,#ffcf5a,#ff6b6b,#7fe0a6,#6f9dff)'],['paran','Parans',PARAN_COL],['ls','Local space','linear-gradient(90deg,#8ff5dc,#3fd1b0,#2c8db0)'],['asp','Aspect lines','linear-gradient(90deg,#3fe0b0,#5ea8ff,#ff5c72)']].map(([k,l,c])=>`<label for="acgt-${k}"><input type="checkbox" id="acgt-${k}" data-acgt="${k}" ${T[k]?'checked':''}><i style="background:${c}"></i>${l}</label>`).join('')}</div>
  ${T.paran||T.asp?`<div class="two" style="margin-top:10px"><label class="l" for="acgFocus">${T.paran&&T.asp?'Parans and aspect lines for':T.paran?'Parans for':'Aspect lines for'}<select class="f" id="acgFocus"><option value="all" ${f==='all'?'selected':''}>All shown planets</option>${all.filter(k=>on.includes(k)).map(k=>`<option value="${k}" ${f===k?'selected':''}>${PT[k][1]}</option>`).join('')}</select></label>${T.ls?`<label class="l" for="lsOrigin">Local space from<select class="f" id="lsOrigin"><option value="birth" ${lso==='birth'?'selected':''}>Birthplace</option>${A.cur?`<option value="current" ${lso==='current'?'selected':''}>Current city</option>`:''}${mapPin?`<option value="pin" ${lso==='pin'?'selected':''}>Selected place</option>`:''}</select></label>`:''}</div>`:T.ls?`<div class="two" style="margin-top:10px"><label class="l" for="lsOrigin">Local space from<select class="f" id="lsOrigin"><option value="birth" ${lso==='birth'?'selected':''}>Birthplace</option>${A.cur?`<option value="current" ${lso==='current'?'selected':''}>Current city</option>`:''}${mapPin?`<option value="pin" ${lso==='pin'?'selected':''}>Selected place</option>`:''}</select></label></div>`:''}
  ${T.asp?`<div class="hrow" style="margin-top:10px"><span class="note">Aspects</span><span class="allnone"><button type="button" class="linkbtn" data-acgall="asp" data-v="1">Select all</button><button type="button" class="linkbtn" data-acgall="asp" data-v="0">Clear all</button></span></div><div class="acgleg" style="margin-top:6px">${Object.keys(ASPL_COL).map(a=>`<label for="acga-${a}"><input type="checkbox" id="acga-${a}" data-acga="${a}" ${asel.includes(a)?'checked':''}><i style="background:${acgCol(ASPL_COL[a])}"></i>${ASPL_N[a][1]?ASPL_N[a][1]+' ':''}${ASPL_N[a][0]}</label>`).join('')}</div>`:''}
  ${T.paran&&v.parans?`<p class="note" style="margin-top:8px">${v.parans.length} paran latitude${v.parans.length===1?'':'s'} shown. Solid: one planet on the meridian; dashed: both on the horizon.</p>`:''}
@@ -3158,10 +3163,6 @@ function drawBase(){mbRaf=0;if(GL&&GL.on)return;const AT=ATSKIN();const cv=$('ma
    if(LC)ctx.drawImage(LC,0,0,3600,1800);
    else{ctx.save();ctx.translate(0,lw(1.6));ctx.fillStyle=AT==='atlas'?'rgba(0,0,0,.5)':'rgba(50,35,90,.22)';ctx.fill(mbPaths.land);ctx.restore();ctx.fillStyle=st.land[0];ctx.fill(mbPaths.land)}}
   else{ctx.fillStyle=st.land[0];ctx.fill(mbPaths.land)}
-  if(S.acgGeo!==false&&typeof MAP_MTNS!=='undefined'){if(!mbGeo)mbGeo={mtn:new Path2D(MAP_MTNS.map(m=>m[2]).join('')),riv:MAP_RIVERS.map(r=>new Path2D(r))};const dk=AT!=='atlaslight'&&!['paper','pastel'].includes(document.documentElement.dataset.theme);
-   const bl=Math.min(7,1.6+3600/mapVB.w*.5);ctx.save();ctx.clip(mbPaths.land);ctx.filter=`blur(${(bl*dpr).toFixed(1)}px)`;ctx.save();ctx.translate(lw(bl*.7),lw(bl*.9));ctx.fillStyle=dk?'rgba(20,10,48,.42)':'rgba(70,45,130,.2)';ctx.fill(mbGeo.mtn);ctx.restore();ctx.save();ctx.translate(-lw(bl*.35),-lw(bl*.45));ctx.fillStyle=dk?'rgba(240,232,255,.16)':'rgba(255,255,255,.5)';ctx.fill(mbGeo.mtn);ctx.restore();ctx.filter='none';
-
-   const mr=mapVB.w>2400?3:mapVB.w>1200?5:6,zf=Math.min(1.5,.8+3600/mapVB.w*.12);ctx.strokeStyle=dk?'rgba(30,27,72,.85)':'rgba(96,120,196,.85)';ctx.lineCap='round';ctx.lineJoin='round';for(let r=0;r<mr;r++){ctx.lineWidth=lw([1.5,1.3,1.1,.95,.8,.7][r]*zf);ctx.stroke(mbGeo.riv[r])}ctx.restore()}
   ctx.strokeStyle=st.land[1];ctx.lineWidth=lw(st.land[2]);ctx.lineJoin='round';ctx.stroke(mbPaths.land);
   if(det){ctx.save();ctx.strokeStyle=st.adm[0];ctx.lineWidth=lw(st.adm[1]);if(st.adm[2].length)ctx.setLineDash(st.adm[2].map(lw));ctx.stroke(mbPaths.adm);ctx.restore()}
   ctx.strokeStyle=st.border[0];ctx.lineWidth=lw(st.border[1]);ctx.stroke(mbPaths.border)}
@@ -3231,7 +3232,7 @@ function acgClick(e){const b=e.target.closest('[data-acgall]');if(!b)return;cons
  saveSet();renderAll()}
 $('pane').addEventListener('click',acgClick);
 function acgChange(e){const t=e.target,tid=(t.id||'').replace(/^ml/,'');
- if(tid==='acgDet'){S.acgDetail=t.checked;saveSet();renderAll();return}if(tid==='acgCap'){S.acgCaps=t.checked;saveSet();renderAll();return}if(tid==='acgGeo'){S.acgGeo=t.checked;saveSet();mbQueue();if(GL&&GL.on)glQueue();return}if(tid==='acgGlb'){glSet(t.checked);renderAll();return}
+ if(tid==='acgDet'){S.acgDetail=t.checked;saveSet();renderAll();return}if(tid==='acgCap'){S.acgCaps=t.checked;saveSet();renderAll();return}if(tid==='acgGlb'){glSet(t.checked);renderAll();return}
  if(t.dataset?.acgt){S.acgTypes={...acgT(),[t.dataset.acgt]:t.checked};saveSet();renderAll();return}
  if(t.dataset?.acga){const set=new Set(S.acgAsp||['squ','tri']);t.checked?set.add(t.dataset.acga):set.delete(t.dataset.acga);S.acgAsp=Object.keys(ASPL_COL).filter(a=>set.has(a));saveSet();renderAll();return}
  if(tid==='acgFocus'){S.acgFocus=t.value;saveSet();renderAll();return}
@@ -4297,10 +4298,9 @@ function atlasGlow(v){const SK=document.documentElement.dataset.skin,LT=SK==='at
 (()=>{try{const vw=document.getElementById('views');if(!vw)return;const mark=document.createComment('views');vw.parentNode.insertBefore(mark,vw);const mq=matchMedia('(max-width:640px)');
  const place=()=>{if(mq.matches){if(vw.parentNode!==document.body)document.body.appendChild(vw)}else if(vw.previousSibling!==mark)mark.parentNode.insertBefore(vw,mark.nextSibling)};place();mq.addEventListener('change',place)}catch(e){console.warn(e)}})();
 /* ---------- astrocartography globe ---------- */
-/* Orthographic globe drawn on a 2D canvas. Uses the same land, border, river and mountain data as the flat map
+/* Orthographic globe drawn on a 2D canvas. Uses the same land and border data as the flat map
    (x=(lon+180)*10, y=(90-lat)*10) and the same line data (v.acg, v.parans, v.ls, v.asl). */
 var GL={on:S.acgGlobe!==false,lon0:null,lat0:20,z:1,zt:null,za:null,tl:null,tb:null,raf:0,data:null,v:null,lines:[],hit:[],pins:[],mov:0,fly:null,inert:null,sun:null,st:null,stKey:''};
-const glGeoOn=()=>S.acgGeo!==false;
 function glParse(str,closed,sc){sc=sc||10;const out=[];if(!str)return out;const re=/[MLlz]|-?\d+(?:\.\d+)?/g;let m,cmd='',x=0,y=0,cur=null,nums=[];
  const flush=()=>{if(cur&&cur.length>=(closed?6:4))out.push(cur);cur=null};
  const push=(X,Y)=>{cur.push((X/sc-180)*DR,(90-Y/sc)*DR)};
@@ -4311,13 +4311,11 @@ function glParse(str,closed,sc){sc=sc||10;const out=[];if(!str)return out;const 
  /* to unit vectors, with a bounding cap for quick culling */
  return out.map(ll=>{const n=ll.length/2,v=new Float32Array(n*3);let cx=0,cy=0,cz=0;for(let i=0;i<n;i++){const l=ll[2*i],b=ll[2*i+1],cb=Math.cos(b);v[3*i]=cb*Math.cos(l);v[3*i+1]=cb*Math.sin(l);v[3*i+2]=Math.sin(b);cx+=v[3*i];cy+=v[3*i+1];cz+=v[3*i+2]}
   const L=Math.hypot(cx,cy,cz)||1;cx/=L;cy/=L;cz/=L;let mn=1;for(let i=0;i<n;i++){const d=v[3*i]*cx+v[3*i+1]*cy+v[3*i+2]*cz;if(d<mn)mn=d}
-  return {v,n,c:[cx,cy,cz],r:Math.acos(Math.max(-1,Math.min(1,mn))),o:glOrient(v,n,[cx,cy,cz]),closed}})}
+  return {v,n,c:[cx,cy,cz],r:Math.acos(Math.max(-1,Math.min(1,mn))),o:glOrient(v,n,[cx,cy,cz]),closed,lin:sc===100}})}
 /* ring orientation seen from outside the sphere: +1 counter-clockwise (inside on the left), -1 clockwise */
 function glOrient(v,n,c){let s=0;for(let i=0;i<n;i++){const j=(i+1)%n,ax=v[3*i],ay=v[3*i+1],az=v[3*i+2],bx=v[3*j],by=v[3*j+1],bz=v[3*j+2];s+=c[0]*(ay*bz-az*by)+c[1]*(az*bx-ax*bz)+c[2]*(ax*by-ay*bx)}return s>=0?1:-1}
 function glData(){if(GL.data)return GL.data;if(typeof MAP_LAND==='undefined')return null;
- const d={land:typeof MAP_LAND_HI!=='undefined'?glParse(MAP_LAND_HI,true,100):glParse(MAP_LAND,true),border:glParse(MAP_BORDERS,false),adm:null,riv:[],mtn:[]};
- if(typeof MAP_RIVERS!=='undefined')d.riv=MAP_RIVERS.map(s=>glParse(s,false));
- if(typeof MAP_MTNS!=='undefined')d.mtn=MAP_MTNS.map(([n,r,p])=>{const polys=glParse(p,true);let cx=0,cy=0,cz=0;polys.forEach(q=>{cx+=q.c[0]*q.n;cy+=q.c[1]*q.n;cz+=q.c[2]*q.n});const L=Math.hypot(cx,cy,cz)||1;return {n,r,polys,c:[cx/L,cy/L,cz/L]}});
+ const d={land:typeof MAP_LAND_HI!=='undefined'?glParse(MAP_LAND_HI,true,100):glParse(MAP_LAND,true),border:glParse(MAP_BORDERS,false),adm:null};
  return GL.data=d}
 /* levels of detail: the same ring simplified for small globes (Douglas-Peucker on the sphere, tolerance in radians) */
 var GL_PX=.5,GL_ST=0;const GL_TOL=[0.016,0.008,0.004,0.002,0.001,0.0005,0.00025];
@@ -4343,6 +4341,7 @@ const glVis=(F,c,r)=>{const a=c[0]*F.c0+c[1]*F.s0,Z=F.sb*c[2]+F.cb*a;return Z>-M
    through the midpoints gives natural coastlines without adding points. Points on the map's cut edges (the 180°
    meridian and the south pole) are kept exact so neighbouring pieces still meet. */
 const glSeam=(v,i)=>(Math.abs(v[3*i+1])<2e-5&&v[3*i]<0)||v[3*i+2]<-.99995;
+function glEmitL(ctx,P,closed){const n=P.length/2;if(closed)ctx.moveTo(P[0],P[1]);for(let i=1;i<n;i++)ctx.lineTo(P[2*i],P[2*i+1])}
 function glEmit(ctx,P,S,closed){const n=P.length/2;if(n<3){for(let i=closed?0:1;i<n;i++)ctx.lineTo(P[2*i],P[2*i+1]);return}
  if(closed){let s0=-1;for(let i=0;i<n;i++)if(S[i]){s0=i;break}
   if(s0<0){ctx.moveTo((P[2*n-2]+P[0])/2,(P[2*n-1]+P[1])/2);for(let i=0;i<n;i++){const j=(i+1)%n;ctx.quadraticCurveTo(P[2*i],P[2*i+1],(P[2*i]+P[2*j])/2,(P[2*i+1]+P[2*j+1])/2)}return}
@@ -4356,14 +4355,15 @@ function mapSmooth(str,closed,sc){const k=sc?10/sc:1;const re=/[MLlz]|-?\d+(?:\.
  for(const P of rings){const n=P.length/2,S=new Uint8Array(n);for(let i=0;i<n;i++){const X=P[2*i],Y=P[2*i+1];S[i]=X<=0||X>=3600||Y>=1800||Y<=0?1:0}let d='';const c={moveTo:(a,b)=>d+='M'+f(a)+' '+f(b),lineTo:(a,b)=>d+='L'+f(a)+' '+f(b),quadraticCurveTo:(a,b,e,g)=>d+='Q'+f(a)+' '+f(b)+' '+f(e)+' '+f(g)};
   if(!closed)c.moveTo(P[0],P[1]);glEmit(c,P,S,closed);out+=d+(closed?'Z':'')}return out}
 /* polygon: hidden points pushed to the horizon along their direction (gives a clean clip at the rim) */
-function glPolyR(ctx,F,q){const L=glLv(q,F.R);if(!L)return;const v=L.v,n=L.n,P=new Float32Array(2*n),S=new Uint8Array(n);for(let i=0;i<n;i++){const p=glP(F,v[3*i],v[3*i+1],v[3*i+2]);let x=p[0],y=p[1];if(p[2]<0){const h=Math.hypot(p[3],p[4])||1e-9;x=F.cx+p[3]/h*F.R;y=F.cy-p[4]/h*F.R}P[2*i]=x;P[2*i+1]=y;S[i]=glSeam(v,i)?1:0}glEmit(ctx,P,S,true);ctx.closePath()}
+function glPolyR(ctx,F,q){const L=glLv(q,F.R);if(!L)return;const v=L.v,n=L.n,lin=q.lin;if(lin){for(let i=0;i<n;i++){const px=v[3*i],py=v[3*i+1],pz=v[3*i+2],a=px*F.c0+py*F.s0;let X=py*F.c0-px*F.s0,Y=F.cb*pz-F.sb*a;if(F.sb*pz+F.cb*a<0){const h=Math.hypot(X,Y)||1e-9;X/=h;Y/=h}const x=F.cx+X*F.R,y=F.cy-Y*F.R;if(i)ctx.lineTo(x,y);else ctx.moveTo(x,y)}ctx.closePath();return}
+ const P=new Float32Array(2*n),S=new Uint8Array(n);for(let i=0;i<n;i++){const p=glP(F,v[3*i],v[3*i+1],v[3*i+2]);let x=p[0],y=p[1];if(p[2]<0){const h=Math.hypot(p[3],p[4])||1e-9;x=F.cx+p[3]/h*F.R;y=F.cy-p[4]/h*F.R}P[2*i]=x;P[2*i+1]=y;S[i]=glSeam(v,i)?1:0}glEmit(ctx,P,S,true);ctx.closePath()}
 /* polygon clipped to the visible hemisphere: the part behind the globe is cut at the horizon and the cut is closed
    along the rim, going the way that keeps the inside of the ring on the same side */
 function glPoly(ctx,F,q){if(q.r!=null&&q.r<0.07)return glPolyR(ctx,F,q);const L=q.closed?glLv(q,F.R):q;if(!L)return;const v=L.v,n=L.n,B=glBuf(n),X=B.X,Y=B.Y,Z=B.Z;let vis=0,hid=-1;
  for(let i=0;i<n;i++){const px=v[3*i],py=v[3*i+1],pz=v[3*i+2],a=px*F.c0+py*F.s0;X[i]=py*F.c0-px*F.s0;Y[i]=F.cb*pz-F.sb*a;Z[i]=F.sb*pz+F.cb*a;if(Math.abs(Z[i])<1e-6)Z[i]=-1e-6;if(Z[i]>=0)vis++;else if(hid<0)hid=i}
  const sx=i=>F.cx+X[i]*F.R,sy=i=>F.cy-Y[i]*F.R;
  if(!vis){if(q.inside&&q.inside(F)){ctx.moveTo(F.cx+F.R,F.cy);ctx.arc(F.cx,F.cy,F.R,0,Math.PI*2);ctx.closePath()}return}
- if(hid<0){const PP=new Float32Array(2*n),SS=new Uint8Array(n);for(let i=0;i<n;i++){PP[2*i]=sx(i);PP[2*i+1]=sy(i);SS[i]=glSeam(v,i)?1:0}glEmit(ctx,PP,SS,true);ctx.closePath();if(q.inside&&!q.inside(F)){ctx.moveTo(F.cx+F.R,F.cy);ctx.arc(F.cx,F.cy,F.R,0,Math.PI*2);ctx.closePath()}return}
+ if(hid<0){if(q.lin){ctx.moveTo(sx(0),sy(0));for(let i=1;i<n;i++)ctx.lineTo(sx(i),sy(i))}else{const PP=new Float32Array(2*n),SS=new Uint8Array(n);for(let i=0;i<n;i++){PP[2*i]=sx(i);PP[2*i+1]=sy(i);SS[i]=glSeam(v,i)?1:0}glEmit(ctx,PP,SS,true)}ctx.closePath();if(q.inside&&!q.inside(F)){ctx.moveTo(F.cx+F.R,F.cy);ctx.arc(F.cx,F.cy,F.R,0,Math.PI*2);ctx.closePath()}return}
  const fr=[];let cur=null;const cut=(a,b)=>{const t=Z[a]/(Z[a]-Z[b]),x=X[a]+(X[b]-X[a])*t,y=Y[a]+(Y[b]-Y[a])*t,h=Math.hypot(x,y)||1;return [F.cx+x/h*F.R,F.cy-y/h*F.R,Math.atan2(y,x)]};
  for(let k=1;k<=n;k++){const i=(hid+k)%n,p=(i-1+n)%n;
   if(Z[p]<0&&Z[i]>=0){const e=cut(p,i);cur={a:e[2],pts:[e[0],e[1],sx(i),sy(i)],sf:[1,glSeam(v,i)?1:0]}}
@@ -4371,7 +4371,7 @@ function glPoly(ctx,F,q){if(q.r!=null&&q.r<0.07)return glPolyR(ctx,F,q);const L=
   else if(Z[p]>=0&&Z[i]<0){const e=cut(p,i);if(cur){cur.pts.push(e[0],e[1]);cur.sf.push(1);cur.b=e[2];fr.push(cur)}cur=null}}
  if(!fr.length)return;const dir=q.o>=0?1:-1,TAU=Math.PI*2,used=new Uint8Array(fr.length);
  for(let s0=0;s0<fr.length;s0++){if(used[s0])continue;let f=fr[s0],fi=s0,guard=0;ctx.moveTo(f.pts[0],f.pts[1]);
-  while(guard++<=fr.length){used[fi]=1;glEmit(ctx,f.pts,f.sf,false);
+  while(guard++<=fr.length){used[fi]=1;if(q.lin)glEmitL(ctx,f.pts,false);else glEmit(ctx,f.pts,f.sf,false);
    let best=-1,bd=1e9;for(let g=0;g<fr.length;g++){if(used[g]&&g!==s0)continue;let d=((fr[g].a-f.b)*dir)%TAU;if(d<0)d+=TAU;if(d>TAU-0.004)d=0;if(d<bd){bd=d;best=g}}
    if(best<0)break;const g=fr[best];if(bd>1e-6)ctx.arc(F.cx,F.cy,F.R,-f.b,-(f.b+dir*bd),dir>0);if(best===s0)break;f=g;fi=best}
   ctx.closePath()}}
@@ -4389,22 +4389,20 @@ function glLineH(ctx,F,v,n,out,h){const zc=-Math.sqrt(Math.max(0,1-1/(h*h))),hR=
   else if(open){const t=(pv[2]-zc)/(pv[2]-Z),e=P(pv[0]+(X-pv[0])*t,pv[1]+(Y-pv[1])*t);ctx.lineTo(e[0],e[1]);out&&out.push(e[0],e[1]);open=false}
   pv=[X,Y,Z,vis]}}
 const glLL=pts=>{const n=pts.length,v=new Float32Array(n*3);pts.forEach(([l,b],i)=>{const q=glVec(b,l);v[3*i]=q[0];v[3*i+1]=q[1];v[3*i+2]=q[2]});return {v,n}};
-const glMer=l=>{const p=[];for(let b=-85;b<=85.01;b+=1)p.push([l,b]);return p},glPar=b=>{const p=[];for(let l=-180;l<=180.01;l+=1.5)p.push([l,b]);return p};
+const glMerF=l=>{const p=[];for(let b=-90;b<=90.01;b+=1)p.push([l,b]);return p},glMer=l=>{const p=[];for(let b=-85;b<=85.01;b+=1)p.push([l,b]);return p},glPar=b=>{const p=[];for(let l=-180;l<=180.01;l+=1.5)p.push([l,b]);return p};
 /* small circle of angular radius r (deg) around (b,l) */
 function glCap(b,l,r){const pts=[],B=b*DR,L=l*DR,d=r*DR;for(let a=0;a<360;a+=3){const br=a*DR,b2=Math.asin(Math.sin(B)*Math.cos(d)+Math.cos(B)*Math.sin(d)*Math.cos(br)),l2=L+Math.atan2(Math.sin(br)*Math.sin(d)*Math.cos(B),Math.cos(d)-Math.sin(B)*Math.sin(b2));pts.push([l2/DR,b2/DR])}const q=glLL(pts),c=glVec(b,l);
  return {v:q.v,n:q.n,o:-1,inside:F=>{const a=c[0]*F.c0+c[1]*F.s0,Zc=F.sb*c[2]+F.cb*a;return Zc>Math.cos(d)}}}
 /* lines from the same data the flat map uses */
 let GLGRAT=null;function glGrat(){if(GLGRAT)return GLGRAT;const g=[],t=[];for(let l=-180;l<180;l+=30)g.push(glLL(glMer(l)));for(let b=-60;b<=60;b+=30)g.push(glLL(glPar(b)));for(const b of [23.44,-23.44,66.56,-66.56])t.push(glLL(glPar(b)));return GLGRAT={g,t}}
-/* night caps only change with the Sun */
-let GLCAPS={k:'',c:[]};function glCaps(sun){const k=sun.b.toFixed(3)+','+sun.l.toFixed(3);if(GLCAPS.k!==k)GLCAPS={k,c:[104,100,96,93,90,87,84,80,76].map(r=>glCap(-sun.b,w180b(sun.l+180),r)),tw:[[97,83],[94,86]].map(([a,b])=>[glCap(-sun.b,w180b(sun.l+180),a),glCap(-sun.b,w180b(sun.l+180),b)])};return GLCAPS}
 /* low resolution layers for soft effects: blurring by drawing small and scaling up costs almost nothing */
 const GLFX={};function glFx(name,W,H,s){let f=GLFX[name];const w=Math.max(1,Math.ceil(W*s)),h=Math.max(1,Math.ceil(H*s));if(!f){f=GLFX[name]={c:document.createElement('canvas')};f.x=f.c.getContext('2d')}if(f.c.width!==w||f.c.height!==h){f.c.width=w;f.c.height=h}f.x.setTransform(1,0,0,1,0,0);f.x.clearRect(0,0,w,h);f.x.setTransform(s,0,0,s,0,0);return f}
 const GLMW=new Map();function glMW(ctx,t){const k=ctx.font+'|'+t;let w=GLMW.get(k);if(w==null){w=ctx.measureText(t).width;if(GLMW.size>4000)GLMW.clear();GLMW.set(k,w)}return w}
 function glBuildLines(v){const T=acgT(),L=[];const SG=acgStrong(v),add=(pts,c,w,da,a,obj,tt,g)=>{const q=glLL(pts);L.push({...q,c:acgCol(c),w,dash:da&&da!=='none'?da.split(' ').map(Number):[],a:a||1,obj,tt,g})};
  (v.parans||[]).forEach((P,i)=>add(glPar(P.lat),PARAN_COL,.85,'CA'.includes(P.e1)||'CA'.includes(P.e2)?'none':'5 5',.8,'paran:'+i,`${PT[P.p][1]} ${EVN[P.e1]} / ${PT[P.q][1]} ${EVN[P.e2]} · ${Math.abs(P.lat).toFixed(2)}°${P.lat>=0?'N':'S'}`));
  (v.ls||[]).forEach(Ls=>add(Ls.pts,LS_COL[Ls.k]||'#7fd8c8',1.5,'1 5',1,'ls:'+Ls.k,`${PT[Ls.k][1]} local space · ${Ls.az.toFixed(0)}° ${compass(Ls.az)}`));
- (v.asl||[]).forEach((Ls,i)=>add(Ls.mer!=null?glMer(Ls.mer):Ls.pts,ASPL_COL[Ls.a],1,Ls.ang==='MC'?'10 4 2 4':'3 4',.85,'asl:'+i,`${Ls.syn?Ls.syn.who+'’s ':''}${PT[Ls.k][1]} ${ASPL_N[Ls.a][0]}${Ls.syn?' your '+PT[Ls.syn.c][1]:''} · ${Ls.ang}`));
- if(T.planet)(v.acg||[]).forEach(Ls=>add(Ls.mer!=null?glMer(Ls.mer):Ls.pts,ACG_COL[Ls.k]||'#ddd',1.3,ACG_ANG[Ls.a][2],1,`acgline:${Ls.k}:${Ls.a}`,`${PT[Ls.k][1]} ${Ls.a}${SG.has(Ls.k)?' · strong in this chart':''}`,SG.has(Ls.k)));
+ (v.asl||[]).forEach((Ls,i)=>add(Ls.mer!=null?glMerF(Ls.mer):Ls.pts,ASPL_COL[Ls.a],1,Ls.ang==='MC'?'10 4 2 4':'3 4',.85,'asl:'+i,`${Ls.syn?Ls.syn.who+'’s ':''}${PT[Ls.k][1]} ${ASPL_N[Ls.a][0]}${Ls.syn?' your '+PT[Ls.syn.c][1]:''} · ${Ls.ang}`));
+ if(T.planet)(v.acg||[]).forEach(Ls=>add(Ls.mer!=null?glMerF(Ls.mer):Ls.pts,ACG_COL[Ls.k]||'#ddd',1.3,ACG_ANG[Ls.a][2],1,`acgline:${Ls.k}:${Ls.a}`,`${PT[Ls.k][1]} ${Ls.a}${SG.has(Ls.k)?' · strong in this chart':''}`,SG.has(Ls.k)));
  GL.lines=L}
 /* a small moon surface drawn once: grey disc with darker seas, a few craters and a darker edge */
 var GLMOONT=null;function glMoonTex(){if(GLMOONT)return GLMOONT;const S=96,c=document.createElement('canvas');c.width=c.height=S;const g=c.getContext('2d'),h=S/2;
@@ -4418,11 +4416,23 @@ function glMoon(v){try{const ch=mapChart(v).ch,q=acgEq(ch,'moon');if(!q)return n
 function glSun(v){try{const ch=mapChart(v).ch,q=acgEq(ch,'sun');if(!q)return null;return {b:q.dec,l:w180b(q.ra-acgGst(ch))}}catch(e){return null}}
 function glStyle(){const key=(document.documentElement.dataset.theme||'')+(ATSKIN()||'');if(GL.st&&GL.stKey===key)return GL.st;const st=mbReadStyle(),AT=ATSKIN(),dk=AT!=='atlaslight'&&document.documentElement.dataset.theme!=='paper'&&document.documentElement.dataset.theme!=='pastel';
  GL.st={...st,dk,AT,sea0:dk?'#2a2766':'#e0e7f8',sea1:dk?'#15132f':'#a6b7e2',night:dk?'rgba(4,3,16,.085)':'rgba(40,36,90,.045)',glow:dk?'rgba(191,145,228,':'rgba(150,120,210,',
-  riv:dk?'rgba(30,27,72,.85)':'rgba(96,120,196,.85)',mtnHi:dk?'rgba(240,232,255,.22)':'rgba(255,255,255,.5)',mtnSh:dk?'rgba(20,10,48,.34)':'rgba(70,45,130,.2)',mtnLbl:dk?'rgba(232,224,255,.62)':'rgba(70,50,120,.7)',ocean:dk?'rgba(205,195,245,.42)':'rgba(55,65,115,.5)',grat:dk?'rgba(191,145,228,.14)':'rgba(110,90,170,.16)'};GL.stKey=key;return GL.st}
+  ocean:dk?'rgba(205,195,245,.42)':'rgba(55,65,115,.5)',grat:dk?'rgba(191,145,228,.14)':'rgba(110,90,170,.16)'};GL.stKey=key;return GL.st}
 var glStarC=null;function glStarImg(W,H,dpr){const k=W+'x'+H+'@'+dpr;if(glStarC&&glStarC.k===k)return glStarC.c;const c=document.createElement('canvas');c.width=Math.round(W*dpr);c.height=Math.round(H*dpr);const g=c.getContext('2d');g.scale(dpr,dpr);g.fillStyle='#ece6ff';for(const [x,y,r,a] of glStarField(W,H)){g.globalAlpha=a;g.beginPath();g.arc(x,y,r,0,7);g.fill()}glStarC={k,c};return c}
 var glStars=null;function glStarField(W,H){if(glStars&&glStars.W===W&&glStars.H===H)return glStars.l;let seed=11;const rnd=()=>(seed=(seed*16807)%2147483647)/2147483647,l=[];for(let i=0;i<Math.round(W*H/2600);i++)l.push([rnd()*W,rnd()*H,rnd()*.9+.25,rnd()*.55+.15]);glStars={W,H,l};return l}
-var GLPAT={};function glMtnPat(ctx,dk){const k=dk?'d':'l';if(GLPAT[k])return GLPAT[k];const c=document.createElement('canvas');c.width=c.height=28;const g=c.getContext('2d');g.strokeStyle=dk?'rgba(245,238,255,.22)':'rgba(80,55,140,.22)';g.lineWidth=1;g.lineJoin='round';
- for(const [x,y] of [[5,9],[19,4],[13,20],[25,18]]){g.beginPath();g.moveTo(x-3.5,y+2.5);g.lineTo(x,y-1.5);g.lineTo(x+3.5,y+2.5);g.stroke()}return GLPAT[k]=ctx.createPattern(c,'repeat')}
+/* night layer: alpha follows the Sun's altitude with a smooth step through twilight, plus a faint warm band at dusk */
+function glNight(ctx,F,W,H,sp,dk){const s=Math.min(.34,Math.max(.2,260/Math.max(W,H))),fx=glFx('n',W,H,s),w=fx.c.width,h=fx.c.height;
+ const sX=sp[3],sY=sp[4],sZ=sp[2],cx=F.cx*s,cy=F.cy*s,R=F.R*s,A=dk?.42:.25,T=dk?.075:.07,nr=dk?4:40,ng=dk?3:36,nb=dk?16:90;
+ let img=fx.img;if(!img||img.width!==w||img.height!==h)img=fx.img=fx.x.createImageData(w,h);const D=img.data;
+ const x0=Math.max(0,Math.floor(cx-R-2)),x1=Math.min(w,Math.ceil(cx+R+2)),y0=Math.max(0,Math.floor(cy-R-2)),y1=Math.min(h,Math.ceil(cy+R+2));D.fill(0);
+ for(let y=y0;y<y1;y++){const Y=(cy-(y+.5))/R;for(let x=x0;x<x1;x++){let X=((x+.5)-cx)/R,Yy=Y,r2=X*X+Yy*Yy,Z;if(r2>=1){const k=1/Math.sqrt(r2);X*=k;Yy*=k;Z=0}else Z=Math.sqrt(1-r2);
+  const e=X*sX+Yy*sY+Z*sZ;/* sine of the Sun's altitude */let t=(0.07-e)/0.25;t=t<0?0:t>1?1:t;const an=A*t*t*(3-2*t),q=(e+0.03)/0.07,at=T*Math.exp(-q*q);const a=an+at;if(a<0.002)continue;
+  const i=(y*w+x)*4;D[i]=(nr*an+255*at*(dk?1:1))/a;D[i+1]=(ng*an+(dk?168:150)*at)/a;D[i+2]=(nb*an+(dk?120:95)*at)/a;D[i+3]=a*255}}
+ fx.x.putImageData(img,0,0);ctx.imageSmoothingEnabled=true;ctx.imageSmoothingQuality='high';ctx.drawImage(fx.c,0,0,w,h,0,0,w/s,h/s)}
+/* a small tile of random +-1 level noise, drawn in device pixels */
+var GLDITH=null;function glDither(W,H,dpr){const k=W+'x'+H+'@'+dpr;if(GLDITH&&GLDITH.k===k)return GLDITH.c;
+ let t=GLDITH&&GLDITH.t;if(!t){t=document.createElement('canvas');t.width=t.height=128;const g=t.getContext('2d'),im=g.createImageData(128,128),D=im.data;let seed=7;const rnd=()=>(seed=(seed*16807)%2147483647)/2147483647;
+  for(let i=0;i<D.length;i+=4){const r=rnd(),v=r<.5?0:255;D[i]=D[i+1]=D[i+2]=v;D[i+3]=Math.round(Math.abs(r-.5)*2*3)}g.putImageData(im,0,0)}
+ const c=document.createElement('canvas');c.width=Math.round(W*dpr);c.height=Math.round(H*dpr);const g=c.getContext('2d');g.fillStyle=g.createPattern(t,'repeat');g.fillRect(0,0,c.width,c.height);GLDITH={k,c,t};return c}
 function glQueue(){if(!GL.raf)GL.raf=requestAnimationFrame(glDraw)}
 function glDraw(){GL.raf=0;const cv=$('mapGlobe'),wrap=$('acgWrap');if(!cv||!GL.on||mode!=='acg'||wrap.hidden)return;const W=wrap.clientWidth,H=wrap.clientHeight;if(!W||!H)return;
  const d=glData();if(!d){dnMapNeed();return}
@@ -4453,34 +4463,24 @@ function glDraw(){GL.raf=0;const cv=$('mapGlobe'),wrap=$('acgWrap');if(!cv||!GL.
  const land=new Path2D();for(const q of d.land){if(!glOn(F,q,W,H))continue;glPoly(land,F,q)}
  ctx.save();ctx.translate(0,1.4);ctx.fillStyle=dk?'rgba(0,0,0,.45)':'rgba(50,35,90,.2)';ctx.fill(land,'nonzero');ctx.restore();
  ctx.fillStyle=st.land[0];ctx.fill(land);
- /* mountains */
- const geo=glGeoOn();
- if(geo&&d.mtn.length){const mp=new Path2D();let any=false;for(const m of d.mtn)for(const q of m.polys){if(glOn(F,q,W,H)){glPoly(mp,F,q);any=true}}
-  if(any){const bl=Math.min(7,1.6+zl*.5),fs=Math.max(.16,Math.min(.4,1/(bl*1.3))),fx=glFx('m',W,H,fs),g=fx.x;g.save();g.translate(bl*.7,bl*.9);g.fillStyle=st.mtnSh;g.fill(mp);g.restore();g.save();g.translate(-bl*.35,-bl*.45);g.fillStyle=st.mtnHi;g.fill(mp);g.restore();
-   ctx.save();ctx.clip(land);ctx.imageSmoothingEnabled=true;ctx.imageSmoothingQuality='high';ctx.drawImage(fx.c,0,0,W,H);ctx.restore()}}
- ctx.save();ctx.clip(land);ctx.lineJoin='round';ctx.strokeStyle=dk?'rgba(40,24,90,.35)':'rgba(110,80,170,.18)';ctx.lineWidth=3.2;ctx.stroke(land);ctx.strokeStyle=dk?'rgba(236,226,255,.22)':'rgba(255,255,255,.55)';ctx.lineWidth=1;ctx.translate(0,-.6);ctx.stroke(land);ctx.restore();
+ if(!mvg){ctx.save();ctx.clip(land);ctx.lineJoin='round';ctx.strokeStyle=dk?'rgba(40,24,90,.35)':'rgba(110,80,170,.18)';ctx.lineWidth=3.2;ctx.stroke(land);ctx.strokeStyle=dk?'rgba(236,226,255,.22)':'rgba(255,255,255,.55)';ctx.lineWidth=1;ctx.translate(0,-.6);ctx.stroke(land);ctx.restore()}
  ctx.strokeStyle=st.land[1];ctx.lineWidth=Math.max(.55,st.land[2]*.75);ctx.lineJoin='round';ctx.stroke(land);
- /* rivers */
- if(geo){const mr=zl<1.6?3:zl<3?5:6;ctx.save();ctx.clip(land);ctx.strokeStyle=st.riv;ctx.lineCap='round';ctx.lineJoin='round';
-  for(let r=0;r<Math.min(mr,d.riv.length);r++){ctx.lineWidth=[1.5,1.3,1.1,.95,.8,.7][r]*Math.min(1.5,.75+zl*.12);ctx.beginPath();for(const q of d.riv[r]){if(glOn(F,q,W,H))glLineQ(ctx,F,q)}ctx.stroke()}ctx.restore()}
  /* borders */
  if(zl>=1.5){ctx.globalAlpha=Math.min(1,(zl-1.5)/.6+.35);ctx.strokeStyle=st.border[0];ctx.lineWidth=Math.max(.6,st.border[1]);ctx.beginPath();for(const q of d.border){if(glOn(F,q,W,H))glLineQ(ctx,F,q)}ctx.stroke();ctx.globalAlpha=1}
  if(zl>=3&&S.acgDetail!==false){if(!d.adm)d.adm=glParse(MAP_ADM1,false);ctx.save();ctx.globalAlpha=Math.min(1,(zl-3)/1.2+.3);ctx.strokeStyle=st.adm[0];ctx.lineWidth=Math.max(.4,st.adm[1]);if(st.adm[2].length)ctx.setLineDash(st.adm[2]);ctx.beginPath();for(const q of d.adm){if(glOn(F,q,W,H))glLineQ(ctx,F,q)}ctx.stroke();ctx.restore()}
- /* night side for the chart's moment, with a soft edge */
+ /* night side for the chart's moment: the Sun's altitude worked out per pixel on a small layer and scaled up,
+    so the shading changes smoothly instead of in stacked steps */
  if(sun){if(sp&&sp[2]>-.35){const sh=ctx.createRadialGradient(sp[0],sp[1],0,sp[0],sp[1],R*1.1);sh.addColorStop(0,dk?'rgba(225,210,255,.11)':'rgba(255,255,255,.28)');sh.addColorStop(1,'rgba(255,255,255,0)');ctx.fillStyle=sh;ctx.fillRect(F.cx-R,F.cy-R,2*R,2*R)}
-  /* night drawn small and scaled up, which softens the terminator for free */
-  const C=glCaps(sun),fx=glFx('n',W,H,.14),g=fx.x;g.fillStyle=dk?'rgba(4,3,16,.053)':'rgba(40,36,90,.028)';for(const q of C.c){g.beginPath();glPoly(g,F,q);g.fill('evenodd')}
-  g.fillStyle=dk?'rgba(255,170,120,.03)':'rgba(255,150,90,.04)';for(const [a,b] of C.tw){g.beginPath();glPoly(g,F,a);glPoly(g,F,b);g.fill('evenodd')}
-  ctx.imageSmoothingQuality='high';ctx.drawImage(fx.c,0,0,W,H)}
+  glNight(ctx,F,W,H,sp,dk)}
  /* limb shading */
  const lg=ctx.createRadialGradient(F.cx,F.cy,R*.55,F.cx,F.cy,R);lg.addColorStop(0,'rgba(0,0,0,0)');lg.addColorStop(1,dk?'rgba(6,4,20,.42)':'rgba(60,50,120,.12)');ctx.fillStyle=lg;ctx.fillRect(F.cx-R,F.cy-R,2*R,2*R);
  /* labels */
  const fsz=11;ctx.textAlign='center';ctx.textBaseline='middle';
  if(zl<2.4&&R>=190){ctx.font=`italic 500 ${fsz}px Fraunces, Georgia, serif`;try{ctx.letterSpacing='2.6px'}catch(e){}ctx.fillStyle=st.ocean;for(const [a,b,lo,la] of AT_OCEANS){const q=glVec(la,lo),p=glP(F,q[0],q[1],q[2]);if(p[2]<.25)continue;ctx.globalAlpha=Math.min(1,(p[2]-.25)*3);ctx.fillText(a,p[0],b?p[1]-fsz*.7:p[1]);if(b)ctx.fillText(b,p[0],p[1]+fsz*.7)}ctx.globalAlpha=1}
- if(geo){ctx.font=`italic 500 ${zl>3?11:10}px Fraunces, Georgia, serif`;try{ctx.letterSpacing='1.2px'}catch(e){}ctx.fillStyle=st.mtnLbl;const boxes=[];for(const m of d.mtn){const need=m.r===1?1.5:m.r===2?2.6:4;if(zl<need)continue;const p=glP(F,m.c[0],m.c[1],m.c[2]);if(p[2]<.3)continue;const w=glMW(ctx,m.n),bx=[p[0]-w/2-4,p[1]-8,p[0]+w/2+4,p[1]+8];if(boxes.some(q=>bx[0]<q[2]&&bx[2]>q[0]&&bx[1]<q[3]&&bx[3]>q[1]))continue;boxes.push(bx);ctx.globalAlpha=Math.min(1,(p[2]-.3)*4)*Math.min(1,(zl-need)*2.5+.15);ctx.fillText(m.n,p[0],p[1])}ctx.globalAlpha=1}
  try{ctx.letterSpacing='0px'}catch(e){}
  if(S.acgCaps!==false&&zl>=4){if(!mbCapSt)mbCapSt=mbReadCapStyle();const boxes=[];ctx.textAlign='left';for(const [n,b,l,t] of MAP_CAPS){if(t===1&&zl<7)continue;const q=glVec(b,l),p=glP(F,q[0],q[1],q[2]);if(p[2]<.15||p[0]<-50||p[0]>W+50||p[1]<-20||p[1]>H+20)continue;ctx.globalAlpha=Math.min(1,(p[2]-.15)*5)*Math.min(1,(zl-(t?7:4))*2+.2);const s=t?mbCapSt.s:mbCapSt.n,f=t?10.5:12;ctx.font=s.font.replace('{S}',f);const w=glMW(ctx,n),bx=[p[0]-3,p[1]-f*.6,p[0]+7+w,p[1]+f*.6];if(boxes.some(q2=>bx[0]<q2[2]&&bx[2]>q2[0]&&bx[1]<q2[3]&&bx[3]>q2[1]))continue;boxes.push(bx);
   ctx.fillStyle=s.dot;ctx.beginPath();ctx.arc(p[0],p[1],t?2:2.6,0,7);ctx.fill();if(s.halo&&s.halo!=='none'){ctx.strokeStyle=s.halo;ctx.lineWidth=3;ctx.lineJoin='round';ctx.strokeText(n,p[0]+6,p[1])}ctx.fillStyle=s.fill;ctx.fillText(n,p[0]+6,p[1])}ctx.globalAlpha=1;ctx.textAlign='center'}
+ ctx.drawImage(glDither(W,H,dpr),0,0,W,H);
  ctx.restore();
  /* rim line */
  ctx.strokeStyle=dk?'rgba(205,184,255,.55)':'rgba(132,102,182,.5)';ctx.lineWidth=1.1;ctx.beginPath();ctx.arc(F.cx,F.cy,R,0,7);ctx.stroke();
@@ -7293,7 +7293,7 @@ html[data-theme="paper"] .infotab,html[data-theme="pastel"] .infotab{color:var(-
 })();
 
 /* ===== Accuracy helpers: birth-time sensitivity, time-zone check, node type; site version; first-visit tips ===== */
-const DN_VER='v316';
+const DN_VER='v317';
 const btFmt=m=>m==null?'more than 4 hours':m<60?`${m} min`:`${Math.floor(m/60)} h${m%60?' '+(m%60)+' min':''}`;
 /* how far the birth time can move before the rising sign, Midheaven, Moon sign or a planet's house changes */
 const BT_MEMO=new Map();
