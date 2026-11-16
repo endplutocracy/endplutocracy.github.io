@@ -16,7 +16,7 @@ Destinned bundles the following data, code, fonts and images.
 ## Places and maps
 
 - **City gazetteer:** countries-states-cities-database by Darshan Gada (dr5hn), under the Open Database License (ODbL) 1.0. https://github.com/dr5hn/countries-states-cities-database
-- **World map:** Natural Earth 1:50m land, public domain. https://www.naturalearthdata.com
+- **World map:** Natural Earth 1:10m land (coastlines) and 1:50m rivers and mountain ranges, public domain. https://www.naturalearthdata.com
 - **Time zones and daylight saving history** come from your browser's built-in IANA time zone database.
 
 ## Code libraries
