@@ -3687,7 +3687,7 @@ function showInfo(obj,x,y){const html=infoFor(obj);if(!html)return;infoObj=obj;c
  if(x!=null)infoAnchor={x,y};placeInfo();
  $('infoClose').focus({preventScroll:true})}
 let infoAnchor=null;
-function placeInfo(){const box=$('info');if(box.hidden)return;if(matchMedia('(max-width:600px)').matches){box.style.maxHeight='';return}const vw=innerWidth,vh=innerHeight;box.style.maxHeight=Math.max(200,Math.min(560,vh-82))+'px';
+function placeInfo(){const box=$('info');if(box.hidden)return;if(matchMedia('(max-width:600px)').matches){box.style.maxHeight='';return}const vw=innerWidth,vh=innerHeight;box.style.maxHeight=Math.max(200,Math.min(780,vh-90))+'px';
  const w=box.offsetWidth,h=box.offsetHeight,a=infoAnchor||{x:vw/2,y:vh/3};let L=a.x+16,T=a.y-20;if(L+w>vw-12)L=a.x-w-16;if(L<12)L=12;if(L+w>vw-12)L=Math.max(12,vw-w-12);if(T+h>vh-12)T=vh-h-12;if(T<70)T=70;box.style.left=L+'px';box.style.top=T+'px'}
 try{new ResizeObserver(()=>placeInfo()).observe($('info'))}catch(e){}addEventListener('resize',placeInfo);$('info').addEventListener('toggle',()=>placeInfo(),true);
 function hideInfo(){$('info').hidden=true;infoObj=null}
@@ -7004,7 +7004,7 @@ html[data-theme="paper"] .infotab,html[data-theme="pastel"] .infotab{color:var(-
 })();
 
 /* ===== Accuracy helpers: birth-time sensitivity, time-zone check, node type; site version; first-visit tips ===== */
-const DN_VER='v296';
+const DN_VER='v297';
 const btFmt=m=>m==null?'more than 4 hours':m<60?`${m} min`:`${Math.floor(m/60)} h${m%60?' '+(m%60)+' min':''}`;
 /* how far the birth time can move before the rising sign, Midheaven, Moon sign or a planet's house changes */
 const BT_MEMO=new Map();
@@ -8283,6 +8283,12 @@ html{-webkit-tap-highlight-color:transparent}:is(#map,#wheel,#mapBase) :focus:no
 .tymoons .tymoon{font:inherit;color:inherit;background:none;border:0;padding:0;margin:0;cursor:pointer;text-align:left;text-decoration:underline;text-decoration-color:color-mix(in srgb,currentColor 35%,transparent);text-underline-offset:3px}.tymoons .tymoon:hover{color:var(--fg)}
 #infoBody .tyig{margin:-2px 0 8px;font-size:1.05rem}
 @media (max-width:640px){html body .sitefoot{padding-bottom:calc(96px + env(safe-area-inset-bottom,0px))!important}}
+@media (min-width:601px){html body #info.info{width:min(460px,calc(100% - 24px));padding:22px 26px 20px!important;gap:12px}
+html body #info .kicker{margin-bottom:2px}html body #info h4{margin-bottom:4px}
+html body #info dl{gap:8px 20px;font-size:.92rem;line-height:1.45}html body #info dt{white-space:nowrap}
+html body #info p.il,html body #info .il{margin:10px 0 2px}
+html body #info p.interp{font-size:.95rem;line-height:1.62}html body #info p{line-height:1.55}
+html body #info ul{gap:6px}html body #info ul.ilist li{margin-bottom:10px}}
 html.nointerp #pane .tpi{display:none!important}#pane p.il.tpi{margin:10px 0 2px;font-size:.74rem;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}#pane p.interp.tpi{margin:0 0 4px;line-height:1.55}
 .tptbl th{text-align:left;vertical-align:top;font-weight:500;color:var(--muted);font-size:.8rem;padding:6px 10px 6px 0;white-space:nowrap}.tptbl td{padding:6px 0;vertical-align:top}.tptbl td>div+div{margin-top:4px}.tptbl .tag{margin-left:4px}
 .tpact{margin:0 0 6px;padding-left:18px;display:grid;gap:5px}.evact td,.evact th{font-size:.82rem;vertical-align:top}.evok{color:var(--soft,#3fbf8f);font-weight:700}
