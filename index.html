@@ -4388,6 +4388,13 @@ function glLineH(ctx,F,v,n,out,h){const zc=-Math.sqrt(Math.max(0,1-1/(h*h))),hR=
   if(vis){const q=P(X,Y);if(!open){if(pv&&!pv[3]){const t=(pv[2]-zc)/(pv[2]-Z),e=P(pv[0]+(X-pv[0])*t,pv[1]+(Y-pv[1])*t);ctx.moveTo(e[0],e[1]);ctx.lineTo(q[0],q[1]);out&&out.push(NaN,NaN,e[0],e[1],q[0],q[1])}else{ctx.moveTo(q[0],q[1]);out&&out.push(NaN,NaN,q[0],q[1])}open=true}else{ctx.lineTo(q[0],q[1]);out&&out.push(q[0],q[1])}}
   else if(open){const t=(pv[2]-zc)/(pv[2]-Z),e=P(pv[0]+(X-pv[0])*t,pv[1]+(Y-pv[1])*t);ctx.lineTo(e[0],e[1]);out&&out.push(e[0],e[1]);open=false}
   pv=[X,Y,Z,vis]}}
+function glLineH2(ctx,sh,F,v,n,out,h){const zc=-Math.sqrt(Math.max(0,1-1/(h*h))),hR=h*F.R,R=F.R,cx=F.cx,cy=F.cy;let pX=0,pY=0,pZ=0,first=true,open=false,sOpen=false;
+ for(let i=0;i<n;i++){const px=v[3*i],py=v[3*i+1],pz=v[3*i+2],a=px*F.c0+py*F.s0,X=py*F.c0-px*F.s0,Y=F.cb*pz-F.sb*a,Z=F.sb*pz+F.cb*a;
+  if(Z>=zc){const qx=cx+X*hR,qy=cy-Y*hR;if(!open){if(!first){const t=(pZ-zc)/(pZ-Z),ex=cx+(pX+(X-pX)*t)*hR,ey=cy-(pY+(Y-pY)*t)*hR;ctx.moveTo(ex,ey);ctx.lineTo(qx,qy);out.push(NaN,NaN,ex,ey,qx,qy)}else{ctx.moveTo(qx,qy);out.push(NaN,NaN,qx,qy)}open=true}else{ctx.lineTo(qx,qy);out.push(qx,qy)}}
+  else if(open){const t=(pZ-zc)/(pZ-Z),ex=cx+(pX+(X-pX)*t)*hR,ey=cy-(pY+(Y-pY)*t)*hR;ctx.lineTo(ex,ey);out.push(ex,ey);open=false}
+  if(Z>=0){const sx=cx+X*R,sy=cy-Y*R;if(!sOpen){if(!first&&pZ<0){const t=pZ/(pZ-Z),x=pX+(X-pX)*t,y=pY+(Y-pY)*t,hh=Math.hypot(x,y)||1;sh.moveTo(cx+x/hh*R,cy-y/hh*R);sh.lineTo(sx,sy)}else sh.moveTo(sx,sy);sOpen=true}else sh.lineTo(sx,sy)}
+  else if(sOpen){const t=pZ/(pZ-Z),x=pX+(X-pX)*t,y=pY+(Y-pY)*t,hh=Math.hypot(x,y)||1;sh.lineTo(cx+x/hh*R,cy-y/hh*R);sOpen=false}
+  pX=X;pY=Y;pZ=Z;first=false}}
 const glLL=pts=>{const n=pts.length,v=new Float32Array(n*3);pts.forEach(([l,b],i)=>{const q=glVec(b,l);v[3*i]=q[0];v[3*i+1]=q[1];v[3*i+2]=q[2]});return {v,n}};
 const glMerF=l=>{const p=[];for(let b=-90;b<=90.01;b+=1)p.push([l,b]);return p},glMer=l=>{const p=[];for(let b=-85;b<=85.01;b+=1)p.push([l,b]);return p},glPar=b=>{const p=[];for(let l=-180;l<=180.01;l+=1.5)p.push([l,b]);return p};
 /* small circle of angular radius r (deg) around (b,l) */
@@ -4427,12 +4434,14 @@ function glNight(ctx,F,W,H,sp,dk){const s=Math.min(.34,Math.max(.2,260/Math.max(
  for(let y=y0;y<y1;y++){const Y=(cy-(y+.5))/R;for(let x=x0;x<x1;x++){let X=((x+.5)-cx)/R,Yy=Y,r2=X*X+Yy*Yy,Z;if(r2>=1){const k=1/Math.sqrt(r2);X*=k;Yy*=k;Z=0}else Z=Math.sqrt(1-r2);
   const e=X*sX+Yy*sY+Z*sZ;/* sine of the Sun's altitude */let t=(0.07-e)/0.25;t=t<0?0:t>1?1:t;const an=A*t*t*(3-2*t),q=(e+0.03)/0.07,at=T*Math.exp(-q*q);const a=an+at;if(a<0.002)continue;
   const i=(y*w+x)*4;D[i]=(nr*an+255*at*(dk?1:1))/a;D[i+1]=(ng*an+(dk?168:150)*at)/a;D[i+2]=(nb*an+(dk?120:95)*at)/a;D[i+3]=a*255}}
- fx.x.putImageData(img,0,0);ctx.imageSmoothingEnabled=true;ctx.imageSmoothingQuality='high';ctx.drawImage(fx.c,0,0,w,h,0,0,w/s,h/s)}
+ fx.x.putImageData(img,0,0);ctx.imageSmoothingEnabled=true;ctx.imageSmoothingQuality='high';ctx.drawImage(fx.c,0,0,w,h,0,0,w/s,h/s);ctx.imageSmoothingQuality='low'}
 /* a small tile of random +-1 level noise, drawn in device pixels */
 var GLDITH=null;function glDither(W,H,dpr){const k=W+'x'+H+'@'+dpr;if(GLDITH&&GLDITH.k===k)return GLDITH.c;
  let t=GLDITH&&GLDITH.t;if(!t){t=document.createElement('canvas');t.width=t.height=128;const g=t.getContext('2d'),im=g.createImageData(128,128),D=im.data;let seed=7;const rnd=()=>(seed=(seed*16807)%2147483647)/2147483647;
   for(let i=0;i<D.length;i+=4){const r=rnd(),v=r<.5?0:255;D[i]=D[i+1]=D[i+2]=v;D[i+3]=Math.round(Math.abs(r-.5)*2*3)}g.putImageData(im,0,0)}
  const c=document.createElement('canvas');c.width=Math.round(W*dpr);c.height=Math.round(H*dpr);const g=c.getContext('2d');g.fillStyle=g.createPattern(t,'repeat');g.fillRect(0,0,c.width,c.height);GLDITH={k,c,t};return c}
+/* scale a low-resolution layer up onto the canvas, copying only the square around the globe */
+function glBlit(ctx,c,s,F,W,H,r){const x0=Math.max(0,Math.floor((F.cx-r)*s)),y0=Math.max(0,Math.floor((F.cy-r)*s)),x1=Math.min(c.width,Math.ceil((F.cx+r)*s)),y1=Math.min(c.height,Math.ceil((F.cy+r)*s));if(x1<=x0||y1<=y0)return;ctx.drawImage(c,x0,y0,x1-x0,y1-y0,x0/s,y0/s,(x1-x0)/s,(y1-y0)/s)}
 function glQueue(){if(!GL.raf)GL.raf=requestAnimationFrame(glDraw)}
 function glDraw(){GL.raf=0;const cv=$('mapGlobe'),wrap=$('acgWrap');if(!cv||!GL.on||mode!=='acg'||wrap.hidden)return;const W=wrap.clientWidth,H=wrap.clientHeight;if(!W||!H)return;
  const d=glData();if(!d){dnMapNeed();return}
@@ -4486,15 +4495,18 @@ function glDraw(){GL.raf=0;const cv=$('mapGlobe'),wrap=$('acgWrap');if(!cv||!GL.
  ctx.strokeStyle=dk?'rgba(205,184,255,.55)':'rgba(132,102,182,.5)';ctx.lineWidth=1.1;ctx.beginPath();ctx.arc(F.cx,F.cy,R,0,7);ctx.stroke();
  /* astrocartography lines */
  GL.hit=[];ctx.lineCap='round';ctx.lineJoin='round';
- const drawn=[],HL=1+Math.min(.025,.012+.006*zl)/Math.max(1,zl*.6);for(const Ln of GL.lines){const pts=[];const p2=new Path2D(),sh=new Path2D();glLineH(p2,F,Ln.v,Ln.n,pts,HL);if(!pts.length)continue;glLine(sh,F,Ln.v,Ln.n);drawn.push([Ln,p2,sh]);GL.hit.push([Ln.obj,pts,Ln.tt])}
- /* soft shadow on the surface under the raised lines */
- if(drawn.length){const fx=glFx('s',W,H,.5),g=fx.x,all=new Path2D();for(const [,,sh] of drawn)all.addPath(sh);g.lineCap='round';g.lineJoin='round';g.strokeStyle=dk?'rgba(5,3,18,.5)':'rgba(60,40,110,.2)';g.translate(1.5,2.5);g.lineWidth=2.1;g.stroke(all)
-  ctx.save();ctx.beginPath();ctx.arc(F.cx,F.cy,R,0,7);ctx.clip();ctx.drawImage(fx.c,0,0,W,H);ctx.restore()}
+ /* lines with the same look share one path, so many lines (parans, aspect lines) cost a few strokes instead of one each */
+ const HL=1+Math.min(.025,.012+.006*zl)/Math.max(1,zl*.6),SH=new Path2D(),grp=new Map();
+ for(const Ln of GL.lines){const k=Ln.c+'|'+Ln.dash.join(',')+'|'+Ln.w+'|'+Ln.a+'|'+(Ln.g?1:0);let G=grp.get(k);if(!G){G={Ln,p:new Path2D(),any:false};grp.set(k,G)}
+  const pts=[],Lq=glLv(Ln,F.R)||Ln;glLineH2(G.p,SH,F,Lq.v,Lq.n,pts,HL);if(!pts.length)continue;G.any=true;GL.hit.push([Ln.obj,pts,Ln.tt])}
+ const drawn=[...grp.values()].filter(G=>G.any);
+ /* soft shadow on the surface under the raised lines (clipped to the globe on the small layer, where clipping is cheap) */
+ if(drawn.length){const fx=glFx('s',W,H,.5),g=fx.x;g.save();g.beginPath();g.arc(F.cx,F.cy,R,0,7);g.clip();g.lineCap='round';g.lineJoin='round';g.strokeStyle=dk?'rgba(5,3,18,.5)':'rgba(60,40,110,.2)';g.translate(1.5,2.5);g.lineWidth=2.1;g.stroke(SH);g.restore();glBlit(ctx,fx.c,.5,F,W,H,R+2)}
  /* glow under the lines of the strongest planets */
- if(drawn.some(x=>x[0].g)){const fx=glFx('g',W,H,.25),g=fx.x;g.lineCap='round';g.lineJoin='round';for(const [Ln,p2] of drawn){if(!Ln.g)continue;g.strokeStyle=Ln.c;g.globalAlpha=.8;g.lineWidth=Ln.w*3;g.stroke(p2)}ctx.save();ctx.globalAlpha=dk?.42:.3;ctx.imageSmoothingQuality='high';ctx.drawImage(fx.c,0,0,W,H);ctx.restore()}
- /* halos first, then colours, so crossings near the poles do not pile up into a dark blot */
- if(drawn.length){const all=new Path2D();for(const [,p2] of drawn)all.addPath(p2);ctx.setLineDash([]);ctx.strokeStyle=dk?'rgba(14,11,30,.3)':'rgba(255,252,246,.35)';ctx.lineWidth=dk?2.7:2.6;ctx.stroke(all)}ctx.globalAlpha=1;
- for(const [Ln,p2] of drawn){const lw0=Ln.w*(dk?.9:1.1);ctx.setLineDash(Ln.dash.map(x=>x*1.15));ctx.globalAlpha=Ln.a;ctx.strokeStyle=Ln.c;ctx.lineWidth=lw0;ctx.stroke(p2)}
+ if(drawn.some(G=>G.Ln.g)){const fx=glFx('g',W,H,.25),g=fx.x;g.lineCap='round';g.lineJoin='round';for(const G of drawn){if(!G.Ln.g)continue;g.strokeStyle=G.Ln.c;g.globalAlpha=.8;g.lineWidth=G.Ln.w*3;g.stroke(G.p)}ctx.save();ctx.globalAlpha=dk?.42:.3;glBlit(ctx,fx.c,.25,F,W,H,R*1.06);ctx.restore()}
+ /* halos first (one combined path, so crossings near the poles do not pile up into a dark blot), then colours */
+ if(drawn.length){const all=new Path2D();for(const G of drawn)all.addPath(G.p);ctx.setLineDash([]);ctx.strokeStyle=dk?'rgba(14,11,30,.3)':'rgba(255,252,246,.35)';ctx.lineWidth=dk?2.7:2.6;ctx.stroke(all)}ctx.globalAlpha=1;
+ for(const G of drawn){const Ln=G.Ln;ctx.setLineDash(Ln.dash.map(x=>x*1.15));ctx.globalAlpha=Ln.a;ctx.strokeStyle=Ln.c;ctx.lineWidth=Ln.w*(dk?.9:1.1);ctx.stroke(G.p)}
  ctx.setLineDash([]);ctx.globalAlpha=1;
  /* pins */
  GL.pins=[];const A=byId(activeId);const pin=(b,l,col,star,obj,tt)=>{const q=glVec(b,l),p=glP(F,q[0],q[1],q[2]);if(p[2]<0)return;ctx.fillStyle=col;ctx.strokeStyle='#1b2230';ctx.lineWidth=1.5;ctx.beginPath();if(star){const r=6;ctx.moveTo(p[0],p[1]-r*1.6);ctx.lineTo(p[0]+r*.45,p[1]-r*.45);ctx.lineTo(p[0]+r*1.6,p[1]);ctx.lineTo(p[0]+r*.45,p[1]+r*.45);ctx.lineTo(p[0],p[1]+r*1.6);ctx.lineTo(p[0]-r*.45,p[1]+r*.45);ctx.lineTo(p[0]-r*1.6,p[1]);ctx.lineTo(p[0]-r*.45,p[1]-r*.45);ctx.closePath()}else ctx.arc(p[0],p[1],5,0,7);ctx.fill();ctx.stroke();GL.pins.push([p[0],p[1],obj,tt])};
@@ -7293,7 +7305,7 @@ html[data-theme="paper"] .infotab,html[data-theme="pastel"] .infotab{color:var(-
 })();
 
 /* ===== Accuracy helpers: birth-time sensitivity, time-zone check, node type; site version; first-visit tips ===== */
-const DN_VER='v317';
+const DN_VER='v318';
 const btFmt=m=>m==null?'more than 4 hours':m<60?`${m} min`:`${Math.floor(m/60)} h${m%60?' '+(m%60)+' min':''}`;
 /* how far the birth time can move before the rising sign, Midheaven, Moon sign or a planet's house changes */
 const BT_MEMO=new Map();
