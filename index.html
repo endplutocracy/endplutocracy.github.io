@@ -838,7 +838,7 @@ html[data-theme="orrery"] input[type=checkbox]{-webkit-appearance:none;appearanc
 html[data-theme="orrery"] input[type=checkbox]:checked{box-shadow:none;background:var(--lilac) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M3.5 8.3l3 3 6-6.3' fill='none' stroke='%23231f27' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center/100% no-repeat}
 html[data-theme="orrery"] input[type=checkbox]:focus-visible{outline:2px solid var(--lilac);outline-offset:2px}
 .efield>span.efh{display:flex;align-items:center;justify-content:space-between;gap:8px}
-#ephTabs button[aria-pressed="false"],#amSeg button[aria-pressed="false"]{background:var(--raised)}#ephTabs,#amSeg{gap:6px;background:none;border:0;padding:0}#ephTabs button,#amSeg button{border-radius:999px!important;border:0!important}
+
 html[data-theme="orrery"] .jog .ticks{background-image:repeating-linear-gradient(90deg,var(--bg) 0 1px,transparent 1px 12px),repeating-linear-gradient(90deg,var(--bg) 0 1px,transparent 1px 60px)}
 html[data-theme] .iconbtn.lockbtn[aria-pressed="true"]{background:var(--lilac)!important;color:var(--accent-ink)!important;border-color:transparent!important}
 html[data-theme] .iconbtn.lockbtn[aria-pressed="true"]:hover{filter:brightness(1.08)}
@@ -2664,7 +2664,7 @@ document.addEventListener('click',async e=>{const b=e.target.closest('[data-elsa
 function renderAll(){const A=byId(activeId);try{if(!offsetMin&&!jog){tickPos=0;$('ticks').style.transform=''}}catch(e){}if(view==='eph'){try{saveEphState();renderEphForm()}catch(e){}}if(view==='zr'){zrSel=zrSel2=zrSel3=null;zrOpenSet.clear();try{renderZRPage()}catch(e){console.error(e)}}if(view==='year'){try{renderYearPage()}catch(e){console.error(e)}}$('editActive').hidden=!!A.now||view==='acg';$('tLoc').hidden=!(['transits','solar','lunar','preturn'].includes(mode)&&!A.now);document.querySelectorAll('#tLoc button').forEach(b=>{b.setAttribute('aria-pressed',String((S.transitLoc||'birth')===b.dataset.tl&&(b.dataset.tl==='birth'||!!A.cur)));b.title=b.dataset.tl==='current'?(A.cur?`Cast transits and show times for ${A.cur.place}`:'Add a current city to this chart first'):'Cast transits for the birthplace'});$('chartName').textContent=A.name+(otherId&&['synastry','composite','davison'].includes(mode==='acg'?prevMode:mode)?' + '+byId(otherId).name:'');
  const curMode=mode==='acg'?(prevMode||'natal'):mode;try{window.mapModeSync&&mapModeSync()}catch(e){}$('modeLabel').textContent=(MODES.find(m=>m[0]===curMode)||MODES[0])[1];$('modes').innerHTML=MODES.map(([k,l],i)=>`<button type="button" role="menuitemradio" data-mode="${k}" aria-checked="${curMode===k}"><span>${l}</span>${i<8?`<span class="kbd">${i+1}</span>`:''}</button>`).join('');
  if(reloc&&reloc.id!==activeId)reloc=null;
- const v=compute();lastView=v;try{syncThird()}catch(e){}const isMap=mode==='acg';$('wheelWrap').hidden=isMap;$('acgWrap').hidden=!isMap;$('tabs').hidden=isMap;
+ const v=compute();lastView=v;try{syncThird()}catch(e){}const isMap=mode==='acg';$('wheelWrap').hidden=isMap;$('acgWrap').hidden=!isMap;$('tabs').hidden=isMap;try{$('tabsDD').hidden=isMap;let ml=$('mapPaneLbl');if(!ml){ml=document.createElement('strong');ml.id='mapPaneLbl';ml.textContent='Map Layers';$('tabsDD').after(ml)}ml.hidden=!isMap}catch(e){}
  if(isMap){try{renderMap(v)}catch(e){console.warn('map',e);try{v.outer=null;v.acgType='natal';renderMap(v)}catch(_){}}}else renderWheel(v);if(isMap){try{drawEclipsePaths()}catch(e){console.warn(e)}}try{elemMini(isMap?null:v.inner)}catch(e){}
  $('relocBar').hidden=mode!=='relocated'||isMap;if(mode==='relocated'&&!isMap){const rb=$('relocBar'),has=reloc&&reloc.id===A.id;
   rb.innerHTML=`<span class="rltxt">${has?`Relocated to <strong>${esc(reloc.label)}</strong>: same birth moment, with houses and angles for this place.`:'Choose a place to relocate this chart to.'}</span><div class="place rlpick"><input class="f" id="rlQ" placeholder="Type a city" autocomplete="off" role="combobox" aria-controls="rlSugg" aria-expanded="false"><ul class="sugg" id="rlSugg" role="listbox" hidden></ul></div>${A.cur&&!(has&&reloc.label===A.cur.place)?`<button class="btn ghost" id="rlCur" type="button">Use ${esc(A.cur.place.split(',')[0])}</button>`:''}`;
@@ -7004,7 +7004,7 @@ html[data-theme="paper"] .infotab,html[data-theme="pastel"] .infotab{color:var(-
 })();
 
 /* ===== Accuracy helpers: birth-time sensitivity, time-zone check, node type; site version; first-visit tips ===== */
-const DN_VER='v297';
+const DN_VER='v301';
 const btFmt=m=>m==null?'more than 4 hours':m<60?`${m} min`:`${Math.floor(m/60)} h${m%60?' '+(m%60)+' min':''}`;
 /* how far the birth time can move before the rising sign, Midheaven, Moon sign or a planet's house changes */
 const BT_MEMO=new Map();
@@ -8126,7 +8126,7 @@ window.MANX=[
 .elnow{font-size:.82rem}
 html body #ephView .eph-out,html body #ephView .eph-out th,html body #zrView .zrcard,html body #zrView .zrsec{background:var(--raised)!important}
 html body *{hyphens:manual!important;-webkit-hyphens:manual!important}
-#tlSeg{width:fit-content;overflow:hidden}
+#tlSeg,#ephTabs,#amSeg{width:fit-content;overflow:hidden}
 #hdrLib{display:none}
 html.nointerp #pane h3.tpi,html.nointerp #pane .note.tpi,html.nointerp #pane ul.tpi{display:none!important}.cyc+.cyc{border-top:1px solid var(--line);margin-top:10px}
 /* Lapis theme: the default layout in lapis blue, gold and ivory */
@@ -8289,6 +8289,9 @@ html body #info dl{gap:8px 20px;font-size:.92rem;line-height:1.45}html body #inf
 html body #info p.il,html body #info .il{margin:10px 0 2px}
 html body #info p.interp{font-size:.95rem;line-height:1.62}html body #info p{line-height:1.55}
 html body #info ul{gap:6px}html body #info ul.ilist li{margin-bottom:10px}}
+#tabsDD[hidden]{display:none!important}#mapPaneLbl{display:none}
+@media (min-width:861px){.sidehead #mapPaneLbl:not([hidden]){display:flex;align-items:center;height:32px;margin:8px 16px 4px 12px;font:600 1rem var(--serif);letter-spacing:.035em;color:var(--fg)}.sidehead:has(#sideTog[aria-expanded="false"]) #mapPaneLbl{display:none!important}}
+:is(html[data-skin="atlas"],html[data-skin="atlaslight"]) body :is(.mapfstop .chip,.mapfstop .iconbtn,#tabDDBtn,#sideTog,#acgWrap .wzoom button,#mapLayersBtn,#fsSearchBtn,.efield button[id$="Pick"]){border:1px solid var(--line)!important;box-sizing:border-box}
 html.nointerp #pane .tpi{display:none!important}#pane p.il.tpi{margin:10px 0 2px;font-size:.74rem;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}#pane p.interp.tpi{margin:0 0 4px;line-height:1.55}
 .tptbl th{text-align:left;vertical-align:top;font-weight:500;color:var(--muted);font-size:.8rem;padding:6px 10px 6px 0;white-space:nowrap}.tptbl td{padding:6px 0;vertical-align:top}.tptbl td>div+div{margin-top:4px}.tptbl .tag{margin-left:4px}
 .tpact{margin:0 0 6px;padding-left:18px;display:grid;gap:5px}.evact td,.evact th{font-size:.82rem;vertical-align:top}.evok{color:var(--soft,#3fbf8f);font-weight:700}
