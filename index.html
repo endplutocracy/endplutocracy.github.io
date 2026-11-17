@@ -4450,11 +4450,16 @@ function glDraw(){GL.raf=0;const cv=$('mapGlobe'),wrap=$('acgWrap');if(!cv||!GL.
  if(GL.inert){const I=GL.inert,dt=Math.min(40,now-I.t);I.t=now;GL.lon0=w180b(GL.lon0+I.vl*dt);GL.lat0=Math.max(-80,Math.min(80,GL.lat0+I.vb*dt));const k=Math.pow(.992,dt);I.vl*=k;I.vb*=k;if(Math.abs(I.vl)+Math.abs(I.vb)<.0002/GL.z)GL.inert=null;else glQueue();GL.mov=now}
  if(GL.tl!=null){const dl=w180b(GL.tl-GL.lon0),db=GL.tb-GL.lat0;if(Math.abs(dl)+Math.abs(db)<1e-4){GL.lon0=GL.tl;GL.lat0=GL.tb;GL.tl=null}else{GL.lon0=w180b(GL.lon0+dl*.42);GL.lat0+=db*.42;glQueue()}}
  if(GL.zt!=null){const r=GL.zt/GL.z;if(Math.abs(Math.log(r))<0.003){glZoomStep(r,GL.za);GL.zt=null}else{glZoomStep(Math.pow(r,0.36),GL.za);glQueue()}}
- const dpr=Math.min(2,window.devicePixelRatio||1),pw=Math.round(W*dpr),ph=Math.round(H*dpr);if(cv.width!==pw||cv.height!==ph){cv.width=pw;cv.height=ph}
+ const mvg=now-(GL.mov||0)<140||GL.tl!=null||GL.zt!=null||!!GL.fly||!!GL.inert;
+ /* adaptive resolution while moving: if consecutive moving frames arrive slower than ~45 per second, draw the moving
+    frames with fewer pixels (the browser scales the canvas up), and step back up when frames are fast again.
+    Still frames are always drawn at full resolution, 180 ms after the motion stops. */
+ if(mvg){if(GL.lt&&now-GL.lt<200){const dt=now-GL.lt;GL.ft=GL.ft?GL.ft*.8+dt*.2:dt;if(GL.ft>22)GL.q=Math.max(GL.qmin||.5,(GL.q||1)*.9),GL.ft=17;else if(GL.ft<17.6&&(GL.q||1)<1)GL.q=Math.min(1,GL.q*1.03)}GL.lt=now}else GL.lt=0;
+ const dpr0=Math.min(2,window.devicePixelRatio||1);GL.qmin=dpr0>=1.5?1/dpr0:.75;const dpr=mvg?dpr0*(GL.q||1):dpr0,pw=Math.round(W*dpr),ph=Math.round(H*dpr);if(cv.width!==pw||cv.height!==ph){cv.width=pw;cv.height=ph}
  const ctx=cv.getContext('2d'),st=glStyle(),dk=st.dk;ctx.setTransform(dpr,0,0,dpr,0,0);
  const F=glFrame(W,H),R=F.R,zl=Math.max(.5,R/280);
  /* lighter outlines while moving, full detail once it settles */
- const mvg=now-(GL.mov||0)<140||GL.tl!=null||GL.drag;GL_PX=mvg?1.5:.5;clearTimeout(GL_ST);if(mvg)GL_ST=setTimeout(glQueue,180);
+ GL_PX=mvg?1.5:.5;clearTimeout(GL_ST);if(mvg)GL_ST=setTimeout(glQueue,180);
  /* space */
  ctx.clearRect(0,0,W,H);if(wrap.classList.contains('fs')){const bg=ctx.createRadialGradient(W/2,H*.45,0,W/2,H*.45,Math.max(W,H)*.8);bg.addColorStop(0,dk?'#171433':'#efeaf8');bg.addColorStop(1,dk?'#07060f':'#d9d2ea');ctx.fillStyle=bg;ctx.fillRect(0,0,W,H)}
  if(dk){ctx.drawImage(glStarImg(W,H,dpr),0,0,W,H)}
@@ -4489,7 +4494,7 @@ function glDraw(){GL.raf=0;const cv=$('mapGlobe'),wrap=$('acgWrap');if(!cv||!GL.
  try{ctx.letterSpacing='0px'}catch(e){}
  if(S.acgCaps!==false&&zl>=4){if(!mbCapSt)mbCapSt=mbReadCapStyle();const boxes=[];ctx.textAlign='left';for(const [n,b,l,t] of MAP_CAPS){if(t===1&&zl<7)continue;const q=glVec(b,l),p=glP(F,q[0],q[1],q[2]);if(p[2]<.15||p[0]<-50||p[0]>W+50||p[1]<-20||p[1]>H+20)continue;ctx.globalAlpha=Math.min(1,(p[2]-.15)*5)*Math.min(1,(zl-(t?7:4))*2+.2);const s=t?mbCapSt.s:mbCapSt.n,f=t?10.5:12;ctx.font=s.font.replace('{S}',f);const w=glMW(ctx,n),bx=[p[0]-3,p[1]-f*.6,p[0]+7+w,p[1]+f*.6];if(boxes.some(q2=>bx[0]<q2[2]&&bx[2]>q2[0]&&bx[1]<q2[3]&&bx[3]>q2[1]))continue;boxes.push(bx);
   ctx.fillStyle=s.dot;ctx.beginPath();ctx.arc(p[0],p[1],t?2:2.6,0,7);ctx.fill();if(s.halo&&s.halo!=='none'){ctx.strokeStyle=s.halo;ctx.lineWidth=3;ctx.lineJoin='round';ctx.strokeText(n,p[0]+6,p[1])}ctx.fillStyle=s.fill;ctx.fillText(n,p[0]+6,p[1])}ctx.globalAlpha=1;ctx.textAlign='center'}
- ctx.drawImage(glDither(W,H,dpr),0,0,W,H);
+ if(!mvg)ctx.drawImage(glDither(W,H,dpr),0,0,W,H);
  ctx.restore();
  /* rim line */
  ctx.strokeStyle=dk?'rgba(205,184,255,.55)':'rgba(132,102,182,.5)';ctx.lineWidth=1.1;ctx.beginPath();ctx.arc(F.cx,F.cy,R,0,7);ctx.stroke();
@@ -7305,7 +7310,7 @@ html[data-theme="paper"] .infotab,html[data-theme="pastel"] .infotab{color:var(-
 })();
 
 /* ===== Accuracy helpers: birth-time sensitivity, time-zone check, node type; site version; first-visit tips ===== */
-const DN_VER='v318';
+const DN_VER='v319';
 const btFmt=m=>m==null?'more than 4 hours':m<60?`${m} min`:`${Math.floor(m/60)} h${m%60?' '+(m%60)+' min':''}`;
 /* how far the birth time can move before the rising sign, Midheaven, Moon sign or a planet's house changes */
 const BT_MEMO=new Map();
